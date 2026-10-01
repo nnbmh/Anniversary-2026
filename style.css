@@ -873,7 +873,10 @@ button {
 */
 
 #eyepiece {
-  position: relative;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  margin: 0;
 
   width: min(40vw, 340px);
   aspect-ratio: 1;
@@ -887,7 +890,7 @@ button {
 
   opacity: 0;
 
-  transform: scale(.92);
+  transform: translate(-50%, -50%) scale(.92);
 
   border: 1px solid rgba(175, 199, 225, .12);
 
@@ -901,14 +904,12 @@ button {
     transform .75s cubic-bezier(.16,.8,.2,1);
 }
 
-#app.telescope-active
-#eyepiece {
+#app.telescope-active #eyepiece {
   opacity: 1;
 
   transform:
-    scale(1);
+    translate(-50%, -50%) scale(1);
 }
-
 
 /* =========================================================
    TELESCOPE CANVAS

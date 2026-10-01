@@ -1,283 +1,587 @@
 /* =========================================================
    OUR LITTLE UNIVERSE
-   Navigation Prototype
+   Cinematic Universe Foundation
 ========================================================= */
-
-const universe = document.getElementById("universe");
-
-const farStars = document.getElementById("farStars");
-const midStars = document.getElementById("midStars");
-const nearStars = document.getElementById("nearStars");
-
-const modeButtons =
-  document.querySelectorAll(".mode-button");
-
-const instructionTitle =
-  document.getElementById("instructionTitle");
-
-const instructionText =
-  document.getElementById("instructionText");
-
-const resetButton =
-  document.getElementById("resetButton");
-
-const depthFill =
-  document.querySelector(".depth-fill");
 
 
 /* =========================================================
-   SETTINGS
+   ELEMENTS
 ========================================================= */
 
-let mode = "flat";
+const app =
+  document.getElementById("app");
 
-let cameraX = 0;
-let cameraY = 0;
+const universe =
+  document.getElementById("universe");
 
-let scale = 1;
+const farStars =
+  document.getElementById("starsFar");
 
-const minScale = 0.55;
-const maxScale = 2.2;
+const midStars =
+  document.getElementById("starsMid");
 
-let isDragging = false;
+const nearStars =
+  document.getElementById("starsNear");
 
-let lastPointerX = 0;
-let lastPointerY = 0;
+const homeButton =
+  document.getElementById("homeButton");
 
-let targetCameraX = 0;
-let targetCameraY = 0;
+const navigationHint =
+  document.getElementById(
+    "navigationHint"
+  );
 
-let targetScale = 1;
-
-
-/* =========================================================
-   RANDOM STARS
-========================================================= */
-
-function createStars(container, amount, seedOffset = 0) {
-
-  /*
-    We use deterministic-ish maths rather than Math.random()
-    for positions so the sky doesn't completely change
-    every refresh.
-  */
-
-  for (let i = 0; i < amount; i++) {
-
-    const star =
-      document.createElement("div");
-
-    star.classList.add("star");
-
-    const pseudoA =
-      Math.abs(
-        Math.sin(
-          (i + 1) * 12.9898 + seedOffset
-        )
-      );
-
-    const pseudoB =
-      Math.abs(
-        Math.sin(
-          (i + 1) * 78.233 + seedOffset
-        )
-      );
-
-    const x =
-      (pseudoA * 100000) % 100;
-
-    const y =
-      (pseudoB * 100000) % 100;
-
-    star.style.left = `${x}%`;
-    star.style.top = `${y}%`;
-
-    const brightness =
-      ((i * 17 + seedOffset) % 100);
-
-    if (brightness > 94) {
-      star.classList.add("bright");
-    }
-    else if (brightness > 80) {
-      star.classList.add("medium");
-    }
-
-    const opacity =
-      0.25 +
-      (
-        ((i * 37 + seedOffset) % 70) / 100
-      );
-
-    star.style.opacity = opacity;
-
-    container.appendChild(star);
-  }
-}
-
-
-/* =========================================================
-   BUILD SKY
-========================================================= */
-
-createStars(farStars, 330, 11);
-createStars(midStars, 210, 37);
-createStars(nearStars, 90, 83);
+const zoomFill =
+  document.getElementById(
+    "zoomFill"
+  );
 
 
 /* =========================================================
    CAMERA
 ========================================================= */
 
-function updateCamera() {
+let cameraX = 0;
+let cameraY = 0;
+
+let targetX = 0;
+let targetY = 0;
+
+let zoom = 1;
+let targetZoom = 1;
+
+const MIN_ZOOM = 0.58;
+const MAX_ZOOM = 2.15;
+
+
+/*
+  Soft movement creates the cinematic
+  floating feeling from Prototype C.
+*/
+
+const CAMERA_EASING = 0.11;
+const ZOOM_EASING = 0.09;
+
+
+/* =========================================================
+   POINTER STATE
+========================================================= */
+
+let dragging = false;
+
+let previousX = 0;
+let previousY = 0;
+
+let hasInteracted = false;
+
+
+/* =========================================================
+   PINCH STATE
+========================================================= */
+
+let previousPinchDistance = null;
+
+
+/* =========================================================
+   DETERMINISTIC RANDOM GENERATOR
+========================================================= */
+
+/*
+  This makes the same star field appear
+  after every refresh.
+*/
+
+function seededRandom(seed) {
+
+  const value =
+    Math.sin(seed * 12.9898) *
+    43758.5453;
+
+  return (
+    value -
+    Math.floor(value)
+  );
+
+}
+
+
+/* =========================================================
+   CREATE STAR
+========================================================= */
+
+function createStar(
+  container,
+  index,
+  seed,
+  layer
+) {
+
+  const star =
+    document.createElement("span");
+
+  star.className =
+    "space-star";
+
+
+  const x =
+    seededRandom(
+      index + seed
+    ) * 100;
+
+  const y =
+    seededRandom(
+      index * 2.13 + seed
+    ) * 100;
+
+
+  star.style.left =
+    `${x}%`;
+
+  star.style.top =
+    `${y}%`;
+
 
   /*
-    Main universe movement.
+    Variation value determines whether
+    a star is tiny, bright, warm, etc.
   */
 
-  universe.style.transform =
-    `
-      translate(
-        calc(-50% + ${cameraX}px),
-        calc(-50% + ${cameraY}px)
-      )
-      scale(${scale})
-    `;
+  const variation =
+    seededRandom(
+      index * 4.71 + seed
+    );
+
+
+  if (variation < 0.25) {
+    star.classList.add("tiny");
+  }
+
+
+  if (
+    variation > 0.78 &&
+    variation < 0.9
+  ) {
+    star.classList.add("bright");
+  }
+
+
+  if (variation > 0.94) {
+    star.classList.add("warm");
+  }
+
+
+  else if (
+    variation > 0.88
+  ) {
+    star.classList.add("cool");
+  }
 
 
   /*
-    Prototype C gets additional parallax.
-
-    The layers shift at slightly different speeds,
-    which creates the illusion that some stars are
-    much closer than others.
+    Different depth layers have
+    different opacity ranges.
   */
 
-  if (mode === "cinematic") {
+  let opacity;
 
-    farStars.style.transform =
-      `
-        translate(
-          ${-cameraX * 0.025}px,
-          ${-cameraY * 0.025}px
-        )
-      `;
+  if (layer === "far") {
 
-    midStars.style.transform =
-      `
-        translate(
-          ${-cameraX * 0.07}px,
-          ${-cameraY * 0.07}px
-        )
-      `;
+    opacity =
+      0.18 +
+      seededRandom(
+        index * 6.2 + seed
+      ) * 0.4;
 
-    nearStars.style.transform =
-      `
-        translate(
-          ${-cameraX * 0.14}px,
-          ${-cameraY * 0.14}px
-        )
-      `;
+  }
+
+  else if (layer === "mid") {
+
+    opacity =
+      0.3 +
+      seededRandom(
+        index * 7.4 + seed
+      ) * 0.48;
 
   }
 
   else {
 
-    farStars.style.transform = "none";
-    midStars.style.transform = "none";
-    nearStars.style.transform = "none";
+    opacity =
+      0.42 +
+      seededRandom(
+        index * 8.6 + seed
+      ) * 0.48;
 
   }
 
 
+  star.style.opacity =
+    opacity;
+
+
   /*
-    Depth indicator reacts to zoom.
+    Only some stars twinkle.
+    Most stay still so the sky
+    doesn't look glittery.
   */
 
-  const zoomProgress =
-    (
-      (scale - minScale) /
-      (maxScale - minScale)
-    ) * 100;
+  const twinkleChance =
+    seededRandom(
+      index * 9.91 + seed
+    );
 
-  const clamped =
-    Math.max(
-      5,
-      Math.min(
-        100,
-        zoomProgress
+
+  if (twinkleChance > 0.88) {
+
+    star.classList.add(
+      "twinkle"
+    );
+
+
+    const speed =
+      4 +
+      seededRandom(
+        index * 11.3 + seed
+      ) * 5;
+
+
+    star.style.setProperty(
+      "--twinkle-speed",
+      `${speed}s`
+    );
+
+
+    star.style.setProperty(
+      "--base-opacity",
+      Math.max(
+        0.2,
+        opacity - 0.18
       )
     );
 
-  depthFill.style.width =
-    `${clamped}%`;
+
+    star.style.setProperty(
+      "--peak-opacity",
+      Math.min(
+        1,
+        opacity + 0.25
+      )
+    );
+
+  }
+
+
+  container.appendChild(star);
+
 }
 
 
 /* =========================================================
-   SMOOTH CINEMATIC CAMERA
+   BUILD STAR FIELD
 ========================================================= */
 
-function animationLoop() {
+function buildStarField() {
 
-  if (mode === "cinematic") {
+  /*
+    Far layer:
+    many tiny stars.
+  */
 
-    /*
-      Instead of camera movement happening instantly,
-      C gently catches up with the user's movement.
-    */
+  for (
+    let i = 0;
+    i < 520;
+    i++
+  ) {
 
-    cameraX +=
-      (targetCameraX - cameraX) * 0.12;
-
-    cameraY +=
-      (targetCameraY - cameraY) * 0.12;
-
-    scale +=
-      (targetScale - scale) * 0.1;
-
-  }
-
-  else {
-
-    cameraX = targetCameraX;
-    cameraY = targetCameraY;
-
-    scale = targetScale;
+    createStar(
+      farStars,
+      i,
+      13,
+      "far"
+    );
 
   }
 
-  updateCamera();
 
-  requestAnimationFrame(animationLoop);
+  /*
+    Mid layer.
+  */
+
+  for (
+    let i = 0;
+    i < 280;
+    i++
+  ) {
+
+    createStar(
+      midStars,
+      i,
+      47,
+      "mid"
+    );
+
+  }
+
+
+  /*
+    Near layer:
+    fewer, brighter stars.
+  */
+
+  for (
+    let i = 0;
+    i < 95;
+    i++
+  ) {
+
+    createStar(
+      nearStars,
+      i,
+      91,
+      "near"
+    );
+
+  }
+
 }
 
-animationLoop();
+
+buildStarField();
 
 
 /* =========================================================
-   POINTER / MOUSE / TOUCH DRAG
+   CAMERA BOUNDARIES
+========================================================= */
+
+function clampCamera() {
+
+  /*
+    Prevents Faris from dragging so far
+    that the entire universe disappears.
+
+    We'll refine these boundaries later
+    when the real constellations are placed.
+  */
+
+  const maxX =
+    window.innerWidth * 1.25;
+
+  const maxY =
+    window.innerHeight * 1.35;
+
+
+  targetX =
+    Math.max(
+      -maxX,
+      Math.min(
+        maxX,
+        targetX
+      )
+    );
+
+
+  targetY =
+    Math.max(
+      -maxY,
+      Math.min(
+        maxY,
+        targetY
+      )
+    );
+
+}
+
+
+/* =========================================================
+   PARALLAX
+========================================================= */
+
+function updateParallax() {
+
+  /*
+    Each layer moves at a slightly
+    different rate.
+
+    This is what gives C its depth.
+  */
+
+  farStars.style.transform =
+    `
+      translate3d(
+        ${-cameraX * 0.018}px,
+        ${-cameraY * 0.018}px,
+        0
+      )
+    `;
+
+
+  midStars.style.transform =
+    `
+      translate3d(
+        ${-cameraX * 0.055}px,
+        ${-cameraY * 0.055}px,
+        0
+      )
+    `;
+
+
+  nearStars.style.transform =
+    `
+      translate3d(
+        ${-cameraX * 0.115}px,
+        ${-cameraY * 0.115}px,
+        0
+      )
+    `;
+
+}
+
+
+/* =========================================================
+   CAMERA RENDER
+========================================================= */
+
+function renderCamera() {
+
+  universe.style.transform =
+    `
+      translate3d(
+        calc(-50% + ${cameraX}px),
+        calc(-50% + ${cameraY}px),
+        0
+      )
+      scale(${zoom})
+    `;
+
+
+  updateParallax();
+
+
+  /*
+    Depth meter.
+  */
+
+  const progress =
+    (
+      (zoom - MIN_ZOOM) /
+      (MAX_ZOOM - MIN_ZOOM)
+    ) * 100;
+
+
+  zoomFill.style.width =
+    `${
+      Math.max(
+        5,
+        Math.min(
+          100,
+          progress
+        )
+      )
+    }%`;
+
+}
+
+
+/* =========================================================
+   ANIMATION LOOP
+========================================================= */
+
+function animate() {
+
+  cameraX +=
+    (
+      targetX -
+      cameraX
+    ) *
+    CAMERA_EASING;
+
+
+  cameraY +=
+    (
+      targetY -
+      cameraY
+    ) *
+    CAMERA_EASING;
+
+
+  zoom +=
+    (
+      targetZoom -
+      zoom
+    ) *
+    ZOOM_EASING;
+
+
+  renderCamera();
+
+
+  requestAnimationFrame(
+    animate
+  );
+
+}
+
+
+animate();
+
+
+/* =========================================================
+   HIDE NAVIGATION HINT
+========================================================= */
+
+function registerInteraction() {
+
+  if (hasInteracted) {
+    return;
+  }
+
+
+  hasInteracted = true;
+
+
+  navigationHint.classList.add(
+    "hidden"
+  );
+
+}
+
+
+/* =========================================================
+   POINTER DRAG
 ========================================================= */
 
 document.addEventListener(
   "pointerdown",
-  (event) => {
+  event => {
 
     /*
-      Don't drag universe if touching UI.
+      Ignore UI buttons.
     */
 
     if (
       event.target.closest(
-        ".mode-switch, #resetButton"
+        "#interface"
       )
     ) {
       return;
     }
 
-    isDragging = true;
 
-    lastPointerX = event.clientX;
-    lastPointerY = event.clientY;
+    dragging = true;
+
+    previousX =
+      event.clientX;
+
+    previousY =
+      event.clientY;
+
+
+    app.classList.add(
+      "dragging"
+    );
+
+
+    registerInteraction();
 
   }
 );
@@ -285,65 +589,107 @@ document.addEventListener(
 
 document.addEventListener(
   "pointermove",
-  (event) => {
+  event => {
 
-    if (!isDragging) return;
+    if (!dragging) {
+      return;
+    }
+
 
     const deltaX =
-      event.clientX - lastPointerX;
+      event.clientX -
+      previousX;
+
 
     const deltaY =
-      event.clientY - lastPointerY;
+      event.clientY -
+      previousY;
 
-    targetCameraX += deltaX;
-    targetCameraY += deltaY;
 
-    lastPointerX = event.clientX;
-    lastPointerY = event.clientY;
+    /*
+      Slightly compensate for zoom
+      so dragging stays natural.
+    */
+
+    targetX +=
+      deltaX / zoom;
+
+
+    targetY +=
+      deltaY / zoom;
+
+
+    previousX =
+      event.clientX;
+
+    previousY =
+      event.clientY;
+
+
+    clampCamera();
 
   }
 );
 
 
+function stopDragging() {
+
+  dragging = false;
+
+
+  app.classList.remove(
+    "dragging"
+  );
+
+}
+
+
 document.addEventListener(
   "pointerup",
-  () => {
-    isDragging = false;
-  }
+  stopDragging
 );
 
 
 document.addEventListener(
   "pointercancel",
-  () => {
-    isDragging = false;
-  }
+  stopDragging
 );
 
 
 /* =========================================================
-   DESKTOP SCROLL ZOOM
+   DESKTOP / TRACKPAD ZOOM
 ========================================================= */
 
 document.addEventListener(
   "wheel",
-  (event) => {
+  event => {
 
     event.preventDefault();
 
-    const direction =
-      event.deltaY > 0
-        ? -0.08
-        : 0.08;
 
-    targetScale += direction;
+    registerInteraction();
 
-    targetScale =
+
+    /*
+      Trackpads often return smaller
+      delta values than mouse wheels.
+    */
+
+    const amount =
+      -event.deltaY *
+      0.0012;
+
+
+    targetZoom +=
+      amount;
+
+
+    targetZoom =
       Math.max(
-        minScale,
+        MIN_ZOOM,
         Math.min(
-          maxScale,
-          targetScale
+          MAX_ZOOM,
+          targetZoom
         )
       );
 
@@ -358,38 +704,52 @@ document.addEventListener(
    MOBILE PINCH ZOOM
 ========================================================= */
 
-let previousPinchDistance = null;
-
 document.addEventListener(
   "touchmove",
-  (event) => {
+  event => {
 
-    if (event.touches.length !== 2) {
-      previousPinchDistance = null;
+    if (
+      event.touches.length !== 2
+    ) {
+
+      previousPinchDistance =
+        null;
+
       return;
+
     }
 
+
     event.preventDefault();
+
+
+    registerInteraction();
+
 
     const touchA =
       event.touches[0];
 
+
     const touchB =
       event.touches[1];
+
 
     const dx =
       touchA.clientX -
       touchB.clientX;
 
+
     const dy =
       touchA.clientY -
       touchB.clientY;
+
 
     const distance =
       Math.sqrt(
         dx * dx +
         dy * dy
       );
+
 
     if (
       previousPinchDistance !== null
@@ -399,19 +759,23 @@ document.addEventListener(
         distance -
         previousPinchDistance;
 
-      targetScale +=
-        difference * 0.003;
 
-      targetScale =
+      targetZoom +=
+        difference *
+        0.0028;
+
+
+      targetZoom =
         Math.max(
-          minScale,
+          MIN_ZOOM,
           Math.min(
-            maxScale,
-            targetScale
+            MAX_ZOOM,
+            targetZoom
           )
         );
 
     }
+
 
     previousPinchDistance =
       distance;
@@ -427,105 +791,49 @@ document.addEventListener(
   "touchend",
   () => {
 
-    previousPinchDistance = null;
+    previousPinchDistance =
+      null;
 
   }
 );
 
 
 /* =========================================================
-   MODE SWITCHING
+   HOME / ORION
 ========================================================= */
 
-function setMode(newMode) {
+function returnToOrion() {
 
-  mode = newMode;
+  targetX = 0;
+  targetY = 0;
 
-  modeButtons.forEach(
-    button => {
-
-      button.classList.toggle(
-        "active",
-        button.dataset.mode === mode
-      );
-
-    }
-  );
-
-
-  if (mode === "cinematic") {
-
-    document.body.classList.add(
-      "cinematic"
-    );
-
-    instructionTitle.textContent =
-      "PROTOTYPE C";
-
-    instructionText.textContent =
-      "Drag to travel · Pinch or scroll to move through depth";
-
-  }
-
-  else {
-
-    document.body.classList.remove(
-      "cinematic"
-    );
-
-    instructionTitle.textContent =
-      "PROTOTYPE A";
-
-    instructionText.textContent =
-      "Drag to explore · Pinch or scroll to zoom";
-
-  }
+  targetZoom = 1;
 
 }
 
 
-modeButtons.forEach(
-  button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        setMode(
-          button.dataset.mode
-        );
-
-      }
-    );
-
-  }
-);
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-function resetView() {
-
-  targetCameraX = 0;
-  targetCameraY = 0;
-
-  targetScale = 1;
-
-}
-
-
-resetButton.addEventListener(
+homeButton.addEventListener(
   "click",
-  resetView
+  returnToOrion
 );
 
 
 /* =========================================================
-   START
+   WINDOW RESIZE
 ========================================================= */
 
-setMode("flat");
+window.addEventListener(
+  "resize",
+  () => {
 
-resetView();
+    clampCamera();
+
+  }
+);
+
+
+/* =========================================================
+   STARTING POSITION
+========================================================= */
+
+returnToOrion();

@@ -1074,7 +1074,7 @@ function drawTelescopeOrion(
       ctx.strokeStyle =
         "rgba(226, 238, 252, .76)";
 
-      ctx.lineWidth =  0.55;
+      ctx.lineWidth = 1;
 
       ctx.lineCap = "round";
 

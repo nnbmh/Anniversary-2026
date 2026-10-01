@@ -1409,3 +1409,125 @@ button {
   }
 
 }
+
+/* =========================================================
+   ORION — DISCOVERED LABEL
+========================================================= */
+
+#orion .constellation-label {
+  position: absolute;
+
+  /*
+    Keep the wording completely outside Orion's body.
+  */
+  left: 50%;
+  top: calc(100% + 42px);
+
+  width: max-content;
+
+  transform:
+    translate(-50%, 10px);
+
+  text-align: center;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity 1.2s ease .9s,
+    transform 1.4s cubic-bezier(.16,.8,.2,1) .9s;
+}
+
+
+/* Reveal only after Orion has been discovered */
+
+#orion.discovered .constellation-label {
+  opacity: 1;
+
+  transform:
+    translate(-50%, 0);
+}
+
+
+/* ORION */
+
+#orion .constellation-name {
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(21px, 2vw, 30px);
+  font-weight: 400;
+
+  letter-spacing: .34em;
+
+  /*
+    Compensates visually for the final letter spacing.
+  */
+  padding-left: .34em;
+
+  color: rgba(245, 247, 250, .94);
+
+  text-shadow:
+    0 0 12px rgba(210, 225, 245, .12);
+}
+
+
+/* The Beginning */
+
+#orion .constellation-subtitle {
+  margin-top: 8px;
+
+  font-size: clamp(8px, .72vw, 10px);
+  font-weight: 400;
+
+  letter-spacing: .20em;
+
+  color: rgba(207, 218, 232, .52);
+}
+
+
+/* =========================================================
+   TEMPORARY DISCOVERY MESSAGE
+
+   This is the existing #discoveryMessage.
+========================================================= */
+
+#discoveryMessage {
+  position: fixed;
+
+  left: 50%;
+  bottom: 8vh;
+
+  z-index: 110;
+
+  transform:
+    translate(-50%, 8px);
+
+  padding: 0;
+
+  background: none;
+  border: none;
+  box-shadow: none;
+
+  font-size: 9px;
+  font-weight: 500;
+
+  letter-spacing: .26em;
+  text-transform: uppercase;
+
+  color: rgba(225, 233, 243, .62);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity .6s ease,
+    transform .8s ease;
+}
+
+
+#discoveryMessage.show {
+  opacity: 1;
+
+  transform:
+    translate(-50%, 0);
+}

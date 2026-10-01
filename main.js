@@ -1261,6 +1261,198 @@ function checkOrionFocus(timestamp) {
   }
 }
 
+async function animateOrionReveal() {
+  const lines =
+    Array.from(
+      orion.querySelectorAll(
+        ".constellation-lines line"
+      )
+    );
+
+  const stars =
+    Array.from(
+      orion.querySelectorAll(
+        ".orion-star"
+      )
+    );
+
+  /*
+    Hide everything before the reveal begins.
+  */
+
+  lines.forEach(line => {
+    const length =
+      line.getTotalLength();
+
+    line.style.strokeDasharray =
+      `${length}`;
+
+    line.style.strokeDashoffset =
+      `${length}`;
+
+    line.style.opacity = "0";
+  });
+
+
+  stars.forEach(star => {
+    star.style.opacity = "0";
+    star.style.transform = "scale(.45)";
+  });
+
+
+  /*
+    First star quietly appears.
+  */
+
+  if (stars[0]) {
+    stars[0].animate(
+      [
+        {
+          opacity: 0,
+          transform: "scale(.45)"
+        },
+        {
+          opacity: 1,
+          transform: "scale(1.35)"
+        },
+        {
+          opacity: 1,
+          transform: "scale(1)"
+        }
+      ],
+      {
+        duration: 700,
+        easing: "ease-out",
+        fill: "forwards"
+      }
+    );
+  }
+
+
+  await wait(450);
+
+
+  /*
+    Draw each Orion connection separately.
+
+    Light travels from one star to the next instead
+    of the whole constellation appearing together.
+  */
+
+  for (
+    let i = 0;
+    i < lines.length;
+    i++
+  ) {
+    const line =
+      lines[i];
+
+    const length =
+      line.getTotalLength();
+
+
+    line.style.opacity = "1";
+
+
+    const lineAnimation =
+      line.animate(
+        [
+          {
+            strokeDashoffset:
+              length
+          },
+          {
+            strokeDashoffset:
+              0
+          }
+        ],
+        {
+          duration: 520,
+          easing:
+            "cubic-bezier(.45,0,.25,1)",
+          fill: "forwards"
+        }
+      );
+
+
+    await lineAnimation.finished;
+
+
+    /*
+      As each connection arrives,
+      another Orion star wakes up.
+    */
+
+    const star =
+      stars[
+        Math.min(
+          i + 1,
+          stars.length - 1
+        )
+      ];
+
+
+    if (star) {
+      star.animate(
+        [
+          {
+            opacity: 0,
+            transform:
+              "scale(.45)"
+          },
+          {
+            opacity: 1,
+            transform:
+              "scale(1.45)"
+          },
+          {
+            opacity: 1,
+            transform:
+              "scale(1)"
+          }
+        ],
+        {
+          duration: 500,
+          easing: "ease-out",
+          fill: "forwards"
+        }
+      );
+    }
+
+
+    await wait(170);
+  }
+
+
+  /*
+    Let the completed constellation breathe.
+  */
+
+  await wait(500);
+
+
+  /*
+    NOW Orion becomes officially revealed.
+
+    This is also when the permanent
+    ORION / The Beginning label fades in.
+  */
+
+  orion.classList.add(
+    "discovered"
+  );
+}
+
+
+function wait(milliseconds) {
+  return new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        milliseconds
+      )
+  );
+}
 
 function discoverOrion() {
   if (orionDiscovered) {
@@ -1270,32 +1462,34 @@ function discoverOrion() {
   orionDiscovered = true;
   focusStartedAt = null;
 
-  /*
-    Reveal Orion in the main universe.
-  */
-
-  orion.classList.add(
-    "discovered"
-  );
-
   discoveryNumber.textContent = "1";
 
+
   /*
-    Temporary notification only.
-    The permanent ORION / The Beginning label
-    is handled by the Orion HTML + CSS.
+    Keep the telescope over Orion for a moment
+    so the final glow can register.
   */
 
   setTimeout(
     () => {
       setTelescope(false);
     },
-    800
+    650
   );
 
+
   /*
-    Remove the temporary notification.
+    Once the telescope has faded away,
+    begin drawing Orion through the sky.
   */
+
+  setTimeout(
+    () => {
+      animateOrionReveal();
+    },
+    1250
+  );
+}
 
 /* =========================================================
    NORMAL UNIVERSE POINTER INPUT

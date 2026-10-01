@@ -94,7 +94,11 @@ let orionScreenX = window.innerWidth / 2;
 let orionScreenY = window.innerHeight / 2;
 
 let orionDiscovered = false;
+let orionRevealStarted = false;
+let orionRevealStartTime = 0;
 
+const ORION_LINE_DURATION = 420;
+const ORION_LINE_PAUSE = 90;
 let focusStartedAt = null;
 
 const HOLD_TO_DISCOVER = 1800;
@@ -731,21 +735,29 @@ function getOrionDistance() {
   );
 }
 
-
 function drawTelescopeOrion(
   width,
   height
 ) {
-  if (orionDiscovered) {
-    return;
-  }
-
   const distance =
     getOrionDistance();
 
-  if (distance > 320) {
+  /*
+    Keep Orion visible during the telescope
+    reveal even after discovery has started.
+  */
+
+  if (
+    distance > 320 &&
+    !orionRevealStarted
+  ) {
     return;
   }
+
+
+  /* -----------------------------------------
+     HOW BRIGHT THE HIDDEN STARS ARE
+  ----------------------------------------- */
 
   let intensity = 0.12;
 
@@ -769,6 +781,11 @@ function drawTelescopeOrion(
     intensity = 1;
   }
 
+
+  /* -----------------------------------------
+     ORION POSITION INSIDE THE MOVING LENS
+  ----------------------------------------- */
+
   const centreX =
     width / 2 +
     (
@@ -785,11 +802,50 @@ function drawTelescopeOrion(
     ) *
     0.55;
 
+
+  /*
+    Exact connections between the SAME stars
+    drawn by telescopeOrionStars.
+
+    0 = left shoulder
+    1 = right shoulder
+
+    2,3,4 = belt
+
+    5,6 = sword
+
+    7 = left foot
+    8 = right foot
+  */
+
+  const connections = [
+    [0, 1],
+
+    [0, 2],
+    [2, 3],
+    [3, 4],
+    [4, 1],
+
+    [2, 7],
+    [4, 8],
+
+    [3, 5],
+    [5, 6]
+  ];
+
+
+  /* -----------------------------------------
+     DRAW THE STARS
+  ----------------------------------------- */
+
   telescopeOrionStars.forEach(
     (star, index) => {
       let shimmer = 1;
 
-      if (distance < 145) {
+      if (
+        distance < 145 ||
+        orionRevealStarted
+      ) {
         shimmer =
           1 +
           Math.sin(
@@ -800,6 +856,25 @@ function drawTelescopeOrion(
           0.10;
       }
 
+
+      let starIntensity =
+        intensity;
+
+
+      /*
+        Once the reveal starts, make the
+        constellation stars clearer.
+      */
+
+      if (orionRevealStarted) {
+        starIntensity =
+          Math.max(
+            starIntensity,
+            0.82
+          );
+      }
+
+
       drawBrightStar(
         centreX + star.x,
         centreY + star.y,
@@ -807,17 +882,196 @@ function drawTelescopeOrion(
         star.size *
         (
           0.8 +
-          intensity * 0.5
+          starIntensity * 0.5
         ) *
         shimmer,
 
         0.20 +
-        intensity * 0.78,
+        starIntensity * 0.78,
 
-        distance < 145
-          ? intensity
+        (
+          distance < 145 ||
+          orionRevealStarted
+        )
+          ? starIntensity
           : 0
       );
+    }
+  );
+
+
+  /* -----------------------------------------
+     DON'T DRAW LINES UNTIL DISCOVERY STARTS
+  ----------------------------------------- */
+
+  if (!orionRevealStarted) {
+    return;
+  }
+
+
+  const elapsed =
+    performance.now() -
+    orionRevealStartTime;
+
+
+  const segmentTime =
+    ORION_LINE_DURATION +
+    ORION_LINE_PAUSE;
+
+
+  /* -----------------------------------------
+     DRAW EACH CONNECTION ONE AFTER ANOTHER
+  ----------------------------------------- */
+
+  connections.forEach(
+    (connection, index) => {
+      const startTime =
+        index *
+        segmentTime;
+
+      const progress =
+        Math.max(
+          0,
+          Math.min(
+            1,
+            (
+              elapsed -
+              startTime
+            ) /
+            ORION_LINE_DURATION
+          )
+        );
+
+
+      if (progress <= 0) {
+        return;
+      }
+
+
+      const start =
+        telescopeOrionStars[
+          connection[0]
+        ];
+
+      const end =
+        telescopeOrionStars[
+          connection[1]
+        ];
+
+
+      const startX =
+        centreX +
+        start.x;
+
+      const startY =
+        centreY +
+        start.y;
+
+      const endX =
+        centreX +
+        end.x;
+
+      const endY =
+        centreY +
+        end.y;
+
+
+      /*
+        Current travelling point.
+      */
+
+      const currentX =
+        startX +
+        (
+          endX -
+          startX
+        ) *
+        progress;
+
+      const currentY =
+        startY +
+        (
+          endY -
+          startY
+        ) *
+        progress;
+
+
+      /* soft glow beneath the line */
+
+      ctx.save();
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        startX,
+        startY
+      );
+
+      ctx.lineTo(
+        currentX,
+        currentY
+      );
+
+      ctx.strokeStyle =
+        "rgba(177, 210, 247, .18)";
+
+      ctx.lineWidth = 4;
+
+      ctx.lineCap = "round";
+
+      ctx.shadowColor =
+        "rgba(185, 218, 255, .32)";
+
+      ctx.shadowBlur = 8;
+
+      ctx.stroke();
+
+      ctx.restore();
+
+
+      /* actual fine constellation line */
+
+      ctx.save();
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        startX,
+        startY
+      );
+
+      ctx.lineTo(
+        currentX,
+        currentY
+      );
+
+      ctx.strokeStyle =
+        "rgba(226, 238, 252, .76)";
+
+      ctx.lineWidth = 1;
+
+      ctx.lineCap = "round";
+
+      ctx.stroke();
+
+      ctx.restore();
+
+
+      /*
+        Tiny travelling light at the head
+        of the line.
+      */
+
+      if (progress < 1) {
+        drawBrightStar(
+          currentX,
+          currentY,
+          1.25,
+          0.95,
+          1
+        );
+      }
     }
   );
 }
@@ -1262,39 +1516,78 @@ function checkOrionFocus(timestamp) {
 }
 
 function discoverOrion() {
-  if (orionDiscovered) {
+  if (
+    orionDiscovered ||
+    orionRevealStarted
+  ) {
     return;
   }
 
-  orionDiscovered = true;
+
+  /*
+    Lock the telescope in discovery mode.
+
+    The telescope stays OPEN while Orion
+    draws itself.
+  */
+
+  orionRevealStarted = true;
+
+  orionRevealStartTime =
+    performance.now();
+
   focusStartedAt = null;
 
-  discoveryNumber.textContent = "1";
+
+  const totalRevealTime =
+    (
+      9 *
+      (
+        ORION_LINE_DURATION +
+        ORION_LINE_PAUSE
+      )
+    ) +
+    900;
 
 
   /*
-    Keep the telescope over Orion for a moment
-    so the final glow can register.
+    Only after every line has travelled
+    from star to star do we complete
+    the discovery.
   */
 
   setTimeout(
     () => {
-      setTelescope(false);
+      orionDiscovered = true;
+
+      discoveryNumber.textContent =
+        "1";
+
+
+      /*
+        Reveal the permanent Orion
+        in the normal universe.
+      */
+
+      orion.classList.add(
+        "discovered"
+      );
+
+
+      /*
+        Keep the completed constellation
+        inside the telescope briefly.
+      */
+
+      setTimeout(
+        () => {
+          setTelescope(false);
+        },
+        650
+      );
+
     },
-    650
-  );
-
-
-  /*
-    Once the telescope has faded away,
-    begin drawing Orion through the sky.
-  */
-
-  setTimeout(
-    () => {
-      animateOrionReveal();
-    },
-    1250
+    totalRevealTime
   );
 }
 

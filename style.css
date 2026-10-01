@@ -35,48 +35,6 @@ button {
 }
 
 /* =========================================================
-   PHOTOGRAPHIC DEEP-SPACE BACKGROUND
-========================================================= */
-
-#spaceBackground {
-  position: absolute;
-
-  /*
-    Slightly oversized so we never expose an edge
-    during the subtle parallax movement.
-  */
-  inset: -4%;
-
-  background-image:
-    linear-gradient(
-      rgba(1, 4, 10, 0.12),
-      rgba(1, 4, 10, 0.18)
-    ),
-    url("public/images/space-bg.png");
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  /*
-    Keep the photograph underneath all our
-    interactive/generated stars.
-  */
-  z-index: -10;
-
-  pointer-events: none;
-
-  transform: scale(1.06);
-
-  filter:
-    brightness(0.82)
-    contrast(1.05)
-    saturate(0.82);
-
-  will-change: transform;
-}
-
-/* =========================================================
    APP
 ========================================================= */
 

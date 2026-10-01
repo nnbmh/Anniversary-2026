@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+
+  <title>Our Little Universe</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- =========================
+         STAR UNIVERSE
+    ========================== -->
+    <div id="universe">
+
+      <!-- Distant stars -->
+      <div class="star-layer layer-far" id="farStars"></div>
+
+      <!-- Middle stars -->
+      <div class="star-layer layer-mid" id="midStars"></div>
+
+      <!-- Foreground stars -->
+      <div class="star-layer layer-near" id="nearStars"></div>
+
+      <!-- Cosmic haze -->
+      <div class="haze haze-one"></div>
+      <div class="haze haze-two"></div>
+
+      <!-- =========================
+           ORION TEST CONSTELLATION
+      ========================== -->
+      <div id="orion" class="constellation">
+
+        <svg
+          class="constellation-lines"
+          viewBox="0 0 500 600"
+          preserveAspectRatio="none"
+        >
+          <!-- shoulders -->
+          <line x1="155" y1="120" x2="350" y2="145" />
+
+          <!-- left side -->
+          <line x1="155" y1="120" x2="210" y2="270" />
+          <line x1="210" y1="270" x2="175" y2="470" />
+
+          <!-- right side -->
+          <line x1="350" y1="145" x2="290" y2="280" />
+          <line x1="290" y1="280" x2="355" y2="475" />
+
+          <!-- belt -->
+          <line x1="210" y1="270" x2="250" y2="276" />
+          <line x1="250" y1="276" x2="290" y2="280" />
+
+          <!-- sword -->
+          <line x1="250" y1="276" x2="248" y2="340" />
+          <line x1="248" y1="340" x2="245" y2="390" />
+        </svg>
+
+        <div class="constellation-star major-star" style="left:31%; top:20%;"></div>
+        <div class="constellation-star major-star" style="left:70%; top:24%;"></div>
+
+        <div class="constellation-star" style="left:42%; top:45%;"></div>
+        <div class="constellation-star" style="left:50%; top:46%;"></div>
+        <div class="constellation-star" style="left:58%; top:47%;"></div>
+
+        <div class="constellation-star small-star" style="left:49.5%; top:57%;"></div>
+        <div class="constellation-star small-star" style="left:49%; top:65%;"></div>
+
+        <div class="constellation-star major-star" style="left:35%; top:78%;"></div>
+        <div class="constellation-star major-star" style="left:71%; top:79%;"></div>
+
+        <div class="constellation-name">
+          <span>ORION</span>
+          <small>The Beginning</small>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         UI
+    ========================== -->
+
+    <div id="topUI">
+
+      <div class="brand">
+        OUR LITTLE UNIVERSE
+      </div>
+
+      <div class="mode-switch">
+
+        <button
+          class="mode-button active"
+          data-mode="flat"
+        >
+          A
+          <span>Simple</span>
+        </button>
+
+        <button
+          class="mode-button"
+          data-mode="cinematic"
+        >
+          C
+          <span>Cinematic</span>
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div id="instructions">
+      <div id="instructionTitle">
+        PROTOTYPE A
+      </div>
+
+      <div id="instructionText">
+        Drag to explore · Pinch or scroll to zoom
+      </div>
+    </div>
+
+
+    <div id="depthIndicator">
+      <span>DEPTH</span>
+
+      <div class="depth-track">
+        <div class="depth-fill"></div>
+      </div>
+    </div>
+
+
+    <button id="resetButton">
+      Reset view
+    </button>
+
+
+    <!-- subtle vignette -->
+    <div id="vignette"></div>
+
+  </div>
+
+  <script src="main.js"></script>
+
+</body>
+</html>

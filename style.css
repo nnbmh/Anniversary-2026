@@ -1,6 +1,6 @@
 /* =========================================================
    OUR LITTLE UNIVERSE
-   Navigation Prototype
+   Cinematic Universe Foundation
 ========================================================= */
 
 * {
@@ -9,16 +9,32 @@
   box-sizing: border-box;
 }
 
+
 html,
 body {
   width: 100%;
   height: 100%;
+
   overflow: hidden;
-  background: #02040a;
-  color: #f4f1e8;
-  font-family: Georgia, "Times New Roman", serif;
+
+  background: #010308;
+
+  color: #f5f2e9;
+
   touch-action: none;
+
+  overscroll-behavior: none;
 }
+
+
+body {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
 
 button {
   font: inherit;
@@ -31,16 +47,27 @@ button {
 
 #app {
   position: relative;
+
   width: 100vw;
   height: 100dvh;
+
   overflow: hidden;
+
   background:
     radial-gradient(
-      circle at 50% 45%,
-      #0a1120 0%,
-      #050914 40%,
-      #02040a 78%
+      circle at 50% 42%,
+      #09101d 0%,
+      #050a13 36%,
+      #02050b 68%,
+      #010207 100%
     );
+
+  cursor: grab;
+}
+
+
+#app.dragging {
+  cursor: grabbing;
 }
 
 
@@ -51,8 +78,8 @@ button {
 #universe {
   position: absolute;
 
-  width: 3000px;
-  height: 2200px;
+  width: 3600px;
+  height: 2800px;
 
   left: 50%;
   top: 50%;
@@ -69,6 +96,7 @@ button {
 
 .star-layer {
   position: absolute;
+
   inset: 0;
 
   pointer-events: none;
@@ -76,90 +104,189 @@ button {
   will-change: transform;
 }
 
-.star {
-  position: absolute;
 
-  width: 2px;
-  height: 2px;
+/* Individual background star */
+
+.space-star {
+  position: absolute;
 
   border-radius: 50%;
 
-  background: rgba(255,255,255,.85);
+  background: rgba(255, 255, 255, .9);
 
-  box-shadow:
-    0 0 3px rgba(255,255,255,.5);
+  transform: translate(-50%, -50%);
+
+  will-change:
+    opacity,
+    transform;
 }
 
-.star.medium {
+
+/* FAR */
+
+.stars-far .space-star {
+  width: 1px;
+  height: 1px;
+
+  opacity: .35;
+}
+
+
+/* MID */
+
+.stars-mid .space-star {
+  width: 2px;
+  height: 2px;
+
+  box-shadow:
+    0 0 3px rgba(255, 255, 255, .35);
+}
+
+
+/* NEAR */
+
+.stars-near .space-star {
   width: 3px;
   height: 3px;
 
   box-shadow:
-    0 0 5px rgba(255,255,255,.7);
+    0 0 4px rgba(255, 255, 255, .65),
+    0 0 9px rgba(185, 210, 255, .16);
 }
 
-.star.bright {
-  width: 4px;
-  height: 4px;
 
-  background: #fffdf4;
+/* Star variations */
+
+.space-star.tiny {
+  transform:
+    translate(-50%, -50%)
+    scale(.6);
+}
+
+
+.space-star.soft {
+  opacity: .3 !important;
+}
+
+
+.space-star.bright {
+  opacity: .95 !important;
 
   box-shadow:
-    0 0 5px rgba(255,255,255,.95),
-    0 0 12px rgba(210,225,255,.5);
+    0 0 5px rgba(255, 255, 255, .8),
+    0 0 13px rgba(190, 215, 255, .25);
+}
+
+
+.space-star.warm {
+  background: #fff4d8;
+}
+
+
+.space-star.cool {
+  background: #e4eeff;
+}
+
+
+/* Gentle twinkle */
+
+.space-star.twinkle {
+  animation:
+    starTwinkle
+    var(--twinkle-speed, 5s)
+    ease-in-out
+    infinite;
+}
+
+
+@keyframes starTwinkle {
+
+  0%,
+  100% {
+    opacity: var(--base-opacity, .5);
+  }
+
+  50% {
+    opacity: var(--peak-opacity, .9);
+  }
+
 }
 
 
 /* =========================================================
-   HAZE
+   COSMIC HAZE
 ========================================================= */
 
-.haze {
+.space-haze {
   position: absolute;
-
-  width: 1100px;
-  height: 650px;
 
   border-radius: 50%;
 
-  filter: blur(90px);
-
-  opacity: 0;
-
   pointer-events: none;
 
-  transition: opacity 1.2s ease;
+  filter: blur(100px);
 
   will-change: transform;
 }
 
-.haze-one {
-  left: 800px;
-  top: 650px;
+
+.haze-a {
+  width: 1300px;
+  height: 650px;
+
+  left: 900px;
+  top: 850px;
+
+  opacity: .28;
+
+  transform: rotate(-15deg);
 
   background:
     radial-gradient(
       ellipse,
-      rgba(100,125,165,.13),
-      rgba(50,70,110,.04) 45%,
+      rgba(102, 123, 158, .13) 0%,
+      rgba(73, 91, 128, .06) 40%,
       transparent 72%
     );
 }
 
-.haze-two {
-  left: 1550px;
-  top: 900px;
+
+.haze-b {
+  width: 900px;
+  height: 850px;
+
+  left: 1900px;
+  top: 1050px;
+
+  opacity: .18;
 
   background:
     radial-gradient(
       ellipse,
-      rgba(140,145,170,.08),
-      transparent 70%
+      rgba(125, 135, 157, .10) 0%,
+      rgba(61, 77, 105, .04) 42%,
+      transparent 73%
     );
 }
 
-body.cinematic .haze {
-  opacity: 1;
+
+.haze-c {
+  width: 1000px;
+  height: 500px;
+
+  left: 450px;
+  top: 1650px;
+
+  opacity: .13;
+
+  transform: rotate(12deg);
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(86, 106, 139, .1) 0%,
+      transparent 70%
+    );
 }
 
 
@@ -171,22 +298,25 @@ body.cinematic .haze {
   position: absolute;
 
   width: 500px;
-  height: 600px;
+  height: 620px;
 
-  left: 1250px;
-  top: 800px;
+  left: 1550px;
+  top: 1090px;
+
+  z-index: 10;
 
   transform-origin: center;
 
-  transition:
-    filter .8s ease,
-    opacity .8s ease;
-
-  z-index: 10;
+  filter:
+    drop-shadow(
+      0 0 22px rgba(180, 210, 255, .06)
+    );
 }
+
 
 .constellation-lines {
   position: absolute;
+
   inset: 0;
 
   width: 100%;
@@ -195,373 +325,403 @@ body.cinematic .haze {
   overflow: visible;
 }
 
+
 .constellation-lines line {
-  stroke: rgba(230,238,255,.23);
-  stroke-width: 1.2;
+  stroke:
+    rgba(221, 232, 250, .22);
+
+  stroke-width: 1;
+
+  vector-effect:
+    non-scaling-stroke;
 }
+
+
+/* Orion stars */
 
 .constellation-star {
   position: absolute;
 
-  width: 8px;
-  height: 8px;
-
-  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 7px;
 
   border-radius: 50%;
 
-  background: #fffdf3;
+  transform:
+    translate(-50%, -50%);
+
+  background:
+    #fffdf3;
 
   box-shadow:
-    0 0 6px rgba(255,255,255,.95),
-    0 0 15px rgba(190,215,255,.7),
-    0 0 28px rgba(170,200,255,.3);
+    0 0 5px rgba(255, 255, 255, .95),
+    0 0 13px rgba(194, 217, 255, .6),
+    0 0 27px rgba(174, 205, 255, .2);
+
+  animation:
+    constellationGlow
+    5s
+    ease-in-out
+    infinite;
 }
 
-.constellation-star.major-star {
-  width: 11px;
-  height: 11px;
+
+.constellation-star.star-large {
+  width: 10px;
+  height: 10px;
 
   box-shadow:
-    0 0 7px rgba(255,255,255,1),
-    0 0 20px rgba(190,215,255,.8),
-    0 0 42px rgba(170,200,255,.38);
+    0 0 6px rgba(255, 255, 255, 1),
+    0 0 18px rgba(195, 218, 255, .75),
+    0 0 38px rgba(170, 205, 255, .28);
 }
 
-.constellation-star.small-star {
-  width: 6px;
-  height: 6px;
+
+.constellation-star.star-small {
+  width: 5px;
+  height: 5px;
 }
 
-.constellation-name {
+
+.constellation-star.star-warm {
+  background:
+    #ffd7b1;
+
+  box-shadow:
+    0 0 6px rgba(255, 224, 194, 1),
+    0 0 19px rgba(255, 173, 122, .5),
+    0 0 40px rgba(255, 133, 92, .18);
+}
+
+
+.constellation-star.star-blue {
+  background:
+    #e3eeff;
+
+  box-shadow:
+    0 0 7px rgba(231, 240, 255, 1),
+    0 0 20px rgba(169, 205, 255, .65),
+    0 0 42px rgba(126, 176, 255, .22);
+}
+
+
+@keyframes constellationGlow {
+
+  0%,
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+
+    opacity: .9;
+  }
+
+  50% {
+    transform:
+      translate(-50%, -50%)
+      scale(1.08);
+
+    opacity: 1;
+  }
+
+}
+
+
+/* Orion label */
+
+.constellation-label {
   position: absolute;
 
   left: 50%;
-  top: 91%;
-
-  transform: translateX(-50%);
-
-  text-align: center;
-
-  letter-spacing: .28em;
-
-  white-space: nowrap;
-
-  opacity: .65;
-}
-
-.constellation-name span {
-  display: block;
-
-  font-size: 14px;
-}
-
-.constellation-name small {
-  display: block;
-
-  margin-top: 8px;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  font-size: 9px;
-
-  letter-spacing: .18em;
-
-  text-transform: uppercase;
-
-  opacity: .55;
-}
-
-
-/* =========================================================
-   CINEMATIC MODE
-========================================================= */
-
-body.cinematic .constellation {
-  filter:
-    drop-shadow(
-      0 0 25px rgba(160,195,255,.08)
-    );
-}
-
-body.cinematic .layer-far {
-  opacity: .7;
-}
-
-body.cinematic .layer-mid {
-  opacity: .9;
-}
-
-body.cinematic .layer-near {
-  opacity: 1;
-}
-
-
-/* =========================================================
-   TOP UI
-========================================================= */
-
-#topUI {
-  position: absolute;
-
-  left: 0;
-  right: 0;
-  top: 0;
-
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-
-  padding:
-    max(22px, env(safe-area-inset-top))
-    24px
-    0;
-
-  z-index: 100;
-
-  pointer-events: none;
-}
-
-.brand {
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  font-size: 10px;
-
-  letter-spacing: .28em;
-
-  opacity: .55;
-}
-
-
-/* =========================================================
-   MODE SWITCH
-========================================================= */
-
-.mode-switch {
-  display: flex;
-
-  padding: 4px;
-
-  border:
-    1px solid rgba(255,255,255,.12);
-
-  border-radius: 50px;
-
-  background:
-    rgba(4,7,15,.58);
-
-  backdrop-filter: blur(16px);
-
-  pointer-events: auto;
-}
-
-.mode-button {
-  border: 0;
-
-  min-width: 76px;
-
-  padding: 9px 13px;
-
-  border-radius: 50px;
-
-  background: transparent;
-
-  color:
-    rgba(255,255,255,.45);
-
-  cursor: pointer;
-
-  transition:
-    background .25s ease,
-    color .25s ease;
-}
-
-.mode-button span {
-  display: block;
-
-  margin-top: 2px;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  font-size: 8px;
-
-  letter-spacing: .12em;
-
-  text-transform: uppercase;
-}
-
-.mode-button.active {
-  background:
-    rgba(255,255,255,.1);
-
-  color: #fff;
-}
-
-
-/* =========================================================
-   INSTRUCTIONS
-========================================================= */
-
-#instructions {
-  position: absolute;
-
-  left: 50%;
-  bottom:
-    max(28px, env(safe-area-inset-bottom));
+  top: 92%;
 
   transform:
     translateX(-50%);
 
   text-align: center;
 
-  z-index: 100;
-
   pointer-events: none;
-
-  transition: opacity .5s ease;
-}
-
-#instructionTitle {
-  margin-bottom: 7px;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  font-size: 9px;
-
-  letter-spacing: .3em;
-
-  opacity: .45;
-}
-
-#instructionText {
-  font-size: 12px;
-
-  font-style: italic;
-
-  opacity: .62;
 
   white-space: nowrap;
 }
 
 
+.constellation-label span {
+  display: block;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 14px;
+
+  letter-spacing: .38em;
+
+  opacity: .72;
+}
+
+
+.constellation-label small {
+  display: block;
+
+  margin-top: 8px;
+
+  font-size: 8px;
+
+  font-weight: 400;
+
+  letter-spacing: .24em;
+
+  text-transform: uppercase;
+
+  opacity: .38;
+}
+
+
 /* =========================================================
-   RESET
+   INTERFACE
 ========================================================= */
 
-#resetButton {
+#interface {
   position: absolute;
 
-  right: 24px;
-  bottom:
-    max(26px, env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  top: 0;
 
   z-index: 100;
 
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  padding:
+    max(
+      22px,
+      env(safe-area-inset-top)
+    )
+    24px
+    0;
+
+  pointer-events: none;
+}
+
+
+.site-title {
+  font-size: 9px;
+
+  letter-spacing: .32em;
+
+  opacity: .45;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HOME BUTTON
+========================================================= */
+
+#homeButton {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding:
+    9px
+    13px;
+
   border:
-    1px solid rgba(255,255,255,.12);
+    1px solid
+    rgba(255, 255, 255, .10);
 
-  border-radius: 50px;
-
-  padding: 10px 15px;
+  border-radius:
+    100px;
 
   background:
-    rgba(5,8,16,.55);
+    rgba(4, 8, 16, .45);
 
-  backdrop-filter: blur(14px);
+  backdrop-filter:
+    blur(12px);
+
+  -webkit-backdrop-filter:
+    blur(12px);
 
   color:
-    rgba(255,255,255,.6);
+    rgba(255, 255, 255, .55);
 
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  transition:
+    background .25s ease,
+    color .25s ease;
+}
+
+
+#homeButton:hover {
+  background:
+    rgba(255, 255, 255, .08);
+
+  color:
+    rgba(255, 255, 255, .85);
+}
+
+
+.home-symbol {
+  font-size: 11px;
+}
+
+
+.home-text {
+  font-size: 8px;
+
+  letter-spacing: .2em;
+}
+
+
+/* =========================================================
+   NAVIGATION HINT
+========================================================= */
+
+#navigationHint {
+  position: absolute;
+
+  left: 50%;
+
+  bottom:
+    max(
+      26px,
+      env(safe-area-inset-bottom)
+    );
+
+  z-index: 100;
+
+  transform:
+    translateX(-50%);
+
+  text-align: center;
+
+  pointer-events: none;
+
+  transition:
+    opacity
+    1.2s ease;
+}
+
+
+#navigationHint.hidden {
+  opacity: 0;
+}
+
+
+.hint-line {
+  width: 1px;
+  height: 23px;
+
+  margin:
+    0 auto 10px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(255, 255, 255, .45)
+    );
+}
+
+
+#navigationHint p {
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+    Georgia,
+    "Times New Roman",
+    serif;
 
-  font-size: 9px;
+  font-size: 12px;
+
+  font-style: italic;
+
+  opacity: .7;
+}
+
+
+#navigationHint span {
+  display: block;
+
+  margin-top: 5px;
+
+  font-size: 8px;
 
   letter-spacing: .12em;
 
   text-transform: uppercase;
 
-  cursor: pointer;
+  opacity: .3;
 }
 
 
 /* =========================================================
-   DEPTH INDICATOR
+   DEPTH DISPLAY
 ========================================================= */
 
-#depthIndicator {
+#zoomDisplay {
   position: absolute;
 
   left: 24px;
+
   bottom:
-    max(28px, env(safe-area-inset-bottom));
+    max(
+      27px,
+      env(safe-area-inset-bottom)
+    );
 
   z-index: 100;
 
-  width: 90px;
-
-  opacity: 0;
-
-  transition: opacity .5s ease;
+  width: 82px;
 
   pointer-events: none;
+
+  opacity: .35;
 }
 
-body.cinematic #depthIndicator {
-  opacity: .5;
-}
 
-#depthIndicator span {
+.zoom-label {
   display: block;
 
   margin-bottom: 7px;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
 
   font-size: 7px;
 
   letter-spacing: .25em;
 }
 
-.depth-track {
+
+.zoom-track {
   width: 100%;
   height: 1px;
 
   background:
-    rgba(255,255,255,.15);
+    rgba(255, 255, 255, .14);
 }
 
-.depth-fill {
-  width: 45%;
+
+#zoomFill {
+  width: 35%;
   height: 100%;
 
   background:
-    rgba(255,255,255,.75);
+    rgba(255, 255, 255, .7);
 
-  transition: width .2s ease;
+  transition:
+    width .1s linear;
 }
 
 
@@ -574,16 +734,16 @@ body.cinematic #depthIndicator {
 
   inset: 0;
 
-  pointer-events: none;
-
   z-index: 50;
+
+  pointer-events: none;
 
   background:
     radial-gradient(
       circle at center,
-      transparent 45%,
-      rgba(0,0,0,.15) 72%,
-      rgba(0,0,0,.55) 110%
+      transparent 40%,
+      rgba(0, 0, 0, .08) 65%,
+      rgba(0, 0, 0, .5) 120%
     );
 }
 
@@ -595,48 +755,59 @@ body.cinematic #depthIndicator {
 @media (max-width: 700px) {
 
   #universe {
-    width: 2200px;
-    height: 1800px;
+    width: 2700px;
+    height: 2200px;
   }
+
 
   .constellation {
-    width: 360px;
-    height: 440px;
+    width: 390px;
+    height: 485px;
 
-    left: 920px;
-    top: 650px;
+    left: 1155px;
+    top: 855px;
   }
 
-  #topUI {
+
+  #interface {
     padding-left: 16px;
     padding-right: 16px;
   }
 
-  .brand {
+
+  .site-title {
     max-width: 100px;
 
-    line-height: 1.6;
+    line-height: 1.55;
   }
 
-  .mode-button {
-    min-width: 58px;
 
-    padding:
-      8px
-      9px;
-  }
-
-  #resetButton {
-    right: 16px;
-  }
-
-  #depthIndicator {
+  #zoomDisplay {
     left: 16px;
 
-    width: 60px;
+    width: 56px;
   }
 
-  #instructionText {
-    font-size: 11px;
+
+  #navigationHint span {
+    font-size: 7px;
   }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (
+  prefers-reduced-motion:
+  reduce
+) {
+
+  .space-star.twinkle,
+  .constellation-star {
+    animation: none;
+  }
+
 }

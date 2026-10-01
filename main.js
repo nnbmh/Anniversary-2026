@@ -1,6 +1,6 @@
 /* =========================================================
    OUR LITTLE UNIVERSE
-   Cinematic Astrophotography Sky
+   Cinematic Universe + Telescope Discovery
 ========================================================= */
 
 
@@ -14,23 +14,44 @@ const app =
 const universe =
   document.getElementById("universe");
 
-const farStars =
+const dustLayer =
+  document.getElementById("dustLayer");
+
+const starsDeep =
+  document.getElementById("starsDeep");
+
+const starsFar =
   document.getElementById("starsFar");
 
-const midStars =
+const starsMid =
   document.getElementById("starsMid");
 
-const nearStars =
+const starsNear =
   document.getElementById("starsNear");
 
-const homeButton =
-  document.getElementById("homeButton");
+const orion =
+  document.getElementById("orion");
+
+const telescopeLens =
+  document.getElementById("telescopeLens");
+
+const telescopeButton =
+  document.getElementById("telescopeButton");
 
 const navigationHint =
   document.getElementById("navigationHint");
 
-const zoomFill =
-  document.getElementById("zoomFill");
+const hintMain =
+  document.getElementById("hintMain");
+
+const hintSub =
+  document.getElementById("hintSub");
+
+const discoveryMessage =
+  document.getElementById("discoveryMessage");
+
+const discoveryNumber =
+  document.getElementById("discoveryNumber");
 
 
 /* =========================================================
@@ -46,15 +67,15 @@ let targetY = 0;
 let zoom = 1;
 let targetZoom = 1;
 
-const MIN_ZOOM = 0.58;
-const MAX_ZOOM = 2.15;
+const MIN_ZOOM = 0.62;
+const MAX_ZOOM = 1.9;
 
-const CAMERA_EASING = 0.11;
+const CAMERA_EASING = 0.105;
 const ZOOM_EASING = 0.09;
 
 
 /* =========================================================
-   INPUT STATE
+   INPUT
 ========================================================= */
 
 let dragging = false;
@@ -68,26 +89,60 @@ let hasInteracted = false;
 
 
 /* =========================================================
+   TELESCOPE
+========================================================= */
+
+let telescopeActive = false;
+
+let lensX =
+  window.innerWidth / 2;
+
+let lensY =
+  window.innerHeight / 2;
+
+let targetLensX = lensX;
+let targetLensY = lensY;
+
+let lensDragging = false;
+
+
+/* =========================================================
+   ORION DISCOVERY
+========================================================= */
+
+let orionDiscovered = false;
+
+let focusStartedAt = null;
+
+const HOLD_TO_DISCOVER = 1800;
+
+
+/* =========================================================
    SEEDED RANDOM
 ========================================================= */
 
-function seededRandom(seed) {
+function random(seed) {
 
-  const x =
+  const value =
     Math.sin(seed * 12.9898) *
-    43758.5453;
+    43758.5453123;
 
-  return x - Math.floor(x);
+  return (
+    value -
+    Math.floor(value)
+  );
+
 }
 
 
 /* =========================================================
-   ORDINARY STAR CREATION
+   STAR CREATION
 ========================================================= */
 
-function createSpaceStar(
+function createStar(
   container,
-  index,
+  x,
+  y,
   seed,
   layer
 ) {
@@ -96,20 +151,7 @@ function createSpaceStar(
     document.createElement("span");
 
   star.className =
-    "space-star";
-
-
-  /* Position */
-
-  const x =
-    seededRandom(
-      index * 1.71 + seed
-    ) * 100;
-
-  const y =
-    seededRandom(
-      index * 3.17 + seed
-    ) * 100;
+    "sky-star";
 
 
   star.style.left =
@@ -119,15 +161,15 @@ function createSpaceStar(
     `${y}%`;
 
 
-  /* Appearance */
-
   const appearance =
-    seededRandom(
-      index * 5.93 + seed
+    random(
+      seed * 2.7
     );
 
 
-  if (appearance < .22) {
+  if (
+    appearance < .3
+  ) {
 
     star.classList.add(
       "tiny"
@@ -136,20 +178,9 @@ function createSpaceStar(
   }
 
 
-  else if (
-    appearance > .82 &&
-    appearance < .93
-  ) {
-
-    star.classList.add(
-      "medium"
-    );
-
-  }
-
-
-  else if (
-    appearance >= .93
+  if (
+    appearance > .955 &&
+    layer !== "deep"
   ) {
 
     star.classList.add(
@@ -159,45 +190,14 @@ function createSpaceStar(
   }
 
 
-  /*
-    Very few stars are given
-    stronger highlights.
-  */
-
-  if (
-    appearance > .965
-  ) {
-
-    star.classList.add(
-      "bright"
-    );
-
-  }
-
-
-  if (
-    appearance > .987
-  ) {
-
-    star.classList.add(
-      "anchor"
-    );
-
-  }
-
-
-  /*
-    Small temperature variation.
-  */
-
-  const temperature =
-    seededRandom(
-      index * 8.21 + seed
+  const tone =
+    random(
+      seed * 4.93
     );
 
 
   if (
-    temperature > .94
+    tone > .965
   ) {
 
     star.classList.add(
@@ -207,7 +207,7 @@ function createSpaceStar(
   }
 
   else if (
-    temperature < .08
+    tone < .055
   ) {
 
     star.classList.add(
@@ -217,18 +217,35 @@ function createSpaceStar(
   }
 
 
-  /* Opacity by depth */
+  /*
+    Opacity by layer.
+  */
 
   let opacity;
 
 
-  if (layer === "far") {
+  if (
+    layer === "deep"
+  ) {
 
     opacity =
-      .15 +
-      seededRandom(
-        index * 10.1 + seed
-      ) * .42;
+      .10 +
+      random(
+        seed * 6.17
+      ) * .3;
+
+  }
+
+
+  else if (
+    layer === "far"
+  ) {
+
+    opacity =
+      .18 +
+      random(
+        seed * 7.31
+      ) * .4;
 
   }
 
@@ -239,8 +256,8 @@ function createSpaceStar(
 
     opacity =
       .28 +
-      seededRandom(
-        index * 11.4 + seed
+      random(
+        seed * 8.51
       ) * .5;
 
   }
@@ -249,10 +266,10 @@ function createSpaceStar(
   else {
 
     opacity =
-      .42 +
-      seededRandom(
-        index * 12.7 + seed
-      ) * .48;
+      .4 +
+      random(
+        seed * 9.73
+      ) * .5;
 
   }
 
@@ -261,16 +278,18 @@ function createSpaceStar(
     opacity;
 
 
-  /* Restrained twinkling */
+  /*
+    Very few stars twinkle.
+  */
 
   const twinkle =
-    seededRandom(
-      index * 14.3 + seed
+    random(
+      seed * 11.17
     );
 
 
   if (
-    twinkle > .92
+    twinkle > .955
   ) {
 
     star.classList.add(
@@ -278,122 +297,67 @@ function createSpaceStar(
     );
 
 
-    const speed =
-      5 +
-      seededRandom(
-        index * 16.7 + seed
-      ) * 6;
-
-
     star.style.setProperty(
-      "--twinkle-speed",
-      `${speed}s`
+      "--twinkle-duration",
+      `${
+        6 +
+        random(seed * 13.1) * 7
+      }s`
     );
 
 
     star.style.setProperty(
-      "--base-opacity",
+      "--twinkle-low",
       Math.max(
-        .18,
-        opacity - .16
+        .15,
+        opacity - .15
       )
     );
 
 
     star.style.setProperty(
-      "--peak-opacity",
+      "--twinkle-high",
       Math.min(
         1,
-        opacity + .2
+        opacity + .22
       )
     );
 
   }
 
 
-  container.appendChild(star);
+  container.appendChild(
+    star
+  );
 
 }
 
 
 /* =========================================================
-   BUILD ORDINARY SKY
-========================================================= */
-
-function buildOrdinarySky() {
-
-  /*
-    More distant stars than before.
-
-    Because most are extremely small,
-    this increases richness without
-    turning the sky into glitter.
-  */
-
-  for (
-    let i = 0;
-    i < 850;
-    i++
-  ) {
-
-    createSpaceStar(
-      farStars,
-      i,
-      17,
-      "far"
-    );
-
-  }
-
-
-  for (
-    let i = 0;
-    i < 390;
-    i++
-  ) {
-
-    createSpaceStar(
-      midStars,
-      i,
-      53,
-      "mid"
-    );
-
-  }
-
-
-  for (
-    let i = 0;
-    i < 125;
-    i++
-  ) {
-
-    createSpaceStar(
-      nearStars,
-      i,
-      97,
-      "near"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   MILKY WAY MICRO STARS
+   STAR CLUSTER
 ========================================================= */
 
 /*
-  Instead of a rectangular strip of dots,
-  these stars follow a diagonal curved band.
+  This is the big difference from our old sky.
 
-  The centre is denser than the edges.
+  Instead of distributing everything evenly,
+  we deliberately create irregular stellar regions.
 */
 
-function buildMilkyWay() {
+function createCluster(
+  container,
+  config
+) {
 
-  const amount = 300;
+  const {
+    centreX,
+    centreY,
+    width,
+    height,
+    amount,
+    seed,
+    layer
+  } = config;
 
 
   for (
@@ -402,227 +366,92 @@ function buildMilkyWay() {
     i++
   ) {
 
-    const star =
-      document.createElement(
-        "span"
-      );
-
-
-    star.className =
-      "milky-star";
-
-
     /*
-      Travel horizontally across
-      most of the universe.
+      Average several random values.
+
+      This clusters stars around the centre
+      rather than distributing them evenly
+      inside a rectangle.
     */
 
-    const progress =
-      seededRandom(
-        i * 2.17 + 400
-      );
-
-
-    const x =
-      4 +
-      progress * 92;
-
-
-    /*
-      Diagonal centre line.
-
-      At x=0 the band is lower.
-      At x=100 it is higher.
-    */
-
-    const centreY =
-      70 -
-      x * .38;
-
-
-    /*
-      Several random values are averaged.
-
-      This naturally clusters most stars
-      close to the centre line while still
-      allowing some to sit farther away.
-    */
-
-    const r1 =
-      seededRandom(
-        i * 3.11 + 700
-      );
-
-    const r2 =
-      seededRandom(
-        i * 5.37 + 900
-      );
-
-    const r3 =
-      seededRandom(
-        i * 7.23 + 1200
-      );
-
-
-    const spread =
+    const rx =
       (
-        r1 +
-        r2 +
-        r3
+        random(seed + i * 2.11) +
+        random(seed + i * 3.73) +
+        random(seed + i * 5.19)
       ) / 3;
 
 
-    const offset =
+    const ry =
       (
-        spread - .5
-      ) * 27;
+        random(seed + i * 7.07) +
+        random(seed + i * 8.91) +
+        random(seed + i * 10.33)
+      ) / 3;
 
 
-    /*
-      Gentle waviness prevents the band
-      from looking mechanically straight.
-    */
-
-    const wave =
-      Math.sin(
-        progress *
-        Math.PI *
-        3
-      ) * 2.8;
+    const x =
+      centreX +
+      (
+        rx - .5
+      ) * width;
 
 
     const y =
       centreY +
-      offset +
-      wave;
-
-
-    star.style.left =
-      `${x}%`;
-
-    star.style.top =
-      `${y}%`;
-
-
-    /*
-      Most are extremely tiny.
-    */
-
-    const sizeValue =
-      seededRandom(
-        i * 9.13 + 1500
-      );
-
-
-    let size;
-
-
-    if (
-      sizeValue > .985
-    ) {
-
-      size = 2.1;
-
-    }
-
-    else if (
-      sizeValue > .91
-    ) {
-
-      size = 1.4;
-
-    }
-
-    else {
-
-      size =
-        .45 +
-        sizeValue * .55;
-
-    }
-
-
-    star.style.width =
-      `${size}px`;
-
-    star.style.height =
-      `${size}px`;
-
-
-    /*
-      Centre of the Milky Way is
-      slightly brighter.
-    */
-
-    const centreDistance =
-      Math.abs(
-        spread - .5
-      );
-
-
-    let opacity =
-      .08 +
       (
-        1 - centreDistance * 2
-      ) * .25;
+        ry - .5
+      ) * height;
 
 
-    opacity +=
-      seededRandom(
-        i * 12.7 + 1700
-      ) * .15;
+    createStar(
+      container,
+      x,
+      y,
+      seed + i,
+      layer
+    );
+
+  }
+
+}
 
 
-    opacity =
-      Math.max(
-        .05,
-        Math.min(
-          .46,
-          opacity
-        )
-      );
+/* =========================================================
+   SPARSE BACKGROUND
+========================================================= */
+
+function createSparseField(
+  container,
+  amount,
+  seed,
+  layer
+) {
+
+  for (
+    let i = 0;
+    i < amount;
+    i++
+  ) {
+
+    const x =
+      random(
+        seed + i * 2.37
+      ) * 100;
 
 
-    star.style.opacity =
-      opacity;
+    const y =
+      random(
+        seed + i * 5.83
+      ) * 100;
 
 
-    /*
-      Slight temperature differences.
-    */
-
-    const tone =
-      seededRandom(
-        i * 13.91 + 1900
-      );
-
-
-    if (
-      tone > .93
-    ) {
-
-      star.style.background =
-        "#fff0d6";
-
-    }
-
-    else if (
-      tone < .1
-    ) {
-
-      star.style.background =
-        "#dbe8ff";
-
-    }
-
-
-    /*
-      The Milky Way lives in the
-      far star layer.
-    */
-
-    farStars.appendChild(
-      star
+    createStar(
+      container,
+      x,
+      y,
+      seed + i * 13,
+      layer
     );
 
   }
@@ -634,25 +463,172 @@ function buildMilkyWay() {
    BUILD SKY
 ========================================================= */
 
-buildOrdinarySky();
+function buildSky() {
 
-buildMilkyWay();
+  /*
+    1. Sparse universe everywhere.
+  */
+
+  createSparseField(
+    starsDeep,
+    780,
+    100,
+    "deep"
+  );
+
+
+  createSparseField(
+    starsFar,
+    300,
+    400,
+    "far"
+  );
+
+
+  createSparseField(
+    starsMid,
+    130,
+    700,
+    "mid"
+  );
+
+
+  createSparseField(
+    starsNear,
+    42,
+    1000,
+    "near"
+  );
+
+
+  /*
+    2. Irregular distant clusters.
+
+    Notice that we DON'T cover the whole sky.
+    Large quiet regions remain.
+  */
+
+  createCluster(
+    starsDeep,
+    {
+      centreX: 28,
+      centreY: 38,
+      width: 30,
+      height: 16,
+      amount: 420,
+      seed: 2000,
+      layer: "deep"
+    }
+  );
+
+
+  createCluster(
+    starsDeep,
+    {
+      centreX: 61,
+      centreY: 64,
+      width: 36,
+      height: 18,
+      amount: 520,
+      seed: 3000,
+      layer: "deep"
+    }
+  );
+
+
+  createCluster(
+    starsDeep,
+    {
+      centreX: 78,
+      centreY: 27,
+      width: 21,
+      height: 20,
+      amount: 240,
+      seed: 4000,
+      layer: "deep"
+    }
+  );
+
+
+  createCluster(
+    starsFar,
+    {
+      centreX: 34,
+      centreY: 42,
+      width: 28,
+      height: 19,
+      amount: 130,
+      seed: 5000,
+      layer: "far"
+    }
+  );
+
+
+  createCluster(
+    starsFar,
+    {
+      centreX: 67,
+      centreY: 66,
+      width: 31,
+      height: 17,
+      amount: 150,
+      seed: 6000,
+      layer: "far"
+    }
+  );
+
+
+  /*
+    Small foreground pockets.
+  */
+
+  createCluster(
+    starsMid,
+    {
+      centreX: 72,
+      centreY: 32,
+      width: 16,
+      height: 18,
+      amount: 35,
+      seed: 7000,
+      layer: "mid"
+    }
+  );
+
+
+  createCluster(
+    starsMid,
+    {
+      centreX: 23,
+      centreY: 70,
+      width: 18,
+      height: 15,
+      amount: 30,
+      seed: 8000,
+      layer: "mid"
+    }
+  );
+
+}
+
+
+buildSky();
 
 
 /* =========================================================
-   CAMERA BOUNDARIES
+   CAMERA BOUNDS
 ========================================================= */
 
 function clampCamera() {
 
   const maxX =
     window.innerWidth *
-    1.25;
+    1.3;
 
 
   const maxY =
     window.innerHeight *
-    1.35;
+    1.4;
 
 
   targetX =
@@ -684,37 +660,56 @@ function clampCamera() {
 function updateParallax() {
 
   /*
-    The Milky Way is inside the far layer,
-    so it moves the least.
+    Dust = deepest.
 
-    Foreground stars move the most.
+    Near stars = largest movement.
   */
 
-  farStars.style.transform =
+  dustLayer.style.transform =
     `
       translate3d(
-        ${-cameraX * .016}px,
-        ${-cameraY * .016}px,
+        ${-cameraX * .008}px,
+        ${-cameraY * .008}px,
         0
       )
     `;
 
 
-  midStars.style.transform =
+  starsDeep.style.transform =
     `
       translate3d(
-        ${-cameraX * .052}px,
-        ${-cameraY * .052}px,
+        ${-cameraX * .012}px,
+        ${-cameraY * .012}px,
         0
       )
     `;
 
 
-  nearStars.style.transform =
+  starsFar.style.transform =
     `
       translate3d(
-        ${-cameraX * .12}px,
-        ${-cameraY * .12}px,
+        ${-cameraX * .028}px,
+        ${-cameraY * .028}px,
+        0
+      )
+    `;
+
+
+  starsMid.style.transform =
+    `
+      translate3d(
+        ${-cameraX * .065}px,
+        ${-cameraY * .065}px,
+        0
+      )
+    `;
+
+
+  starsNear.style.transform =
+    `
+      translate3d(
+        ${-cameraX * .13}px,
+        ${-cameraY * .13}px,
         0
       )
     `;
@@ -723,7 +718,7 @@ function updateParallax() {
 
 
 /* =========================================================
-   RENDER CAMERA
+   CAMERA RENDER
 ========================================================= */
 
 function renderCamera() {
@@ -741,31 +736,345 @@ function renderCamera() {
 
   updateParallax();
 
+}
 
-  const progress =
+
+/* =========================================================
+   LENS RENDER
+========================================================= */
+
+function renderLens() {
+
+  lensX +=
     (
-      (
-        zoom -
-        MIN_ZOOM
-      )
-      /
-      (
-        MAX_ZOOM -
-        MIN_ZOOM
-      )
-    ) * 100;
+      targetLensX -
+      lensX
+    ) * .2;
 
 
-  zoomFill.style.width =
-    `${
-      Math.max(
-        5,
-        Math.min(
-          100,
-          progress
-        )
-      )
-    }%`;
+  lensY +=
+    (
+      targetLensY -
+      lensY
+    ) * .2;
+
+
+  telescopeLens.style.left =
+    `${lensX}px`;
+
+
+  telescopeLens.style.top =
+    `${lensY}px`;
+
+}
+
+
+/* =========================================================
+   ORION SCREEN POSITION
+========================================================= */
+
+function getOrionScreenCentre() {
+
+  const rect =
+    orion.getBoundingClientRect();
+
+
+  return {
+
+    x:
+      rect.left +
+      rect.width / 2,
+
+    y:
+      rect.top +
+      rect.height / 2
+
+  };
+
+}
+
+
+/* =========================================================
+   TELESCOPE DISCOVERY CHECK
+========================================================= */
+
+function checkTelescopeFocus(
+  timestamp
+) {
+
+  if (
+    !telescopeActive ||
+    orionDiscovered
+  ) {
+
+    orion.classList.remove(
+      "telescope-near",
+      "telescope-hot"
+    );
+
+
+    telescopeLens.classList.remove(
+      "near",
+      "hot",
+      "holding"
+    );
+
+
+    focusStartedAt =
+      null;
+
+
+    return;
+
+  }
+
+
+  const orionCentre =
+    getOrionScreenCentre();
+
+
+  const dx =
+    lensX -
+    orionCentre.x;
+
+
+  const dy =
+    lensY -
+    orionCentre.y;
+
+
+  const distance =
+    Math.sqrt(
+      dx * dx +
+      dy * dy
+    );
+
+
+  /*
+    Hot/cold thresholds adapt slightly
+    to screen size.
+  */
+
+  const nearDistance =
+    Math.min(
+      330,
+      window.innerWidth * .32
+    );
+
+
+  const hotDistance =
+    Math.min(
+      135,
+      window.innerWidth * .14
+    );
+
+
+  /* -------------------------
+     FAR
+  ------------------------- */
+
+  if (
+    distance >
+    nearDistance
+  ) {
+
+    orion.classList.remove(
+      "telescope-near",
+      "telescope-hot"
+    );
+
+
+    telescopeLens.classList.remove(
+      "near",
+      "hot",
+      "holding"
+    );
+
+
+    focusStartedAt =
+      null;
+
+
+    return;
+
+  }
+
+
+  /* -------------------------
+     NEAR
+  ------------------------- */
+
+  orion.classList.add(
+    "telescope-near"
+  );
+
+
+  telescopeLens.classList.add(
+    "near"
+  );
+
+
+  if (
+    distance >
+    hotDistance
+  ) {
+
+    orion.classList.remove(
+      "telescope-hot"
+    );
+
+
+    telescopeLens.classList.remove(
+      "hot",
+      "holding"
+    );
+
+
+    focusStartedAt =
+      null;
+
+
+    return;
+
+  }
+
+
+  /* -------------------------
+     HOT
+  ------------------------- */
+
+  orion.classList.add(
+    "telescope-hot"
+  );
+
+
+  telescopeLens.classList.add(
+    "hot",
+    "holding"
+  );
+
+
+  /*
+    Start hold timer.
+  */
+
+  if (
+    focusStartedAt === null
+  ) {
+
+    focusStartedAt =
+      timestamp;
+
+  }
+
+
+  const heldFor =
+    timestamp -
+    focusStartedAt;
+
+
+  if (
+    heldFor >=
+    HOLD_TO_DISCOVER
+  ) {
+
+    discoverOrion();
+
+  }
+
+}
+
+
+/* =========================================================
+   DISCOVER ORION
+========================================================= */
+
+function discoverOrion() {
+
+  if (
+    orionDiscovered
+  ) {
+    return;
+  }
+
+
+  orionDiscovered =
+    true;
+
+
+  focusStartedAt =
+    null;
+
+
+  orion.classList.remove(
+    "telescope-near",
+    "telescope-hot"
+  );
+
+
+  telescopeLens.classList.remove(
+    "near",
+    "hot",
+    "holding"
+  );
+
+
+  orion.classList.add(
+    "discovered"
+  );
+
+
+  discoveryNumber.textContent =
+    "1";
+
+
+  /*
+    Let the constellation lines begin first.
+  */
+
+  setTimeout(
+    () => {
+
+      discoveryMessage.classList.add(
+        "show"
+      );
+
+    },
+    1150
+  );
+
+
+  /*
+    Message disappears again.
+  */
+
+  setTimeout(
+    () => {
+
+      discoveryMessage.classList.remove(
+        "show"
+      );
+
+    },
+    4300
+  );
+
+
+  /*
+    Telescope gently switches off
+    after the reveal.
+  */
+
+  setTimeout(
+    () => {
+
+      setTelescope(
+        false
+      );
+
+    },
+    2900
+  );
 
 }
 
@@ -774,7 +1083,9 @@ function renderCamera() {
    ANIMATION LOOP
 ========================================================= */
 
-function animate() {
+function animate(
+  timestamp
+) {
 
   cameraX +=
     (
@@ -803,6 +1114,14 @@ function animate() {
   renderCamera();
 
 
+  renderLens();
+
+
+  checkTelescopeFocus(
+    timestamp
+  );
+
+
   requestAnimationFrame(
     animate
   );
@@ -810,11 +1129,13 @@ function animate() {
 }
 
 
-animate();
+requestAnimationFrame(
+  animate
+);
 
 
 /* =========================================================
-   FIRST INTERACTION
+   INITIAL INTERACTION
 ========================================================= */
 
 function registerInteraction() {
@@ -838,23 +1159,59 @@ function registerInteraction() {
 
 
 /* =========================================================
-   DRAG
+   UNIVERSE DRAG
 ========================================================= */
 
 document.addEventListener(
   "pointerdown",
   event => {
 
+    /*
+      Telescope mode has its own
+      pointer behaviour.
+    */
+
+    if (
+      telescopeActive
+    ) {
+
+      if (
+        event.target.closest(
+          "#telescopeButton"
+        )
+      ) {
+        return;
+      }
+
+
+      lensDragging =
+        true;
+
+
+      targetLensX =
+        event.clientX;
+
+
+      targetLensY =
+        event.clientY;
+
+
+      return;
+
+    }
+
+
     if (
       event.target.closest(
-        "#interface"
+        "button"
       )
     ) {
       return;
     }
 
 
-    dragging = true;
+    dragging =
+      true;
 
 
     previousX =
@@ -880,6 +1237,56 @@ document.addEventListener(
   "pointermove",
   event => {
 
+    /*
+      LAPTOP:
+      telescope follows cursor.
+    */
+
+    if (
+      telescopeActive &&
+      event.pointerType === "mouse"
+    ) {
+
+      targetLensX =
+        event.clientX;
+
+
+      targetLensY =
+        event.clientY;
+
+
+      return;
+
+    }
+
+
+    /*
+      TOUCH:
+      drag telescope with finger.
+    */
+
+    if (
+      telescopeActive &&
+      lensDragging
+    ) {
+
+      targetLensX =
+        event.clientX;
+
+
+      targetLensY =
+        event.clientY;
+
+
+      return;
+
+    }
+
+
+    /*
+      NORMAL UNIVERSE DRAG
+    */
+
     if (
       !dragging
     ) {
@@ -887,22 +1294,22 @@ document.addEventListener(
     }
 
 
-    const deltaX =
+    const dx =
       event.clientX -
       previousX;
 
 
-    const deltaY =
+    const dy =
       event.clientY -
       previousY;
 
 
     targetX +=
-      deltaX / zoom;
+      dx / zoom;
 
 
     targetY +=
-      deltaY / zoom;
+      dy / zoom;
 
 
     previousX =
@@ -919,27 +1326,43 @@ document.addEventListener(
 );
 
 
-function stopDragging() {
-
-  dragging = false;
-
-
-  app.classList.remove(
-    "dragging"
-  );
-
-}
-
-
 document.addEventListener(
   "pointerup",
-  stopDragging
+  () => {
+
+    dragging =
+      false;
+
+
+    lensDragging =
+      false;
+
+
+    app.classList.remove(
+      "dragging"
+    );
+
+  }
 );
 
 
 document.addEventListener(
   "pointercancel",
-  stopDragging
+  () => {
+
+    dragging =
+      false;
+
+
+    lensDragging =
+      false;
+
+
+    app.classList.remove(
+      "dragging"
+    );
+
+  }
 );
 
 
@@ -951,6 +1374,13 @@ document.addEventListener(
   "wheel",
   event => {
 
+    if (
+      telescopeActive
+    ) {
+      return;
+    }
+
+
     event.preventDefault();
 
 
@@ -959,7 +1389,7 @@ document.addEventListener(
 
     targetZoom +=
       -event.deltaY *
-      .0012;
+      .001;
 
 
     targetZoom =
@@ -979,12 +1409,19 @@ document.addEventListener(
 
 
 /* =========================================================
-   MOBILE PINCH ZOOM
+   TOUCH PINCH ZOOM
 ========================================================= */
 
 document.addEventListener(
   "touchmove",
   event => {
+
+    if (
+      telescopeActive
+    ) {
+      return;
+    }
+
 
     if (
       event.touches.length !== 2
@@ -999,9 +1436,6 @@ document.addEventListener(
 
 
     event.preventDefault();
-
-
-    registerInteraction();
 
 
     const a =
@@ -1040,7 +1474,7 @@ document.addEventListener(
 
       targetZoom +=
         difference *
-        .0028;
+        .0026;
 
 
       targetZoom =
@@ -1077,22 +1511,108 @@ document.addEventListener(
 
 
 /* =========================================================
-   RETURN TO ORION
+   TELESCOPE TOGGLE
 ========================================================= */
 
-function returnToOrion() {
+function setTelescope(
+  active
+) {
 
-  targetX = 0;
-  targetY = 0;
+  telescopeActive =
+    active;
 
-  targetZoom = 1;
+
+  app.classList.toggle(
+    "telescope-active",
+    active
+  );
+
+
+  telescopeButton.classList.toggle(
+    "active",
+    active
+  );
+
+
+  if (
+    active
+  ) {
+
+    /*
+      Telescope starts in the centre
+      of the screen.
+    */
+
+    targetLensX =
+      window.innerWidth / 2;
+
+
+    targetLensY =
+      window.innerHeight / 2;
+
+
+    lensX =
+      targetLensX;
+
+
+    lensY =
+      targetLensY;
+
+
+    navigationHint.classList.remove(
+      "hidden"
+    );
+
+
+    hintMain.textContent =
+      "Move the telescope";
+
+
+    hintSub.textContent =
+      "Some stars are not quite what they seem";
+
+  }
+
+  else {
+
+    navigationHint.classList.add(
+      "hidden"
+    );
+
+
+    focusStartedAt =
+      null;
+
+
+    telescopeLens.classList.remove(
+      "near",
+      "hot",
+      "holding"
+    );
+
+
+    orion.classList.remove(
+      "telescope-near",
+      "telescope-hot"
+    );
+
+  }
 
 }
 
 
-homeButton.addEventListener(
+telescopeButton.addEventListener(
   "click",
-  returnToOrion
+  event => {
+
+    event.stopPropagation();
+
+
+    setTelescope(
+      !telescopeActive
+    );
+
+  }
 );
 
 
@@ -1102,7 +1622,33 @@ homeButton.addEventListener(
 
 window.addEventListener(
   "resize",
-  clampCamera
+  () => {
+
+    clampCamera();
+
+
+    if (
+      !telescopeActive
+    ) {
+
+      lensX =
+        window.innerWidth / 2;
+
+
+      lensY =
+        window.innerHeight / 2;
+
+
+      targetLensX =
+        lensX;
+
+
+      targetLensY =
+        lensY;
+
+    }
+
+  }
 );
 
 
@@ -1110,4 +1656,14 @@ window.addEventListener(
    START
 ========================================================= */
 
-returnToOrion();
+/*
+  Orion is approximately centred initially.
+
+  Later our intro/tutorial will determine the
+  actual opening camera position.
+*/
+
+targetX = 0;
+targetY = 0;
+
+targetZoom = 1;

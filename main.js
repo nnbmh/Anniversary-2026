@@ -393,7 +393,7 @@ function buildOrdinarySky() {
 
 function buildMilkyWay() {
 
-  const amount = 1150;
+  const amount = 300;
 
 
   for (

@@ -1,6 +1,22 @@
 /* =========================================================
    OUR LITTLE UNIVERSE
-   Cinematic Universe + Telescope Discovery
+   Anniversary 2026
+
+   main.js
+
+   Current build:
+   - cinematic draggable universe
+   - layered procedural stars
+   - parallax
+   - mouse-wheel zoom
+   - pinch zoom
+   - telescope mode
+   - black telescope surroundings
+   - fixed circular eyepiece
+   - drag sky through telescope
+   - detailed telescope star field
+   - hidden Orion search
+   - hold Orion in view to discover
 ========================================================= */
 
 
@@ -32,8 +48,14 @@ const starsNear =
 const orion =
   document.getElementById("orion");
 
-const telescopeLens =
-  document.getElementById("telescopeLens");
+const telescopeView =
+  document.getElementById("telescopeView");
+
+const eyepiece =
+  document.getElementById("eyepiece");
+
+const telescopeCanvas =
+  document.getElementById("telescopeCanvas");
 
 const telescopeButton =
   document.getElementById("telescopeButton");
@@ -54,6 +76,10 @@ const discoveryNumber =
   document.getElementById("discoveryNumber");
 
 
+const telescopeContext =
+  telescopeCanvas.getContext("2d");
+
+
 /* =========================================================
    CAMERA
 ========================================================= */
@@ -67,6 +93,7 @@ let targetY = 0;
 let zoom = 1;
 let targetZoom = 1;
 
+
 const MIN_ZOOM = 0.62;
 const MAX_ZOOM = 1.9;
 
@@ -75,39 +102,62 @@ const ZOOM_EASING = 0.09;
 
 
 /* =========================================================
-   INPUT
+   NORMAL UNIVERSE DRAG
 ========================================================= */
 
-let dragging = false;
+let universeDragging = false;
 
-let previousX = 0;
-let previousY = 0;
+let dragStartX = 0;
+let dragStartY = 0;
 
-let previousPinchDistance = null;
-
-let hasInteracted = false;
+let dragCameraStartX = 0;
+let dragCameraStartY = 0;
 
 
 /* =========================================================
-   TELESCOPE
+   PINCH ZOOM
+========================================================= */
+
+const activePointers =
+  new Map();
+
+let pinchStartDistance = 0;
+let pinchStartZoom = 1;
+
+
+/* =========================================================
+   TELESCOPE STATE
 ========================================================= */
 
 let telescopeActive = false;
 
-let lensX =
-  window.innerWidth / 2;
+let telescopeX = 0;
+let telescopeY = 0;
 
-let lensY =
-  window.innerHeight / 2;
+let targetTelescopeX = 0;
+let targetTelescopeY = 0;
 
-let targetLensX = lensX;
-let targetLensY = lensY;
+let telescopeDragging = false;
 
-let lensDragging = false;
+let previousTelescopeX = 0;
+let previousTelescopeY = 0;
+
+
+/*
+   Orion's location in telescope-space.
+
+   Telescope begins at 0,0.
+
+   Orion is intentionally somewhere else so
+   Faris has to search for it.
+*/
+
+const ORION_TELESCOPE_X = 380;
+const ORION_TELESCOPE_Y = -180;
 
 
 /* =========================================================
-   ORION DISCOVERY
+   DISCOVERY
 ========================================================= */
 
 let orionDiscovered = false;
@@ -118,33 +168,40 @@ const HOLD_TO_DISCOVER = 1800;
 
 
 /* =========================================================
-   SEEDED RANDOM
+   TELESCOPE STAR DATA
 ========================================================= */
 
-function random(seed) {
+const telescopeStars = [];
+
+
+/* =========================================================
+   SEEDED RANDOM
+
+   Using deterministic random numbers means the universe
+   looks the same every time the page reloads.
+========================================================= */
+
+function seededRandom(seed) {
 
   const value =
-    Math.sin(seed * 12.9898) *
-    43758.5453123;
+    Math.sin(seed * 91.3458) *
+    47453.5453;
 
-  return (
-    value -
-    Math.floor(value)
-  );
+  return value -
+    Math.floor(value);
 
 }
 
 
 /* =========================================================
-   STAR CREATION
+   NORMAL UNIVERSE STAR CREATION
 ========================================================= */
 
 function createStar(
-  container,
+  layer,
   x,
   y,
-  seed,
-  layer
+  options = {}
 ) {
 
   const star =
@@ -154,262 +211,295 @@ function createStar(
     "sky-star";
 
 
-  star.style.left =
-    `${x}%`;
-
-  star.style.top =
-    `${y}%`;
-
-
-  const appearance =
-    random(
-      seed * 2.7
-    );
-
-
-  if (
-    appearance < .3
-  ) {
-
-    star.classList.add(
-      "tiny"
-    );
-
+  if (options.tiny) {
+    star.classList.add("tiny");
   }
 
 
-  if (
-    appearance > .955 &&
-    layer !== "deep"
-  ) {
-
-    star.classList.add(
-      "large"
-    );
-
+  if (options.large) {
+    star.classList.add("large");
   }
 
 
-  const tone =
-    random(
-      seed * 4.93
-    );
-
-
-  if (
-    tone > .965
-  ) {
-
-    star.classList.add(
-      "warm"
-    );
-
-  }
-
-  else if (
-    tone < .055
-  ) {
-
-    star.classList.add(
-      "cool"
-    );
-
+  if (options.warm) {
+    star.classList.add("warm");
   }
 
 
-  /*
-    Opacity by layer.
-  */
-
-  let opacity;
-
-
-  if (
-    layer === "deep"
-  ) {
-
-    opacity =
-      .10 +
-      random(
-        seed * 6.17
-      ) * .3;
-
+  if (options.cool) {
+    star.classList.add("cool");
   }
 
 
-  else if (
-    layer === "far"
-  ) {
+  if (options.twinkle) {
 
-    opacity =
-      .18 +
-      random(
-        seed * 7.31
-      ) * .4;
-
-  }
-
-
-  else if (
-    layer === "mid"
-  ) {
-
-    opacity =
-      .28 +
-      random(
-        seed * 8.51
-      ) * .5;
-
-  }
-
-
-  else {
-
-    opacity =
-      .4 +
-      random(
-        seed * 9.73
-      ) * .5;
-
-  }
-
-
-  star.style.opacity =
-    opacity;
-
-
-  /*
-    Very few stars twinkle.
-  */
-
-  const twinkle =
-    random(
-      seed * 11.17
-    );
-
-
-  if (
-    twinkle > .955
-  ) {
-
-    star.classList.add(
-      "twinkle"
-    );
-
+    star.classList.add("twinkle");
 
     star.style.setProperty(
       "--twinkle-duration",
-      `${
-        6 +
-        random(seed * 13.1) * 7
-      }s`
+      `${options.duration || 8}s`
     );
 
 
     star.style.setProperty(
       "--twinkle-low",
-      Math.max(
-        .15,
-        opacity - .15
-      )
+      options.low || ".28"
     );
 
 
     star.style.setProperty(
       "--twinkle-high",
-      Math.min(
-        1,
-        opacity + .22
-      )
+      options.high || ".72"
     );
 
   }
 
 
-  container.appendChild(
-    star
-  );
+  star.style.left =
+    `${x}px`;
+
+  star.style.top =
+    `${y}px`;
+
+
+  if (
+    options.opacity !== undefined
+  ) {
+
+    star.style.opacity =
+      options.opacity;
+
+  }
+
+
+  layer.appendChild(star);
 
 }
 
 
 /* =========================================================
-   STAR CLUSTER
+   CREATE A SPARSE STAR FIELD
 ========================================================= */
 
-/*
-  This is the big difference from our old sky.
-
-  Instead of distributing everything evenly,
-  we deliberately create irregular stellar regions.
-*/
-
-function createCluster(
-  container,
-  config
+function buildSparseField(
+  layer,
+  count,
+  seedOffset,
+  width,
+  height,
+  type
 ) {
-
-  const {
-    centreX,
-    centreY,
-    width,
-    height,
-    amount,
-    seed,
-    layer
-  } = config;
-
 
   for (
     let i = 0;
-    i < amount;
+    i < count;
     i++
   ) {
 
-    /*
-      Average several random values.
+    const seed =
+      i + seedOffset;
 
-      This clusters stars around the centre
-      rather than distributing them evenly
-      inside a rectangle.
+
+    /*
+       Slightly non-uniform positioning.
+
+       We don't want every part of the universe to
+       contain exactly the same density.
     */
 
-    const rx =
-      (
-        random(seed + i * 2.11) +
-        random(seed + i * 3.73) +
-        random(seed + i * 5.19)
-      ) / 3;
+    let x =
+      seededRandom(seed * 2.31) *
+      width;
 
 
-    const ry =
-      (
-        random(seed + i * 7.07) +
-        random(seed + i * 8.91) +
-        random(seed + i * 10.33)
-      ) / 3;
+    let y =
+      seededRandom(seed * 5.17) *
+      height;
+
+
+    /*
+       Create some emptier regions.
+
+       Stars that fall inside these regions have a
+       chance of disappearing.
+    */
+
+    const emptyRegionA =
+      Math.hypot(
+        x - width * .25,
+        y - height * .34
+      );
+
+
+    const emptyRegionB =
+      Math.hypot(
+        x - width * .73,
+        y - height * .69
+      );
+
+
+    if (
+      emptyRegionA < 370 &&
+      seededRandom(seed * 8.4) < .62
+    ) {
+      continue;
+    }
+
+
+    if (
+      emptyRegionB < 430 &&
+      seededRandom(seed * 9.1) < .55
+    ) {
+      continue;
+    }
+
+
+    const sizeChance =
+      seededRandom(seed * 11.4);
+
+
+    const colourChance =
+      seededRandom(seed * 13.7);
+
+
+    const twinkleChance =
+      seededRandom(seed * 17.1);
+
+
+    createStar(
+      layer,
+      x,
+      y,
+      {
+
+        tiny:
+          sizeChance < .44,
+
+        large:
+          type === "near" &&
+          sizeChance > .94,
+
+        warm:
+          colourChance > .975,
+
+        cool:
+          colourChance < .035,
+
+        twinkle:
+          type !== "deep" &&
+          twinkleChance > .91,
+
+        duration:
+          6 +
+          seededRandom(seed * 21.3) *
+          8,
+
+        opacity:
+          type === "deep"
+            ? .12 +
+              seededRandom(seed * 25.2) *
+              .24
+            : undefined
+
+      }
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   STAR CLUSTERS
+
+   These make the field feel less evenly generated.
+========================================================= */
+
+function buildCluster(
+  layer,
+  centreX,
+  centreY,
+  radiusX,
+  radiusY,
+  count,
+  seedOffset,
+  type
+) {
+
+  for (
+    let i = 0;
+    i < count;
+    i++
+  ) {
+
+    const seed =
+      i + seedOffset;
+
+
+    /*
+       Multiplying two random values biases more
+       stars toward the cluster centre.
+    */
+
+    const distance =
+      seededRandom(seed * 3.2) *
+      seededRandom(seed * 7.7);
+
+
+    const angle =
+      seededRandom(seed * 10.1) *
+      Math.PI *
+      2;
 
 
     const x =
       centreX +
-      (
-        rx - .5
-      ) * width;
+      Math.cos(angle) *
+      radiusX *
+      distance;
 
 
     const y =
       centreY +
-      (
-        ry - .5
-      ) * height;
+      Math.sin(angle) *
+      radiusY *
+      distance;
+
+
+    const sizeChance =
+      seededRandom(seed * 14.4);
 
 
     createStar(
-      container,
+      layer,
       x,
       y,
-      seed + i,
-      layer
+      {
+
+        tiny:
+          sizeChance < .66,
+
+        large:
+          type === "near" &&
+          sizeChance > .985,
+
+        twinkle:
+          type !== "deep" &&
+          seededRandom(seed * 18.8) > .965,
+
+        duration:
+          7 +
+          seededRandom(seed * 22.4) *
+          7,
+
+        opacity:
+          type === "deep"
+            ? .10 +
+              seededRandom(seed * 26.8) *
+              .22
+            : undefined
+
+      }
     );
 
   }
@@ -418,224 +508,269 @@ function createCluster(
 
 
 /* =========================================================
-   SPARSE BACKGROUND
+   BUILD NORMAL UNIVERSE
 ========================================================= */
 
-function createSparseField(
-  container,
-  amount,
-  seed,
-  layer
-) {
+function buildUniverseStars() {
 
-  for (
-    let i = 0;
-    i < amount;
-    i++
-  ) {
+  const width =
+    universe.offsetWidth;
 
-    const x =
-      random(
-        seed + i * 2.37
-      ) * 100;
+  const height =
+    universe.offsetHeight;
 
 
-    const y =
-      random(
-        seed + i * 5.83
-      ) * 100;
+  starsDeep.innerHTML = "";
+  starsFar.innerHTML = "";
+  starsMid.innerHTML = "";
+  starsNear.innerHTML = "";
 
-
-    createStar(
-      container,
-      x,
-      y,
-      seed + i * 13,
-      layer
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   BUILD SKY
-========================================================= */
-
-function buildSky() {
 
   /*
-    1. Sparse universe everywhere.
+     Base fields.
+
+     Deliberately not insanely dense.
   */
 
-  createSparseField(
+  buildSparseField(
     starsDeep,
-    780,
+    720,
     100,
+    width,
+    height,
     "deep"
   );
 
 
-  createSparseField(
+  buildSparseField(
     starsFar,
-    300,
-    400,
+    280,
+    2000,
+    width,
+    height,
     "far"
   );
 
 
-  createSparseField(
+  buildSparseField(
     starsMid,
-    130,
-    700,
+    115,
+    4000,
+    width,
+    height,
     "mid"
   );
 
 
-  createSparseField(
+  buildSparseField(
     starsNear,
-    42,
-    1000,
+    34,
+    6000,
+    width,
+    height,
     "near"
   );
 
 
   /*
-    2. Irregular distant clusters.
-
-    Notice that we DON'T cover the whole sky.
-    Large quiet regions remain.
+     Irregular faint concentrations.
   */
 
-  createCluster(
+  buildCluster(
     starsDeep,
-    {
-      centreX: 28,
-      centreY: 38,
-      width: 30,
-      height: 16,
-      amount: 420,
-      seed: 2000,
-      layer: "deep"
-    }
+    width * .43,
+    height * .43,
+    760,
+    220,
+    330,
+    8000,
+    "deep"
   );
 
 
-  createCluster(
+  buildCluster(
     starsDeep,
-    {
-      centreX: 61,
-      centreY: 64,
-      width: 36,
-      height: 18,
-      amount: 520,
-      seed: 3000,
-      layer: "deep"
-    }
+    width * .64,
+    height * .54,
+    620,
+    280,
+    260,
+    10000,
+    "deep"
   );
 
 
-  createCluster(
+  buildCluster(
     starsDeep,
-    {
-      centreX: 78,
-      centreY: 27,
-      width: 21,
-      height: 20,
-      amount: 240,
-      seed: 4000,
-      layer: "deep"
-    }
+    width * .18,
+    height * .74,
+    420,
+    180,
+    130,
+    12000,
+    "deep"
   );
 
 
-  createCluster(
+  buildCluster(
     starsFar,
-    {
-      centreX: 34,
-      centreY: 42,
-      width: 28,
-      height: 19,
-      amount: 130,
-      seed: 5000,
-      layer: "far"
-    }
+    width * .44,
+    height * .44,
+    650,
+    220,
+    95,
+    14000,
+    "far"
   );
 
 
-  createCluster(
+  buildCluster(
     starsFar,
-    {
-      centreX: 67,
-      centreY: 66,
-      width: 31,
-      height: 17,
-      amount: 150,
-      seed: 6000,
-      layer: "far"
-    }
+    width * .66,
+    height * .54,
+    520,
+    240,
+    75,
+    16000,
+    "far"
   );
 
 
-  /*
-    Small foreground pockets.
-  */
-
-  createCluster(
+  buildCluster(
     starsMid,
-    {
-      centreX: 72,
-      centreY: 32,
-      width: 16,
-      height: 18,
-      amount: 35,
-      seed: 7000,
-      layer: "mid"
-    }
-  );
-
-
-  createCluster(
-    starsMid,
-    {
-      centreX: 23,
-      centreY: 70,
-      width: 18,
-      height: 15,
-      amount: 30,
-      seed: 8000,
-      layer: "mid"
-    }
+    width * .45,
+    height * .44,
+    480,
+    180,
+    24,
+    18000,
+    "mid"
   );
 
 }
 
 
-buildSky();
+/* =========================================================
+   CAMERA RENDERING
+========================================================= */
+
+function renderCamera() {
+
+  cameraX +=
+    (
+      targetX -
+      cameraX
+    ) *
+    CAMERA_EASING;
+
+
+  cameraY +=
+    (
+      targetY -
+      cameraY
+    ) *
+    CAMERA_EASING;
+
+
+  zoom +=
+    (
+      targetZoom -
+      zoom
+    ) *
+    ZOOM_EASING;
+
+
+  universe.style.transform =
+    `
+      translate(
+        calc(-50% + ${cameraX}px),
+        calc(-50% + ${cameraY}px)
+      )
+      scale(${zoom})
+    `;
+
+
+  /*
+     Very subtle parallax.
+
+     The universe itself moves normally.
+     Individual star layers shift by slightly
+     different amounts.
+  */
+
+  starsDeep.style.transform =
+    `
+      translate(
+        ${-cameraX * .018}px,
+        ${-cameraY * .018}px
+      )
+    `;
+
+
+  starsFar.style.transform =
+    `
+      translate(
+        ${-cameraX * .032}px,
+        ${-cameraY * .032}px
+      )
+    `;
+
+
+  starsMid.style.transform =
+    `
+      translate(
+        ${-cameraX * .052}px,
+        ${-cameraY * .052}px
+      )
+    `;
+
+
+  starsNear.style.transform =
+    `
+      translate(
+        ${-cameraX * .075}px,
+        ${-cameraY * .075}px
+      )
+    `;
+
+
+  dustLayer.style.transform =
+    `
+      translate(
+        ${-cameraX * .012}px,
+        ${-cameraY * .012}px
+      )
+    `;
+
+}
 
 
 /* =========================================================
-   CAMERA BOUNDS
+   CAMERA LIMITS
 ========================================================= */
 
 function clampCamera() {
 
-  const maxX =
-    window.innerWidth *
-    1.3;
+  /*
+     Prevent Faris from dragging so far that he
+     completely loses the universe.
+  */
+
+  const limitX =
+    universe.offsetWidth *
+    .34;
 
 
-  const maxY =
-    window.innerHeight *
-    1.4;
+  const limitY =
+    universe.offsetHeight *
+    .34;
 
 
   targetX =
     Math.max(
-      -maxX,
+      -limitX,
       Math.min(
-        maxX,
+        limitX,
         targetX
       )
     );
@@ -643,9 +778,9 @@ function clampCamera() {
 
   targetY =
     Math.max(
-      -maxY,
+      -limitY,
       Math.min(
-        maxY,
+        limitY,
         targetY
       )
     );
@@ -654,148 +789,823 @@ function clampCamera() {
 
 
 /* =========================================================
-   PARALLAX
+   TELESCOPE STAR FIELD
 ========================================================= */
 
-function updateParallax() {
+function buildTelescopeSky() {
+
+  telescopeStars.length = 0;
+
 
   /*
-    Dust = deepest.
+     Telescope reveals far more tiny stars than
+     the naked eye.
 
-    Near stars = largest movement.
+     This is intentionally denser than the main sky.
   */
 
-  dustLayer.style.transform =
-    `
-      translate3d(
-        ${-cameraX * .008}px,
-        ${-cameraY * .008}px,
-        0
-      )
-    `;
+  for (
+    let i = 0;
+    i < 2400;
+    i++
+  ) {
+
+    const x =
+      (
+        seededRandom(
+          i * 2.13 + 40
+        ) -
+        .5
+      ) *
+      3400;
 
 
-  starsDeep.style.transform =
-    `
-      translate3d(
-        ${-cameraX * .012}px,
-        ${-cameraY * .012}px,
-        0
-      )
-    `;
+    const y =
+      (
+        seededRandom(
+          i * 4.71 + 80
+        ) -
+        .5
+      ) *
+      2800;
 
 
-  starsFar.style.transform =
-    `
-      translate3d(
-        ${-cameraX * .028}px,
-        ${-cameraY * .028}px,
-        0
-      )
-    `;
+    const brightness =
+      .14 +
+      seededRandom(
+        i * 7.37 + 120
+      ) *
+      .6;
 
 
-  starsMid.style.transform =
-    `
-      translate3d(
-        ${-cameraX * .065}px,
-        ${-cameraY * .065}px,
-        0
-      )
-    `;
+    const sizeRandom =
+      seededRandom(
+        i * 11.91 + 160
+      );
 
 
-  starsNear.style.transform =
-    `
-      translate3d(
-        ${-cameraX * .13}px,
-        ${-cameraY * .13}px,
-        0
-      )
-    `;
-
-}
+    let size = .42;
 
 
-/* =========================================================
-   CAMERA RENDER
-========================================================= */
-
-function renderCamera() {
-
-  universe.style.transform =
-    `
-      translate3d(
-        calc(-50% + ${cameraX}px),
-        calc(-50% + ${cameraY}px),
-        0
-      )
-      scale(${zoom})
-    `;
+    if (
+      sizeRandom > .70
+    ) {
+      size = .62;
+    }
 
 
-  updateParallax();
-
-}
-
-
-/* =========================================================
-   LENS RENDER
-========================================================= */
-
-function renderLens() {
-
-  lensX +=
-    (
-      targetLensX -
-      lensX
-    ) * .2;
+    if (
+      sizeRandom > .91
+    ) {
+      size = .9;
+    }
 
 
-  lensY +=
-    (
-      targetLensY -
-      lensY
-    ) * .2;
+    if (
+      sizeRandom > .978
+    ) {
+      size = 1.25;
+    }
 
 
-  telescopeLens.style.left =
-    `${lensX}px`;
+    if (
+      sizeRandom > .996
+    ) {
+      size = 1.7;
+    }
 
 
-  telescopeLens.style.top =
-    `${lensY}px`;
+    telescopeStars.push({
+      x,
+      y,
+      size,
+      brightness
+    });
+
+  }
 
 }
 
 
 /* =========================================================
-   ORION SCREEN POSITION
+   TELESCOPE CANVAS SIZE
 ========================================================= */
 
-function getOrionScreenCentre() {
+function resizeTelescopeCanvas() {
 
   const rect =
-    orion.getBoundingClientRect();
+    eyepiece.getBoundingClientRect();
 
 
-  return {
+  if (
+    rect.width <= 0 ||
+    rect.height <= 0
+  ) {
+    return;
+  }
 
-    x:
-      rect.left +
-      rect.width / 2,
 
-    y:
-      rect.top +
-      rect.height / 2
+  const pixelRatio =
+    Math.min(
+      window.devicePixelRatio || 1,
+      2
+    );
 
-  };
+
+  telescopeCanvas.width =
+    Math.round(
+      rect.width *
+      pixelRatio
+    );
+
+
+  telescopeCanvas.height =
+    Math.round(
+      rect.height *
+      pixelRatio
+    );
+
+
+  telescopeContext.setTransform(
+    pixelRatio,
+    0,
+    0,
+    pixelRatio,
+    0,
+    0
+  );
 
 }
 
 
 /* =========================================================
-   TELESCOPE DISCOVERY CHECK
+   DRAW TELESCOPE STAR
+========================================================= */
+
+function drawTelescopeStar(
+  x,
+  y,
+  radius,
+  brightness
+) {
+
+  telescopeContext.beginPath();
+
+
+  telescopeContext.arc(
+    x,
+    y,
+    radius,
+    0,
+    Math.PI * 2
+  );
+
+
+  telescopeContext.fillStyle =
+    `rgba(
+      231,
+      239,
+      251,
+      ${brightness}
+    )`;
+
+
+  telescopeContext.fill();
+
+}
+
+
+/* =========================================================
+   BRIGHT TELESCOPE STAR
+========================================================= */
+
+function drawBrightTelescopeStar(
+  x,
+  y,
+  radius,
+  brightness,
+  glowStrength
+) {
+
+  /*
+     Very subtle optical glow.
+  */
+
+  if (
+    glowStrength > 0
+  ) {
+
+    const glow =
+      telescopeContext
+        .createRadialGradient(
+          x,
+          y,
+          0,
+          x,
+          y,
+          12 + radius * 3
+        );
+
+
+    glow.addColorStop(
+      0,
+      `rgba(
+        210,
+        229,
+        255,
+        ${.17 * glowStrength}
+      )`
+    );
+
+
+    glow.addColorStop(
+      .28,
+      `rgba(
+        179,
+        210,
+        249,
+        ${.07 * glowStrength}
+      )`
+    );
+
+
+    glow.addColorStop(
+      1,
+      "rgba(150,190,240,0)"
+    );
+
+
+    telescopeContext.beginPath();
+
+
+    telescopeContext.arc(
+      x,
+      y,
+      12 + radius * 3,
+      0,
+      Math.PI * 2
+    );
+
+
+    telescopeContext.fillStyle =
+      glow;
+
+
+    telescopeContext.fill();
+
+  }
+
+
+  drawTelescopeStar(
+    x,
+    y,
+    radius,
+    brightness
+  );
+
+}
+
+
+/* =========================================================
+   ORION — TELESCOPE GEOMETRY
+
+   Simplified Orion geometry for the search stage.
+
+   We can refine the astronomical proportions later.
+========================================================= */
+
+const telescopeOrionStars = [
+
+  /*
+     shoulders
+  */
+
+  {
+    x: -58,
+    y: -72,
+    size: 1.9
+  },
+
+  {
+    x: 58,
+    y: -60,
+    size: 1.7
+  },
+
+
+  /*
+     belt
+  */
+
+  {
+    x: -25,
+    y: 0,
+    size: 1.45
+  },
+
+  {
+    x: 0,
+    y: 3,
+    size: 1.55
+  },
+
+  {
+    x: 26,
+    y: 7,
+    size: 1.4
+  },
+
+
+  /*
+     sword
+  */
+
+  {
+    x: -1,
+    y: 42,
+    size: 1.05
+  },
+
+  {
+    x: -2,
+    y: 67,
+    size: .9
+  },
+
+
+  /*
+     feet
+  */
+
+  {
+    x: -46,
+    y: 105,
+    size: 1.55
+  },
+
+  {
+    x: 64,
+    y: 108,
+    size: 2.05
+  }
+
+];
+
+
+/* =========================================================
+   DRAW ORION IN TELESCOPE
+========================================================= */
+
+function drawTelescopeOrion(
+  width,
+  height
+) {
+
+  const centreX =
+    width / 2 +
+    ORION_TELESCOPE_X -
+    telescopeX;
+
+
+  const centreY =
+    height / 2 +
+    ORION_TELESCOPE_Y -
+    telescopeY;
+
+
+  const distance =
+    Math.hypot(
+      telescopeX -
+      ORION_TELESCOPE_X,
+
+      telescopeY -
+      ORION_TELESCOPE_Y
+    );
+
+
+  /*
+     Hot/cold system.
+
+     No arrows.
+     No giant glowing circle.
+
+     Orion simply starts behaving a little
+     differently as Faris gets closer.
+  */
+
+  let intensity = .24;
+
+
+  if (
+    distance < 400
+  ) {
+    intensity = .35;
+  }
+
+
+  if (
+    distance < 300
+  ) {
+    intensity = .48;
+  }
+
+
+  if (
+    distance < 210
+  ) {
+    intensity = .68;
+  }
+
+
+  if (
+    distance < 125
+  ) {
+    intensity = .88;
+  }
+
+
+  if (
+    distance < 75
+  ) {
+    intensity = 1;
+  }
+
+
+  telescopeOrionStars.forEach(
+    (star, index) => {
+
+      const x =
+        centreX +
+        star.x;
+
+
+      const y =
+        centreY +
+        star.y;
+
+
+      /*
+         Tiny shimmer while close.
+
+         Each star gets a slightly different phase.
+      */
+
+      let shimmer = 1;
+
+
+      if (
+        distance < 210
+      ) {
+
+        shimmer =
+          1 +
+          Math.sin(
+            performance.now() /
+            480 +
+            index *
+            .9
+          ) *
+          .10;
+
+      }
+
+
+      drawBrightTelescopeStar(
+        x,
+        y,
+
+        star.size *
+        (
+          .82 +
+          intensity *
+          .48
+        ) *
+        shimmer,
+
+        .35 +
+        intensity *
+        .62,
+
+        distance < 210
+          ? intensity
+          : 0
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   TELESCOPE SKY TEXTURE
+
+   Very faint unresolved stars.
+
+   This helps telescope mode feel optically richer
+   without becoming a giant fantasy nebula.
+========================================================= */
+
+function drawTelescopeDust(
+  width,
+  height
+) {
+
+  /*
+     Subtle central blue-grey lift.
+  */
+
+  const gradient =
+    telescopeContext
+      .createRadialGradient(
+        width * .44,
+        height * .42,
+        0,
+        width * .5,
+        height * .5,
+        width * .62
+      );
+
+
+  gradient.addColorStop(
+    0,
+    "rgba(23,38,58,.075)"
+  );
+
+
+  gradient.addColorStop(
+    .45,
+    "rgba(8,19,33,.035)"
+  );
+
+
+  gradient.addColorStop(
+    1,
+    "rgba(0,3,8,0)"
+  );
+
+
+  telescopeContext.fillStyle =
+    gradient;
+
+
+  telescopeContext.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+}
+
+
+/* =========================================================
+   RENDER TELESCOPE
+========================================================= */
+
+function renderTelescope() {
+
+  if (
+    !telescopeActive
+  ) {
+    return;
+  }
+
+
+  const rect =
+    eyepiece.getBoundingClientRect();
+
+
+  const width =
+    rect.width;
+
+
+  const height =
+    rect.height;
+
+
+  if (
+    width <= 0 ||
+    height <= 0
+  ) {
+    return;
+  }
+
+
+  telescopeX +=
+    (
+      targetTelescopeX -
+      telescopeX
+    ) *
+    .12;
+
+
+  telescopeY +=
+    (
+      targetTelescopeY -
+      telescopeY
+    ) *
+    .12;
+
+
+  /*
+     Clear previous frame.
+  */
+
+  telescopeContext.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /*
+     Dark telescope sky.
+  */
+
+  telescopeContext.fillStyle =
+    "#00040a";
+
+
+  telescopeContext.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  drawTelescopeDust(
+    width,
+    height
+  );
+
+
+  /*
+     Detailed telescope stars.
+  */
+
+  telescopeStars.forEach(
+    star => {
+
+      const x =
+        width / 2 +
+        star.x -
+        telescopeX;
+
+
+      const y =
+        height / 2 +
+        star.y -
+        telescopeY;
+
+
+      /*
+         Don't draw anything far outside
+         the circular canvas area.
+      */
+
+      if (
+        x < -15 ||
+        x > width + 15 ||
+        y < -15 ||
+        y > height + 15
+      ) {
+        return;
+      }
+
+
+      drawTelescopeStar(
+        x,
+        y,
+        star.size,
+        star.brightness
+      );
+
+    }
+  );
+
+
+  /*
+     Hidden Orion.
+  */
+
+  if (
+    !orionDiscovered
+  ) {
+
+    drawTelescopeOrion(
+      width,
+      height
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   TELESCOPE ON / OFF
+========================================================= */
+
+function setTelescope(active) {
+
+  telescopeActive =
+    active;
+
+
+  app.classList.toggle(
+    "telescope-active",
+    active
+  );
+
+
+  telescopeButton.classList.toggle(
+    "active",
+    active
+  );
+
+
+  telescopeView.setAttribute(
+    "aria-hidden",
+    active
+      ? "false"
+      : "true"
+  );
+
+
+  if (
+    active
+  ) {
+
+    /*
+       Start telescope at a neutral position.
+
+       Orion is deliberately not centred.
+    */
+
+    telescopeX = 0;
+    telescopeY = 0;
+
+    targetTelescopeX = 0;
+    targetTelescopeY = 0;
+
+
+    focusStartedAt =
+      null;
+
+
+    telescopeDragging =
+      false;
+
+
+    requestAnimationFrame(
+      () => {
+
+        resizeTelescopeCanvas();
+
+      }
+    );
+
+  }
+
+
+  else {
+
+    telescopeDragging =
+      false;
+
+
+    focusStartedAt =
+      null;
+
+  }
+
+}
+
+
+/* =========================================================
+   TELESCOPE BUTTON
+========================================================= */
+
+telescopeButton.addEventListener(
+  "click",
+  event => {
+
+    event.stopPropagation();
+
+
+    setTelescope(
+      !telescopeActive
+    );
+
+  }
+);
+
+
+/* =========================================================
+   ORION FOCUS CHECK
 ========================================================= */
 
 function checkTelescopeFocus(
@@ -807,155 +1617,59 @@ function checkTelescopeFocus(
     orionDiscovered
   ) {
 
-    orion.classList.remove(
-      "telescope-near",
-      "telescope-hot"
-    );
-
-
-    telescopeLens.classList.remove(
-      "near",
-      "hot",
-      "holding"
-    );
-
-
     focusStartedAt =
       null;
-
 
     return;
 
   }
-
-
-  const orionCentre =
-    getOrionScreenCentre();
-
-
-  const dx =
-    lensX -
-    orionCentre.x;
-
-
-  const dy =
-    lensY -
-    orionCentre.y;
 
 
   const distance =
-    Math.sqrt(
-      dx * dx +
-      dy * dy
+    Math.hypot(
+      telescopeX -
+      ORION_TELESCOPE_X,
+
+      telescopeY -
+      ORION_TELESCOPE_Y
     );
 
 
   /*
-    Hot/cold thresholds adapt slightly
-    to screen size.
+     Orion isn't centred closely enough.
   */
 
-  const nearDistance =
-    Math.min(
-      330,
-      window.innerWidth * .32
-    );
-
-
-  const hotDistance =
-    Math.min(
-      135,
-      window.innerWidth * .14
-    );
-
-
-  /* -------------------------
-     FAR
-  ------------------------- */
-
   if (
-    distance >
-    nearDistance
+    distance > 115
   ) {
-
-    orion.classList.remove(
-      "telescope-near",
-      "telescope-hot"
-    );
-
-
-    telescopeLens.classList.remove(
-      "near",
-      "hot",
-      "holding"
-    );
-
 
     focusStartedAt =
       null;
 
-
     return;
 
   }
-
-
-  /* -------------------------
-     NEAR
-  ------------------------- */
-
-  orion.classList.add(
-    "telescope-near"
-  );
-
-
-  telescopeLens.classList.add(
-    "near"
-  );
-
-
-  if (
-    distance >
-    hotDistance
-  ) {
-
-    orion.classList.remove(
-      "telescope-hot"
-    );
-
-
-    telescopeLens.classList.remove(
-      "hot",
-      "holding"
-    );
-
-
-    focusStartedAt =
-      null;
-
-
-    return;
-
-  }
-
-
-  /* -------------------------
-     HOT
-  ------------------------- */
-
-  orion.classList.add(
-    "telescope-hot"
-  );
-
-
-  telescopeLens.classList.add(
-    "hot",
-    "holding"
-  );
 
 
   /*
-    Start hold timer.
+     If telescope is still being moved,
+     don't count it as focusing.
+  */
+
+  if (
+    telescopeDragging
+  ) {
+
+    focusStartedAt =
+      null;
+
+    return;
+
+  }
+
+
+  /*
+     Start focus timer.
   */
 
   if (
@@ -972,6 +1686,10 @@ function checkTelescopeFocus(
     timestamp -
     focusStartedAt;
 
+
+  /*
+     Hold Orion steady for 1.8 seconds.
+  */
 
   if (
     heldFor >=
@@ -1006,18 +1724,9 @@ function discoverOrion() {
     null;
 
 
-  orion.classList.remove(
-    "telescope-near",
-    "telescope-hot"
-  );
-
-
-  telescopeLens.classList.remove(
-    "near",
-    "hot",
-    "holding"
-  );
-
+  /*
+     Reveal Orion in normal universe.
+  */
 
   orion.classList.add(
     "discovered"
@@ -1029,23 +1738,31 @@ function discoverOrion() {
 
 
   /*
-    Let the constellation lines begin first.
+     Show discovery message.
+  */
+
+  discoveryMessage.classList.add(
+    "show"
+  );
+
+
+  /*
+     First remove telescope mode so the user
+     sees Orion awaken in the actual universe.
   */
 
   setTimeout(
     () => {
 
-      discoveryMessage.classList.add(
-        "show"
-      );
+      setTelescope(false);
 
     },
-    1150
+    650
   );
 
 
   /*
-    Message disappears again.
+     Hide discovery title after a few seconds.
   */
 
   setTimeout(
@@ -1056,203 +1773,75 @@ function discoverOrion() {
       );
 
     },
-    4300
-  );
-
-
-  /*
-    Telescope gently switches off
-    after the reveal.
-  */
-
-  setTimeout(
-    () => {
-
-      setTelescope(
-        false
-      );
-
-    },
-    2900
+    3900
   );
 
 }
 
 
 /* =========================================================
-   ANIMATION LOOP
+   POINTER DOWN
 ========================================================= */
 
-function animate(
-  timestamp
-) {
-
-  cameraX +=
-    (
-      targetX -
-      cameraX
-    ) *
-    CAMERA_EASING;
-
-
-  cameraY +=
-    (
-      targetY -
-      cameraY
-    ) *
-    CAMERA_EASING;
-
-
-  zoom +=
-    (
-      targetZoom -
-      zoom
-    ) *
-    ZOOM_EASING;
-
-
-  renderCamera();
-
-
-  renderLens();
-
-
-  checkTelescopeFocus(
-    timestamp
-  );
-
-
-  requestAnimationFrame(
-    animate
-  );
-
-}
-
-
-requestAnimationFrame(
-  animate
-);
-
-
-/* =========================================================
-   INITIAL INTERACTION
-========================================================= */
-
-function registerInteraction() {
-
-  if (
-    hasInteracted
-  ) {
-    return;
-  }
-
-
-  hasInteracted =
-    true;
-
-
-  navigationHint.classList.add(
-    "hidden"
-  );
-
-}
-
-
-/* =========================================================
-   UNIVERSE DRAG
-========================================================= */
-
-document.addEventListener(
+app.addEventListener(
   "pointerdown",
   event => {
 
     /*
-      Telescope mode has its own
-      pointer behaviour.
+       Let the telescope button handle itself.
     */
 
     if (
-      telescopeActive
-    ) {
-
-      if (
-        event.target.closest(
-          "#telescopeButton"
-        )
-      ) {
-        return;
-      }
-
-
-      lensDragging =
-        true;
-
-
-      targetLensX =
-        event.clientX;
-
-
-      targetLensY =
-        event.clientY;
-
-
-      return;
-
-    }
-
-
-    if (
       event.target.closest(
-        "button"
+        "#telescopeButton"
       )
     ) {
       return;
     }
 
 
-    dragging =
-      true;
-
-
-    previousX =
-      event.clientX;
-
-
-    previousY =
-      event.clientY;
-
-
-    app.classList.add(
-      "dragging"
+    activePointers.set(
+      event.pointerId,
+      {
+        x: event.clientX,
+        y: event.clientY
+      }
     );
 
 
-    registerInteraction();
-
-  }
-);
-
-
-document.addEventListener(
-  "pointermove",
-  event => {
-
-    /*
-      LAPTOP:
-      telescope follows cursor.
-    */
+    /* =====================================================
+       TELESCOPE DRAG
+    ====================================================== */
 
     if (
-      telescopeActive &&
-      event.pointerType === "mouse"
+      telescopeActive
     ) {
 
-      targetLensX =
+      telescopeDragging =
+        true;
+
+
+      previousTelescopeX =
         event.clientX;
 
 
-      targetLensY =
+      previousTelescopeY =
         event.clientY;
+
+
+      try {
+
+        app.setPointerCapture(
+          event.pointerId
+        );
+
+      }
+
+      catch (error) {
+        /*
+           Some browsers don't require capture.
+        */
+      }
 
 
       return;
@@ -1260,117 +1849,389 @@ document.addEventListener(
     }
 
 
-    /*
-      TOUCH:
-      drag telescope with finger.
-    */
+    /* =====================================================
+       NORMAL UNIVERSE DRAG
+    ====================================================== */
 
     if (
-      telescopeActive &&
-      lensDragging
+      activePointers.size === 1
     ) {
 
-      targetLensX =
+      universeDragging =
+        true;
+
+
+      dragStartX =
         event.clientX;
 
 
-      targetLensY =
+      dragStartY =
         event.clientY;
 
 
-      return;
+      dragCameraStartX =
+        targetX;
+
+
+      dragCameraStartY =
+        targetY;
+
+
+      app.classList.add(
+        "dragging"
+      );
+
+
+      try {
+
+        app.setPointerCapture(
+          event.pointerId
+        );
+
+      }
+
+      catch (error) {
+        /*
+           Safe fallback.
+        */
+      }
 
     }
 
 
-    /*
-      NORMAL UNIVERSE DRAG
-    */
+    /* =====================================================
+       PINCH START
+    ====================================================== */
 
     if (
-      !dragging
+      activePointers.size === 2
     ) {
-      return;
+
+      universeDragging =
+        false;
+
+
+      app.classList.remove(
+        "dragging"
+      );
+
+
+      const points =
+        Array.from(
+          activePointers.values()
+        );
+
+
+      pinchStartDistance =
+        Math.hypot(
+          points[1].x -
+          points[0].x,
+
+          points[1].y -
+          points[0].y
+        );
+
+
+      pinchStartZoom =
+        targetZoom;
+
     }
-
-
-    const dx =
-      event.clientX -
-      previousX;
-
-
-    const dy =
-      event.clientY -
-      previousY;
-
-
-    targetX +=
-      dx / zoom;
-
-
-    targetY +=
-      dy / zoom;
-
-
-    previousX =
-      event.clientX;
-
-
-    previousY =
-      event.clientY;
-
-
-    clampCamera();
-
-  }
-);
-
-
-document.addEventListener(
-  "pointerup",
-  () => {
-
-    dragging =
-      false;
-
-
-    lensDragging =
-      false;
-
-
-    app.classList.remove(
-      "dragging"
-    );
-
-  }
-);
-
-
-document.addEventListener(
-  "pointercancel",
-  () => {
-
-    dragging =
-      false;
-
-
-    lensDragging =
-      false;
-
-
-    app.classList.remove(
-      "dragging"
-    );
 
   }
 );
 
 
 /* =========================================================
-   DESKTOP ZOOM
+   POINTER MOVE
 ========================================================= */
 
-document.addEventListener(
+app.addEventListener(
+  "pointermove",
+  event => {
+
+    if (
+      activePointers.has(
+        event.pointerId
+      )
+    ) {
+
+      activePointers.set(
+        event.pointerId,
+        {
+          x: event.clientX,
+          y: event.clientY
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       MOVE TELESCOPE SKY
+    ====================================================== */
+
+    if (
+      telescopeActive &&
+      telescopeDragging
+    ) {
+
+      const dx =
+        event.clientX -
+        previousTelescopeX;
+
+
+      const dy =
+        event.clientY -
+        previousTelescopeY;
+
+
+      /*
+         The eyepiece stays fixed.
+
+         We reposition where the telescope is
+         pointing in the universe.
+      */
+
+      targetTelescopeX -=
+        dx * 1.25;
+
+
+      targetTelescopeY -=
+        dy * 1.25;
+
+
+      previousTelescopeX =
+        event.clientX;
+
+
+      previousTelescopeY =
+        event.clientY;
+
+
+      /*
+         Keep telescope within the generated
+         searchable sky.
+      */
+
+      targetTelescopeX =
+        Math.max(
+          -1300,
+          Math.min(
+            1300,
+            targetTelescopeX
+          )
+        );
+
+
+      targetTelescopeY =
+        Math.max(
+          -1000,
+          Math.min(
+            1000,
+            targetTelescopeY
+          )
+        );
+
+
+      /*
+         Movement resets the focus timer.
+      */
+
+      focusStartedAt =
+        null;
+
+
+      return;
+
+    }
+
+
+    /* =====================================================
+       PINCH ZOOM
+    ====================================================== */
+
+    if (
+      !telescopeActive &&
+      activePointers.size === 2
+    ) {
+
+      const points =
+        Array.from(
+          activePointers.values()
+        );
+
+
+      const currentDistance =
+        Math.hypot(
+          points[1].x -
+          points[0].x,
+
+          points[1].y -
+          points[0].y
+        );
+
+
+      if (
+        pinchStartDistance > 0
+      ) {
+
+        const ratio =
+          currentDistance /
+          pinchStartDistance;
+
+
+        targetZoom =
+          Math.max(
+            MIN_ZOOM,
+            Math.min(
+              MAX_ZOOM,
+              pinchStartZoom *
+              ratio
+            )
+          );
+
+      }
+
+
+      return;
+
+    }
+
+
+    /* =====================================================
+       NORMAL UNIVERSE DRAG
+    ====================================================== */
+
+    if (
+      !telescopeActive &&
+      universeDragging
+    ) {
+
+      const dx =
+        event.clientX -
+        dragStartX;
+
+
+      const dy =
+        event.clientY -
+        dragStartY;
+
+
+      targetX =
+        dragCameraStartX +
+        dx;
+
+
+      targetY =
+        dragCameraStartY +
+        dy;
+
+
+      clampCamera();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   END POINTER
+========================================================= */
+
+function endPointer(event) {
+
+  activePointers.delete(
+    event.pointerId
+  );
+
+
+  if (
+    telescopeActive
+  ) {
+
+    telescopeDragging =
+      false;
+
+  }
+
+
+  if (
+    activePointers.size === 0
+  ) {
+
+    universeDragging =
+      false;
+
+
+    app.classList.remove(
+      "dragging"
+    );
+
+
+    pinchStartDistance =
+      0;
+
+  }
+
+
+  /*
+     If one finger remains after a pinch,
+     reset the normal drag origin.
+  */
+
+  if (
+    !telescopeActive &&
+    activePointers.size === 1
+  ) {
+
+    const remaining =
+      Array.from(
+        activePointers.values()
+      )[0];
+
+
+    dragStartX =
+      remaining.x;
+
+
+    dragStartY =
+      remaining.y;
+
+
+    dragCameraStartX =
+      targetX;
+
+
+    dragCameraStartY =
+      targetY;
+
+
+    universeDragging =
+      true;
+
+  }
+
+}
+
+
+app.addEventListener(
+  "pointerup",
+  endPointer
+);
+
+
+app.addEventListener(
+  "pointercancel",
+  endPointer
+);
+
+
+/* =========================================================
+   DESKTOP WHEEL ZOOM
+========================================================= */
+
+app.addEventListener(
   "wheel",
   event => {
 
@@ -1384,12 +2245,13 @@ document.addEventListener(
     event.preventDefault();
 
 
-    registerInteraction();
+    const zoomAmount =
+      -event.deltaY *
+      .001;
 
 
     targetZoom +=
-      -event.deltaY *
-      .001;
+      zoomAmount;
 
 
     targetZoom =
@@ -1409,209 +2271,59 @@ document.addEventListener(
 
 
 /* =========================================================
-   TOUCH PINCH ZOOM
+   REMOVE NAVIGATION HINT AFTER INTERACTION
 ========================================================= */
 
-document.addEventListener(
-  "touchmove",
-  event => {
-
-    if (
-      telescopeActive
-    ) {
-      return;
-    }
+let hintHasHidden = false;
 
 
-    if (
-      event.touches.length !== 2
-    ) {
-
-      previousPinchDistance =
-        null;
-
-      return;
-
-    }
-
-
-    event.preventDefault();
-
-
-    const a =
-      event.touches[0];
-
-
-    const b =
-      event.touches[1];
-
-
-    const dx =
-      a.clientX -
-      b.clientX;
-
-
-    const dy =
-      a.clientY -
-      b.clientY;
-
-
-    const distance =
-      Math.sqrt(
-        dx * dx +
-        dy * dy
-      );
-
-
-    if (
-      previousPinchDistance !== null
-    ) {
-
-      const difference =
-        distance -
-        previousPinchDistance;
-
-
-      targetZoom +=
-        difference *
-        .0026;
-
-
-      targetZoom =
-        Math.max(
-          MIN_ZOOM,
-          Math.min(
-            MAX_ZOOM,
-            targetZoom
-          )
-        );
-
-    }
-
-
-    previousPinchDistance =
-      distance;
-
-  },
-  {
-    passive: false
-  }
-);
-
-
-document.addEventListener(
-  "touchend",
-  () => {
-
-    previousPinchDistance =
-      null;
-
-  }
-);
-
-
-/* =========================================================
-   TELESCOPE TOGGLE
-========================================================= */
-
-function setTelescope(
-  active
-) {
-
-  telescopeActive =
-    active;
-
-
-  app.classList.toggle(
-    "telescope-active",
-    active
-  );
-
-
-  telescopeButton.classList.toggle(
-    "active",
-    active
-  );
-
+function hideNavigationHint() {
 
   if (
-    active
+    hintHasHidden
   ) {
-
-    /*
-      Telescope starts in the centre
-      of the screen.
-    */
-
-    targetLensX =
-      window.innerWidth / 2;
-
-
-    targetLensY =
-      window.innerHeight / 2;
-
-
-    lensX =
-      targetLensX;
-
-
-    lensY =
-      targetLensY;
-
-
-    navigationHint.classList.remove(
-      "hidden"
-    );
-
-
-    hintMain.textContent =
-      "Move the telescope";
-
-
-    hintSub.textContent =
-      "Some stars are not quite what they seem";
-
+    return;
   }
 
-  else {
 
-    navigationHint.classList.add(
-      "hidden"
-    );
+  hintHasHidden =
+    true;
 
 
-    focusStartedAt =
-      null;
-
-
-    telescopeLens.classList.remove(
-      "near",
-      "hot",
-      "holding"
-    );
-
-
-    orion.classList.remove(
-      "telescope-near",
-      "telescope-hot"
-    );
-
-  }
+  navigationHint.classList.add(
+    "hidden"
+  );
 
 }
 
 
-telescopeButton.addEventListener(
-  "click",
+app.addEventListener(
+  "pointerdown",
   event => {
 
-    event.stopPropagation();
+    if (
+      event.target.closest(
+        "#telescopeButton"
+      )
+    ) {
+      return;
+    }
 
 
-    setTelescope(
-      !telescopeActive
-    );
+    hideNavigationHint();
 
+  },
+  {
+    once: true
+  }
+);
+
+
+app.addEventListener(
+  "wheel",
+  hideNavigationHint,
+  {
+    once: true
   }
 );
 
@@ -1624,27 +2336,22 @@ window.addEventListener(
   "resize",
   () => {
 
-    clampCamera();
+    /*
+       CSS may resize the universe at tablet /
+       phone breakpoints, so rebuild its procedural
+       stars using the new dimensions.
+    */
+
+    buildUniverseStars();
 
 
     if (
-      !telescopeActive
+      telescopeActive
     ) {
 
-      lensX =
-        window.innerWidth / 2;
-
-
-      lensY =
-        window.innerHeight / 2;
-
-
-      targetLensX =
-        lensX;
-
-
-      targetLensY =
-        lensY;
+      requestAnimationFrame(
+        resizeTelescopeCanvas
+      );
 
     }
 
@@ -1653,17 +2360,75 @@ window.addEventListener(
 
 
 /* =========================================================
-   START
+   ANIMATION LOOP
 ========================================================= */
 
-/*
-  Orion is approximately centred initially.
+function animate(timestamp) {
 
-  Later our intro/tutorial will determine the
-  actual opening camera position.
-*/
+  renderCamera();
 
-targetX = 0;
-targetY = 0;
 
-targetZoom = 1;
+  renderTelescope();
+
+
+  checkTelescopeFocus(
+    timestamp
+  );
+
+
+  requestAnimationFrame(
+    animate
+  );
+
+}
+
+
+/* =========================================================
+   INITIALISE
+========================================================= */
+
+function initialise() {
+
+  /*
+     Build both versions of the sky.
+  */
+
+  buildUniverseStars();
+
+  buildTelescopeSky();
+
+
+  /*
+     Start camera centred on Orion's general
+     region without making Orion obvious.
+  */
+
+  cameraX = 0;
+  cameraY = 0;
+
+  targetX = 0;
+  targetY = 0;
+
+  zoom = 1;
+  targetZoom = 1;
+
+
+  /*
+     Make sure telescope begins closed.
+  */
+
+  setTelescope(false);
+
+
+  /*
+     Start animation.
+  */
+
+  requestAnimationFrame(
+    animate
+  );
+
+}
+
+
+initialise();

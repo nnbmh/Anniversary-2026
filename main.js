@@ -637,7 +637,6 @@ function drawStar(
   ctx.fill();
 }
 
-
 function drawBrightStar(
   x,
   y,
@@ -645,38 +644,42 @@ function drawBrightStar(
   brightness,
   glow
 ) {
-  if (glow > 0) {
-    const gradient =
-      ctx.createRadialGradient(
-        x,
-        y,
-        0,
-        x,
-        y,
-        12 + radius * 3
-      );
+  const starRadius = Math.max(0.7, radius * 0.58);
 
-    gradient.addColorStop(
+  // Very restrained atmospheric glow.
+  // Keeps the star luminous without turning it into a glowing ball.
+  if (glow > 0) {
+    const haloRadius = starRadius * 3.2;
+
+    const gradient = ctx.createRadialGradient(
+      x,
+      y,
       0,
-      `rgba(210,229,255,${0.16 * glow})`
+      x,
+      y,
+      haloRadius
     );
 
     gradient.addColorStop(
-      0.3,
-      `rgba(179,210,249,${0.06 * glow})`
+      0,
+      `rgba(235, 243, 255, ${0.10 * glow})`
+    );
+
+    gradient.addColorStop(
+      0.35,
+      `rgba(190, 215, 245, ${0.035 * glow})`
     );
 
     gradient.addColorStop(
       1,
-      "rgba(150,190,240,0)"
+      "rgba(150, 190, 240, 0)"
     );
 
     ctx.beginPath();
-
     ctx.arc(
       x,
       y,
-      12 + radius * 3,
+      haloRadius,
       0,
       Math.PI * 2
     );
@@ -685,14 +688,36 @@ function drawBrightStar(
     ctx.fill();
   }
 
-  drawStar(
+  // Tiny sharp star core
+  ctx.beginPath();
+  ctx.arc(
     x,
     y,
-    radius,
-    brightness
+    starRadius,
+    0,
+    Math.PI * 2
   );
-}
 
+  ctx.fillStyle =
+    `rgba(245, 248, 255, ${Math.min(1, brightness)})`;
+
+  ctx.fill();
+
+  // Pinpoint centre instead of a large glowing circle
+  ctx.beginPath();
+  ctx.arc(
+    x,
+    y,
+    Math.max(0.35, starRadius * 0.32),
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    `rgba(255, 255, 255, ${Math.min(1, brightness + 0.18)})`;
+
+  ctx.fill();
+}
 
 /* =========================================================
    ORION INSIDE TELESCOPE

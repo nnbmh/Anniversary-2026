@@ -4,19 +4,16 @@
 
    main.js
 
-   Current build:
-   - cinematic draggable universe
-   - layered procedural stars
-   - parallax
-   - mouse-wheel zoom
-   - pinch zoom
-   - telescope mode
-   - black telescope surroundings
-   - fixed circular eyepiece
-   - drag sky through telescope
-   - detailed telescope star field
-   - hidden Orion search
-   - hold Orion in view to discover
+   TELESCOPE VERSION:
+   - normal universe can pan + zoom
+   - telescope itself MOVES
+   - desktop: follows mouse
+   - iPad/phone: drag telescope around
+   - release finger = telescope stays there
+   - surrounding screen darkens
+   - telescope canvas renders detailed stars
+   - Orion reacts when telescope reaches it
+   - hold over Orion to discover
 ========================================================= */
 
 
@@ -24,60 +21,32 @@
    ELEMENTS
 ========================================================= */
 
-const app =
-  document.getElementById("app");
+const app = document.getElementById("app");
+const universe = document.getElementById("universe");
 
-const universe =
-  document.getElementById("universe");
+const dustLayer = document.getElementById("dustLayer");
 
-const dustLayer =
-  document.getElementById("dustLayer");
+const starsDeep = document.getElementById("starsDeep");
+const starsFar = document.getElementById("starsFar");
+const starsMid = document.getElementById("starsMid");
+const starsNear = document.getElementById("starsNear");
 
-const starsDeep =
-  document.getElementById("starsDeep");
+const orion = document.getElementById("orion");
 
-const starsFar =
-  document.getElementById("starsFar");
+const telescopeView = document.getElementById("telescopeView");
+const eyepiece = document.getElementById("eyepiece");
+const telescopeCanvas = document.getElementById("telescopeCanvas");
 
-const starsMid =
-  document.getElementById("starsMid");
+const telescopeButton = document.getElementById("telescopeButton");
 
-const starsNear =
-  document.getElementById("starsNear");
+const navigationHint = document.getElementById("navigationHint");
+const hintMain = document.getElementById("hintMain");
+const hintSub = document.getElementById("hintSub");
 
-const orion =
-  document.getElementById("orion");
+const discoveryMessage = document.getElementById("discoveryMessage");
+const discoveryNumber = document.getElementById("discoveryNumber");
 
-const telescopeView =
-  document.getElementById("telescopeView");
-
-const eyepiece =
-  document.getElementById("eyepiece");
-
-const telescopeCanvas =
-  document.getElementById("telescopeCanvas");
-
-const telescopeButton =
-  document.getElementById("telescopeButton");
-
-const navigationHint =
-  document.getElementById("navigationHint");
-
-const hintMain =
-  document.getElementById("hintMain");
-
-const hintSub =
-  document.getElementById("hintSub");
-
-const discoveryMessage =
-  document.getElementById("discoveryMessage");
-
-const discoveryNumber =
-  document.getElementById("discoveryNumber");
-
-
-const telescopeContext =
-  telescopeCanvas.getContext("2d");
+const telescopeContext = telescopeCanvas.getContext("2d");
 
 
 /* =========================================================
@@ -92,7 +61,6 @@ let targetY = 0;
 
 let zoom = 1;
 let targetZoom = 1;
-
 
 const MIN_ZOOM = 0.62;
 const MAX_ZOOM = 1.9;
@@ -115,14 +83,21 @@ let dragCameraStartY = 0;
 
 
 /* =========================================================
-   PINCH ZOOM
+   TOUCH / PINCH
 ========================================================= */
 
-const activePointers =
-  new Map();
+const activePointers = new Map();
 
 let pinchStartDistance = 0;
 let pinchStartZoom = 1;
+
+
+/* =========================================================
+   DEVICE TYPE
+========================================================= */
+
+const finePointer =
+  window.matchMedia("(pointer: fine)").matches;
 
 
 /* =========================================================
@@ -131,29 +106,35 @@ let pinchStartZoom = 1;
 
 let telescopeActive = false;
 
-let telescopeX = 0;
-let telescopeY = 0;
+/*
+   These are SCREEN coordinates.
 
-let targetTelescopeX = 0;
-let targetTelescopeY = 0;
+   This is important.
+
+   The telescope now moves around the screen instead of
+   moving an imaginary telescope camera behind a fixed circle.
+*/
+
+let lensX = window.innerWidth / 2;
+let lensY = window.innerHeight / 2;
+
+let targetLensX = lensX;
+let targetLensY = lensY;
 
 let telescopeDragging = false;
 
-let previousTelescopeX = 0;
-let previousTelescopeY = 0;
 
+/* =========================================================
+   ORION SEARCH LOCATION
 
-/*
-   Orion's location in telescope-space.
+   Orion has an actual location on the screen because the
+   real hidden Orion element exists in the universe.
 
-   Telescope begins at 0,0.
+   We calculate its current screen position every frame.
+========================================================= */
 
-   Orion is intentionally somewhere else so
-   Faris has to search for it.
-*/
-
-const ORION_TELESCOPE_X = 380;
-const ORION_TELESCOPE_Y = -180;
+let orionScreenX = window.innerWidth / 2;
+let orionScreenY = window.innerHeight / 2;
 
 
 /* =========================================================
@@ -176,9 +157,6 @@ const telescopeStars = [];
 
 /* =========================================================
    SEEDED RANDOM
-
-   Using deterministic random numbers means the universe
-   looks the same every time the page reloads.
 ========================================================= */
 
 function seededRandom(seed) {
@@ -187,14 +165,13 @@ function seededRandom(seed) {
     Math.sin(seed * 91.3458) *
     47453.5453;
 
-  return value -
-    Math.floor(value);
+  return value - Math.floor(value);
 
 }
 
 
 /* =========================================================
-   NORMAL UNIVERSE STAR CREATION
+   NORMAL STAR CREATION
 ========================================================= */
 
 function createStar(
@@ -207,29 +184,24 @@ function createStar(
   const star =
     document.createElement("span");
 
-  star.className =
-    "sky-star";
+  star.className = "sky-star";
 
 
   if (options.tiny) {
     star.classList.add("tiny");
   }
 
-
   if (options.large) {
     star.classList.add("large");
   }
-
 
   if (options.warm) {
     star.classList.add("warm");
   }
 
-
   if (options.cool) {
     star.classList.add("cool");
   }
-
 
   if (options.twinkle) {
 
@@ -240,12 +212,10 @@ function createStar(
       `${options.duration || 8}s`
     );
 
-
     star.style.setProperty(
       "--twinkle-low",
       options.low || ".28"
     );
-
 
     star.style.setProperty(
       "--twinkle-high",
@@ -255,16 +225,11 @@ function createStar(
   }
 
 
-  star.style.left =
-    `${x}px`;
-
-  star.style.top =
-    `${y}px`;
+  star.style.left = `${x}px`;
+  star.style.top = `${y}px`;
 
 
-  if (
-    options.opacity !== undefined
-  ) {
+  if (options.opacity !== undefined) {
 
     star.style.opacity =
       options.opacity;
@@ -278,7 +243,7 @@ function createStar(
 
 
 /* =========================================================
-   CREATE A SPARSE STAR FIELD
+   SPARSE STAR FIELD
 ========================================================= */
 
 function buildSparseField(
@@ -300,28 +265,19 @@ function buildSparseField(
       i + seedOffset;
 
 
-    /*
-       Slightly non-uniform positioning.
-
-       We don't want every part of the universe to
-       contain exactly the same density.
-    */
-
-    let x =
+    const x =
       seededRandom(seed * 2.31) *
       width;
 
 
-    let y =
+    const y =
       seededRandom(seed * 5.17) *
       height;
 
 
     /*
-       Create some emptier regions.
-
-       Stars that fall inside these regions have a
-       chance of disappearing.
+       Leave some negative space so the sky doesn't
+       look like evenly distributed confetti.
     */
 
     const emptyRegionA =
@@ -411,8 +367,6 @@ function buildSparseField(
 
 /* =========================================================
    STAR CLUSTERS
-
-   These make the field feel less evenly generated.
 ========================================================= */
 
 function buildCluster(
@@ -435,11 +389,6 @@ function buildCluster(
     const seed =
       i + seedOffset;
 
-
-    /*
-       Multiplying two random values biases more
-       stars toward the cluster centre.
-    */
 
     const distance =
       seededRandom(seed * 3.2) *
@@ -526,12 +475,6 @@ function buildUniverseStars() {
   starsNear.innerHTML = "";
 
 
-  /*
-     Base fields.
-
-     Deliberately not insanely dense.
-  */
-
   buildSparseField(
     starsDeep,
     720,
@@ -571,10 +514,6 @@ function buildUniverseStars() {
     "near"
   );
 
-
-  /*
-     Irregular faint concentrations.
-  */
 
   buildCluster(
     starsDeep,
@@ -651,32 +590,23 @@ function buildUniverseStars() {
 
 
 /* =========================================================
-   CAMERA RENDERING
+   CAMERA
 ========================================================= */
 
 function renderCamera() {
 
   cameraX +=
-    (
-      targetX -
-      cameraX
-    ) *
+    (targetX - cameraX) *
     CAMERA_EASING;
 
 
   cameraY +=
-    (
-      targetY -
-      cameraY
-    ) *
+    (targetY - cameraY) *
     CAMERA_EASING;
 
 
   zoom +=
-    (
-      targetZoom -
-      zoom
-    ) *
+    (targetZoom - zoom) *
     ZOOM_EASING;
 
 
@@ -689,14 +619,6 @@ function renderCamera() {
       scale(${zoom})
     `;
 
-
-  /*
-     Very subtle parallax.
-
-     The universe itself moves normally.
-     Individual star layers shift by slightly
-     different amounts.
-  */
 
   starsDeep.style.transform =
     `
@@ -751,11 +673,6 @@ function renderCamera() {
 
 function clampCamera() {
 
-  /*
-     Prevent Faris from dragging so far that he
-     completely loses the universe.
-  */
-
   const limitX =
     universe.offsetWidth *
     .34;
@@ -789,7 +706,7 @@ function clampCamera() {
 
 
 /* =========================================================
-   TELESCOPE STAR FIELD
+   BUILD TELESCOPE STAR FIELD
 ========================================================= */
 
 function buildTelescopeSky() {
@@ -797,18 +714,19 @@ function buildTelescopeSky() {
   telescopeStars.length = 0;
 
 
-  /*
-     Telescope reveals far more tiny stars than
-     the naked eye.
-
-     This is intentionally denser than the main sky.
-  */
-
   for (
     let i = 0;
-    i < 2400;
+    i < 1900;
     i++
   ) {
+
+    /*
+       These are relative offsets around the
+       telescope view.
+
+       The telescope sky should feel denser than
+       the naked-eye universe.
+    */
 
     const x =
       (
@@ -817,7 +735,7 @@ function buildTelescopeSky() {
         ) -
         .5
       ) *
-      3400;
+      1200;
 
 
     const y =
@@ -827,15 +745,15 @@ function buildTelescopeSky() {
         ) -
         .5
       ) *
-      2800;
+      900;
 
 
     const brightness =
-      .14 +
+      .10 +
       seededRandom(
         i * 7.37 + 120
       ) *
-      .6;
+      .55;
 
 
     const sizeRandom =
@@ -847,31 +765,18 @@ function buildTelescopeSky() {
     let size = .42;
 
 
-    if (
-      sizeRandom > .70
-    ) {
+    if (sizeRandom > .70) {
       size = .62;
     }
 
 
-    if (
-      sizeRandom > .91
-    ) {
+    if (sizeRandom > .91) {
       size = .9;
     }
 
 
-    if (
-      sizeRandom > .978
-    ) {
-      size = 1.25;
-    }
-
-
-    if (
-      sizeRandom > .996
-    ) {
-      size = 1.7;
+    if (sizeRandom > .978) {
+      size = 1.2;
     }
 
 
@@ -939,7 +844,7 @@ function resizeTelescopeCanvas() {
 
 
 /* =========================================================
-   DRAW TELESCOPE STAR
+   BASIC TELESCOPE STAR
 ========================================================= */
 
 function drawTelescopeStar(
@@ -962,12 +867,7 @@ function drawTelescopeStar(
 
 
   telescopeContext.fillStyle =
-    `rgba(
-      231,
-      239,
-      251,
-      ${brightness}
-    )`;
+    `rgba(231,239,251,${brightness})`;
 
 
   telescopeContext.fill();
@@ -986,10 +886,6 @@ function drawBrightTelescopeStar(
   brightness,
   glowStrength
 ) {
-
-  /*
-     Very subtle optical glow.
-  */
 
   if (
     glowStrength > 0
@@ -1013,18 +909,18 @@ function drawBrightTelescopeStar(
         210,
         229,
         255,
-        ${.17 * glowStrength}
+        ${.16 * glowStrength}
       )`
     );
 
 
     glow.addColorStop(
-      .28,
+      .3,
       `rgba(
         179,
         210,
         249,
-        ${.07 * glowStrength}
+        ${.06 * glowStrength}
       )`
     );
 
@@ -1067,18 +963,10 @@ function drawBrightTelescopeStar(
 
 
 /* =========================================================
-   ORION — TELESCOPE GEOMETRY
-
-   Simplified Orion geometry for the search stage.
-
-   We can refine the astronomical proportions later.
+   ORION GEOMETRY INSIDE TELESCOPE
 ========================================================= */
 
 const telescopeOrionStars = [
-
-  /*
-     shoulders
-  */
 
   {
     x: -58,
@@ -1091,11 +979,6 @@ const telescopeOrionStars = [
     y: -60,
     size: 1.7
   },
-
-
-  /*
-     belt
-  */
 
   {
     x: -25,
@@ -1115,11 +998,6 @@ const telescopeOrionStars = [
     size: 1.4
   },
 
-
-  /*
-     sword
-  */
-
   {
     x: -1,
     y: 42,
@@ -1131,11 +1009,6 @@ const telescopeOrionStars = [
     y: 67,
     size: .9
   },
-
-
-  /*
-     feet
-  */
 
   {
     x: -46,
@@ -1153,7 +1026,51 @@ const telescopeOrionStars = [
 
 
 /* =========================================================
-   DRAW ORION IN TELESCOPE
+   GET ORION SCREEN POSITION
+========================================================= */
+
+function updateOrionScreenPosition() {
+
+  if (!orion) {
+    return;
+  }
+
+
+  const rect =
+    orion.getBoundingClientRect();
+
+
+  orionScreenX =
+    rect.left +
+    rect.width / 2;
+
+
+  orionScreenY =
+    rect.top +
+    rect.height / 2;
+
+}
+
+
+/* =========================================================
+   DISTANCE FROM LENS TO ORION
+========================================================= */
+
+function getLensDistanceToOrion() {
+
+  return Math.hypot(
+    lensX - orionScreenX,
+    lensY - orionScreenY
+  );
+
+}
+
+
+/* =========================================================
+   DRAW ORION IN THE TELESCOPE
+
+   Orion only becomes noticeable when the lens is
+   actually near Orion's location in the universe.
 ========================================================= */
 
 function drawTelescopeOrion(
@@ -1161,107 +1078,109 @@ function drawTelescopeOrion(
   height
 ) {
 
-  const centreX =
-    width / 2 +
-    ORION_TELESCOPE_X -
-    telescopeX;
-
-
-  const centreY =
-    height / 2 +
-    ORION_TELESCOPE_Y -
-    telescopeY;
+  if (orionDiscovered) {
+    return;
+  }
 
 
   const distance =
-    Math.hypot(
-      telescopeX -
-      ORION_TELESCOPE_X,
-
-      telescopeY -
-      ORION_TELESCOPE_Y
-    );
+    getLensDistanceToOrion();
 
 
   /*
-     Hot/cold system.
-
-     No arrows.
-     No giant glowing circle.
-
-     Orion simply starts behaving a little
-     differently as Faris gets closer.
+     If the telescope isn't anywhere near Orion,
+     don't draw Orion at all.
   */
 
-  let intensity = .24;
+  if (
+    distance > 320
+  ) {
+    return;
+  }
+
+
+  let intensity = .12;
 
 
   if (
-    distance < 400
+    distance < 260
   ) {
-    intensity = .35;
+    intensity = .20;
   }
 
 
   if (
-    distance < 300
+    distance < 200
+  ) {
+    intensity = .32;
+  }
+
+
+  if (
+    distance < 145
   ) {
     intensity = .48;
   }
 
 
   if (
-    distance < 210
+    distance < 95
   ) {
-    intensity = .68;
+    intensity = .72;
   }
 
 
   if (
-    distance < 125
-  ) {
-    intensity = .88;
-  }
-
-
-  if (
-    distance < 75
+    distance < 55
   ) {
     intensity = 1;
   }
 
 
+  /*
+     Orion moves relative to the telescope.
+
+     If the telescope is slightly left of Orion,
+     Orion appears slightly right of centre inside
+     the eyepiece, and vice versa.
+  */
+
+  const offsetScale = .55;
+
+
+  const centreX =
+    width / 2 +
+    (
+      orionScreenX -
+      lensX
+    ) *
+    offsetScale;
+
+
+  const centreY =
+    height / 2 +
+    (
+      orionScreenY -
+      lensY
+    ) *
+    offsetScale;
+
+
   telescopeOrionStars.forEach(
     (star, index) => {
-
-      const x =
-        centreX +
-        star.x;
-
-
-      const y =
-        centreY +
-        star.y;
-
-
-      /*
-         Tiny shimmer while close.
-
-         Each star gets a slightly different phase.
-      */
 
       let shimmer = 1;
 
 
       if (
-        distance < 210
+        distance < 145
       ) {
 
         shimmer =
           1 +
           Math.sin(
             performance.now() /
-            480 +
+            470 +
             index *
             .9
           ) *
@@ -1271,22 +1190,22 @@ function drawTelescopeOrion(
 
 
       drawBrightTelescopeStar(
-        x,
-        y,
+        centreX + star.x,
+        centreY + star.y,
 
         star.size *
         (
-          .82 +
+          .8 +
           intensity *
-          .48
+          .5
         ) *
         shimmer,
 
-        .35 +
+        .20 +
         intensity *
-        .62,
+        .78,
 
-        distance < 210
+        distance < 145
           ? intensity
           : 0
       );
@@ -1298,50 +1217,58 @@ function drawTelescopeOrion(
 
 
 /* =========================================================
-   TELESCOPE SKY TEXTURE
-
-   Very faint unresolved stars.
-
-   This helps telescope mode feel optically richer
-   without becoming a giant fantasy nebula.
+   DRAW TELESCOPE BACKGROUND
 ========================================================= */
 
-function drawTelescopeDust(
+function drawTelescopeBackground(
   width,
   height
 ) {
 
+  telescopeContext.fillStyle =
+    "#07111d";
+
+
+  telescopeContext.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
   /*
-     Subtle central blue-grey lift.
+     Extremely restrained optical depth.
   */
 
   const gradient =
     telescopeContext
       .createRadialGradient(
-        width * .44,
-        height * .42,
+        width * .43,
+        height * .38,
         0,
+
         width * .5,
         height * .5,
-        width * .62
+        width * .7
       );
 
 
   gradient.addColorStop(
     0,
-    "rgba(23,38,58,.075)"
+    "rgba(29,45,65,.10)"
   );
 
 
   gradient.addColorStop(
-    .45,
-    "rgba(8,19,33,.035)"
+    .55,
+    "rgba(8,18,31,.035)"
   );
 
 
   gradient.addColorStop(
     1,
-    "rgba(0,3,8,0)"
+    "rgba(0,2,7,0)"
   );
 
 
@@ -1360,6 +1287,123 @@ function drawTelescopeDust(
 
 
 /* =========================================================
+   DRAW TELESCOPE SKY
+
+   The star pattern shifts according to the actual
+   screen position of the telescope.
+
+   This prevents the stars from looking glued to
+   the moving circle.
+========================================================= */
+
+function drawTelescopeSky(
+  width,
+  height
+) {
+
+  const fieldOffsetX =
+    lensX * .52;
+
+
+  const fieldOffsetY =
+    lensY * .52;
+
+
+  telescopeStars.forEach(
+    star => {
+
+      /*
+         Wrap the generated telescope field.
+
+         This gives us a continuous field as the
+         telescope moves around.
+      */
+
+      let x =
+        width / 2 +
+        star.x -
+        fieldOffsetX;
+
+
+      let y =
+        height / 2 +
+        star.y -
+        fieldOffsetY;
+
+
+      const wrapWidth = 1200;
+      const wrapHeight = 900;
+
+
+      x =
+        (
+          (
+            x +
+            wrapWidth * 10
+          ) %
+          wrapWidth
+        );
+
+
+      y =
+        (
+          (
+            y +
+            wrapHeight * 10
+          ) %
+          wrapHeight
+        );
+
+
+      /*
+         Re-centre wrapped coordinates around
+         the current eyepiece.
+      */
+
+      if (
+        x >
+        width + 100
+      ) {
+
+        x -= wrapWidth;
+
+      }
+
+
+      if (
+        y >
+        height + 100
+      ) {
+
+        y -= wrapHeight;
+
+      }
+
+
+      if (
+        x < -20 ||
+        x > width + 20 ||
+        y < -20 ||
+        y > height + 20
+      ) {
+        return;
+      }
+
+
+      drawTelescopeStar(
+        x,
+        y,
+        star.size,
+        star.brightness
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
    RENDER TELESCOPE
 ========================================================= */
 
@@ -1370,6 +1414,38 @@ function renderTelescope() {
   ) {
     return;
   }
+
+
+  /*
+     Smooth movement.
+  */
+
+  lensX +=
+    (
+      targetLensX -
+      lensX
+    ) *
+    .18;
+
+
+  lensY +=
+    (
+      targetLensY -
+      lensY
+    ) *
+    .18;
+
+
+  /*
+     Move the actual telescope element.
+  */
+
+  eyepiece.style.left =
+    `${lensX}px`;
+
+
+  eyepiece.style.top =
+    `${lensY}px`;
 
 
   const rect =
@@ -1392,26 +1468,6 @@ function renderTelescope() {
   }
 
 
-  telescopeX +=
-    (
-      targetTelescopeX -
-      telescopeX
-    ) *
-    .12;
-
-
-  telescopeY +=
-    (
-      targetTelescopeY -
-      telescopeY
-    ) *
-    .12;
-
-
-  /*
-     Clear previous frame.
-  */
-
   telescopeContext.clearRect(
     0,
     0,
@@ -1420,87 +1476,108 @@ function renderTelescope() {
   );
 
 
-  /*
-     Dark telescope sky.
-  */
-
-  telescopeContext.fillStyle =
-    "#00040a";
-
-
-  telescopeContext.fillRect(
-    0,
-    0,
+  drawTelescopeBackground(
     width,
     height
   );
 
 
-  drawTelescopeDust(
+  drawTelescopeSky(
     width,
     height
   );
 
 
-  /*
-     Detailed telescope stars.
-  */
-
-  telescopeStars.forEach(
-    star => {
-
-      const x =
-        width / 2 +
-        star.x -
-        telescopeX;
-
-
-      const y =
-        height / 2 +
-        star.y -
-        telescopeY;
-
-
-      /*
-         Don't draw anything far outside
-         the circular canvas area.
-      */
-
-      if (
-        x < -15 ||
-        x > width + 15 ||
-        y < -15 ||
-        y > height + 15
-      ) {
-        return;
-      }
-
-
-      drawTelescopeStar(
-        x,
-        y,
-        star.size,
-        star.brightness
-      );
-
-    }
+  drawTelescopeOrion(
+    width,
+    height
   );
 
+}
 
-  /*
-     Hidden Orion.
-  */
 
-  if (
-    !orionDiscovered
-  ) {
+/* =========================================================
+   KEEP TELESCOPE ON SCREEN
+========================================================= */
 
-    drawTelescopeOrion(
-      width,
-      height
+function clampLensPosition(
+  x,
+  y
+) {
+
+  const rect =
+    eyepiece.getBoundingClientRect();
+
+
+  const radius =
+    Math.max(
+      rect.width / 2,
+      90
     );
 
-  }
+
+  const padding = 14;
+
+
+  return {
+
+    x:
+      Math.max(
+        radius + padding,
+        Math.min(
+          window.innerWidth -
+          radius -
+          padding,
+          x
+        )
+      ),
+
+    y:
+      Math.max(
+        radius + padding,
+        Math.min(
+          window.innerHeight -
+          radius -
+          padding,
+          y
+        )
+      )
+
+  };
+
+}
+
+
+/* =========================================================
+   MOVE TELESCOPE TO SCREEN POSITION
+========================================================= */
+
+function moveLensTo(
+  x,
+  y
+) {
+
+  const position =
+    clampLensPosition(
+      x,
+      y
+    );
+
+
+  targetLensX =
+    position.x;
+
+
+  targetLensY =
+    position.y;
+
+
+  /*
+     Moving the telescope resets discovery hold.
+  */
+
+  focusStartedAt =
+    null;
 
 }
 
@@ -1540,24 +1617,31 @@ function setTelescope(active) {
   ) {
 
     /*
-       Start telescope at a neutral position.
-
-       Orion is deliberately not centred.
+       Telescope begins in the middle of the screen.
     */
 
-    telescopeX = 0;
-    telescopeY = 0;
-
-    targetTelescopeX = 0;
-    targetTelescopeY = 0;
+    lensX =
+      window.innerWidth / 2;
 
 
-    focusStartedAt =
-      null;
+    lensY =
+      window.innerHeight / 2;
+
+
+    targetLensX =
+      lensX;
+
+
+    targetLensY =
+      lensY;
 
 
     telescopeDragging =
       false;
+
+
+    focusStartedAt =
+      null;
 
 
     requestAnimationFrame(
@@ -1605,6 +1689,44 @@ telescopeButton.addEventListener(
 
 
 /* =========================================================
+   DESKTOP TELESCOPE FOLLOW
+========================================================= */
+
+window.addEventListener(
+  "pointermove",
+  event => {
+
+    if (
+      !telescopeActive
+    ) {
+      return;
+    }
+
+
+    /*
+       Mouse / trackpad devices:
+       telescope follows pointer.
+
+       Touch devices are handled separately below.
+    */
+
+    if (
+      finePointer &&
+      event.pointerType !== "touch"
+    ) {
+
+      moveLensTo(
+        event.clientX,
+        event.clientY
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
    ORION FOCUS CHECK
 ========================================================= */
 
@@ -1626,21 +1748,15 @@ function checkTelescopeFocus(
 
 
   const distance =
-    Math.hypot(
-      telescopeX -
-      ORION_TELESCOPE_X,
-
-      telescopeY -
-      ORION_TELESCOPE_Y
-    );
+    getLensDistanceToOrion();
 
 
   /*
-     Orion isn't centred closely enough.
+     Telescope must be positioned close to Orion.
   */
 
   if (
-    distance > 115
+    distance > 75
   ) {
 
     focusStartedAt =
@@ -1652,8 +1768,8 @@ function checkTelescopeFocus(
 
 
   /*
-     If telescope is still being moved,
-     don't count it as focusing.
+     On touch devices, don't discover while
+     the finger is still dragging the lens.
   */
 
   if (
@@ -1667,10 +1783,6 @@ function checkTelescopeFocus(
 
   }
 
-
-  /*
-     Start focus timer.
-  */
 
   if (
     focusStartedAt === null
@@ -1686,10 +1798,6 @@ function checkTelescopeFocus(
     timestamp -
     focusStartedAt;
 
-
-  /*
-     Hold Orion steady for 1.8 seconds.
-  */
 
   if (
     heldFor >=
@@ -1724,10 +1832,6 @@ function discoverOrion() {
     null;
 
 
-  /*
-     Reveal Orion in normal universe.
-  */
-
   orion.classList.add(
     "discovered"
   );
@@ -1737,18 +1841,14 @@ function discoverOrion() {
     "1";
 
 
-  /*
-     Show discovery message.
-  */
-
   discoveryMessage.classList.add(
     "show"
   );
 
 
   /*
-     First remove telescope mode so the user
-     sees Orion awaken in the actual universe.
+     Keep telescope on Orion briefly before
+     returning to the full universe.
   */
 
   setTimeout(
@@ -1757,13 +1857,9 @@ function discoverOrion() {
       setTelescope(false);
 
     },
-    650
+    800
   );
 
-
-  /*
-     Hide discovery title after a few seconds.
-  */
 
   setTimeout(
     () => {
@@ -1773,7 +1869,7 @@ function discoverOrion() {
       );
 
     },
-    3900
+    4000
   );
 
 }
@@ -1788,7 +1884,7 @@ app.addEventListener(
   event => {
 
     /*
-       Let the telescope button handle itself.
+       Telescope button handles itself.
     */
 
     if (
@@ -1800,47 +1896,49 @@ app.addEventListener(
     }
 
 
-    activePointers.set(
-      event.pointerId,
-      {
-        x: event.clientX,
-        y: event.clientY
-      }
-    );
-
-
     /* =====================================================
-       TELESCOPE DRAG
+       TELESCOPE TOUCH DRAG
     ====================================================== */
 
     if (
       telescopeActive
     ) {
 
-      telescopeDragging =
-        true;
+      /*
+         On iPad / phone, touching anywhere in the
+         telescope screen moves the lens to the finger
+         and starts dragging it.
+      */
+
+      if (
+        event.pointerType === "touch" ||
+        !finePointer
+      ) {
+
+        telescopeDragging =
+          true;
 
 
-      previousTelescopeX =
-        event.clientX;
-
-
-      previousTelescopeY =
-        event.clientY;
-
-
-      try {
-
-        app.setPointerCapture(
-          event.pointerId
+        moveLensTo(
+          event.clientX,
+          event.clientY
         );
 
-      }
 
-      catch (error) {
-        /*
-           Some browsers don't require capture.
-        */
+        try {
+
+          app.setPointerCapture(
+            event.pointerId
+          );
+
+        }
+
+        catch (error) {
+          /*
+             Safe fallback.
+          */
+        }
+
       }
 
 
@@ -1850,8 +1948,17 @@ app.addEventListener(
 
 
     /* =====================================================
-       NORMAL UNIVERSE DRAG
+       NORMAL UNIVERSE
     ====================================================== */
+
+    activePointers.set(
+      event.pointerId,
+      {
+        x: event.clientX,
+        y: event.clientY
+      }
+    );
+
 
     if (
       activePointers.size === 1
@@ -1899,10 +2006,6 @@ app.addEventListener(
     }
 
 
-    /* =====================================================
-       PINCH START
-    ====================================================== */
-
     if (
       activePointers.size === 2
     ) {
@@ -1949,6 +2052,39 @@ app.addEventListener(
   "pointermove",
   event => {
 
+    /* =====================================================
+       TELESCOPE TOUCH MOVEMENT
+    ====================================================== */
+
+    if (
+      telescopeActive
+    ) {
+
+      if (
+        telescopeDragging &&
+        (
+          event.pointerType === "touch" ||
+          !finePointer
+        )
+      ) {
+
+        moveLensTo(
+          event.clientX,
+          event.clientY
+        );
+
+      }
+
+
+      return;
+
+    }
+
+
+    /* =====================================================
+       NORMAL UNIVERSE
+    ====================================================== */
+
     if (
       activePointers.has(
         event.pointerId
@@ -1966,92 +2102,11 @@ app.addEventListener(
     }
 
 
-    /* =====================================================
-       MOVE TELESCOPE SKY
-    ====================================================== */
+    /*
+       Pinch zoom
+    */
 
     if (
-      telescopeActive &&
-      telescopeDragging
-    ) {
-
-      const dx =
-        event.clientX -
-        previousTelescopeX;
-
-
-      const dy =
-        event.clientY -
-        previousTelescopeY;
-
-
-      /*
-         The eyepiece stays fixed.
-
-         We reposition where the telescope is
-         pointing in the universe.
-      */
-
-      targetTelescopeX -=
-        dx * 1.25;
-
-
-      targetTelescopeY -=
-        dy * 1.25;
-
-
-      previousTelescopeX =
-        event.clientX;
-
-
-      previousTelescopeY =
-        event.clientY;
-
-
-      /*
-         Keep telescope within the generated
-         searchable sky.
-      */
-
-      targetTelescopeX =
-        Math.max(
-          -1300,
-          Math.min(
-            1300,
-            targetTelescopeX
-          )
-        );
-
-
-      targetTelescopeY =
-        Math.max(
-          -1000,
-          Math.min(
-            1000,
-            targetTelescopeY
-          )
-        );
-
-
-      /*
-         Movement resets the focus timer.
-      */
-
-      focusStartedAt =
-        null;
-
-
-      return;
-
-    }
-
-
-    /* =====================================================
-       PINCH ZOOM
-    ====================================================== */
-
-    if (
-      !telescopeActive &&
       activePointers.size === 2
     ) {
 
@@ -2098,12 +2153,11 @@ app.addEventListener(
     }
 
 
-    /* =====================================================
-       NORMAL UNIVERSE DRAG
-    ====================================================== */
+    /*
+       Normal drag
+    */
 
     if (
-      !telescopeActive &&
       universeDragging
     ) {
 
@@ -2136,15 +2190,10 @@ app.addEventListener(
 
 
 /* =========================================================
-   END POINTER
+   POINTER END
 ========================================================= */
 
 function endPointer(event) {
-
-  activePointers.delete(
-    event.pointerId
-  );
-
 
   if (
     telescopeActive
@@ -2153,7 +2202,22 @@ function endPointer(event) {
     telescopeDragging =
       false;
 
+
+    /*
+       IMPORTANT:
+       We do NOT return the telescope to centre.
+
+       It stays exactly where Faris leaves it.
+    */
+
+    return;
+
   }
+
+
+  activePointers.delete(
+    event.pointerId
+  );
 
 
   if (
@@ -2175,13 +2239,7 @@ function endPointer(event) {
   }
 
 
-  /*
-     If one finger remains after a pinch,
-     reset the normal drag origin.
-  */
-
   if (
-    !telescopeActive &&
     activePointers.size === 1
   ) {
 
@@ -2245,13 +2303,9 @@ app.addEventListener(
     event.preventDefault();
 
 
-    const zoomAmount =
+    targetZoom +=
       -event.deltaY *
       .001;
-
-
-    targetZoom +=
-      zoomAmount;
 
 
     targetZoom =
@@ -2271,7 +2325,7 @@ app.addEventListener(
 
 
 /* =========================================================
-   REMOVE NAVIGATION HINT AFTER INTERACTION
+   NAVIGATION HINT
 ========================================================= */
 
 let hintHasHidden = false;
@@ -2336,18 +2390,28 @@ window.addEventListener(
   "resize",
   () => {
 
-    /*
-       CSS may resize the universe at tablet /
-       phone breakpoints, so rebuild its procedural
-       stars using the new dimensions.
-    */
-
     buildUniverseStars();
 
 
     if (
       telescopeActive
     ) {
+
+      lensX =
+        window.innerWidth / 2;
+
+
+      lensY =
+        window.innerHeight / 2;
+
+
+      targetLensX =
+        lensX;
+
+
+      targetLensY =
+        lensY;
+
 
       requestAnimationFrame(
         resizeTelescopeCanvas
@@ -2360,12 +2424,15 @@ window.addEventListener(
 
 
 /* =========================================================
-   ANIMATION LOOP
+   ANIMATION
 ========================================================= */
 
 function animate(timestamp) {
 
   renderCamera();
+
+
+  updateOrionScreenPosition();
 
 
   renderTelescope();
@@ -2389,19 +2456,10 @@ function animate(timestamp) {
 
 function initialise() {
 
-  /*
-     Build both versions of the sky.
-  */
-
   buildUniverseStars();
 
   buildTelescopeSky();
 
-
-  /*
-     Start camera centred on Orion's general
-     region without making Orion obvious.
-  */
 
   cameraX = 0;
   cameraY = 0;
@@ -2413,16 +2471,8 @@ function initialise() {
   targetZoom = 1;
 
 
-  /*
-     Make sure telescope begins closed.
-  */
-
   setTelescope(false);
 
-
-  /*
-     Start animation.
-  */
 
   requestAnimationFrame(
     animate

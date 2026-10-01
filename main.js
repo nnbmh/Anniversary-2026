@@ -2482,3 +2482,87 @@ function initialise() {
 
 
 initialise();
+
+/* =========================================================
+   IPAD / TOUCH TELESCOPE MOVEMENT FIX
+========================================================= */
+
+let telescopeTouchId = null;
+
+telescopeView.addEventListener(
+  "pointerdown",
+  event => {
+
+    if (!telescopeActive) return;
+
+    if (event.pointerType !== "touch") return;
+
+    telescopeTouchId = event.pointerId;
+    telescopeDragging = true;
+
+    moveLensTo(
+      event.clientX,
+      event.clientY
+    );
+
+    try {
+      telescopeView.setPointerCapture(
+        event.pointerId
+      );
+    } catch (error) {}
+
+    event.preventDefault();
+  }
+);
+
+
+telescopeView.addEventListener(
+  "pointermove",
+  event => {
+
+    if (!telescopeActive) return;
+
+    if (
+      event.pointerId !== telescopeTouchId
+    ) {
+      return;
+    }
+
+    moveLensTo(
+      event.clientX,
+      event.clientY
+    );
+
+    event.preventDefault();
+  }
+);
+
+
+function finishTelescopeTouch(event) {
+
+  if (
+    event.pointerId !== telescopeTouchId
+  ) {
+    return;
+  }
+
+  telescopeDragging = false;
+  telescopeTouchId = null;
+
+  /*
+     Do NOT reset lensX/lensY.
+     The telescope stays wherever it was released.
+  */
+}
+
+
+telescopeView.addEventListener(
+  "pointerup",
+  finishTelescopeTouch
+);
+
+
+telescopeView.addEventListener(
+  "pointercancel",
+  finishTelescopeTouch
+);

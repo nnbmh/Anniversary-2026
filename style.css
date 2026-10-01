@@ -34,6 +34,47 @@ button {
   font: inherit;
 }
 
+/* =========================================================
+   PHOTOGRAPHIC DEEP-SPACE BACKGROUND
+========================================================= */
+
+#spaceBackground {
+  position: absolute;
+
+  /*
+    Slightly oversized so we never expose an edge
+    during the subtle parallax movement.
+  */
+  inset: -4%;
+
+  background-image:
+    linear-gradient(
+      rgba(1, 4, 10, 0.12),
+      rgba(1, 4, 10, 0.18)
+    ),
+    url("public/images/space-bg.png");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /*
+    Keep the photograph underneath all our
+    interactive/generated stars.
+  */
+  z-index: -10;
+
+  pointer-events: none;
+
+  transform: scale(1.06);
+
+  filter:
+    brightness(0.82)
+    contrast(1.05)
+    saturate(0.82);
+
+  will-change: transform;
+}
 
 /* =========================================================
    APP
@@ -129,65 +170,6 @@ button {
 
   z-index: -4;
 }
-
-
-/* =========================================================
-   MILKY WAY
-========================================================= */
-
-/*
-  The band crosses diagonally through the universe.
-
-  It is deliberately subtle.
-*/
-
-#universe::after {
-  content: "";
-
-  position: absolute;
-
-  width: 4200px;
-  height: 720px;
-
-  left: -280px;
-  top: 1030px;
-
-  transform:
-    rotate(-18deg);
-
-  transform-origin: center;
-
-  pointer-events: none;
-
-  background:
-
-    linear-gradient(
-      to bottom,
-
-      transparent 0%,
-
-      rgba(87, 103, 131, .012) 8%,
-
-      rgba(114, 127, 151, .035) 22%,
-
-      rgba(141, 150, 167, .06) 40%,
-
-      rgba(164, 169, 180, .075) 49%,
-
-      rgba(118, 130, 153, .055) 61%,
-
-      rgba(77, 94, 125, .027) 78%,
-
-      transparent 100%
-    );
-
-  filter: blur(25px);
-
-  opacity: .82;
-
-  z-index: -3;
-}
-
 
 /* =========================================================
    STAR LAYERS
@@ -447,7 +429,7 @@ button {
   transform:
     rotate(-18deg);
 
-  opacity: .32;
+  opacity: .10;
 
   background:
     radial-gradient(

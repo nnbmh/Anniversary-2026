@@ -1286,18 +1286,6 @@ function discoverOrion() {
     is handled by the Orion HTML + CSS.
   */
 
-  discoveryMessage.textContent =
-    "✦  constellation discovered";
-
-  discoveryMessage.classList.add(
-    "show"
-  );
-
-  /*
-    Let the discovery breathe briefly before
-    closing the telescope.
-  */
-
   setTimeout(
     () => {
       setTelescope(false);
@@ -1308,17 +1296,6 @@ function discoverOrion() {
   /*
     Remove the temporary notification.
   */
-
-  setTimeout(
-    () => {
-      discoveryMessage.classList.remove(
-        "show"
-      );
-    },
-    2200
-  );
-}
-
 
 /* =========================================================
    NORMAL UNIVERSE POINTER INPUT

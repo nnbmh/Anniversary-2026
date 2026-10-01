@@ -1041,14 +1041,14 @@ function drawTelescopeOrion(
       ctx.strokeStyle =
          "rgba(177, 210, 247, .10)";
        
-       ctx.lineWidth = 1.5;
+       ctx.lineWidth = 0.6;
        
        ctx.lineCap = "round";
        
        ctx.shadowColor =
           "rgba(185, 218, 255, .14)";
        
-       ctx.shadowBlur = 3;
+       ctx.shadowBlur = 1;
        
        ctx.stroke();
        
@@ -1074,7 +1074,7 @@ function drawTelescopeOrion(
       ctx.strokeStyle =
         "rgba(226, 238, 252, .76)";
 
-      ctx.lineWidth = 1;
+      ctx.lineWidth =  0.55;
 
       ctx.lineCap = "round";
 

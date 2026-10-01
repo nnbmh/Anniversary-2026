@@ -1,6 +1,6 @@
 /* =========================================================
    OUR LITTLE UNIVERSE
-   Cinematic Universe Foundation
+   Cinematic Astrophotography Sky
 ========================================================= */
 
 * {
@@ -9,23 +9,18 @@
   box-sizing: border-box;
 }
 
-
 html,
 body {
   width: 100%;
   height: 100%;
-
   overflow: hidden;
 
-  background: #010308;
-
-  color: #f5f2e9;
+  background: #010208;
+  color: #f6f3eb;
 
   touch-action: none;
-
   overscroll-behavior: none;
 }
-
 
 body {
   font-family:
@@ -34,7 +29,6 @@ body {
     "Segoe UI",
     sans-serif;
 }
-
 
 button {
   font: inherit;
@@ -53,18 +47,22 @@ button {
 
   overflow: hidden;
 
+  cursor: grab;
+
+  /*
+    This gives us a deep navy centre rather than
+    a completely flat black background.
+  */
   background:
     radial-gradient(
-      circle at 50% 42%,
-      #09101d 0%,
-      #050a13 36%,
-      #02050b 68%,
+      ellipse at 46% 40%,
+      #0b1322 0%,
+      #060b15 30%,
+      #030711 58%,
+      #010309 82%,
       #010207 100%
     );
-
-  cursor: grab;
 }
-
 
 #app.dragging {
   cursor: grabbing;
@@ -91,12 +89,112 @@ button {
 
 
 /* =========================================================
+   DEEP BACKGROUND GLOW
+========================================================= */
+
+/*
+  These very large gradients create irregular brightness
+  across the sky so it doesn't look like stars pasted
+  onto a flat background.
+*/
+
+#universe::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+
+    radial-gradient(
+      ellipse at 34% 43%,
+      rgba(87, 109, 148, .075) 0%,
+      rgba(55, 73, 108, .025) 24%,
+      transparent 47%
+    ),
+
+    radial-gradient(
+      ellipse at 68% 58%,
+      rgba(102, 116, 143, .055) 0%,
+      transparent 38%
+    ),
+
+    radial-gradient(
+      ellipse at 53% 24%,
+      rgba(61, 81, 117, .04) 0%,
+      transparent 33%
+    );
+
+  z-index: -4;
+}
+
+
+/* =========================================================
+   MILKY WAY
+========================================================= */
+
+/*
+  The band crosses diagonally through the universe.
+
+  It is deliberately subtle.
+*/
+
+#universe::after {
+  content: "";
+
+  position: absolute;
+
+  width: 4200px;
+  height: 720px;
+
+  left: -280px;
+  top: 1030px;
+
+  transform:
+    rotate(-18deg);
+
+  transform-origin: center;
+
+  pointer-events: none;
+
+  background:
+
+    linear-gradient(
+      to bottom,
+
+      transparent 0%,
+
+      rgba(87, 103, 131, .012) 8%,
+
+      rgba(114, 127, 151, .035) 22%,
+
+      rgba(141, 150, 167, .06) 40%,
+
+      rgba(164, 169, 180, .075) 49%,
+
+      rgba(118, 130, 153, .055) 61%,
+
+      rgba(77, 94, 125, .027) 78%,
+
+      transparent 100%
+    );
+
+  filter: blur(25px);
+
+  opacity: .82;
+
+  z-index: -3;
+}
+
+
+/* =========================================================
    STAR LAYERS
 ========================================================= */
 
 .star-layer {
   position: absolute;
-
   inset: 0;
 
   pointer-events: none;
@@ -105,116 +203,223 @@ button {
 }
 
 
-/* Individual background star */
+/* =========================================================
+   ORDINARY SPACE STARS
+========================================================= */
 
 .space-star {
   position: absolute;
 
+  width: 2px;
+  height: 2px;
+
   border-radius: 50%;
 
-  background: rgba(255, 255, 255, .9);
+  transform:
+    translate(-50%, -50%);
 
-  transform: translate(-50%, -50%);
+  background:
+    rgba(246, 248, 255, .9);
 
-  will-change:
-    opacity,
-    transform;
+  pointer-events: none;
 }
 
 
-/* FAR */
+/* FAR STARS */
 
 .stars-far .space-star {
   width: 1px;
   height: 1px;
 
-  opacity: .35;
+  box-shadow: none;
 }
 
 
-/* MID */
+/* MID STARS */
 
 .stars-mid .space-star {
-  width: 2px;
-  height: 2px;
+  width: 1.7px;
+  height: 1.7px;
 
   box-shadow:
-    0 0 3px rgba(255, 255, 255, .35);
+    0 0 3px
+    rgba(220, 231, 255, .22);
 }
 
 
-/* NEAR */
+/* NEAR STARS */
 
 .stars-near .space-star {
-  width: 3px;
-  height: 3px;
+  width: 2.6px;
+  height: 2.6px;
 
   box-shadow:
-    0 0 4px rgba(255, 255, 255, .65),
-    0 0 9px rgba(185, 210, 255, .16);
+    0 0 4px
+    rgba(255, 255, 255, .55),
+
+    0 0 9px
+    rgba(177, 205, 255, .12);
 }
 
 
-/* Star variations */
+/* =========================================================
+   STAR VARIATIONS
+========================================================= */
 
 .space-star.tiny {
   transform:
     translate(-50%, -50%)
-    scale(.6);
+    scale(.55);
 }
 
-
-.space-star.soft {
-  opacity: .3 !important;
+.space-star.medium {
+  transform:
+    translate(-50%, -50%)
+    scale(1.35);
 }
 
-
-.space-star.bright {
-  opacity: .95 !important;
+.space-star.large {
+  width: 3.5px;
+  height: 3.5px;
 
   box-shadow:
-    0 0 5px rgba(255, 255, 255, .8),
-    0 0 13px rgba(190, 215, 255, .25);
+    0 0 4px
+    rgba(255, 255, 255, .9),
+
+    0 0 11px
+    rgba(205, 222, 255, .34),
+
+    0 0 24px
+    rgba(169, 197, 255, .10);
 }
 
+.space-star.bright {
+  background: #fffefa;
+
+  box-shadow:
+    0 0 4px
+    rgba(255, 255, 255, .95),
+
+    0 0 10px
+    rgba(221, 233, 255, .5),
+
+    0 0 20px
+    rgba(174, 204, 255, .12);
+}
 
 .space-star.warm {
-  background: #fff4d8;
+  background: #fff0d1;
 }
-
 
 .space-star.cool {
-  background: #e4eeff;
+  background: #dceaff;
 }
 
 
-/* Gentle twinkle */
+/* =========================================================
+   BRIGHT STAR CROSS
+========================================================= */
+
+/*
+  Only a few bright stars receive this effect.
+  It keeps them looking astronomical rather than glittery.
+*/
+
+.space-star.anchor::before,
+.space-star.anchor::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  transform:
+    translate(-50%, -50%);
+
+  pointer-events: none;
+}
+
+.space-star.anchor::before {
+  width: 20px;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(255,255,255,.28),
+      transparent
+    );
+}
+
+.space-star.anchor::after {
+  width: 1px;
+  height: 20px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(255,255,255,.22),
+      transparent
+    );
+}
+
+
+/* =========================================================
+   TWINKLE
+========================================================= */
 
 .space-star.twinkle {
   animation:
-    starTwinkle
-    var(--twinkle-speed, 5s)
+    subtleTwinkle
+    var(--twinkle-speed, 7s)
     ease-in-out
     infinite;
 }
 
-
-@keyframes starTwinkle {
+@keyframes subtleTwinkle {
 
   0%,
   100% {
-    opacity: var(--base-opacity, .5);
+    opacity:
+      var(--base-opacity, .45);
   }
 
   50% {
-    opacity: var(--peak-opacity, .9);
+    opacity:
+      var(--peak-opacity, .8);
   }
 
 }
 
 
 /* =========================================================
-   COSMIC HAZE
+   MILKY WAY MICRO STARS
+========================================================= */
+
+.milky-star {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  background:
+    rgba(226, 234, 247, .8);
+
+  transform:
+    translate(-50%, -50%);
+
+  box-shadow:
+    0 0 2px
+    rgba(220, 231, 255, .2);
+}
+
+
+/* =========================================================
+   ATMOSPHERIC HAZE
 ========================================================= */
 
 .space-haze {
@@ -224,69 +429,134 @@ button {
 
   pointer-events: none;
 
-  filter: blur(100px);
+  filter: blur(110px);
 
   will-change: transform;
 }
 
 
+/* Main elongated Milky Way glow */
+
 .haze-a {
-  width: 1300px;
-  height: 650px;
+  width: 1750px;
+  height: 520px;
 
-  left: 900px;
-  top: 850px;
+  left: 840px;
+  top: 1070px;
 
-  opacity: .28;
+  transform:
+    rotate(-18deg);
 
-  transform: rotate(-15deg);
+  opacity: .32;
 
   background:
     radial-gradient(
       ellipse,
-      rgba(102, 123, 158, .13) 0%,
-      rgba(73, 91, 128, .06) 40%,
-      transparent 72%
+
+      rgba(159, 166, 180, .11) 0%,
+
+      rgba(107, 123, 151, .065) 27%,
+
+      rgba(61, 80, 113, .025) 52%,
+
+      transparent 75%
     );
 }
 
 
+/* Cooler cloud */
+
 .haze-b {
-  width: 900px;
-  height: 850px;
+  width: 1050px;
+  height: 760px;
 
-  left: 1900px;
-  top: 1050px;
+  left: 1920px;
+  top: 870px;
 
-  opacity: .18;
+  opacity: .19;
 
   background:
     radial-gradient(
       ellipse,
-      rgba(125, 135, 157, .10) 0%,
-      rgba(61, 77, 105, .04) 42%,
+
+      rgba(104, 123, 157, .095) 0%,
+
+      rgba(58, 78, 113, .035) 43%,
+
       transparent 73%
     );
 }
 
 
+/* Lower faint cloud */
+
 .haze-c {
-  width: 1000px;
-  height: 500px;
+  width: 1200px;
+  height: 600px;
 
-  left: 450px;
-  top: 1650px;
+  left: 420px;
+  top: 1640px;
 
-  opacity: .13;
+  transform:
+    rotate(13deg);
 
-  transform: rotate(12deg);
+  opacity: .14;
 
   background:
     radial-gradient(
       ellipse,
-      rgba(86, 106, 139, .1) 0%,
-      transparent 70%
+
+      rgba(93, 109, 137, .09) 0%,
+
+      transparent 72%
     );
+}
+
+
+/* =========================================================
+   DARK DUST LANES
+========================================================= */
+
+/*
+  These sit over parts of the Milky Way and break up
+  the smooth gradient. That's important because real
+  Milky Way photographs have irregular dark dust lanes.
+*/
+
+.haze-a::before,
+.haze-a::after {
+  content: "";
+
+  position: absolute;
+
+  border-radius: 50%;
+
+  background:
+    rgba(1, 4, 10, .38);
+
+  filter: blur(35px);
+}
+
+.haze-a::before {
+  width: 720px;
+  height: 95px;
+
+  left: 330px;
+  top: 190px;
+
+  transform:
+    rotate(4deg);
+}
+
+.haze-a::after {
+  width: 480px;
+  height: 65px;
+
+  left: 880px;
+  top: 265px;
+
+  transform:
+    rotate(-5deg);
 }
 
 
@@ -309,14 +579,14 @@ button {
 
   filter:
     drop-shadow(
-      0 0 22px rgba(180, 210, 255, .06)
+      0 0 24px
+      rgba(180, 210, 255, .06)
     );
 }
 
 
 .constellation-lines {
   position: absolute;
-
   inset: 0;
 
   width: 100%;
@@ -328,7 +598,7 @@ button {
 
 .constellation-lines line {
   stroke:
-    rgba(221, 232, 250, .22);
+    rgba(220, 232, 250, .2);
 
   stroke-width: 1;
 
@@ -336,8 +606,6 @@ button {
     non-scaling-stroke;
 }
 
-
-/* Orion stars */
 
 .constellation-star {
   position: absolute;
@@ -351,16 +619,21 @@ button {
     translate(-50%, -50%);
 
   background:
-    #fffdf3;
+    #fffdf4;
 
   box-shadow:
-    0 0 5px rgba(255, 255, 255, .95),
-    0 0 13px rgba(194, 217, 255, .6),
-    0 0 27px rgba(174, 205, 255, .2);
+    0 0 5px
+    rgba(255,255,255,.95),
+
+    0 0 13px
+    rgba(194,217,255,.58),
+
+    0 0 28px
+    rgba(174,205,255,.18);
 
   animation:
     constellationGlow
-    5s
+    5.5s
     ease-in-out
     infinite;
 }
@@ -369,11 +642,6 @@ button {
 .constellation-star.star-large {
   width: 10px;
   height: 10px;
-
-  box-shadow:
-    0 0 6px rgba(255, 255, 255, 1),
-    0 0 18px rgba(195, 218, 255, .75),
-    0 0 38px rgba(170, 205, 255, .28);
 }
 
 
@@ -388,20 +656,30 @@ button {
     #ffd7b1;
 
   box-shadow:
-    0 0 6px rgba(255, 224, 194, 1),
-    0 0 19px rgba(255, 173, 122, .5),
-    0 0 40px rgba(255, 133, 92, .18);
+    0 0 7px
+    rgba(255,224,194,1),
+
+    0 0 20px
+    rgba(255,173,122,.5),
+
+    0 0 42px
+    rgba(255,133,92,.16);
 }
 
 
 .constellation-star.star-blue {
   background:
-    #e3eeff;
+    #e2edff;
 
   box-shadow:
-    0 0 7px rgba(231, 240, 255, 1),
-    0 0 20px rgba(169, 205, 255, .65),
-    0 0 42px rgba(126, 176, 255, .22);
+    0 0 7px
+    rgba(231,240,255,1),
+
+    0 0 20px
+    rgba(169,205,255,.62),
+
+    0 0 42px
+    rgba(126,176,255,.2);
 }
 
 
@@ -419,7 +697,7 @@ button {
   50% {
     transform:
       translate(-50%, -50%)
-      scale(1.08);
+      scale(1.07);
 
     opacity: 1;
   }
@@ -427,7 +705,9 @@ button {
 }
 
 
-/* Orion label */
+/* =========================================================
+   CONSTELLATION LABEL
+========================================================= */
 
 .constellation-label {
   position: absolute;
@@ -440,9 +720,9 @@ button {
 
   text-align: center;
 
-  pointer-events: none;
-
   white-space: nowrap;
+
+  pointer-events: none;
 }
 
 
@@ -469,8 +749,6 @@ button {
 
   font-size: 8px;
 
-  font-weight: 400;
-
   letter-spacing: .24em;
 
   text-transform: uppercase;
@@ -480,7 +758,7 @@ button {
 
 
 /* =========================================================
-   INTERFACE
+   UI
 ========================================================= */
 
 #interface {
@@ -497,8 +775,7 @@ button {
   justify-content:
     space-between;
 
-  align-items:
-    center;
+  align-items: center;
 
   padding:
     max(
@@ -518,14 +795,8 @@ button {
   letter-spacing: .32em;
 
   opacity: .45;
-
-  pointer-events: none;
 }
 
-
-/* =========================================================
-   HOME BUTTON
-========================================================= */
 
 #homeButton {
   display: flex;
@@ -540,13 +811,12 @@ button {
 
   border:
     1px solid
-    rgba(255, 255, 255, .10);
+    rgba(255,255,255,.1);
 
-  border-radius:
-    100px;
+  border-radius: 100px;
 
   background:
-    rgba(4, 8, 16, .45);
+    rgba(4,8,16,.45);
 
   backdrop-filter:
     blur(12px);
@@ -555,24 +825,11 @@ button {
     blur(12px);
 
   color:
-    rgba(255, 255, 255, .55);
+    rgba(255,255,255,.55);
 
   cursor: pointer;
 
   pointer-events: auto;
-
-  transition:
-    background .25s ease,
-    color .25s ease;
-}
-
-
-#homeButton:hover {
-  background:
-    rgba(255, 255, 255, .08);
-
-  color:
-    rgba(255, 255, 255, .85);
 }
 
 
@@ -634,7 +891,7 @@ button {
     linear-gradient(
       to bottom,
       transparent,
-      rgba(255, 255, 255, .45)
+      rgba(255,255,255,.45)
     );
 }
 
@@ -669,7 +926,7 @@ button {
 
 
 /* =========================================================
-   DEPTH DISPLAY
+   DEPTH
 ========================================================= */
 
 #zoomDisplay {
@@ -709,7 +966,7 @@ button {
   height: 1px;
 
   background:
-    rgba(255, 255, 255, .14);
+    rgba(255,255,255,.14);
 }
 
 
@@ -718,10 +975,7 @@ button {
   height: 100%;
 
   background:
-    rgba(255, 255, 255, .7);
-
-  transition:
-    width .1s linear;
+    rgba(255,255,255,.7);
 }
 
 
@@ -740,10 +994,15 @@ button {
 
   background:
     radial-gradient(
-      circle at center,
-      transparent 40%,
-      rgba(0, 0, 0, .08) 65%,
-      rgba(0, 0, 0, .5) 120%
+      ellipse at center,
+
+      transparent 38%,
+
+      rgba(0,0,0,.05) 58%,
+
+      rgba(0,0,0,.32) 95%,
+
+      rgba(0,0,0,.58) 135%
     );
 }
 

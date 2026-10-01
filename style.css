@@ -785,29 +785,24 @@ button {
     opacity .5s ease;
 }
 
-
 /* =========================================================
-   TELESCOPE LENS
+   REALISTIC TELESCOPE EYEPIECE
 ========================================================= */
 
 #telescopeLens {
-
-  --lens-size: 310px;
+  --lens-size: min(62vw, 620px);
 
   position: fixed;
 
   left: 50%;
   top: 50%;
 
-  width:
-    var(--lens-size);
-
-  height:
-    var(--lens-size);
+  width: var(--lens-size);
+  height: var(--lens-size);
 
   transform:
     translate(-50%, -50%)
-    scale(.88);
+    scale(.82);
 
   border-radius: 50%;
 
@@ -817,31 +812,11 @@ button {
 
   pointer-events: none;
 
-  overflow: hidden;
-
-  border:
-
-    1px solid
-    rgba(225, 236, 255, .24);
-
-  box-shadow:
-
-    0 0 0 1px
-    rgba(255,255,255,.035),
-
-    0 0 45px
-    rgba(117,161,225,.08),
-
-    inset 0 0 35px
-    rgba(172,207,255,.07),
-
-    inset 0 0 90px
-    rgba(0,0,0,.3);
+  overflow: visible;
 
   transition:
-
-    opacity .35s ease,
-    transform .35s ease;
+    opacity .45s ease,
+    transform .55s cubic-bezier(.2,.8,.2,1);
 
   will-change:
     left,
@@ -850,9 +825,7 @@ button {
 }
 
 
-#app.telescope-active
-#telescopeLens {
-
+#app.telescope-active #telescopeLens {
   opacity: 1;
 
   transform:
@@ -862,198 +835,274 @@ button {
 
 
 /* =========================================================
-   LENS GLASS
+   DARK EYEPIECE RIM
 ========================================================= */
 
-.lens-glass {
-
+.eyepiece-rim {
   position: absolute;
 
-  inset: 0;
+  inset: -34px;
 
   border-radius: 50%;
 
   background:
+    radial-gradient(
+      circle,
+
+      transparent 66%,
+
+      rgba(7, 10, 15, .35) 70%,
+
+      rgba(2, 4, 8, .82) 77%,
+
+      #010205 84%,
+
+      #000 100%
+    );
+
+  box-shadow:
+    0 0 60px rgba(0,0,0,.85),
+    0 0 130px rgba(0,0,0,.7);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   OPTICAL GLASS
+========================================================= */
+
+.lens-glass {
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  border-radius: 50%;
+
+  /*
+    Very subtle optical tint.
+
+    We DON'T want it to look like blue glass.
+  */
+  background:
 
     radial-gradient(
-      circle at 38% 30%,
-
-      rgba(210, 229, 255, .07),
-
-      transparent 28%
+      circle at 44% 42%,
+      rgba(195, 220, 255, .018),
+      transparent 38%
     ),
 
     radial-gradient(
       circle at center,
-
-      transparent 42%,
-
-      rgba(94, 129, 180, .035) 69%,
-
-      rgba(0, 4, 12, .28) 100%
+      transparent 58%,
+      rgba(18, 33, 52, .08) 76%,
+      rgba(0, 3, 8, .42) 100%
     );
 
   box-shadow:
-
-    inset 0 0 25px
-    rgba(210, 229, 255, .04);
-
+    inset 0 0 30px rgba(210,230,255,.035),
+    inset 0 0 75px rgba(0,0,0,.4);
 }
 
 
 /* =========================================================
-   RETICLE
+   GLASS REFLECTION
 ========================================================= */
 
-.lens-reticle {
+.lens-reflection {
+  position: absolute;
 
+  width: 42%;
+  height: 20%;
+
+  left: 17%;
+  top: 12%;
+
+  border-radius: 50%;
+
+  transform:
+    rotate(-24deg);
+
+  background:
+
+    radial-gradient(
+      ellipse,
+      rgba(196, 221, 255, .07),
+      rgba(157, 195, 240, .018) 45%,
+      transparent 72%
+    );
+
+  filter:
+    blur(9px);
+
+  opacity: .55;
+}
+
+
+/* =========================================================
+   NATURAL EDGE FALLOFF
+========================================================= */
+
+.eyepiece-shadow {
   position: absolute;
 
   inset: 0;
 
-  opacity: .28;
-
-  transition:
-    opacity .4s ease;
-}
-
-
-.reticle-horizontal,
-.reticle-vertical {
-
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  transform:
-    translate(-50%, -50%);
-
-  background:
-    rgba(226, 236, 251, .32);
-}
-
-
-.reticle-horizontal {
-
-  width: 30px;
-  height: 1px;
-
-}
-
-
-.reticle-vertical {
-
-  width: 1px;
-  height: 30px;
-
-}
-
-
-.reticle-centre {
-
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  width: 4px;
-  height: 4px;
-
-  transform:
-    translate(-50%, -50%);
-
   border-radius: 50%;
 
-  border:
+  pointer-events: none;
 
-    1px solid
-    rgba(235, 243, 255, .5);
+  box-shadow:
+    inset 0 0 18px rgba(0,0,0,.35),
+    inset 0 0 55px rgba(0,0,0,.65),
+    inset 0 0 95px rgba(0,0,0,.52);
 }
 
 
 /* =========================================================
-   FOCUS RING
+   TELESCOPE MODE
 ========================================================= */
 
-#focusRing {
+#app.telescope-active::after {
+  content: "";
 
-  position: absolute;
+  position: fixed;
 
-  inset: 12px;
+  inset: 0;
 
-  border-radius: 50%;
+  z-index: 55;
 
-  border:
+  pointer-events: none;
 
-    1px solid
-    rgba(206, 225, 255, 0);
+  /*
+    Darkening outside the eyepiece makes it feel
+    like your eye is actually against the telescope.
+  */
+  background:
+    rgba(0, 1, 4, .48);
 
   transition:
-
-    border-color .4s ease,
-    box-shadow .4s ease;
+    opacity .45s ease;
 }
 
 
-#telescopeLens.near
-#focusRing {
+/* =========================================================
+   ORION REACTION WHILE SEARCHING
+========================================================= */
 
-  border-color:
-    rgba(190, 216, 255, .12);
-}
+/*
+   No focus ring anymore.
 
+   The STARS themselves tell you you're getting close.
+*/
 
-#telescopeLens.hot
-#focusRing {
-
-  border-color:
-    rgba(210, 229, 255, .32);
+#orion.telescope-near .orion-star {
+  opacity: .88;
 
   box-shadow:
-
-    inset 0 0 22px
-    rgba(175, 210, 255, .05);
+    0 0 4px rgba(255,255,255,.5),
+    0 0 10px rgba(190,215,255,.12);
 }
 
 
-#telescopeLens.holding
-#focusRing {
+#orion.telescope-hot .orion-star {
+  opacity: 1;
+
+  width: 5px;
+  height: 5px;
+
+  box-shadow:
+    0 0 5px rgba(255,255,255,.95),
+    0 0 14px rgba(193,218,255,.48),
+    0 0 30px rgba(154,195,255,.13);
 
   animation:
-
-    focusPulse
-    1.1s
+    telescopeStarAwaken
+    2.2s
     ease-in-out
     infinite;
 }
 
 
-@keyframes focusPulse {
+#orion.telescope-hot .orion-star:nth-of-type(2) {
+  animation-delay: .2s;
+}
+
+#orion.telescope-hot .orion-star:nth-of-type(3) {
+  animation-delay: .45s;
+}
+
+#orion.telescope-hot .orion-star:nth-of-type(4) {
+  animation-delay: .7s;
+}
+
+#orion.telescope-hot .orion-star:nth-of-type(5) {
+  animation-delay: .9s;
+}
+
+
+@keyframes telescopeStarAwaken {
 
   0%,
   100% {
-
     transform:
+      translate(-50%, -50%)
       scale(1);
 
-    border-color:
-      rgba(210,229,255,.24);
-
+    filter:
+      brightness(1);
   }
 
   50% {
-
     transform:
-      scale(.96);
+      translate(-50%, -50%)
+      scale(1.35);
 
-    border-color:
-      rgba(230,240,255,.55);
-
+    filter:
+      brightness(1.35);
   }
 
 }
 
+
+/* =========================================================
+   IPAD
+========================================================= */
+
+@media (max-width: 900px) {
+
+  #telescopeLens {
+    --lens-size:
+      min(
+        74vw,
+        520px
+      );
+  }
+
+}
+
+
+/* =========================================================
+   PHONE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  #telescopeLens {
+    --lens-size:
+      min(
+        78vw,
+        350px
+      );
+  }
+
+  .eyepiece-rim {
+    inset: -25px;
+  }
+
+}
 
 /* =========================================================
    TELESCOPE BUTTON

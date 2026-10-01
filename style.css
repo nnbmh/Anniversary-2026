@@ -1,6 +1,8 @@
 /* =========================================================
    OUR LITTLE UNIVERSE
-   Universe + Telescope Prototype
+   Anniversary 2026
+
+   Full stylesheet
 ========================================================= */
 
 
@@ -14,7 +16,6 @@
   box-sizing: border-box;
 }
 
-
 html,
 body {
   width: 100%;
@@ -26,11 +27,8 @@ body {
 
   color: #f6f3ea;
 
-  touch-action: none;
-
   overscroll-behavior: none;
 }
-
 
 body {
   font-family:
@@ -38,8 +36,9 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-}
 
+  touch-action: none;
+}
 
 button {
   font: inherit;
@@ -60,17 +59,20 @@ button {
 
   cursor: grab;
 
-  background:
+  /*
+     Temporary naked-eye background.
 
+     We are going to improve the actual star field next.
+  */
+  background:
     radial-gradient(
-      ellipse at 48% 45%,
-      #07101d 0%,
-      #040a13 32%,
-      #02060d 62%,
+      ellipse at 50% 45%,
+      #07101b 0%,
+      #040a13 34%,
+      #02060d 64%,
       #010309 100%
     );
 }
-
 
 #app.dragging {
   cursor: grabbing;
@@ -97,7 +99,7 @@ button {
 
 
 /* =========================================================
-   DUST / DEEP SPACE STRUCTURE
+   DEEP SPACE DUST
 ========================================================= */
 
 #dustLayer {
@@ -105,30 +107,28 @@ button {
 
   inset: 0;
 
-  pointer-events: none;
-
   z-index: 0;
+
+  pointer-events: none;
 
   will-change: transform;
 }
-
 
 .dust {
   position: absolute;
 
   border-radius: 50%;
 
-  filter: blur(100px);
-
   pointer-events: none;
+
+  filter: blur(110px);
 }
 
 
 /*
-  These aren't supposed to look like
-  obvious clouds.
+   These should be VERY faint.
 
-  They just create uneven structure.
+   They aren't meant to look like coloured clouds.
 */
 
 .dust-a {
@@ -140,21 +140,16 @@ button {
 
   transform: rotate(-19deg);
 
-  opacity: .16;
+  opacity: .09;
 
   background:
-
     radial-gradient(
       ellipse,
-
-      rgba(98, 118, 150, .14) 0%,
-
-      rgba(63, 82, 116, .06) 35%,
-
-      transparent 72%
+      rgba(95, 113, 142, .11) 0%,
+      rgba(57, 76, 108, .04) 38%,
+      transparent 73%
     );
 }
-
 
 .dust-b {
   width: 1000px;
@@ -165,21 +160,16 @@ button {
 
   transform: rotate(16deg);
 
-  opacity: .11;
+  opacity: .07;
 
   background:
-
     radial-gradient(
       ellipse,
-
-      rgba(91, 108, 139, .12) 0%,
-
-      rgba(47, 67, 100, .04) 45%,
-
+      rgba(89, 105, 133, .1) 0%,
+      rgba(47, 65, 94, .03) 44%,
       transparent 74%
     );
 }
-
 
 .dust-c {
   width: 900px;
@@ -188,19 +178,15 @@ button {
   left: 1300px;
   top: 1750px;
 
-  opacity: .09;
+  opacity: .06;
 
   background:
-
     radial-gradient(
       ellipse,
-
-      rgba(119, 126, 144, .1) 0%,
-
+      rgba(111, 119, 138, .08) 0%,
       transparent 70%
     );
 }
-
 
 .dust-d {
   width: 750px;
@@ -209,15 +195,12 @@ button {
   left: 160px;
   top: 350px;
 
-  opacity: .07;
+  opacity: .05;
 
   background:
-
     radial-gradient(
       ellipse,
-
-      rgba(76, 98, 135, .11) 0%,
-
+      rgba(72, 91, 122, .09) 0%,
       transparent 72%
     );
 }
@@ -239,7 +222,7 @@ button {
 
 
 /* =========================================================
-   NORMAL STAR
+   BASIC SKY STAR
 ========================================================= */
 
 .sky-star {
@@ -265,7 +248,7 @@ button {
   width: .7px;
   height: .7px;
 
-  opacity: .25;
+  opacity: .24;
 }
 
 
@@ -286,13 +269,12 @@ button {
 ========================================================= */
 
 #starsMid .sky-star {
-  width: 1.6px;
-  height: 1.6px;
+  width: 1.5px;
+  height: 1.5px;
 
   box-shadow:
-
     0 0 3px
-    rgba(220, 231, 255, .24);
+    rgba(220, 231, 255, .2);
 }
 
 
@@ -301,16 +283,15 @@ button {
 ========================================================= */
 
 #starsNear .sky-star {
-  width: 2.4px;
-  height: 2.4px;
+  width: 2.2px;
+  height: 2.2px;
 
   box-shadow:
-
     0 0 4px
-    rgba(255, 255, 255, .55),
+    rgba(255, 255, 255, .45),
 
-    0 0 9px
-    rgba(174, 205, 255, .12);
+    0 0 8px
+    rgba(174, 205, 255, .1);
 }
 
 
@@ -324,42 +305,38 @@ button {
     scale(.55);
 }
 
-
 .sky-star.large {
-  width: 3.2px !important;
-  height: 3.2px !important;
+  width: 3px !important;
+  height: 3px !important;
 
   box-shadow:
-
     0 0 4px
-    rgba(255, 255, 255, .85),
+    rgba(255, 255, 255, .75),
 
-    0 0 12px
-    rgba(196, 217, 255, .26);
+    0 0 10px
+    rgba(196, 217, 255, .2);
 }
-
 
 .sky-star.warm {
-  background:
-    #ffe8c8;
+  background: #ffe8c8;
 }
-
 
 .sky-star.cool {
-  background:
-    #dbe9ff;
+  background: #dbe9ff;
 }
 
+
+/* =========================================================
+   SUBTLE TWINKLE
+========================================================= */
 
 .sky-star.twinkle {
   animation:
-
     skyTwinkle
     var(--twinkle-duration, 8s)
     ease-in-out
     infinite;
 }
-
 
 @keyframes skyTwinkle {
 
@@ -397,13 +374,12 @@ button {
 
 
 /* =========================================================
-   ORION STARS - HIDDEN STATE
+   ORION — UNDISCOVERED
 ========================================================= */
 
 /*
-  They look like slightly brighter ordinary stars.
-
-  Nothing visually says "constellation" yet.
+   Before discovery these should look like
+   ordinary stars in the naked-eye universe.
 */
 
 .orion-star {
@@ -420,34 +396,29 @@ button {
   background:
     rgba(244, 247, 255, .72);
 
-  box-shadow:
+  opacity: .68;
 
+  box-shadow:
     0 0 3px
-    rgba(255, 255, 255, .25);
+    rgba(255, 255, 255, .22);
 
   transition:
-
     width .7s ease,
     height .7s ease,
     opacity .7s ease,
     box-shadow .7s ease,
     background .7s ease;
-
-  opacity: .68;
 }
-
 
 .orion-star.small {
   width: 2px;
   height: 2px;
 }
 
-
 .orion-star.warm {
   background:
     rgba(255, 225, 198, .72);
 }
-
 
 .orion-star.cool {
   background:
@@ -456,124 +427,59 @@ button {
 
 
 /* =========================================================
-   ORION - TELESCOPE AWAKENING
+   ORION — DISCOVERED
 ========================================================= */
 
-#orion.telescope-near
-.orion-star {
-
-  opacity: .9;
-
-  box-shadow:
-
-    0 0 4px
-    rgba(255,255,255,.55),
-
-    0 0 10px
-    rgba(185,211,255,.15);
-}
-
-
-#orion.telescope-hot
-.orion-star {
-
-  width: 5px;
-  height: 5px;
-
-  opacity: 1;
-
-  box-shadow:
-
-    0 0 5px
-    rgba(255,255,255,.95),
-
-    0 0 14px
-    rgba(188,214,255,.55),
-
-    0 0 28px
-    rgba(162,199,255,.15);
-}
-
-
-#orion.telescope-hot
-.orion-star.small {
-
-  width: 3.5px;
-  height: 3.5px;
-}
-
-
-/* =========================================================
-   ORION - DISCOVERED
-========================================================= */
-
-#orion.discovered
-.orion-star {
-
+#orion.discovered .orion-star {
   width: 7px;
   height: 7px;
 
   opacity: 1;
 
-  background:
-    #fffdf4;
+  background: #fffdf4;
 
   box-shadow:
-
     0 0 6px
     rgba(255,255,255,.95),
 
     0 0 16px
-    rgba(192,216,255,.6),
+    rgba(192,216,255,.55),
 
-    0 0 32px
-    rgba(163,199,255,.18);
+    0 0 31px
+    rgba(163,199,255,.16);
 }
 
-
-#orion.discovered
-.orion-star.small {
-
+#orion.discovered .orion-star.small {
   width: 4.5px;
   height: 4.5px;
 }
 
-
-#orion.discovered
-.orion-star.warm {
-
-  background:
-    #ffd6b0;
+#orion.discovered .orion-star.warm {
+  background: #ffd6b0;
 
   box-shadow:
-
     0 0 7px
     rgba(255,225,198,1),
 
-    0 0 20px
-    rgba(255,173,120,.45),
+    0 0 19px
+    rgba(255,173,120,.42),
 
-    0 0 38px
-    rgba(255,135,92,.15);
+    0 0 35px
+    rgba(255,135,92,.13);
 }
 
-
-#orion.discovered
-.orion-star.cool {
-
-  background:
-    #dceaff;
+#orion.discovered .orion-star.cool {
+  background: #dceaff;
 
   box-shadow:
-
     0 0 7px
     rgba(232,241,255,1),
 
-    0 0 20px
-    rgba(164,201,255,.55),
+    0 0 19px
+    rgba(164,201,255,.5),
 
-    0 0 38px
-    rgba(125,175,255,.16);
+    0 0 35px
+    rgba(125,175,255,.14);
 }
 
 
@@ -592,9 +498,7 @@ button {
   overflow: visible;
 }
 
-
 .constellation-lines line {
-
   stroke:
     rgba(221, 232, 248, .42);
 
@@ -604,23 +508,18 @@ button {
     non-scaling-stroke;
 
   stroke-dasharray: 600;
-
   stroke-dashoffset: 600;
 
   opacity: 0;
-
-  transition:
-    opacity .4s ease;
 }
 
 
-/*
-  Lines draw one after another.
-*/
+/* =========================================================
+   DRAW ORION
+========================================================= */
 
 #orion.discovered
 .constellation-lines line {
-
   opacity: 1;
 
   animation:
@@ -630,54 +529,45 @@ button {
     forwards;
 }
 
-
 #orion.discovered
 .constellation-lines line:nth-child(2) {
   animation-delay: .12s;
 }
-
 
 #orion.discovered
 .constellation-lines line:nth-child(3) {
   animation-delay: .24s;
 }
 
-
 #orion.discovered
 .constellation-lines line:nth-child(4) {
   animation-delay: .36s;
 }
-
 
 #orion.discovered
 .constellation-lines line:nth-child(5) {
   animation-delay: .48s;
 }
 
-
 #orion.discovered
 .constellation-lines line:nth-child(6) {
-  animation-delay: .6s;
+  animation-delay: .60s;
 }
-
 
 #orion.discovered
 .constellation-lines line:nth-child(7) {
   animation-delay: .72s;
 }
 
-
 #orion.discovered
 .constellation-lines line:nth-child(8) {
   animation-delay: .84s;
 }
 
-
 #orion.discovered
 .constellation-lines line:nth-child(9) {
   animation-delay: .96s;
 }
-
 
 @keyframes drawConstellation {
 
@@ -693,7 +583,7 @@ button {
 
 
 /* =========================================================
-   ORION LABEL
+   CONSTELLATION LABEL
 ========================================================= */
 
 .constellation-label {
@@ -712,24 +602,19 @@ button {
   opacity: 0;
 
   transition:
-
     opacity 1.1s ease 1.6s,
     transform 1.1s ease 1.6s;
 }
 
-
 #orion.discovered
 .constellation-label {
-
   opacity: 1;
 
   transform:
     translate(-50%, 0);
 }
 
-
 .constellation-label span {
-
   display: block;
 
   font-family:
@@ -744,9 +629,7 @@ button {
   opacity: .86;
 }
 
-
 .constellation-label small {
-
   display: block;
 
   margin-top: 8px;
@@ -762,402 +645,10 @@ button {
 
 
 /* =========================================================
-   TELESCOPE MODE - OUTSIDE DARKENING
-========================================================= */
-
-#app.telescope-active::after {
-
-  content: "";
-
-  position: absolute;
-
-  inset: 0;
-
-  z-index: 55;
-
-  pointer-events: none;
-
-  background:
-
-    rgba(0, 2, 7, .27);
-
-  transition:
-    opacity .5s ease;
-}
-
-/* =========================================================
-   TELESCOPE EYEPIECE — V2
-========================================================= */
-
-#telescopeLens {
-  --lens-size: min(64vw, 600px);
-
-  position: fixed;
-  left: 50%;
-  top: 50%;
-
-  width: var(--lens-size);
-  height: var(--lens-size);
-
-  transform:
-    translate(-50%, -50%)
-    scale(.86);
-
-  border-radius: 50%;
-
-  z-index: 80;
-
-  opacity: 0;
-  visibility: hidden;
-
-  pointer-events: none;
-
-  transition:
-    opacity .35s ease,
-    transform .45s cubic-bezier(.2,.8,.2,1);
-
-  will-change:
-    left,
-    top,
-    transform;
-}
-
-
-#app.telescope-active #telescopeLens {
-  opacity: 1;
-  visibility: visible;
-
-  transform:
-    translate(-50%, -50%)
-    scale(1);
-}
-
-
-/* =========================================================
-   PHYSICAL EYEPIECE EDGE
-========================================================= */
-
-.eyepiece-rim {
-  position: absolute;
-
-  inset: -22px;
-
-  border-radius: 50%;
-
-  z-index: 1;
-
-  border:
-    2px solid
-    rgba(153, 174, 201, .34);
-
-  background:
-    radial-gradient(
-      circle,
-      transparent 67%,
-      rgba(38, 46, 58, .30) 68%,
-      rgba(13, 17, 24, .92) 75%,
-      rgba(3, 5, 9, .98) 84%,
-      #000 100%
-    );
-
-  box-shadow:
-    0 0 0 5px rgba(0, 0, 0, .75),
-    0 0 22px rgba(132, 161, 201, .12),
-    0 0 70px rgba(0, 0, 0, .9);
-
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   GLASS
-========================================================= */
-
-.lens-glass {
-  position: absolute;
-
-  inset: 0;
-
-  z-index: 2;
-
-  overflow: hidden;
-
-  border-radius: 50%;
-
-  border:
-    1px solid
-    rgba(198, 218, 242, .30);
-
-  /*
-    This is intentionally visible for now.
-
-    Later the real high-detail sky will appear
-    through this area.
-  */
-
-  background:
-    radial-gradient(
-      circle at 45% 40%,
-      rgba(116, 151, 198, .10) 0%,
-      rgba(40, 65, 98, .07) 35%,
-      rgba(3, 9, 18, .05) 65%,
-      rgba(0, 2, 7, .30) 100%
-    );
-
-  box-shadow:
-    inset 0 0 20px rgba(206, 226, 255, .10),
-    inset 0 0 65px rgba(45, 75, 115, .10),
-    inset 0 0 110px rgba(0, 0, 0, .65);
-}
-
-
-/* =========================================================
-   GLASS REFLECTION
-========================================================= */
-
-.lens-reflection {
-  position: absolute;
-
-  width: 45%;
-  height: 17%;
-
-  left: 14%;
-  top: 12%;
-
-  border-radius: 50%;
-
-  transform:
-    rotate(-24deg);
-
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(205, 226, 255, .16),
-      rgba(148, 190, 239, .045) 45%,
-      transparent 72%
-    );
-
-  filter:
-    blur(10px);
-
-  opacity: .7;
-}
-
-
-/* =========================================================
-   EDGE FALLOFF
-========================================================= */
-
-.eyepiece-shadow {
-  position: absolute;
-
-  inset: 0;
-
-  z-index: 3;
-
-  border-radius: 50%;
-
-  pointer-events: none;
-
-  box-shadow:
-    inset 0 0 14px rgba(0, 0, 0, .55),
-    inset 0 0 45px rgba(0, 0, 0, .55),
-    inset 0 0 85px rgba(0, 0, 0, .55);
-}
-
-
-/* =========================================================
-   DARKEN THE WORLD AROUND THE TELESCOPE
-========================================================= */
-
-#app.telescope-active::after {
-  content: "";
-
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 60;
-
-  pointer-events: none;
-
-  background:
-    rgba(0, 1, 5, .58);
-}
-
-
-/* =========================================================
-   ORION SEARCH RESPONSE
-========================================================= */
-
-#orion.telescope-near .orion-star {
-  opacity: .92;
-
-  box-shadow:
-    0 0 4px rgba(255,255,255,.65),
-    0 0 11px rgba(187,213,255,.18);
-}
-
-
-#orion.telescope-hot .orion-star {
-  opacity: 1;
-
-  width: 5px;
-  height: 5px;
-
-  box-shadow:
-    0 0 5px rgba(255,255,255,1),
-    0 0 15px rgba(192,218,255,.58),
-    0 0 30px rgba(151,195,255,.18);
-
-  animation:
-    telescopeStarAwaken
-    2.2s
-    ease-in-out
-    infinite;
-}
-
-
-@keyframes telescopeStarAwaken {
-
-  0%,
-  100% {
-    transform:
-      translate(-50%, -50%)
-      scale(1);
-  }
-
-  50% {
-    transform:
-      translate(-50%, -50%)
-      scale(1.4);
-  }
-
-}
-
-
-/* =========================================================
-   IPAD
-========================================================= */
-
-@media (max-width: 900px) {
-
-  #telescopeLens {
-    --lens-size:
-      min(72vw, 520px);
-  }
-
-}
-
-
-/* =========================================================
-   PHONE
-========================================================= */
-
-@media (max-width: 600px) {
-
-  #telescopeLens {
-    --lens-size:
-      min(76vw, 350px);
-  }
-
-  .eyepiece-rim {
-    inset: -18px;
-  }
-
-}
-
-/* =========================================================
-   TELESCOPE BUTTON
-========================================================= */
-
-#telescopeButton {
-
-  position: fixed;
-
-  right: 24px;
-
-  bottom:
-    max(
-      24px,
-      env(safe-area-inset-bottom)
-    );
-
-  z-index: 100;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  padding:
-    11px
-    15px;
-
-  border:
-
-    1px solid
-    rgba(255,255,255,.12);
-
-  border-radius:
-    100px;
-
-  background:
-    rgba(3,8,16,.66);
-
-  backdrop-filter:
-    blur(14px);
-
-  -webkit-backdrop-filter:
-    blur(14px);
-
-  color:
-    rgba(239,244,255,.65);
-
-  cursor: pointer;
-
-  transition:
-
-    color .3s ease,
-    background .3s ease,
-    border-color .3s ease;
-}
-
-
-#telescopeButton.active {
-
-  color:
-    rgba(246,249,255,.95);
-
-  background:
-    rgba(11,21,37,.82);
-
-  border-color:
-    rgba(195,218,255,.24);
-}
-
-
-.telescope-icon {
-
-  font-size: 12px;
-}
-
-
-.telescope-text {
-
-  font-size: 8px;
-
-  letter-spacing: .2em;
-}
-
-
-/* =========================================================
-   TOP INTERFACE
+   NORMAL INTERFACE
 ========================================================= */
 
 #interface {
-
   position: fixed;
 
   left: 0;
@@ -1168,29 +659,24 @@ button {
 
   display: flex;
 
-  justify-content:
-    space-between;
-
-  align-items:
-    flex-start;
+  justify-content: space-between;
+  align-items: flex-start;
 
   padding:
-
     max(
       22px,
       env(safe-area-inset-top)
     )
-
     24px
-
     0;
 
   pointer-events: none;
+
+  transition:
+    opacity .5s ease;
 }
 
-
 .site-title {
-
   font-size: 9px;
 
   letter-spacing: .34em;
@@ -1204,7 +690,6 @@ button {
 ========================================================= */
 
 #discoveryCounter {
-
   text-align: right;
 
   font-family:
@@ -1219,18 +704,13 @@ button {
   opacity: .38;
 }
 
-
 .counter-divider {
-
-  margin:
-    0 2px;
+  margin: 0 2px;
 
   opacity: .5;
 }
 
-
 #discoveryCounter small {
-
   display: block;
 
   margin-top: 4px;
@@ -1252,7 +732,6 @@ button {
 ========================================================= */
 
 #navigationHint {
-
   position: fixed;
 
   left: 50%;
@@ -1273,18 +752,14 @@ button {
   pointer-events: none;
 
   transition:
-    opacity .7s ease;
+    opacity .5s ease;
 }
 
-
 #navigationHint.hidden {
-
   opacity: 0;
 }
 
-
 #navigationHint p {
-
   font-family:
     Georgia,
     "Times New Roman",
@@ -1297,9 +772,7 @@ button {
   opacity: .68;
 }
 
-
 #navigationHint span {
-
   display: block;
 
   margin-top: 6px;
@@ -1315,20 +788,396 @@ button {
 
 
 /* =========================================================
+   TELESCOPE VIEW
+========================================================= */
+
+/*
+   This is now a proper "looking through a telescope"
+   experience rather than a lens floating over the universe.
+
+   The whole screen goes black.
+*/
+
+#telescopeView {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 70;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background:
+    rgba(0, 0, 0, 0);
+
+  opacity: 0;
+  visibility: hidden;
+
+  pointer-events: none;
+
+  transition:
+    opacity .65s ease,
+    background .65s ease,
+    visibility .65s;
+}
+
+
+/* =========================================================
+   ACTIVE TELESCOPE
+========================================================= */
+
+#app.telescope-active
+#telescopeView {
+  opacity: 1;
+  visibility: visible;
+
+  pointer-events: auto;
+
+  /*
+     Nearly complete darkness around the eyepiece.
+  */
+  background:
+    rgba(0, 0, 0, .985);
+}
+
+
+/* =========================================================
+   NORMAL UI DISAPPEARS IN TELESCOPE MODE
+========================================================= */
+
+#app.telescope-active
+#interface {
+  opacity: 0;
+}
+
+#app.telescope-active
+#navigationHint {
+  opacity: 0;
+}
+
+
+/* =========================================================
+   TELESCOPE EYEPIECE
+========================================================= */
+
+/*
+   IMPORTANT:
+
+   There is deliberately no visible silver/white ring.
+
+   The star field simply fades into black around
+   the circular field of vision.
+*/
+
+#eyepiece {
+  position: relative;
+
+  width:
+    min(
+      47vw,
+      430px
+    );
+
+  aspect-ratio: 1;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  background:
+    #00040a;
+
+  opacity: 0;
+
+  transform:
+    scale(.88);
+
+  /*
+     The shadow is BLACK rather than glowing,
+     so the edge disappears into the surroundings.
+  */
+  box-shadow:
+    0 0 18px
+    rgba(0, 0, 0, 1),
+
+    0 0 55px
+    rgba(0, 0, 0, 1);
+
+  transition:
+    opacity .55s ease .1s,
+    transform .75s
+    cubic-bezier(.16,.8,.2,1);
+}
+
+#app.telescope-active
+#eyepiece {
+  opacity: 1;
+
+  transform:
+    scale(1);
+}
+
+
+/* =========================================================
+   TELESCOPE CANVAS
+========================================================= */
+
+#telescopeCanvas {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background:
+    #00040a;
+}
+
+
+/* =========================================================
+   OPTICAL FALLOFF
+========================================================= */
+
+.eyepiece-optics {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  /*
+     Very subtle reflection near upper left.
+
+     Most of the effect comes from the dark
+     falloff around the edge.
+  */
+  background:
+
+    radial-gradient(
+      ellipse at 35% 27%,
+      rgba(200, 220, 245, .035) 0%,
+      rgba(170, 205, 245, .012) 22%,
+      transparent 37%
+    ),
+
+    radial-gradient(
+      circle at center,
+
+      transparent 48%,
+
+      rgba(0, 2, 6, .05) 59%,
+
+      rgba(0, 1, 4, .20) 70%,
+
+      rgba(0, 0, 0, .58) 84%,
+
+      rgba(0, 0, 0, .96) 100%
+    );
+
+  box-shadow:
+    inset 0 0 16px
+    rgba(0, 0, 0, .25),
+
+    inset 0 0 42px
+    rgba(0, 0, 0, .45),
+
+    inset 0 0 80px
+    rgba(0, 0, 0, .48);
+}
+
+
+/* =========================================================
+   TELESCOPE INSTRUCTION
+========================================================= */
+
+.telescope-instruction {
+  position: absolute;
+
+  left: 50%;
+
+  bottom:
+    max(
+      34px,
+      env(safe-area-inset-bottom)
+    );
+
+  transform:
+    translateX(-50%);
+
+  width: max-content;
+  max-width: 70vw;
+
+  text-align: center;
+
+  color:
+    rgba(238, 243, 251, .42);
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  transition:
+    opacity .7s ease .5s;
+}
+
+#app.telescope-active
+.telescope-instruction {
+  opacity: 1;
+}
+
+.telescope-instruction span {
+  display: block;
+
+  font-size: 7px;
+
+  letter-spacing: .28em;
+}
+
+.telescope-instruction small {
+  display: block;
+
+  margin-top: 6px;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 11px;
+
+  font-style: italic;
+
+  letter-spacing: .04em;
+
+  opacity: .7;
+}
+
+
+/* =========================================================
+   TELESCOPE BUTTON
+========================================================= */
+
+#telescopeButton {
+  position: fixed;
+
+  right: 24px;
+
+  bottom:
+    max(
+      24px,
+      env(safe-area-inset-bottom)
+    );
+
+  z-index: 120;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-height: 42px;
+
+  padding:
+    10px
+    15px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.11);
+
+  border-radius:
+    100px;
+
+  background:
+    rgba(3,8,16,.66);
+
+  backdrop-filter:
+    blur(14px);
+
+  -webkit-backdrop-filter:
+    blur(14px);
+
+  color:
+    rgba(239,244,255,.64);
+
+  cursor: pointer;
+
+  -webkit-tap-highlight-color:
+    transparent;
+
+  transition:
+    color .3s ease,
+    background .3s ease,
+    border-color .3s ease,
+    opacity .3s ease;
+}
+
+#telescopeButton:hover {
+  color:
+    rgba(246,249,255,.9);
+
+  border-color:
+    rgba(195,218,255,.2);
+}
+
+#telescopeButton.active,
+#app.telescope-active
+#telescopeButton {
+  color:
+    rgba(246,249,255,.85);
+
+  background:
+    rgba(7,10,16,.78);
+
+  border-color:
+    rgba(210,225,245,.16);
+}
+
+.telescope-icon {
+  font-size: 12px;
+
+  line-height: 1;
+}
+
+.telescope-text {
+  font-size: 8px;
+
+  letter-spacing: .2em;
+}
+
+
+/* =========================================================
    DISCOVERY MESSAGE
 ========================================================= */
 
 #discoveryMessage {
-
   position: fixed;
 
   left: 50%;
   top: 50%;
 
-  z-index: 120;
+  z-index: 150;
 
   transform:
     translate(-50%, -42%);
+
+  width: max-content;
+  max-width: 85vw;
 
   text-align: center;
 
@@ -1337,23 +1186,18 @@ button {
   opacity: 0;
 
   transition:
-
     opacity 1s ease,
     transform 1s ease;
 }
 
-
 #discoveryMessage.show {
-
   opacity: 1;
 
   transform:
     translate(-50%, -50%);
 }
 
-
 .discovery-eyebrow {
-
   display: block;
 
   margin-bottom: 13px;
@@ -1365,9 +1209,7 @@ button {
   opacity: .4;
 }
 
-
 #discoveryMessage strong {
-
   display: block;
 
   font-family:
@@ -1384,9 +1226,7 @@ button {
   padding-left: .42em;
 }
 
-
 #discoveryMessage small {
-
   display: block;
 
   margin-top: 11px;
@@ -1402,11 +1242,10 @@ button {
 
 
 /* =========================================================
-   VIGNETTE
+   NORMAL SCREEN VIGNETTE
 ========================================================= */
 
 #vignette {
-
   position: fixed;
 
   inset: 0;
@@ -1416,76 +1255,81 @@ button {
   pointer-events: none;
 
   background:
-
     radial-gradient(
       ellipse at center,
 
-      transparent 40%,
+      transparent 43%,
 
-      rgba(0,0,0,.06) 65%,
+      rgba(0,0,0,.05) 66%,
 
-      rgba(0,0,0,.38) 110%
+      rgba(0,0,0,.35) 110%
     );
+
+  transition:
+    opacity .5s ease;
+}
+
+
+/*
+   Telescope already supplies its own darkness.
+*/
+
+#app.telescope-active
+#vignette {
+  opacity: 0;
 }
 
 
 /* =========================================================
-   MOBILE / IPAD
+   IPAD / TABLET
 ========================================================= */
 
 @media (max-width: 900px) {
 
   #universe {
-
     width: 2800px;
     height: 2250px;
-
   }
 
 
   #orion {
-
     width: 390px;
     height: 485px;
 
     left: 1205px;
     top: 880px;
-
   }
 
 
-  #telescopeLens {
+  /*
+     Smaller than our previous telescope.
 
-    --lens-size:
+     Around half of the screen width.
+  */
+  #eyepiece {
+    width:
       min(
-        68vw,
-        360px
+        49vw,
+        390px
       );
-
   }
 
 
   #interface {
-
     padding-left: 17px;
     padding-right: 17px;
-
   }
 
 
   .site-title {
-
-    max-width: 110px;
+    max-width: 120px;
 
     line-height: 1.6;
-
   }
 
 
   #telescopeButton {
-
     right: 17px;
-
   }
 
 }
@@ -1497,40 +1341,73 @@ button {
 
 @media (max-width: 600px) {
 
-  #telescopeLens {
-
-    --lens-size:
+  /*
+     A phone needs a proportionally larger field
+     because the screen itself is much narrower.
+  */
+  #eyepiece {
+    width:
       min(
-        72vw,
+        64vw,
         300px
       );
-
   }
 
 
   .telescope-text {
-
     display: none;
-
   }
 
 
   #telescopeButton {
-
     width: 46px;
     height: 46px;
 
     justify-content: center;
 
     padding: 0;
-
   }
 
 
   #navigationHint {
-
     max-width: 240px;
+  }
 
+
+  .telescope-instruction {
+    bottom:
+      max(
+        31px,
+        env(safe-area-inset-bottom)
+      );
+  }
+
+
+  #discoveryMessage strong {
+    font-size: 23px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL PHONE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  #eyepiece {
+    width: 68vw;
+  }
+
+
+  .site-title {
+    font-size: 8px;
+  }
+
+
+  #discoveryMessage strong {
+    font-size: 20px;
   }
 
 }
@@ -1545,11 +1422,17 @@ button {
   reduce
 ) {
 
-  .sky-star.twinkle,
-  #focusRing {
+  *,
+  *::before,
+  *::after {
+    animation-duration:
+      .01ms !important;
 
-    animation: none !important;
+    animation-iteration-count:
+      1 !important;
 
+    transition-duration:
+      .01ms !important;
   }
 
 }

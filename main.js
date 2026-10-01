@@ -1039,20 +1039,20 @@ function drawTelescopeOrion(
       );
 
       ctx.strokeStyle =
-        "rgba(177, 210, 247, .18)";
-
-      ctx.lineWidth = 4;
-
-      ctx.lineCap = "round";
-
-      ctx.shadowColor =
-        "rgba(185, 218, 255, .32)";
-
-      ctx.shadowBlur = 8;
-
-      ctx.stroke();
-
-      ctx.restore();
+         "rgba(177, 210, 247, .10)";
+       
+       ctx.lineWidth = 1.5;
+       
+       ctx.lineCap = "round";
+       
+       ctx.shadowColor =
+          "rgba(185, 218, 255, .14)";
+       
+       ctx.shadowBlur = 3;
+       
+       ctx.stroke();
+       
+       ctx.restore();
 
 
       /* actual fine constellation line */

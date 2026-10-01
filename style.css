@@ -1531,3 +1531,34 @@ button {
   transform:
     translate(-50%, 0);
 }
+
+/* =========================================================
+   ORION CINEMATIC REVEAL
+========================================================= */
+
+#orion:not(.discovered) .constellation-label {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+#orion.discovered .constellation-label {
+  opacity: 1;
+}
+
+
+/*
+  Make each travelling constellation line
+  feel like light rather than a diagram.
+*/
+
+#orion .constellation-lines line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  filter:
+    drop-shadow(
+      0 0 3px
+      rgba(220, 235, 255, .28)
+    );
+}

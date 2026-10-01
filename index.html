@@ -1,155 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  />
+  >
+
+  <meta name="theme-color" content="#02040a">
 
   <title>Our Little Universe</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div id="app">
+  <main id="app">
 
-    <!-- =========================
-         STAR UNIVERSE
-    ========================== -->
+    <!-- =========================================
+         UNIVERSE
+    ========================================== -->
+
     <div id="universe">
 
-      <!-- Distant stars -->
-      <div class="star-layer layer-far" id="farStars"></div>
+      <!-- Background atmospheric glow -->
+      <div class="space-haze haze-a"></div>
+      <div class="space-haze haze-b"></div>
+      <div class="space-haze haze-c"></div>
 
-      <!-- Middle stars -->
-      <div class="star-layer layer-mid" id="midStars"></div>
+      <!-- Different depth layers -->
+      <div
+        id="starsFar"
+        class="star-layer stars-far"
+      ></div>
 
-      <!-- Foreground stars -->
-      <div class="star-layer layer-near" id="nearStars"></div>
+      <div
+        id="starsMid"
+        class="star-layer stars-mid"
+      ></div>
 
-      <!-- Cosmic haze -->
-      <div class="haze haze-one"></div>
-      <div class="haze haze-two"></div>
+      <div
+        id="starsNear"
+        class="star-layer stars-near"
+      ></div>
 
-      <!-- =========================
-           ORION TEST CONSTELLATION
-      ========================== -->
-      <div id="orion" class="constellation">
+
+      <!-- =====================================
+           TEMPORARY ORION
+           This is only our navigation reference.
+      ====================================== -->
+
+      <section
+        id="orion"
+        class="constellation"
+        aria-label="Orion"
+      >
 
         <svg
           class="constellation-lines"
-          viewBox="0 0 500 600"
-          preserveAspectRatio="none"
+          viewBox="0 0 500 620"
+          aria-hidden="true"
         >
-          <!-- shoulders -->
-          <line x1="155" y1="120" x2="350" y2="145" />
 
-          <!-- left side -->
-          <line x1="155" y1="120" x2="210" y2="270" />
-          <line x1="210" y1="270" x2="175" y2="470" />
+          <line x1="145" y1="115" x2="355" y2="145"></line>
 
-          <!-- right side -->
-          <line x1="350" y1="145" x2="290" y2="280" />
-          <line x1="290" y1="280" x2="355" y2="475" />
+          <line x1="145" y1="115" x2="205" y2="275"></line>
+          <line x1="355" y1="145" x2="295" y2="285"></line>
 
-          <!-- belt -->
-          <line x1="210" y1="270" x2="250" y2="276" />
-          <line x1="250" y1="276" x2="290" y2="280" />
+          <line x1="205" y1="275" x2="250" y2="280"></line>
+          <line x1="250" y1="280" x2="295" y2="285"></line>
 
-          <!-- sword -->
-          <line x1="250" y1="276" x2="248" y2="340" />
-          <line x1="248" y1="340" x2="245" y2="390" />
+          <line x1="205" y1="275" x2="165" y2="495"></line>
+          <line x1="295" y1="285" x2="365" y2="500"></line>
+
+          <line x1="250" y1="280" x2="248" y2="350"></line>
+          <line x1="248" y1="350" x2="245" y2="400"></line>
+
         </svg>
 
-        <div class="constellation-star major-star" style="left:31%; top:20%;"></div>
-        <div class="constellation-star major-star" style="left:70%; top:24%;"></div>
 
-        <div class="constellation-star" style="left:42%; top:45%;"></div>
-        <div class="constellation-star" style="left:50%; top:46%;"></div>
-        <div class="constellation-star" style="left:58%; top:47%;"></div>
+        <!-- Betelgeuse -->
+        <span
+          class="constellation-star star-large star-warm"
+          style="left:29%; top:18.5%;"
+        ></span>
 
-        <div class="constellation-star small-star" style="left:49.5%; top:57%;"></div>
-        <div class="constellation-star small-star" style="left:49%; top:65%;"></div>
+        <!-- Bellatrix -->
+        <span
+          class="constellation-star star-large"
+          style="left:71%; top:23.5%;"
+        ></span>
 
-        <div class="constellation-star major-star" style="left:35%; top:78%;"></div>
-        <div class="constellation-star major-star" style="left:71%; top:79%;"></div>
+        <!-- Belt -->
+        <span
+          class="constellation-star"
+          style="left:41%; top:44.4%;"
+        ></span>
 
-        <div class="constellation-name">
+        <span
+          class="constellation-star"
+          style="left:50%; top:45.2%;"
+        ></span>
+
+        <span
+          class="constellation-star"
+          style="left:59%; top:46%;"
+        ></span>
+
+        <!-- Sword -->
+        <span
+          class="constellation-star star-small"
+          style="left:49.6%; top:56.5%;"
+        ></span>
+
+        <span
+          class="constellation-star star-small"
+          style="left:49%; top:64.5%;"
+        ></span>
+
+        <!-- Saiph -->
+        <span
+          class="constellation-star star-large"
+          style="left:33%; top:80%;"
+        ></span>
+
+        <!-- Rigel -->
+        <span
+          class="constellation-star star-large star-blue"
+          style="left:73%; top:80.5%;"
+        ></span>
+
+
+        <div class="constellation-label">
           <span>ORION</span>
           <small>The Beginning</small>
         </div>
 
-      </div>
+      </section>
 
     </div>
 
 
-    <!-- =========================
-         UI
-    ========================== -->
+    <!-- =========================================
+         INTERFACE
+    ========================================== -->
 
-    <div id="topUI">
+    <header id="interface">
 
-      <div class="brand">
+      <div class="site-title">
         OUR LITTLE UNIVERSE
       </div>
 
-      <div class="mode-switch">
+      <button
+        id="homeButton"
+        type="button"
+        aria-label="Return to Orion"
+      >
+        <span class="home-symbol">✦</span>
+        <span class="home-text">ORION</span>
+      </button>
 
-        <button
-          class="mode-button active"
-          data-mode="flat"
-        >
-          A
-          <span>Simple</span>
-        </button>
+    </header>
 
-        <button
-          class="mode-button"
-          data-mode="cinematic"
-        >
-          C
-          <span>Cinematic</span>
-        </button>
 
+    <!-- First-time navigation hint -->
+
+    <div id="navigationHint">
+
+      <div class="hint-line"></div>
+
+      <p>
+        Drag to explore
+      </p>
+
+      <span>
+        Pinch or scroll to travel through the stars
+      </span>
+
+    </div>
+
+
+    <!-- Zoom indicator -->
+
+    <div id="zoomDisplay">
+
+      <span class="zoom-label">
+        DEPTH
+      </span>
+
+      <div class="zoom-track">
+        <div id="zoomFill"></div>
       </div>
 
     </div>
 
 
-    <div id="instructions">
-      <div id="instructionTitle">
-        PROTOTYPE A
-      </div>
+    <!-- Edge vignette -->
 
-      <div id="instructionText">
-        Drag to explore · Pinch or scroll to zoom
-      </div>
-    </div>
-
-
-    <div id="depthIndicator">
-      <span>DEPTH</span>
-
-      <div class="depth-track">
-        <div class="depth-fill"></div>
-      </div>
-    </div>
-
-
-    <button id="resetButton">
-      Reset view
-    </button>
-
-
-    <!-- subtle vignette -->
     <div id="vignette"></div>
 
-  </div>
+  </main>
+
 
   <script src="main.js"></script>
 

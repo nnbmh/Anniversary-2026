@@ -1,6 +1,5 @@
 /* =========================================================
    OUR LITTLE UNIVERSE
-   Anniversary 2026
 ========================================================= */
 
 * {
@@ -14,8 +13,10 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+
   background: #010309;
   color: #f6f3ea;
+
   overscroll-behavior: none;
 }
 
@@ -76,14 +77,14 @@ button {
   left: 50%;
   top: 50%;
 
-  transform-origin: center center;
+  transform-origin: center;
 
   will-change: transform;
 }
 
 
 /* =========================================================
-   DEEP SPACE DUST
+   DUST
 ========================================================= */
 
 #dustLayer {
@@ -121,8 +122,8 @@ button {
   background:
     radial-gradient(
       ellipse,
-      rgba(95, 113, 142, .11) 0%,
-      rgba(57, 76, 108, .04) 38%,
+      rgba(95,113,142,.11) 0%,
+      rgba(57,76,108,.04) 38%,
       transparent 73%
     );
 }
@@ -141,8 +142,8 @@ button {
   background:
     radial-gradient(
       ellipse,
-      rgba(89, 105, 133, .1) 0%,
-      rgba(47, 65, 94, .03) 44%,
+      rgba(89,105,133,.10) 0%,
+      rgba(47,65,94,.03) 44%,
       transparent 74%
     );
 }
@@ -159,7 +160,7 @@ button {
   background:
     radial-gradient(
       ellipse,
-      rgba(111, 119, 138, .08) 0%,
+      rgba(111,119,138,.08) 0%,
       transparent 70%
     );
 }
@@ -176,7 +177,7 @@ button {
   background:
     radial-gradient(
       ellipse,
-      rgba(72, 91, 122, .09) 0%,
+      rgba(72,91,122,.09) 0%,
       transparent 72%
     );
 }
@@ -209,7 +210,7 @@ button {
     translate(-50%, -50%);
 
   background:
-    rgba(242, 246, 255, .92);
+    rgba(242,246,255,.92);
 
   pointer-events: none;
 }
@@ -234,7 +235,7 @@ button {
 
   box-shadow:
     0 0 3px
-    rgba(220, 231, 255, .2);
+    rgba(220,231,255,.2);
 }
 
 #starsNear .sky-star {
@@ -243,10 +244,10 @@ button {
 
   box-shadow:
     0 0 4px
-    rgba(255, 255, 255, .45),
+    rgba(255,255,255,.45),
 
     0 0 8px
-    rgba(174, 205, 255, .1);
+    rgba(174,205,255,.1);
 }
 
 .sky-star.tiny {
@@ -261,10 +262,10 @@ button {
 
   box-shadow:
     0 0 4px
-    rgba(255, 255, 255, .75),
+    rgba(255,255,255,.75),
 
     0 0 10px
-    rgba(196, 217, 255, .2);
+    rgba(196,217,255,.2);
 }
 
 .sky-star.warm {
@@ -289,6 +290,7 @@ button {
 }
 
 @keyframes skyTwinkle {
+
   0%,
   100% {
     opacity:
@@ -328,22 +330,22 @@ button {
 .orion-star {
   position: absolute;
 
-  width: 1.6px;
-  height: 1.6px;
-
   transform:
     translate(-50%, -50%);
 
   border-radius: 50%;
 
-  background:
-    rgba(244, 247, 255, .6);
+  width: 1.2px;
+  height: 1.2px;
 
-  opacity: .5;
+  background:
+    rgba(244,247,255,.55);
+
+  opacity: .48;
 
   box-shadow:
     0 0 2px
-    rgba(255, 255, 255, .15);
+    rgba(255,255,255,.14);
 
   pointer-events: none;
 
@@ -351,1521 +353,30 @@ button {
     opacity .8s ease,
     box-shadow .8s ease,
     background .8s ease;
-}
-
-.orion-star.small {
-  width: 1.2px;
-  height: 1.2px;
-}
-
-.orion-star.warm {
-  background:
-    rgba(255, 225, 198, .65);
-}
-
-.orion-star.cool {
-  background:
-    rgba(218, 233, 255, .7);
-}
-
-/* =========================================================
-   ORION — REVEALED STARS
-   Varied brightness + size
-========================================================= */
-
-#orion.discovered .orion-star {
-  width: 1.35px;
-  height: 1.35px;
-
-  opacity: .95;
-
-  border-radius: 50%;
-
-  background: #f8fbff;
-
-  box-shadow:
-    0 0 1px rgba(255,255,255,.95),
-    0 0 3px rgba(215,232,255,.55);
-
-  overflow: visible;
-}
-
-
-/* subtle horizontal ray */
-
-#orion.discovered .orion-star::before {
-  content: "";
-
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  width: 6px;
-  height: .45px;
-
-  transform: translate(-50%, -50%);
-
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(230,242,255,.12),
-    rgba(255,255,255,.65),
-    rgba(230,242,255,.12),
-    transparent
-  );
-
-  pointer-events: none;
-}
-
-
-/* subtle vertical ray */
-
-#orion.discovered .orion-star::after {
-  content: "";
-
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  width: .45px;
-  height: 7px;
-
-  transform: translate(-50%, -50%);
-
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(230,242,255,.1),
-    rgba(255,255,255,.6),
-    rgba(230,242,255,.1),
-    transparent
-  );
-
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   BETELGEUSE
-   Big warm anchor
-========================================================= */
-
-#orion.discovered .orion-star.warm {
-  width: 2.8px;
-  height: 2.8px;
-
-  opacity: 1;
-
-  background: #ffe2c5;
-
-  box-shadow:
-    0 0 2px rgba(255,245,230,1),
-    0 0 5px rgba(255,194,145,.65),
-    0 0 10px rgba(255,155,100,.2);
-}
-
-#orion.discovered .orion-star.warm::before {
-  width: 11px;
-}
-
-#orion.discovered .orion-star.warm::after {
-  height: 12px;
-}
-
-
-/* =========================================================
-   RIGEL
-   Brightest blue-white anchor
-========================================================= */
-
-#orion.discovered .orion-star.cool {
-  width: 3.2px;
-  height: 3.2px;
-
-  opacity: 1;
-
-  background: #edf6ff;
-
-  box-shadow:
-    0 0 2px rgba(255,255,255,1),
-    0 0 6px rgba(195,225,255,.72),
-    0 0 12px rgba(135,185,255,.22);
-}
-
-#orion.discovered .orion-star.cool::before {
-  width: 13px;
-}
-
-#orion.discovered .orion-star.cool::after {
-  height: 14px;
-}
-
-
-/* =========================================================
-   BELLATRIX
-   right shoulder — 71%, 23.5%
-========================================================= */
-
-#orion.discovered .orion-star[style*="71%"] {
-  width: 2px;
-  height: 2px;
-
-  opacity: 1;
-
-  box-shadow:
-    0 0 1px rgba(255,255,255,1),
-    0 0 4px rgba(215,232,255,.6);
-}
-
-
-/* =========================================================
-   ALNITAK
-   left belt — 41%
-========================================================= */
-
-#orion.discovered .orion-star[style*="41%"] {
-  width: 1.65px;
-  height: 1.65px;
-
-  opacity: .96;
-}
-
-
-/* =========================================================
-   ALNILAM
-   middle belt — 50%
-========================================================= */
-
-#orion.discovered .orion-star[style*="50%"] {
-  width: 2.15px;
-  height: 2.15px;
-
-  opacity: 1;
-
-  box-shadow:
-    0 0 1px rgba(255,255,255,1),
-    0 0 4px rgba(215,232,255,.62);
-}
-
-
-/* =========================================================
-   MINTAKA
-   right belt — 59%
-========================================================= */
-
-#orion.discovered .orion-star[style*="59%"] {
-  width: 1.55px;
-  height: 1.55px;
-
-  opacity: .92;
-}
-
-
-/* =========================================================
-   SAIPH
-   lower-left — 33%
-========================================================= */
-
-#orion.discovered .orion-star[style*="33%"] {
-  width: 1.8px;
-  height: 1.8px;
-
-  opacity: .95;
-}
-
-
-/* =========================================================
-   SWORD
-   Deliberately much fainter/smaller
-========================================================= */
-
-#orion.discovered .orion-star.small {
-  width: .8px;
-  height: .8px;
-
-  opacity: .68;
-
-  box-shadow:
-    0 0 1px rgba(255,255,255,.72),
-    0 0 2px rgba(205,225,250,.25);
-}
-
-#orion.discovered .orion-star.small::before {
-  width: 3.5px;
-  opacity: .45;
-}
-
-#orion.discovered .orion-star.small::after {
-  height: 4px;
-  opacity: .45;
-}
-
-/* =========================================================
-   CONSTELLATION LINES
-========================================================= */
-
-.constellation-lines {
-  position: absolute;
-
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
-
-  overflow: visible;
-
-  pointer-events: none;
-}
-
-.constellation-lines line {
-  stroke:
-    rgba(198, 215, 235, .3);
-
-  stroke-width: .42;
-
-  vector-effect:
-    non-scaling-stroke;
-
-  stroke-linecap: round;
-  stroke-linejoin: round;
-
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-
-  opacity: 0;
-}
-
-
-/* =========================================================
-   REVEALED ORION LINES
-========================================================= */
-
-#orion.discovered .constellation-lines line {
-  stroke:
-    rgba(205, 225, 247, .64);
-
-  stroke-width: .58;
-
-  stroke-dashoffset: 0;
-
-  opacity: .55;
-
-  animation: none;
-
-  filter:
-    drop-shadow(
-      0 0 1px
-      rgba(175, 210, 250, .12)
-    );
-}
-
-
-/* =========================================================
-   ORION LABEL
-========================================================= */
-
-.constellation-label {
-  position: absolute;
-
-  left: 50%;
-  top: calc(100% + 24px);
-
-  width: max-content;
-
-  transform:
-    translate(-50%, 5px);
-
-  text-align: center;
-
-  opacity: 0;
-
-  pointer-events: none;
-
-  transition:
-    opacity .8s ease,
-    transform .8s ease;
-}
-
-#orion.discovered .constellation-label {
-  opacity: 1;
-
-  transform:
-    translate(-50%, 0);
-}
-
-.constellation-name {
-  display: block;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  font-size: 13px;
-  font-weight: 600;
-
-  line-height: 1;
-
-  letter-spacing: .42em;
-
-  padding-left: .42em;
-
-  color:
-    rgba(246,249,255,.94);
-
-  text-shadow:
-    0 0 7px
-    rgba(170,205,245,.18);
-}
-
-.constellation-subtitle {
-  display: block;
-
-  margin-top: 8px;
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 11px;
-  font-style: italic;
-
-  line-height: 1.2;
-
-  letter-spacing: .06em;
-
-  color:
-    rgba(222,233,246,.72);
-}
-
-
-/* =========================================================
-   INTERFACE
-========================================================= */
-
-#interface {
-  position: fixed;
-
-  left: 0;
-  right: 0;
-  top: 0;
-
-  z-index: 100;
-
-  display: flex;
-
-  justify-content: space-between;
-  align-items: flex-start;
-
-  padding:
-    max(
-      22px,
-      env(safe-area-inset-top)
-    )
-    24px
-    0;
-
-  pointer-events: none;
-
-  transition:
-    opacity .5s ease;
-}
-
-.site-title {
-  font-size: 9px;
-
-  letter-spacing: .34em;
-
-  opacity: .38;
-}
-
-
-/* =========================================================
-   DISCOVERY COUNTER
-========================================================= */
-
-#discoveryCounter {
-  text-align: right;
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 11px;
-
-  letter-spacing: .1em;
-
-  opacity: .38;
-}
-
-.counter-divider {
-  margin: 0 2px;
-
-  opacity: .5;
-}
-
-#discoveryCounter small {
-  display: block;
-
-  margin-top: 4px;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  font-size: 6px;
-
-  letter-spacing: .2em;
-}
-
-
-/* =========================================================
-   NAVIGATION HINT
-========================================================= */
-
-#navigationHint {
-  position: fixed;
-
-  left: 50%;
-
-  bottom:
-    max(
-      28px,
-      env(safe-area-inset-bottom)
-    );
-
-  transform:
-    translateX(-50%);
-
-  z-index: 60;
-
-  text-align: center;
-
-  pointer-events: none;
-
-  opacity: 1;
-  visibility: visible;
-
-  transition:
-    opacity .45s ease,
-    visibility .45s ease;
-}
-
-#navigationHint.hidden {
-  opacity: 0;
-  visibility: hidden;
-}
-
-#navigationHint p {
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 12px;
-
-  font-style: italic;
-
-  opacity: .68;
-}
-
-#navigationHint span {
-  display: block;
-
-  margin-top: 6px;
-
-  font-size: 7px;
-
-  letter-spacing: .14em;
-
-  text-transform: uppercase;
-
-  opacity: .3;
-}
-
-
-/* =========================================================
-   TELESCOPE VIEW
-========================================================= */
-
-#telescopeView {
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 70;
-
-  display: block;
-
-  background:
-    rgba(0, 0, 0, 0);
-
-  opacity: 0;
-  visibility: hidden;
-
-  pointer-events: none;
-
-  transition:
-    opacity .65s ease,
-    background .65s ease,
-    visibility .65s ease;
-}
-
-#app.telescope-active #telescopeView {
-  opacity: 1;
-  visibility: visible;
-
-  pointer-events: auto;
-
-  background:
-    rgba(0, 0, 0, .985);
-}
-
-#app.telescope-active #interface {
-  opacity: 0;
-}
-
-#app.telescope-active #navigationHint {
-  opacity: 0;
-  visibility: hidden;
-}
-
-
-/* =========================================================
-   TELESCOPE EYEPIECE
-========================================================= */
-
-#eyepiece {
-  position: fixed;
-
-  left: 50%;
-  top: 50%;
-
-  width:
-    min(
-      40vw,
-      340px
-    );
-
-  aspect-ratio: 1;
-
-  border-radius: 50%;
-
-  overflow: hidden;
-
-  background: #07111d;
-
-  opacity: 0;
-
-  transform:
-    translate(-50%, -50%)
-    scale(.94);
-
-  border: none;
-
-  box-shadow:
-    0 0 14px rgba(0,0,0,.95),
-    0 0 35px rgba(0,0,0,.85),
-    0 0 75px rgba(0,0,0,.72),
-    inset 0 0 18px rgba(150,185,220,.035);
-
-  transition:
-    opacity .55s ease .1s,
-    transform .75s cubic-bezier(.16,.8,.2,1);
-
-  touch-action: none;
-
-  will-change:
-    left,
-    top,
-    transform;
-}
-
-#app.telescope-active #eyepiece {
-  opacity: 1;
-
-  transform:
-    translate(-50%, -50%)
-    scale(1);
-}
-
-
-/* =========================================================
-   TELESCOPE CANVAS
-========================================================= */
-
-#telescopeCanvas {
-  position: absolute;
-
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
-
-  display: block;
-
-  border-radius: 50%;
-
-  background: #00040a;
-}
-
-
-/* =========================================================
-   TELESCOPE OPTICS
-========================================================= */
-
-.eyepiece-optics {
-  position: absolute;
-
-  inset: 0;
-
-  z-index: 2;
-
-  border-radius: 50%;
-
-  pointer-events: none;
-
-  background:
-    radial-gradient(
-      circle at 46% 43%,
-      rgba(190,215,240,.035) 0%,
-      rgba(120,160,205,.018) 18%,
-      transparent 36%,
-      rgba(1,5,12,.05) 52%,
-      rgba(0,3,9,.20) 67%,
-      rgba(0,1,5,.52) 82%,
-      rgba(0,0,2,.86) 94%,
-      #000 100%
-    );
-
-  box-shadow:
-    inset 0 0 24px rgba(0,0,0,.18),
-    inset 0 0 50px rgba(0,0,0,.42),
-    inset 0 0 82px rgba(0,0,0,.72);
-}
-
-
-/* =========================================================
-   TELESCOPE INSTRUCTION
-========================================================= */
-
-.telescope-instruction {
-  position: absolute;
-
-  left: 50%;
-
-  bottom:
-    max(
-      34px,
-      env(safe-area-inset-bottom)
-    );
-
-  transform:
-    translateX(-50%);
-
-  width: max-content;
-
-  max-width: 70vw;
-
-  text-align: center;
-
-  color:
-    rgba(238,243,251,.42);
-
-  pointer-events: none;
-
-  opacity: 0;
-
-  transition:
-    opacity .7s ease .5s;
-}
-
-#app.telescope-active .telescope-instruction {
-  opacity: 1;
-}
-
-.telescope-instruction span {
-  display: block;
-
-  font-size: 7px;
-
-  letter-spacing: .28em;
-}
-
-.telescope-instruction small {
-  display: block;
-
-  margin-top: 6px;
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 11px;
-
-  font-style: italic;
-
-  letter-spacing: .04em;
-
-  opacity: .7;
-}
-
-
-/* =========================================================
-   TELESCOPE BUTTON
-========================================================= */
-
-#telescopeButton {
-  position: fixed;
-
-  right: 24px;
-
-  bottom:
-    max(
-      24px,
-      env(safe-area-inset-bottom)
-    );
-
-  z-index: 120;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  min-height: 42px;
-
-  padding:
-    10px
-    15px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.11);
-
-  border-radius: 100px;
-
-  background:
-    rgba(3,8,16,.66);
-
-  backdrop-filter:
-    blur(14px);
-
-  -webkit-backdrop-filter:
-    blur(14px);
-
-  color:
-    rgba(239,244,255,.64);
-
-  cursor: pointer;
-
-  -webkit-tap-highlight-color:
-    transparent;
-
-  transition:
-    color .3s ease,
-    background .3s ease,
-    border-color .3s ease;
-}
-
-#telescopeButton:hover {
-  color:
-    rgba(246,249,255,.9);
-
-  border-color:
-    rgba(195,218,255,.2);
-}
-
-#telescopeButton.active,
-#app.telescope-active #telescopeButton {
-  color:
-    rgba(246,249,255,.85);
-
-  background:
-    rgba(7,10,16,.78);
-
-  border-color:
-    rgba(210,225,245,.16);
-}
-
-.telescope-icon {
-  font-size: 12px;
-
-  line-height: 1;
-}
-
-.telescope-text {
-  font-size: 8px;
-
-  letter-spacing: .2em;
-}
-
-
-/* =========================================================
-   DISCOVERY MESSAGE
-========================================================= */
-
-#discoveryMessage {
-  position: fixed;
-
-  left: 50%;
-  bottom: 18vh;
-
-  z-index: 110;
-
-  transform:
-    translate(-50%, 8px);
-
-  width: max-content;
-
-  max-width: 85vw;
-
-  text-align: center;
-
-  pointer-events: none;
-
-  opacity: 0;
-  visibility: hidden;
-
-  transition:
-    opacity .6s ease,
-    transform .8s ease,
-    visibility .6s ease;
-}
-
-#discoveryMessage.show {
-  opacity: 1;
-  visibility: visible;
-
-  transform:
-    translate(-50%, 0);
-}
-
-.discovery-eyebrow {
-  display: block;
-
-  margin-bottom: 7px;
-
-  font-size: 7px;
-
-  letter-spacing: .26em;
-
-  color:
-    rgba(215,225,238,.48);
-}
-
-#discoveryMessage strong {
-  display: block;
-
-  font-size: 13px;
-  font-weight: 600;
-
-  letter-spacing: .4em;
-
-  padding-left: .4em;
-
-  color:
-    rgba(245,248,253,.94);
-}
-
-#discoveryMessage small {
-  display: block;
-
-  margin-top: 7px;
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 11px;
-
-  font-style: italic;
-
-  letter-spacing: .06em;
-
-  color:
-    rgba(225,233,244,.74);
-}
-
-
-/* =========================================================
-   VIGNETTE
-========================================================= */
-
-#vignette {
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 50;
-
-  pointer-events: none;
-
-  background:
-    radial-gradient(
-      ellipse at center,
-      transparent 43%,
-      rgba(0,0,0,.05) 66%,
-      rgba(0,0,0,.35) 110%
-    );
-
-  transition:
-    opacity .5s ease;
-}
-
-#app.telescope-active #vignette {
-  opacity: 0;
-}
-
-
-/* =========================================================
-   TABLET / IPAD
-========================================================= */
-
-@media (max-width: 900px) {
-
-  #universe {
-    width: 2800px;
-    height: 2250px;
-  }
-
-  #orion {
-    width: 390px;
-    height: 485px;
-
-    left: 1205px;
-    top: 880px;
-  }
-
-  #eyepiece {
-    width:
-      min(
-        49vw,
-        390px
-      );
-  }
-
-  #interface {
-    padding-left: 17px;
-    padding-right: 17px;
-  }
-
-  .site-title {
-    max-width: 120px;
-
-    line-height: 1.6;
-  }
-
-  #telescopeButton {
-    right: 17px;
-  }
-
-  .constellation-label {
-    top:
-      calc(
-        100% + 18px
-      );
-  }
-
-  .constellation-name {
-    font-size: 14px;
-  }
-
-  .constellation-subtitle {
-    font-size: 12px;
-  }
-}
-
-
-/* =========================================================
-   PHONE
-========================================================= */
-
-@media (max-width: 600px) {
-
-  #eyepiece {
-    width:
-      min(
-        64vw,
-        300px
-      );
-  }
-
-  .telescope-text {
-    display: none;
-  }
-
-  #telescopeButton {
-    width: 46px;
-    height: 46px;
-
-    justify-content: center;
-
-    padding: 0;
-  }
-
-  #navigationHint {
-    max-width: 240px;
-  }
-
-  .telescope-instruction {
-    bottom:
-      max(
-        31px,
-        env(safe-area-inset-bottom)
-      );
-  }
-
-  .constellation-name {
-    font-size: 13px;
-  }
-
-  .constellation-subtitle {
-    font-size: 11px;
-  }
-}
-
-
-/* =========================================================
-   SMALL PHONE
-========================================================= */
-
-@media (max-width: 380px) {
-
-  #eyepiece {
-    width: 68vw;
-  }
-
-  .site-title {
-    font-size: 8px;
-  }
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    animation-duration:
-      .01ms !important;
-
-    animation-iteration-count:
-      1 !important;
-
-    transition-duration:
-      .01ms !important;
-  }
-}/* =========================================================
-   OUR LITTLE UNIVERSE
-   Anniversary 2026
-========================================================= */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #010309;
-  color: #f6f3ea;
-  overscroll-behavior: none;
-}
-
-body {
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  touch-action: none;
-}
-
-button {
-  font: inherit;
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
-#app {
-  position: relative;
-
-  width: 100vw;
-  height: 100dvh;
-
-  overflow: hidden;
-
-  cursor: grab;
-
-  background:
-    radial-gradient(
-      ellipse at 50% 45%,
-      #07101b 0%,
-      #040a13 34%,
-      #02060d 64%,
-      #010309 100%
-    );
-}
-
-#app.dragging {
-  cursor: grabbing;
-}
-
-
-/* =========================================================
-   UNIVERSE
-========================================================= */
-
-#universe {
-  position: absolute;
-
-  width: 3600px;
-  height: 2800px;
-
-  left: 50%;
-  top: 50%;
-
-  transform-origin: center center;
-
-  will-change: transform;
-}
-
-
-/* =========================================================
-   DEEP SPACE DUST
-========================================================= */
-
-#dustLayer {
-  position: absolute;
-  inset: 0;
-
-  z-index: 0;
-
-  pointer-events: none;
-
-  will-change: transform;
-}
-
-.dust {
-  position: absolute;
-
-  border-radius: 50%;
-
-  pointer-events: none;
-
-  filter: blur(110px);
-}
-
-.dust-a {
-  width: 1300px;
-  height: 430px;
-
-  left: 500px;
-  top: 900px;
-
-  transform: rotate(-19deg);
-
-  opacity: .09;
-
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(95, 113, 142, .11) 0%,
-      rgba(57, 76, 108, .04) 38%,
-      transparent 73%
-    );
-}
-
-.dust-b {
-  width: 1000px;
-  height: 540px;
-
-  left: 1950px;
-  top: 600px;
-
-  transform: rotate(16deg);
-
-  opacity: .07;
-
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(89, 105, 133, .1) 0%,
-      rgba(47, 65, 94, .03) 44%,
-      transparent 74%
-    );
-}
-
-.dust-c {
-  width: 900px;
-  height: 430px;
-
-  left: 1300px;
-  top: 1750px;
-
-  opacity: .06;
-
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(111, 119, 138, .08) 0%,
-      transparent 70%
-    );
-}
-
-.dust-d {
-  width: 750px;
-  height: 380px;
-
-  left: 160px;
-  top: 350px;
-
-  opacity: .05;
-
-  background:
-    radial-gradient(
-      ellipse,
-      rgba(72, 91, 122, .09) 0%,
-      transparent 72%
-    );
-}
-
-
-/* =========================================================
-   STAR LAYERS
-========================================================= */
-
-.star-layer {
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  will-change: transform;
-}
-
-
-/* =========================================================
-   NORMAL SKY STARS
-========================================================= */
-
-.sky-star {
-  position: absolute;
-
-  border-radius: 50%;
-
-  transform:
-    translate(-50%, -50%);
-
-  background:
-    rgba(242, 246, 255, .92);
-
-  pointer-events: none;
-}
-
-#starsDeep .sky-star {
-  width: .7px;
-  height: .7px;
-
-  opacity: .24;
-}
-
-#starsFar .sky-star {
-  width: 1px;
-  height: 1px;
-
-  opacity: .4;
-}
-
-#starsMid .sky-star {
-  width: 1.5px;
-  height: 1.5px;
-
-  box-shadow:
-    0 0 3px
-    rgba(220, 231, 255, .2);
-}
-
-#starsNear .sky-star {
-  width: 2.2px;
-  height: 2.2px;
-
-  box-shadow:
-    0 0 4px
-    rgba(255, 255, 255, .45),
-
-    0 0 8px
-    rgba(174, 205, 255, .1);
-}
-
-.sky-star.tiny {
-  transform:
-    translate(-50%, -50%)
-    scale(.55);
-}
-
-.sky-star.large {
-  width: 3px !important;
-  height: 3px !important;
-
-  box-shadow:
-    0 0 4px
-    rgba(255, 255, 255, .75),
-
-    0 0 10px
-    rgba(196, 217, 255, .2);
-}
-
-.sky-star.warm {
-  background: #ffe8c8;
-}
-
-.sky-star.cool {
-  background: #dbe9ff;
-}
-
-
-/* =========================================================
-   TWINKLE
-========================================================= */
-
-.sky-star.twinkle {
-  animation:
-    skyTwinkle
-    var(--twinkle-duration, 8s)
-    ease-in-out
-    infinite;
-}
-
-@keyframes skyTwinkle {
-  0%,
-  100% {
-    opacity:
-      var(--twinkle-low, .35);
-  }
-
-  50% {
-    opacity:
-      var(--twinkle-high, .7);
-  }
-}
-
-
-/* =========================================================
-   ORION
-========================================================= */
-
-#orion {
-  position: absolute;
-
-  width: 500px;
-  height: 620px;
-
-  left: 1550px;
-  top: 1090px;
-
-  z-index: 20;
-
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   ORION BEFORE DISCOVERY
-========================================================= */
-
-.orion-star {
-  position: absolute;
-
-  width: 1.6px;
-  height: 1.6px;
-
-  transform:
-    translate(-50%, -50%);
-
-  border-radius: 50%;
-
-  background:
-    rgba(244, 247, 255, .6);
-
-  opacity: .5;
-
-  box-shadow:
-    0 0 2px
-    rgba(255, 255, 255, .15);
-
-  pointer-events: none;
-
-  transition:
-    opacity .8s ease,
-    box-shadow .8s ease,
-    background .8s ease;
-}
-
-.orion-star.small {
-  width: 1.2px;
-  height: 1.2px;
-}
-
-.orion-star.warm {
-  background:
-    rgba(255, 225, 198, .65);
-}
-
-.orion-star.cool {
-  background:
-    rgba(218, 233, 255, .7);
 }
 
 
 /* =========================================================
    ORION AFTER DISCOVERY
-   Realistic pinpoint stars
 ========================================================= */
 
 #orion.discovered .orion-star {
-  width: 1.4px;
-  height: 1.4px;
-
   opacity: 1;
 
-  border-radius: 50%;
-
-  background: #ffffff;
+  background: #f8fbff;
 
   box-shadow:
     0 0 1px rgba(255,255,255,1),
-    0 0 3px rgba(220,235,255,.72),
-    0 0 7px rgba(170,205,245,.24);
+    0 0 3px rgba(220,235,255,.68),
+    0 0 7px rgba(170,205,245,.20);
 
   overflow: visible;
 }
 
 
-/* horizontal diffraction ray */
+/* =========================================================
+   STAR RAYS
+========================================================= */
 
 #orion.discovered .orion-star::before {
   content: "";
@@ -1875,8 +386,8 @@ button {
   left: 50%;
   top: 50%;
 
-  width: 10px;
-  height: .65px;
+  width: 8px;
+  height: .55px;
 
   transform:
     translate(-50%, -50%);
@@ -1885,19 +396,16 @@ button {
     linear-gradient(
       90deg,
       transparent 0%,
-      rgba(220,238,255,.04) 15%,
-      rgba(235,246,255,.2) 34%,
-      rgba(255,255,255,.82) 50%,
-      rgba(235,246,255,.2) 66%,
-      rgba(220,238,255,.04) 85%,
+      rgba(225,240,255,.05) 18%,
+      rgba(240,248,255,.22) 36%,
+      rgba(255,255,255,.72) 50%,
+      rgba(240,248,255,.22) 64%,
+      rgba(225,240,255,.05) 82%,
       transparent 100%
     );
 
   pointer-events: none;
 }
-
-
-/* vertical diffraction ray */
 
 #orion.discovered .orion-star::after {
   content: "";
@@ -1907,8 +415,8 @@ button {
   left: 50%;
   top: 50%;
 
-  width: .65px;
-  height: 11px;
+  width: .55px;
+  height: 9px;
 
   transform:
     translate(-50%, -50%);
@@ -1917,11 +425,11 @@ button {
     linear-gradient(
       180deg,
       transparent 0%,
-      rgba(220,238,255,.04) 15%,
-      rgba(235,246,255,.18) 34%,
-      rgba(255,255,255,.78) 50%,
-      rgba(235,246,255,.18) 66%,
-      rgba(220,238,255,.04) 85%,
+      rgba(225,240,255,.05) 18%,
+      rgba(240,248,255,.20) 36%,
+      rgba(255,255,255,.68) 50%,
+      rgba(240,248,255,.20) 64%,
+      rgba(225,240,255,.05) 82%,
       transparent 100%
     );
 
@@ -1930,67 +438,164 @@ button {
 
 
 /* =========================================================
-   SMALL ORION STARS
+   INDIVIDUAL ORION STAR SIZES
+
+   These are intentionally VERY different.
 ========================================================= */
 
-#orion.discovered .orion-star.small {
-  width: 1.1px;
-  height: 1.1px;
 
-  opacity: .86;
+/* RIGEL — largest */
+
+#orion.discovered .star-rigel {
+  width: 5px;
+  height: 5px;
+
+  background: #e8f3ff;
 
   box-shadow:
-    0 0 1px rgba(255,255,255,.9),
-    0 0 3px rgba(210,230,255,.42);
+    0 0 2px rgba(255,255,255,1),
+    0 0 6px rgba(205,230,255,.8),
+    0 0 12px rgba(145,190,255,.28);
 }
 
-#orion.discovered .orion-star.small::before {
-  width: 6px;
-  opacity: .7;
+#orion.discovered .star-rigel::before {
+  width: 15px;
 }
 
-#orion.discovered .orion-star.small::after {
-  height: 7px;
-  opacity: .7;
+#orion.discovered .star-rigel::after {
+  height: 16px;
+}
+
+
+/* BETELGEUSE — second largest */
+
+#orion.discovered .star-betelgeuse {
+  width: 4.4px;
+  height: 4.4px;
+
+  background: #ffe2c5;
+
+  box-shadow:
+    0 0 2px rgba(255,245,230,1),
+    0 0 6px rgba(255,200,155,.72),
+    0 0 11px rgba(255,160,105,.25);
+}
+
+#orion.discovered .star-betelgeuse::before {
+  width: 14px;
+}
+
+#orion.discovered .star-betelgeuse::after {
+  height: 15px;
+}
+
+
+/* BELLATRIX */
+
+#orion.discovered .star-bellatrix {
+  width: 3.3px;
+  height: 3.3px;
+}
+
+#orion.discovered .star-bellatrix::before {
+  width: 10px;
+}
+
+#orion.discovered .star-bellatrix::after {
+  height: 11px;
+}
+
+
+/* ALNILAM — brightest belt star */
+
+#orion.discovered .star-alnilam {
+  width: 3.1px;
+  height: 3.1px;
+}
+
+#orion.discovered .star-alnilam::before {
+  width: 10px;
+}
+
+#orion.discovered .star-alnilam::after {
+  height: 11px;
+}
+
+
+/* SAIPH */
+
+#orion.discovered .star-saiph {
+  width: 2.7px;
+  height: 2.7px;
+}
+
+
+/* ALNITAK */
+
+#orion.discovered .star-alnitak {
+  width: 2.4px;
+  height: 2.4px;
+}
+
+
+/* MINTAKA */
+
+#orion.discovered .star-mintaka {
+  width: 2px;
+  height: 2px;
+}
+
+
+/* SWORD 1 */
+
+#orion.discovered .star-sword-1 {
+  width: 1.35px;
+  height: 1.35px;
+
+  opacity: .8;
+}
+
+#orion.discovered .star-sword-1::before {
+  width: 4px;
+
+  opacity: .55;
+}
+
+#orion.discovered .star-sword-1::after {
+  height: 5px;
+
+  opacity: .55;
+}
+
+
+/* SWORD 2 — smallest */
+
+#orion.discovered .star-sword-2 {
+  width: .8px;
+  height: .8px;
+
+  opacity: .68;
+
+  box-shadow:
+    0 0 1px
+    rgba(255,255,255,.75);
+}
+
+#orion.discovered .star-sword-2::before {
+  width: 3px;
+
+  opacity: .38;
+}
+
+#orion.discovered .star-sword-2::after {
+  height: 3px;
+
+  opacity: .38;
 }
 
 
 /* =========================================================
-   BETELGEUSE
-========================================================= */
-
-#orion.discovered .orion-star.warm {
-  width: 1.8px;
-  height: 1.8px;
-
-  background: #ffe5ce;
-
-  box-shadow:
-    0 0 1px rgba(255,245,235,1),
-    0 0 4px rgba(255,205,165,.7),
-    0 0 8px rgba(255,165,110,.25);
-}
-
-
-/* =========================================================
-   RIGEL
-========================================================= */
-
-#orion.discovered .orion-star.cool {
-  width: 1.9px;
-  height: 1.9px;
-
-  background: #e8f2ff;
-
-  box-shadow:
-    0 0 1px rgba(255,255,255,1),
-    0 0 4px rgba(205,228,255,.8),
-    0 0 8px rgba(145,190,255,.28);
-}
-
-
-/* =========================================================
-   CONSTELLATION LINES
+   CONSTELLATION SVG
 ========================================================= */
 
 .constellation-lines {
@@ -2008,7 +613,7 @@ button {
 
 .constellation-lines line {
   stroke:
-    rgba(198, 215, 235, .3);
+    rgba(198,215,235,.3);
 
   stroke-width: .42;
 
@@ -2026,12 +631,13 @@ button {
 
 
 /* =========================================================
-   REVEALED ORION LINES
+   REVEALED LINES
 ========================================================= */
 
-#orion.discovered .constellation-lines line {
+#orion.discovered
+.constellation-lines line {
   stroke:
-    rgba(205, 225, 247, .64);
+    rgba(205,225,247,.62);
 
   stroke-width: .58;
 
@@ -2044,7 +650,7 @@ button {
   filter:
     drop-shadow(
       0 0 1px
-      rgba(175, 210, 250, .12)
+      rgba(175,210,250,.12)
     );
 }
 
@@ -2057,12 +663,18 @@ button {
   position: absolute;
 
   left: 50%;
-  top: calc(100% + 24px);
+  top:
+    calc(
+      100% + 24px
+    );
 
   width: max-content;
 
   transform:
-    translate(-50%, 5px);
+    translate(
+      -50%,
+      5px
+    );
 
   text-align: center;
 
@@ -2075,21 +687,19 @@ button {
     transform .8s ease;
 }
 
-#orion.discovered .constellation-label {
+#orion.discovered
+.constellation-label {
   opacity: 1;
 
   transform:
-    translate(-50%, 0);
+    translate(
+      -50%,
+      0
+    );
 }
 
 .constellation-name {
   display: block;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
 
   font-size: 13px;
   font-weight: 600;
@@ -2145,8 +755,11 @@ button {
 
   display: flex;
 
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
 
   padding:
     max(
@@ -2172,7 +785,7 @@ button {
 
 
 /* =========================================================
-   DISCOVERY COUNTER
+   COUNTER
 ========================================================= */
 
 #discoveryCounter {
@@ -2292,7 +905,7 @@ button {
   display: block;
 
   background:
-    rgba(0, 0, 0, 0);
+    rgba(0,0,0,0);
 
   opacity: 0;
   visibility: hidden;
@@ -2305,28 +918,31 @@ button {
     visibility .65s ease;
 }
 
-#app.telescope-active #telescopeView {
+#app.telescope-active
+#telescopeView {
   opacity: 1;
   visibility: visible;
 
   pointer-events: auto;
 
   background:
-    rgba(0, 0, 0, .985);
+    rgba(0,0,0,.985);
 }
 
-#app.telescope-active #interface {
+#app.telescope-active
+#interface {
   opacity: 0;
 }
 
-#app.telescope-active #navigationHint {
+#app.telescope-active
+#navigationHint {
   opacity: 0;
   visibility: hidden;
 }
 
 
 /* =========================================================
-   TELESCOPE EYEPIECE
+   EYEPIECE
 ========================================================= */
 
 #eyepiece {
@@ -2355,8 +971,6 @@ button {
     translate(-50%, -50%)
     scale(.94);
 
-  border: none;
-
   box-shadow:
     0 0 14px rgba(0,0,0,.95),
     0 0 35px rgba(0,0,0,.85),
@@ -2365,7 +979,8 @@ button {
 
   transition:
     opacity .55s ease .1s,
-    transform .75s cubic-bezier(.16,.8,.2,1);
+    transform .75s
+    cubic-bezier(.16,.8,.2,1);
 
   touch-action: none;
 
@@ -2375,7 +990,8 @@ button {
     transform;
 }
 
-#app.telescope-active #eyepiece {
+#app.telescope-active
+#eyepiece {
   opacity: 1;
 
   transform:
@@ -2385,7 +1001,7 @@ button {
 
 
 /* =========================================================
-   TELESCOPE CANVAS
+   CANVAS
 ========================================================= */
 
 #telescopeCanvas {
@@ -2405,7 +1021,7 @@ button {
 
 
 /* =========================================================
-   TELESCOPE OPTICS
+   OPTICS
 ========================================================= */
 
 .eyepiece-optics {
@@ -2474,7 +1090,8 @@ button {
     opacity .7s ease .5s;
 }
 
-#app.telescope-active .telescope-instruction {
+#app.telescope-active
+.telescope-instruction {
   opacity: 1;
 }
 
@@ -2573,7 +1190,8 @@ button {
 }
 
 #telescopeButton.active,
-#app.telescope-active #telescopeButton {
+#app.telescope-active
+#telescopeButton {
   color:
     rgba(246,249,255,.85);
 
@@ -2710,13 +1328,14 @@ button {
     opacity .5s ease;
 }
 
-#app.telescope-active #vignette {
+#app.telescope-active
+#vignette {
   opacity: 0;
 }
 
 
 /* =========================================================
-   TABLET / IPAD
+   TABLET
 ========================================================= */
 
 @media (max-width: 900px) {
@@ -2763,14 +1382,6 @@ button {
         100% + 18px
       );
   }
-
-  .constellation-name {
-    font-size: 14px;
-  }
-
-  .constellation-subtitle {
-    font-size: 12px;
-  }
 }
 
 
@@ -2803,22 +1414,6 @@ button {
 
   #navigationHint {
     max-width: 240px;
-  }
-
-  .telescope-instruction {
-    bottom:
-      max(
-        31px,
-        env(safe-area-inset-bottom)
-      );
-  }
-
-  .constellation-name {
-    font-size: 13px;
-  }
-
-  .constellation-subtitle {
-    font-size: 11px;
   }
 }
 

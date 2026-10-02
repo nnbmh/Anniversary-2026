@@ -1800,3 +1800,250 @@ button {
     0 0 2px rgba(240, 247, 255, 1),
     0 0 6px rgba(160, 200, 255, .3) !important;
 }
+
+/* =========================================================
+   ORION — FINAL CLEANUP
+========================================================= */
+
+
+/* ---------- REVEALED CONSTELLATION LINES ---------- */
+
+#orion.discovered .constellation-lines line {
+  stroke: rgba(210, 228, 248, .78) !important;
+  stroke-width: .8 !important;
+  opacity: .82 !important;
+
+  stroke-dashoffset: 0 !important;
+  animation: none !important;
+
+  filter:
+    drop-shadow(
+      0 0 1px
+      rgba(185, 215, 250, .22)
+    ) !important;
+}
+
+
+/* ---------- REVEALED STARS ---------- */
+
+/*
+   Small bright core rather than a large circular dot.
+*/
+
+#orion.discovered .orion-star {
+  width: 3px !important;
+  height: 3px !important;
+
+  opacity: 1 !important;
+
+  border-radius: 50% !important;
+
+  background: #ffffff !important;
+
+  box-shadow:
+    0 0 2px rgba(255,255,255,1),
+    0 0 5px rgba(215,232,255,.65),
+    0 0 9px rgba(165,205,255,.18) !important;
+
+  overflow: visible !important;
+}
+
+
+/* horizontal sparkle */
+
+#orion.discovered .orion-star::before {
+  content: "" !important;
+
+  position: absolute !important;
+
+  left: 50% !important;
+  top: 50% !important;
+
+  width: 9px !important;
+  height: 1px !important;
+
+  transform:
+    translate(-50%, -50%) !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(220,238,255,.12) 20%,
+      rgba(245,250,255,.72) 50%,
+      rgba(220,238,255,.12) 80%,
+      transparent 100%
+    ) !important;
+
+  pointer-events: none !important;
+}
+
+
+/* vertical sparkle */
+
+#orion.discovered .orion-star::after {
+  content: "" !important;
+
+  position: absolute !important;
+
+  left: 50% !important;
+  top: 50% !important;
+
+  width: 1px !important;
+  height: 9px !important;
+
+  transform:
+    translate(-50%, -50%) !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(220,238,255,.12) 20%,
+      rgba(245,250,255,.7) 50%,
+      rgba(220,238,255,.12) 80%,
+      transparent 100%
+    ) !important;
+
+  pointer-events: none !important;
+}
+
+
+/* sword stars — still visible, just slightly smaller */
+
+#orion.discovered .orion-star.small {
+  width: 2.4px !important;
+  height: 2.4px !important;
+}
+
+#orion.discovered .orion-star.small::before {
+  width: 6px !important;
+  opacity: .75 !important;
+}
+
+#orion.discovered .orion-star.small::after {
+  height: 6px !important;
+  opacity: .75 !important;
+}
+
+
+/* warm star */
+
+#orion.discovered .orion-star.warm {
+  width: 3.4px !important;
+  height: 3.4px !important;
+
+  background: #ffe1c5 !important;
+
+  box-shadow:
+    0 0 2px rgba(255,240,225,1),
+    0 0 6px rgba(255,185,130,.42),
+    0 0 10px rgba(255,160,105,.12) !important;
+}
+
+
+/* cool star */
+
+#orion.discovered .orion-star.cool {
+  width: 3.5px !important;
+  height: 3.5px !important;
+
+  background: #e5f1ff !important;
+
+  box-shadow:
+    0 0 2px rgba(245,250,255,1),
+    0 0 6px rgba(175,210,255,.46),
+    0 0 10px rgba(145,190,255,.12) !important;
+}
+
+
+/* ---------- ORION NAME ---------- */
+
+#orion .constellation-label {
+  display: block !important;
+
+  position: absolute !important;
+
+  left: 50% !important;
+  top: calc(100% + 26px) !important;
+
+  width: max-content !important;
+
+  transform:
+    translateX(-50%) !important;
+
+  text-align: center !important;
+
+  pointer-events: none !important;
+}
+
+
+/* hidden until discovered */
+
+#orion:not(.discovered) .constellation-label {
+  opacity: 0 !important;
+}
+
+
+/* visible after discovery */
+
+#orion.discovered .constellation-label {
+  opacity: 1 !important;
+}
+
+
+#orion .constellation-name {
+  display: block !important;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+
+  font-size: 13px !important;
+  font-weight: 600 !important;
+
+  line-height: 1 !important;
+
+  letter-spacing: .42em !important;
+  padding-left: .42em !important;
+
+  color:
+    rgba(246,249,255,.94) !important;
+}
+
+
+#orion .constellation-subtitle {
+  display: block !important;
+
+  margin-top: 8px !important;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif !important;
+
+  font-size: 11px !important;
+  font-style: italic !important;
+
+  line-height: 1.2 !important;
+
+  letter-spacing: .06em !important;
+
+  color:
+    rgba(222,233,246,.72) !important;
+}
+
+
+/* ---------- REMOVE BOTTOM TEXT COLLISION ---------- */
+
+/*
+   Once Orion is discovered, the permanent constellation
+   label replaces the generic "Drag to explore" instruction.
+*/
+
+#app:has(#orion.discovered) #navigationHint {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}

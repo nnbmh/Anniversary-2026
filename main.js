@@ -8,29 +8,53 @@
    ELEMENTS
 ========================================================= */
 
-const app = document.getElementById("app");
-const universe = document.getElementById("universe");
+const app =
+  document.getElementById("app");
 
-const dustLayer = document.getElementById("dustLayer");
+const universe =
+  document.getElementById("universe");
 
-const starsDeep = document.getElementById("starsDeep");
-const starsFar = document.getElementById("starsFar");
-const starsMid = document.getElementById("starsMid");
-const starsNear = document.getElementById("starsNear");
+const dustLayer =
+  document.getElementById("dustLayer");
 
-const orion = document.getElementById("orion");
+const starsDeep =
+  document.getElementById("starsDeep");
 
-const telescopeView = document.getElementById("telescopeView");
-const eyepiece = document.getElementById("eyepiece");
-const telescopeCanvas = document.getElementById("telescopeCanvas");
-const telescopeButton = document.getElementById("telescopeButton");
+const starsFar =
+  document.getElementById("starsFar");
 
-const navigationHint = document.getElementById("navigationHint");
+const starsMid =
+  document.getElementById("starsMid");
 
-const discoveryMessage = document.getElementById("discoveryMessage");
-const discoveryNumber = document.getElementById("discoveryNumber");
+const starsNear =
+  document.getElementById("starsNear");
 
-const ctx = telescopeCanvas.getContext("2d");
+const orion =
+  document.getElementById("orion");
+
+const telescopeView =
+  document.getElementById("telescopeView");
+
+const eyepiece =
+  document.getElementById("eyepiece");
+
+const telescopeCanvas =
+  document.getElementById("telescopeCanvas");
+
+const telescopeButton =
+  document.getElementById("telescopeButton");
+
+const navigationHint =
+  document.getElementById("navigationHint");
+
+const discoveryMessage =
+  document.getElementById("discoveryMessage");
+
+const discoveryNumber =
+  document.getElementById("discoveryNumber");
+
+const ctx =
+  telescopeCanvas.getContext("2d");
 
 
 /* =========================================================
@@ -57,7 +81,8 @@ const ZOOM_EASING = 0.09;
    NORMAL UNIVERSE INPUT
 ========================================================= */
 
-const activePointers = new Map();
+const activePointers =
+  new Map();
 
 let universeDragging = false;
 
@@ -79,8 +104,11 @@ let telescopeActive = false;
 let telescopeDragging = false;
 let telescopePointerId = null;
 
-let lensX = window.innerWidth / 2;
-let lensY = window.innerHeight / 2;
+let lensX =
+  window.innerWidth / 2;
+
+let lensY =
+  window.innerHeight / 2;
 
 let targetLensX = lensX;
 let targetLensY = lensY;
@@ -90,15 +118,20 @@ let targetLensY = lensY;
    ORION
 ========================================================= */
 
-let orionScreenX = window.innerWidth / 2;
-let orionScreenY = window.innerHeight / 2;
+let orionScreenX =
+  window.innerWidth / 2;
+
+let orionScreenY =
+  window.innerHeight / 2;
 
 let orionDiscovered = false;
+
 let orionRevealStarted = false;
 let orionRevealStartTime = 0;
 
 const ORION_LINE_DURATION = 420;
 const ORION_LINE_PAUSE = 90;
+
 let focusStartedAt = null;
 
 const HOLD_TO_DISCOVER = 1800;
@@ -109,8 +142,16 @@ const HOLD_TO_DISCOVER = 1800;
 ========================================================= */
 
 function seededRandom(seed) {
-  const value = Math.sin(seed * 91.3458) * 47453.5453;
-  return value - Math.floor(value);
+  const value =
+    Math.sin(
+      seed * 91.3458
+    ) *
+    47453.5453;
+
+  return (
+    value -
+    Math.floor(value)
+  );
 }
 
 
@@ -118,18 +159,38 @@ function seededRandom(seed) {
    NORMAL STAR FIELD
 ========================================================= */
 
-function createStar(layer, x, y, options = {}) {
-  const star = document.createElement("span");
+function createStar(
+  layer,
+  x,
+  y,
+  options = {}
+) {
+  const star =
+    document.createElement("span");
 
-  star.className = "sky-star";
+  star.className =
+    "sky-star";
 
-  if (options.tiny) star.classList.add("tiny");
-  if (options.large) star.classList.add("large");
-  if (options.warm) star.classList.add("warm");
-  if (options.cool) star.classList.add("cool");
+  if (options.tiny) {
+    star.classList.add("tiny");
+  }
+
+  if (options.large) {
+    star.classList.add("large");
+  }
+
+  if (options.warm) {
+    star.classList.add("warm");
+  }
+
+  if (options.cool) {
+    star.classList.add("cool");
+  }
 
   if (options.twinkle) {
-    star.classList.add("twinkle");
+    star.classList.add(
+      "twinkle"
+    );
 
     star.style.setProperty(
       "--twinkle-duration",
@@ -147,11 +208,18 @@ function createStar(layer, x, y, options = {}) {
     );
   }
 
-  star.style.left = `${x}px`;
-  star.style.top = `${y}px`;
+  star.style.left =
+    `${x}px`;
 
-  if (options.opacity !== undefined) {
-    star.style.opacity = options.opacity;
+  star.style.top =
+    `${y}px`;
+
+  if (
+    options.opacity !==
+    undefined
+  ) {
+    star.style.opacity =
+      options.opacity;
   }
 
   layer.appendChild(star);
@@ -166,87 +234,110 @@ function buildSparseField(
   height,
   type
 ) {
-  for (let i = 0; i < count; i++) {
-    const seed = i + seedOffset;
+  for (
+    let i = 0;
+    i < count;
+    i++
+  ) {
+    const seed =
+      i + seedOffset;
 
     const x =
-      seededRandom(seed * 2.31) *
+      seededRandom(
+        seed * 2.31
+      ) *
       width;
 
     const y =
-      seededRandom(seed * 5.17) *
+      seededRandom(
+        seed * 5.17
+      ) *
       height;
-
-    /*
-      Preserve darker areas instead of filling
-      the entire sky evenly.
-    */
 
     const emptyRegionA =
       Math.hypot(
-        x - width * 0.25,
-        y - height * 0.34
+        x - width * .25,
+        y - height * .34
       );
 
     const emptyRegionB =
       Math.hypot(
-        x - width * 0.73,
-        y - height * 0.69
+        x - width * .73,
+        y - height * .69
       );
 
     if (
       emptyRegionA < 370 &&
-      seededRandom(seed * 8.4) < 0.62
+      seededRandom(
+        seed * 8.4
+      ) < .62
     ) {
       continue;
     }
 
     if (
       emptyRegionB < 430 &&
-      seededRandom(seed * 9.1) < 0.55
+      seededRandom(
+        seed * 9.1
+      ) < .55
     ) {
       continue;
     }
 
     const sizeChance =
-      seededRandom(seed * 11.4);
+      seededRandom(
+        seed * 11.4
+      );
 
     const colourChance =
-      seededRandom(seed * 13.7);
+      seededRandom(
+        seed * 13.7
+      );
 
     const twinkleChance =
-      seededRandom(seed * 17.1);
+      seededRandom(
+        seed * 17.1
+      );
 
-    createStar(layer, x, y, {
-      tiny:
-        sizeChance < 0.44,
+    createStar(
+      layer,
+      x,
+      y,
+      {
+        tiny:
+          sizeChance < .44,
 
-      large:
-        type === "near" &&
-        sizeChance > 0.94,
+        large:
+          type === "near" &&
+          sizeChance > .94,
 
-      warm:
-        colourChance > 0.975,
+        warm:
+          colourChance > .975,
 
-      cool:
-        colourChance < 0.035,
+        cool:
+          colourChance < .035,
 
-      twinkle:
-        type !== "deep" &&
-        twinkleChance > 0.91,
+        twinkle:
+          type !== "deep" &&
+          twinkleChance > .91,
 
-      duration:
-        6 +
-        seededRandom(seed * 21.3) *
-        8,
+        duration:
+          6 +
+          seededRandom(
+            seed * 21.3
+          ) *
+          8,
 
-      opacity:
-        type === "deep"
-          ? 0.12 +
-            seededRandom(seed * 25.2) *
-            0.24
-          : undefined
-    });
+        opacity:
+          type === "deep"
+            ? .12 +
+              seededRandom(
+                seed * 25.2
+              ) *
+              .24
+            : undefined
+      }
+    );
   }
 }
 
@@ -261,15 +352,26 @@ function buildCluster(
   seedOffset,
   type
 ) {
-  for (let i = 0; i < count; i++) {
-    const seed = i + seedOffset;
+  for (
+    let i = 0;
+    i < count;
+    i++
+  ) {
+    const seed =
+      i + seedOffset;
 
     const distance =
-      seededRandom(seed * 3.2) *
-      seededRandom(seed * 7.7);
+      seededRandom(
+        seed * 3.2
+      ) *
+      seededRandom(
+        seed * 7.7
+      );
 
     const angle =
-      seededRandom(seed * 10.1) *
+      seededRandom(
+        seed * 10.1
+      ) *
       Math.PI *
       2;
 
@@ -286,39 +388,55 @@ function buildCluster(
       distance;
 
     const sizeChance =
-      seededRandom(seed * 14.4);
+      seededRandom(
+        seed * 14.4
+      );
 
-    createStar(layer, x, y, {
-      tiny:
-        sizeChance < 0.66,
+    createStar(
+      layer,
+      x,
+      y,
+      {
+        tiny:
+          sizeChance < .66,
 
-      large:
-        type === "near" &&
-        sizeChance > 0.985,
+        large:
+          type === "near" &&
+          sizeChance > .985,
 
-      twinkle:
-        type !== "deep" &&
-        seededRandom(seed * 18.8) > 0.965,
+        twinkle:
+          type !== "deep" &&
+          seededRandom(
+            seed * 18.8
+          ) > .965,
 
-      duration:
-        7 +
-        seededRandom(seed * 22.4) *
-        7,
+        duration:
+          7 +
+          seededRandom(
+            seed * 22.4
+          ) *
+          7,
 
-      opacity:
-        type === "deep"
-          ? 0.10 +
-            seededRandom(seed * 26.8) *
-            0.22
-          : undefined
-    });
+        opacity:
+          type === "deep"
+            ? .10 +
+              seededRandom(
+                seed * 26.8
+              ) *
+              .22
+            : undefined
+      }
+    );
   }
 }
 
 
 function buildUniverseStars() {
-  const width = universe.offsetWidth;
-  const height = universe.offsetHeight;
+  const width =
+    universe.offsetWidth;
+
+  const height =
+    universe.offsetHeight;
 
   starsDeep.innerHTML = "";
   starsFar.innerHTML = "";
@@ -363,8 +481,8 @@ function buildUniverseStars() {
 
   buildCluster(
     starsDeep,
-    width * 0.43,
-    height * 0.43,
+    width * .43,
+    height * .43,
     760,
     220,
     330,
@@ -374,8 +492,8 @@ function buildUniverseStars() {
 
   buildCluster(
     starsDeep,
-    width * 0.64,
-    height * 0.54,
+    width * .64,
+    height * .54,
     620,
     280,
     260,
@@ -385,8 +503,8 @@ function buildUniverseStars() {
 
   buildCluster(
     starsDeep,
-    width * 0.18,
-    height * 0.74,
+    width * .18,
+    height * .74,
     420,
     180,
     130,
@@ -396,8 +514,8 @@ function buildUniverseStars() {
 
   buildCluster(
     starsFar,
-    width * 0.44,
-    height * 0.44,
+    width * .44,
+    height * .44,
     650,
     220,
     95,
@@ -407,8 +525,8 @@ function buildUniverseStars() {
 
   buildCluster(
     starsFar,
-    width * 0.66,
-    height * 0.54,
+    width * .66,
+    height * .54,
     520,
     240,
     75,
@@ -418,8 +536,8 @@ function buildUniverseStars() {
 
   buildCluster(
     starsMid,
-    width * 0.45,
-    height * 0.44,
+    width * .45,
+    height * .44,
     480,
     180,
     24,
@@ -435,36 +553,53 @@ function buildUniverseStars() {
 
 function clampCamera() {
   const limitX =
-    universe.offsetWidth * 0.34;
+    universe.offsetWidth *
+    .34;
 
   const limitY =
-    universe.offsetHeight * 0.34;
+    universe.offsetHeight *
+    .34;
 
   targetX =
     Math.max(
       -limitX,
-      Math.min(limitX, targetX)
+      Math.min(
+        limitX,
+        targetX
+      )
     );
 
   targetY =
     Math.max(
       -limitY,
-      Math.min(limitY, targetY)
+      Math.min(
+        limitY,
+        targetY
+      )
     );
 }
 
 
 function renderCamera() {
   cameraX +=
-    (targetX - cameraX) *
+    (
+      targetX -
+      cameraX
+    ) *
     CAMERA_EASING;
 
   cameraY +=
-    (targetY - cameraY) *
+    (
+      targetY -
+      cameraY
+    ) *
     CAMERA_EASING;
 
   zoom +=
-    (targetZoom - zoom) *
+    (
+      targetZoom -
+      zoom
+    ) *
     ZOOM_EASING;
 
   universe.style.transform = `
@@ -477,36 +612,36 @@ function renderCamera() {
 
   starsDeep.style.transform = `
     translate(
-      ${-cameraX * 0.018}px,
-      ${-cameraY * 0.018}px
+      ${-cameraX * .018}px,
+      ${-cameraY * .018}px
     )
   `;
 
   starsFar.style.transform = `
     translate(
-      ${-cameraX * 0.032}px,
-      ${-cameraY * 0.032}px
+      ${-cameraX * .032}px,
+      ${-cameraY * .032}px
     )
   `;
 
   starsMid.style.transform = `
     translate(
-      ${-cameraX * 0.052}px,
-      ${-cameraY * 0.052}px
+      ${-cameraX * .052}px,
+      ${-cameraY * .052}px
     )
   `;
 
   starsNear.style.transform = `
     translate(
-      ${-cameraX * 0.075}px,
-      ${-cameraY * 0.075}px
+      ${-cameraX * .075}px,
+      ${-cameraY * .075}px
     )
   `;
 
   dustLayer.style.transform = `
     translate(
-      ${-cameraX * 0.012}px,
-      ${-cameraY * 0.012}px
+      ${-cameraX * .012}px,
+      ${-cameraY * .012}px
     )
   `;
 }
@@ -518,7 +653,8 @@ function renderCamera() {
 
 function resizeTelescopeCanvas() {
   const rect =
-    eyepiece.getBoundingClientRect();
+    eyepiece
+      .getBoundingClientRect();
 
   if (
     rect.width <= 0 ||
@@ -529,15 +665,22 @@ function resizeTelescopeCanvas() {
 
   const dpr =
     Math.min(
-      window.devicePixelRatio || 1,
+      window.devicePixelRatio ||
+      1,
       2
     );
 
   telescopeCanvas.width =
-    Math.round(rect.width * dpr);
+    Math.round(
+      rect.width *
+      dpr
+    );
 
   telescopeCanvas.height =
-    Math.round(rect.height * dpr);
+    Math.round(
+      rect.height *
+      dpr
+    );
 
   ctx.setTransform(
     dpr,
@@ -560,13 +703,17 @@ const telescopeStars = [];
 function buildTelescopeStars() {
   telescopeStars.length = 0;
 
-  for (let i = 0; i < 1500; i++) {
+  for (
+    let i = 0;
+    i < 1500;
+    i++
+  ) {
     const x =
       (
         seededRandom(
           i * 2.13 + 40
         ) -
-        0.5
+        .5
       ) *
       1200;
 
@@ -575,33 +722,39 @@ function buildTelescopeStars() {
         seededRandom(
           i * 4.71 + 80
         ) -
-        0.5
+        .5
       ) *
       900;
 
     const brightness =
-      0.10 +
+      .10 +
       seededRandom(
         i * 7.37 + 120
       ) *
-      0.50;
+      .50;
 
     const chance =
       seededRandom(
         i * 11.91 + 160
       );
 
-    let size = 0.42;
+    let size = .42;
 
-    if (chance > 0.70) {
-      size = 0.62;
+    if (
+      chance > .70
+    ) {
+      size = .62;
     }
 
-    if (chance > 0.91) {
-      size = 0.9;
+    if (
+      chance > .91
+    ) {
+      size = .9;
     }
 
-    if (chance > 0.978) {
+    if (
+      chance > .978
+    ) {
       size = 1.2;
     }
 
@@ -614,6 +767,10 @@ function buildTelescopeStars() {
   }
 }
 
+
+/* =========================================================
+   ORDINARY TELESCOPE STAR
+========================================================= */
 
 function drawStar(
   x,
@@ -632,10 +789,23 @@ function drawStar(
   );
 
   ctx.fillStyle =
-    `rgba(231,239,251,${brightness})`;
+    `rgba(
+      231,
+      239,
+      251,
+      ${brightness}
+    )`;
 
   ctx.fill();
 }
+
+
+/* =========================================================
+   ORION TELESCOPE STAR
+
+   Same visual language as the revealed Orion:
+   tiny core + halo + subtle diffraction rays.
+========================================================= */
 
 function drawBrightStar(
   x,
@@ -644,38 +814,73 @@ function drawBrightStar(
   brightness,
   glow
 ) {
-  const starRadius = Math.max(0.7, radius * 0.58);
-
-  // Very restrained atmospheric glow.
-  // Keeps the star luminous without turning it into a glowing ball.
-  if (glow > 0) {
-    const haloRadius = starRadius * 3.2;
-
-    const gradient = ctx.createRadialGradient(
-      x,
-      y,
+  const strength =
+    Math.max(
       0,
-      x,
-      y,
-      haloRadius
+      Math.min(
+        1,
+        brightness
+      )
     );
 
-    gradient.addColorStop(
+  const coreRadius =
+    Math.max(
+      .42,
+      Math.min(
+        .78,
+        radius * .28
+      )
+    );
+
+
+  /* soft outer halo */
+
+  if (
+    glow > 0
+  ) {
+    const haloRadius =
+      Math.max(
+        3,
+        radius * 2.8
+      );
+
+    const halo =
+      ctx.createRadialGradient(
+        x,
+        y,
+        0,
+        x,
+        y,
+        haloRadius
+      );
+
+    halo.addColorStop(
       0,
-      `rgba(235, 243, 255, ${0.10 * glow})`
+      `rgba(
+        245,
+        250,
+        255,
+        ${.18 * glow * strength}
+      )`
     );
 
-    gradient.addColorStop(
-      0.35,
-      `rgba(190, 215, 245, ${0.035 * glow})`
+    halo.addColorStop(
+      .3,
+      `rgba(
+        215,
+        233,
+        255,
+        ${.08 * glow * strength}
+      )`
     );
 
-    gradient.addColorStop(
+    halo.addColorStop(
       1,
-      "rgba(150, 190, 240, 0)"
+      "rgba(160,200,245,0)"
     );
 
     ctx.beginPath();
+
     ctx.arc(
       x,
       y,
@@ -684,64 +889,352 @@ function drawBrightStar(
       Math.PI * 2
     );
 
-    ctx.fillStyle = gradient;
+    ctx.fillStyle =
+      halo;
+
     ctx.fill();
   }
 
-  // Tiny sharp star core
+
+  /* horizontal ray */
+
+  const rayLength =
+    Math.max(
+      4.5,
+      Math.min(
+        7,
+        radius * 3.5
+      )
+    );
+
+  const horizontal =
+    ctx.createLinearGradient(
+      x - rayLength,
+      y,
+      x + rayLength,
+      y
+    );
+
+  horizontal.addColorStop(
+    0,
+    "rgba(220,238,255,0)"
+  );
+
+  horizontal.addColorStop(
+    .32,
+    `rgba(
+      235,
+      246,
+      255,
+      ${.12 * strength}
+    )`
+  );
+
+  horizontal.addColorStop(
+    .5,
+    `rgba(
+      255,
+      255,
+      255,
+      ${.72 * strength}
+    )`
+  );
+
+  horizontal.addColorStop(
+    .68,
+    `rgba(
+      235,
+      246,
+      255,
+      ${.12 * strength}
+    )`
+  );
+
+  horizontal.addColorStop(
+    1,
+    "rgba(220,238,255,0)"
+  );
+
+  ctx.save();
+
   ctx.beginPath();
+
+  ctx.moveTo(
+    x - rayLength,
+    y
+  );
+
+  ctx.lineTo(
+    x + rayLength,
+    y
+  );
+
+  ctx.strokeStyle =
+    horizontal;
+
+  ctx.lineWidth =
+    .55;
+
+  ctx.lineCap =
+    "round";
+
+  ctx.stroke();
+
+  ctx.restore();
+
+
+  /* vertical ray */
+
+  const verticalLength =
+    rayLength * 1.12;
+
+  const vertical =
+    ctx.createLinearGradient(
+      x,
+      y - verticalLength,
+      x,
+      y + verticalLength
+    );
+
+  vertical.addColorStop(
+    0,
+    "rgba(220,238,255,0)"
+  );
+
+  vertical.addColorStop(
+    .32,
+    `rgba(
+      235,
+      246,
+      255,
+      ${.1 * strength}
+    )`
+  );
+
+  vertical.addColorStop(
+    .5,
+    `rgba(
+      255,
+      255,
+      255,
+      ${.68 * strength}
+    )`
+  );
+
+  vertical.addColorStop(
+    .68,
+    `rgba(
+      235,
+      246,
+      255,
+      ${.1 * strength}
+    )`
+  );
+
+  vertical.addColorStop(
+    1,
+    "rgba(220,238,255,0)"
+  );
+
+  ctx.save();
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x,
+    y - verticalLength
+  );
+
+  ctx.lineTo(
+    x,
+    y + verticalLength
+  );
+
+  ctx.strokeStyle =
+    vertical;
+
+  ctx.lineWidth =
+    .5;
+
+  ctx.lineCap =
+    "round";
+
+  ctx.stroke();
+
+  ctx.restore();
+
+
+  /* tiny luminous core */
+
+  const coreGlow =
+    ctx.createRadialGradient(
+      x,
+      y,
+      0,
+      x,
+      y,
+      coreRadius * 2.8
+    );
+
+  coreGlow.addColorStop(
+    0,
+    `rgba(
+      255,
+      255,
+      255,
+      ${strength}
+    )`
+  );
+
+  coreGlow.addColorStop(
+    .28,
+    `rgba(
+      245,
+      250,
+      255,
+      ${.72 * strength}
+    )`
+  );
+
+  coreGlow.addColorStop(
+    1,
+    "rgba(190,220,255,0)"
+  );
+
+  ctx.beginPath();
+
   ctx.arc(
     x,
     y,
-    starRadius,
+    coreRadius * 2.8,
     0,
     Math.PI * 2
   );
 
   ctx.fillStyle =
-    `rgba(245, 248, 255, ${Math.min(1, brightness)})`;
+    coreGlow;
 
   ctx.fill();
 
-  // Pinpoint centre instead of a large glowing circle
+
+  /* pinpoint centre */
+
   ctx.beginPath();
+
   ctx.arc(
     x,
     y,
-    Math.max(0.35, starRadius * 0.32),
+    coreRadius,
     0,
     Math.PI * 2
   );
 
   ctx.fillStyle =
-    `rgba(255, 255, 255, ${Math.min(1, brightness + 0.18)})`;
+    `rgba(
+      255,
+      255,
+      255,
+      ${Math.max(
+        .7,
+        strength
+      )}
+    )`;
+
+  ctx.fill();
+
+
+  /* tiny off-centre highlight */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    x - coreRadius * .15,
+    y - coreRadius * .18,
+    Math.max(
+      .14,
+      coreRadius * .25
+    ),
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    `rgba(
+      255,
+      255,
+      255,
+      ${.9 * strength}
+    )`;
 
   ctx.fill();
 }
+
 
 /* =========================================================
    ORION INSIDE TELESCOPE
 ========================================================= */
 
 const telescopeOrionStars = [
-  { x: -58, y: -72, size: 1.9 },
-  { x: 58, y: -60, size: 1.7 },
+  {
+    x: -58,
+    y: -72,
+    size: 1.9
+  },
 
-  { x: -25, y: 0, size: 1.45 },
-  { x: 0, y: 3, size: 1.55 },
-  { x: 26, y: 7, size: 1.4 },
+  {
+    x: 58,
+    y: -60,
+    size: 1.7
+  },
 
-  { x: -1, y: 42, size: 1.05 },
-  { x: -2, y: 67, size: 0.9 },
+  {
+    x: -25,
+    y: 0,
+    size: 1.45
+  },
 
-  { x: -46, y: 105, size: 1.55 },
-  { x: 64, y: 108, size: 2.05 }
+  {
+    x: 0,
+    y: 3,
+    size: 1.55
+  },
+
+  {
+    x: 26,
+    y: 7,
+    size: 1.4
+  },
+
+  {
+    x: -1,
+    y: 42,
+    size: 1.05
+  },
+
+  {
+    x: -2,
+    y: 67,
+    size: .9
+  },
+
+  {
+    x: -46,
+    y: 105,
+    size: 1.55
+  },
+
+  {
+    x: 64,
+    y: 108,
+    size: 2.05
+  }
 ];
 
 
 function updateOrionPosition() {
   const rect =
-    orion.getBoundingClientRect();
+    orion
+      .getBoundingClientRect();
 
   orionScreenX =
     rect.left +
@@ -755,10 +1248,14 @@ function updateOrionPosition() {
 
 function getOrionDistance() {
   return Math.hypot(
-    lensX - orionScreenX,
-    lensY - orionScreenY
+    lensX -
+    orionScreenX,
+
+    lensY -
+    orionScreenY
   );
 }
+
 
 function drawTelescopeOrion(
   width,
@@ -766,11 +1263,6 @@ function drawTelescopeOrion(
 ) {
   const distance =
     getOrionDistance();
-
-  /*
-    Keep Orion visible during the telescope
-    reveal even after discovery has started.
-  */
 
   if (
     distance > 320 &&
@@ -780,36 +1272,40 @@ function drawTelescopeOrion(
   }
 
 
-  /* -----------------------------------------
-     HOW BRIGHT THE HIDDEN STARS ARE
-  ----------------------------------------- */
+  /* hidden stars get brighter as you approach */
 
-  let intensity = 0.12;
+  let intensity = .12;
 
-  if (distance < 260) {
-    intensity = 0.20;
+  if (
+    distance < 260
+  ) {
+    intensity = .20;
   }
 
-  if (distance < 200) {
-    intensity = 0.32;
+  if (
+    distance < 200
+  ) {
+    intensity = .32;
   }
 
-  if (distance < 145) {
-    intensity = 0.48;
+  if (
+    distance < 145
+  ) {
+    intensity = .48;
   }
 
-  if (distance < 95) {
-    intensity = 0.72;
+  if (
+    distance < 95
+  ) {
+    intensity = .72;
   }
 
-  if (distance < 55) {
+  if (
+    distance < 55
+  ) {
     intensity = 1;
   }
 
-
-  /* -----------------------------------------
-     ORION POSITION INSIDE THE MOVING LENS
-  ----------------------------------------- */
 
   const centreX =
     width / 2 +
@@ -817,7 +1313,7 @@ function drawTelescopeOrion(
       orionScreenX -
       lensX
     ) *
-    0.55;
+    .55;
 
   const centreY =
     height / 2 +
@@ -825,23 +1321,8 @@ function drawTelescopeOrion(
       orionScreenY -
       lensY
     ) *
-    0.55;
+    .55;
 
-
-  /*
-    Exact connections between the SAME stars
-    drawn by telescopeOrionStars.
-
-    0 = left shoulder
-    1 = right shoulder
-
-    2,3,4 = belt
-
-    5,6 = sword
-
-    7 = left foot
-    8 = right foot
-  */
 
   const connections = [
     [0, 1],
@@ -859,12 +1340,13 @@ function drawTelescopeOrion(
   ];
 
 
-  /* -----------------------------------------
-     DRAW THE STARS
-  ----------------------------------------- */
+  /* stars */
 
   telescopeOrionStars.forEach(
-    (star, index) => {
+    (
+      star,
+      index
+    ) => {
       let shimmer = 1;
 
       if (
@@ -876,43 +1358,42 @@ function drawTelescopeOrion(
           Math.sin(
             performance.now() /
             470 +
-            index * 0.9
+            index * .9
           ) *
-          0.10;
+          .08;
       }
-
 
       let starIntensity =
         intensity;
 
-
-      /*
-        Once the reveal starts, make the
-        constellation stars clearer.
-      */
-
-      if (orionRevealStarted) {
+      if (
+        orionRevealStarted
+      ) {
         starIntensity =
           Math.max(
             starIntensity,
-            0.82
+            .82
           );
       }
 
-
       drawBrightStar(
-        centreX + star.x,
-        centreY + star.y,
+        centreX +
+        star.x,
+
+        centreY +
+        star.y,
 
         star.size *
         (
-          0.8 +
-          starIntensity * 0.5
+          .8 +
+          starIntensity *
+          .5
         ) *
         shimmer,
 
-        0.20 +
-        starIntensity * 0.78,
+        .20 +
+        starIntensity *
+        .78,
 
         (
           distance < 145 ||
@@ -925,11 +1406,11 @@ function drawTelescopeOrion(
   );
 
 
-  /* -----------------------------------------
-     DON'T DRAW LINES UNTIL DISCOVERY STARTS
-  ----------------------------------------- */
+  /* lines only begin during reveal */
 
-  if (!orionRevealStarted) {
+  if (
+    !orionRevealStarted
+  ) {
     return;
   }
 
@@ -938,18 +1419,16 @@ function drawTelescopeOrion(
     performance.now() -
     orionRevealStartTime;
 
-
   const segmentTime =
     ORION_LINE_DURATION +
     ORION_LINE_PAUSE;
 
 
-  /* -----------------------------------------
-     DRAW EACH CONNECTION ONE AFTER ANOTHER
-  ----------------------------------------- */
-
   connections.forEach(
-    (connection, index) => {
+    (
+      connection,
+      index
+    ) => {
       const startTime =
         index *
         segmentTime;
@@ -967,8 +1446,9 @@ function drawTelescopeOrion(
           )
         );
 
-
-      if (progress <= 0) {
+      if (
+        progress <= 0
+      ) {
         return;
       }
 
@@ -1001,10 +1481,6 @@ function drawTelescopeOrion(
         end.y;
 
 
-      /*
-        Current travelling point.
-      */
-
       const currentX =
         startX +
         (
@@ -1022,7 +1498,7 @@ function drawTelescopeOrion(
         progress;
 
 
-      /* soft glow beneath the line */
+      /* very subtle line glow */
 
       ctx.save();
 
@@ -1039,62 +1515,66 @@ function drawTelescopeOrion(
       );
 
       ctx.strokeStyle =
-         "rgba(177, 210, 247, .10)";
-       
-       ctx.lineWidth = 0.6;
-       
-       ctx.lineCap = "round";
-       
-       ctx.shadowColor =
-          "rgba(185, 218, 255, .14)";
-       
-       ctx.shadowBlur = 1;
-       
-       ctx.stroke();
-       
-       ctx.restore();
+        "rgba(177,210,247,.10)";
 
+      ctx.lineWidth =
+        .6;
 
-      /* actual fine constellation line */
+      ctx.lineCap =
+        "round";
 
-      ctx.save();
+      ctx.shadowColor =
+        "rgba(185,218,255,.14)";
 
-      ctx.beginPath();
-
-      ctx.moveTo(
-        startX,
-        startY
-      );
-
-      ctx.lineTo(
-        currentX,
-        currentY
-      );
-
-      ctx.strokeStyle =
-        "rgba(226, 238, 252, .76)";
-
-      ctx.lineWidth = 1;
-
-      ctx.lineCap = "round";
+      ctx.shadowBlur =
+        1;
 
       ctx.stroke();
 
       ctx.restore();
 
 
-      /*
-        Tiny travelling light at the head
-        of the line.
-      */
+      /* actual constellation line */
 
-      if (progress < 1) {
+      ctx.save();
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        startX,
+        startY
+      );
+
+      ctx.lineTo(
+        currentX,
+        currentY
+      );
+
+      ctx.strokeStyle =
+        "rgba(226,238,252,.68)";
+
+      ctx.lineWidth =
+        .7;
+
+      ctx.lineCap =
+        "round";
+
+      ctx.stroke();
+
+      ctx.restore();
+
+
+      /* travelling point of light */
+
+      if (
+        progress < 1
+      ) {
         drawBrightStar(
           currentX,
           currentY,
-          1.25,
-          0.95,
-          1
+          1.15,
+          .95,
+          .8
         );
       }
     }
@@ -1103,14 +1583,15 @@ function drawTelescopeOrion(
 
 
 /* =========================================================
-   DRAW TELESCOPE
+   TELESCOPE BACKGROUND
 ========================================================= */
 
 function drawTelescopeBackground(
   width,
   height
 ) {
-  ctx.fillStyle = "#07111d";
+  ctx.fillStyle =
+    "#07111d";
 
   ctx.fillRect(
     0,
@@ -1121,13 +1602,13 @@ function drawTelescopeBackground(
 
   const glow =
     ctx.createRadialGradient(
-      width * 0.43,
-      height * 0.38,
+      width * .43,
+      height * .38,
       0,
 
-      width * 0.5,
-      height * 0.5,
-      width * 0.7
+      width * .5,
+      height * .5,
+      width * .7
     );
 
   glow.addColorStop(
@@ -1136,7 +1617,7 @@ function drawTelescopeBackground(
   );
 
   glow.addColorStop(
-    0.55,
+    .55,
     "rgba(8,18,31,.035)"
   );
 
@@ -1145,7 +1626,8 @@ function drawTelescopeBackground(
     "rgba(0,2,7,0)"
   );
 
-  ctx.fillStyle = glow;
+  ctx.fillStyle =
+    glow;
 
   ctx.fillRect(
     0,
@@ -1156,18 +1638,27 @@ function drawTelescopeBackground(
 }
 
 
+/* =========================================================
+   TELESCOPE BACKGROUND STARS
+========================================================= */
+
 function drawTelescopeStars(
   width,
   height
 ) {
   const fieldOffsetX =
-    lensX * 0.52;
+    lensX *
+    .52;
 
   const fieldOffsetY =
-    lensY * 0.52;
+    lensY *
+    .52;
 
-  const wrapWidth = 1200;
-  const wrapHeight = 900;
+  const wrapWidth =
+    1200;
+
+  const wrapHeight =
+    900;
 
   telescopeStars.forEach(
     star => {
@@ -1184,23 +1675,33 @@ function drawTelescopeStars(
       x =
         (
           x +
-          wrapWidth * 10
+          wrapWidth *
+          10
         ) %
         wrapWidth;
 
       y =
         (
           y +
-          wrapHeight * 10
+          wrapHeight *
+          10
         ) %
         wrapHeight;
 
-      if (x > width + 100) {
-        x -= wrapWidth;
+      if (
+        x >
+        width + 100
+      ) {
+        x -=
+          wrapWidth;
       }
 
-      if (y > height + 100) {
-        y -= wrapHeight;
+      if (
+        y >
+        height + 100
+      ) {
+        y -=
+          wrapHeight;
       }
 
       if (
@@ -1223,22 +1724,30 @@ function drawTelescopeStars(
 }
 
 
+/* =========================================================
+   RENDER TELESCOPE
+========================================================= */
+
 function renderTelescope() {
-  if (!telescopeActive) {
+  if (
+    !telescopeActive
+  ) {
     return;
   }
 
   lensX +=
-    (targetLensX - lensX) *
-    0.24;
+    (
+      targetLensX -
+      lensX
+    ) *
+    .24;
 
   lensY +=
-    (targetLensY - lensY) *
-    0.24;
-
-  /*
-    The actual eyepiece moves.
-  */
+    (
+      targetLensY -
+      lensY
+    ) *
+    .24;
 
   eyepiece.style.left =
     `${lensX}px`;
@@ -1247,10 +1756,14 @@ function renderTelescope() {
     `${lensY}px`;
 
   const rect =
-    eyepiece.getBoundingClientRect();
+    eyepiece
+      .getBoundingClientRect();
 
-  const width = rect.width;
-  const height = rect.height;
+  const width =
+    rect.width;
+
+  const height =
+    rect.height;
 
   if (
     width <= 0 ||
@@ -1287,9 +1800,13 @@ function renderTelescope() {
    TELESCOPE MOVEMENT
 ========================================================= */
 
-function clampLens(x, y) {
+function clampLens(
+  x,
+  y
+) {
   const rect =
-    eyepiece.getBoundingClientRect();
+    eyepiece
+      .getBoundingClientRect();
 
   const radius =
     Math.max(
@@ -1297,27 +1814,34 @@ function clampLens(x, y) {
       90
     );
 
-  const padding = 14;
+  const padding =
+    14;
 
   return {
     x:
       Math.max(
-        radius + padding,
+        radius +
+        padding,
+
         Math.min(
           window.innerWidth -
           radius -
           padding,
+
           x
         )
       ),
 
     y:
       Math.max(
-        radius + padding,
+        radius +
+        padding,
+
         Math.min(
           window.innerHeight -
           radius -
           padding,
+
           y
         )
       )
@@ -1325,9 +1849,15 @@ function clampLens(x, y) {
 }
 
 
-function moveLens(x, y) {
+function moveLens(
+  x,
+  y
+) {
   const position =
-    clampLens(x, y);
+    clampLens(
+      x,
+      y
+    );
 
   targetLensX =
     position.x;
@@ -1335,7 +1865,8 @@ function moveLens(x, y) {
   targetLensY =
     position.y;
 
-  focusStartedAt = null;
+  focusStartedAt =
+    null;
 }
 
 
@@ -1343,39 +1874,57 @@ function moveLens(x, y) {
    TELESCOPE ON / OFF
 ========================================================= */
 
-function setTelescope(active) {
-  telescopeActive = active;
+function setTelescope(
+  active
+) {
+  telescopeActive =
+    active;
 
   app.classList.toggle(
     "telescope-active",
     active
   );
 
-  telescopeButton.classList.toggle(
-    "active",
+  telescopeButton
+    .classList
+    .toggle(
+      "active",
+      active
+    );
+
+  telescopeView
+    .setAttribute(
+      "aria-hidden",
+      active
+        ? "false"
+        : "true"
+    );
+
+  telescopeDragging =
+    false;
+
+  telescopePointerId =
+    null;
+
+  focusStartedAt =
+    null;
+
+  if (
     active
-  );
-
-  telescopeView.setAttribute(
-    "aria-hidden",
-    active
-      ? "false"
-      : "true"
-  );
-
-  telescopeDragging = false;
-  telescopePointerId = null;
-  focusStartedAt = null;
-
-  if (active) {
+  ) {
     lensX =
-      window.innerWidth / 2;
+      window.innerWidth /
+      2;
 
     lensY =
-      window.innerHeight / 2;
+      window.innerHeight /
+      2;
 
-    targetLensX = lensX;
-    targetLensY = lensY;
+    targetLensX =
+      lensX;
+
+    targetLensY =
+      lensY;
 
     requestAnimationFrame(
       resizeTelescopeCanvas
@@ -1398,18 +1947,20 @@ telescopeButton.addEventListener(
 
 /* =========================================================
    TELESCOPE POINTER INPUT
-
-   One system handles touch, Apple Pencil and mouse.
 ========================================================= */
 
 telescopeView.addEventListener(
   "pointerdown",
   event => {
-    if (!telescopeActive) {
+    if (
+      !telescopeActive
+    ) {
       return;
     }
 
-    telescopeDragging = true;
+    telescopeDragging =
+      true;
+
     telescopePointerId =
       event.pointerId;
 
@@ -1419,9 +1970,10 @@ telescopeView.addEventListener(
     );
 
     try {
-      telescopeView.setPointerCapture(
-        event.pointerId
-      );
+      telescopeView
+        .setPointerCapture(
+          event.pointerId
+        );
     } catch (error) {}
 
     event.preventDefault();
@@ -1432,17 +1984,15 @@ telescopeView.addEventListener(
 telescopeView.addEventListener(
   "pointermove",
   event => {
-    if (!telescopeActive) {
+    if (
+      !telescopeActive
+    ) {
       return;
     }
 
-    /*
-      Mouse can move the telescope without
-      requiring the button to be held.
-    */
-
     if (
-      event.pointerType === "mouse"
+      event.pointerType ===
+      "mouse"
     ) {
       moveLens(
         event.clientX,
@@ -1452,14 +2002,10 @@ telescopeView.addEventListener(
       return;
     }
 
-    /*
-      Touch/Pencil moves only while dragging.
-    */
-
     if (
       !telescopeDragging ||
       event.pointerId !==
-        telescopePointerId
+      telescopePointerId
     ) {
       return;
     }
@@ -1474,7 +2020,9 @@ telescopeView.addEventListener(
 );
 
 
-function endTelescopePointer(event) {
+function endTelescopePointer(
+  event
+) {
   if (
     event.pointerId !==
     telescopePointerId
@@ -1482,12 +2030,11 @@ function endTelescopePointer(event) {
     return;
   }
 
-  telescopeDragging = false;
-  telescopePointerId = null;
+  telescopeDragging =
+    false;
 
-  /*
-    Telescope stays where it was released.
-  */
+  telescopePointerId =
+    null;
 }
 
 
@@ -1495,7 +2042,6 @@ telescopeView.addEventListener(
   "pointerup",
   endTelescopePointer
 );
-
 
 telescopeView.addEventListener(
   "pointercancel",
@@ -1507,12 +2053,16 @@ telescopeView.addEventListener(
    ORION DISCOVERY
 ========================================================= */
 
-function checkOrionFocus(timestamp) {
+function checkOrionFocus(
+  timestamp
+) {
   if (
     !telescopeActive ||
     orionDiscovered
   ) {
-    focusStartedAt = null;
+    focusStartedAt =
+      null;
+
     return;
   }
 
@@ -1523,12 +2073,18 @@ function checkOrionFocus(timestamp) {
     distance > 75 ||
     telescopeDragging
   ) {
-    focusStartedAt = null;
+    focusStartedAt =
+      null;
+
     return;
   }
 
-  if (focusStartedAt === null) {
-    focusStartedAt = timestamp;
+  if (
+    focusStartedAt ===
+    null
+  ) {
+    focusStartedAt =
+      timestamp;
   }
 
   if (
@@ -1540,6 +2096,7 @@ function checkOrionFocus(timestamp) {
   }
 }
 
+
 function discoverOrion() {
   if (
     orionDiscovered ||
@@ -1548,21 +2105,14 @@ function discoverOrion() {
     return;
   }
 
-
-  /*
-    Lock the telescope in discovery mode.
-
-    The telescope stays OPEN while Orion
-    draws itself.
-  */
-
-  orionRevealStarted = true;
+  orionRevealStarted =
+    true;
 
   orionRevealStartTime =
     performance.now();
 
-  focusStartedAt = null;
-
+  focusStartedAt =
+    null;
 
   const totalRevealTime =
     (
@@ -1574,39 +2124,37 @@ function discoverOrion() {
     ) +
     900;
 
-
-  /*
-    Only after every line has travelled
-    from star to star do we complete
-    the discovery.
-  */
-
   setTimeout(
     () => {
-      orionDiscovered = true;
+      orionDiscovered =
+        true;
 
       discoveryNumber.textContent =
         "1";
-
-
-      /*
-        Reveal the permanent Orion
-        in the normal universe.
-      */
 
       orion.classList.add(
         "discovered"
       );
 
-
       /*
-        Keep the completed constellation
-        inside the telescope briefly.
+        Remove the generic navigation hint
+        so it cannot overlap the Orion name.
       */
+
+      navigationHint
+        .classList
+        .add(
+          "hidden"
+        );
+
+      navigationHintHidden =
+        true;
 
       setTimeout(
         () => {
-          setTelescope(false);
+          setTelescope(
+            false
+          );
         },
         650
       );
@@ -1615,6 +2163,7 @@ function discoverOrion() {
     totalRevealTime
   );
 }
+
 
 /* =========================================================
    NORMAL UNIVERSE POINTER INPUT
@@ -1635,15 +2184,20 @@ app.addEventListener(
     activePointers.set(
       event.pointerId,
       {
-        x: event.clientX,
-        y: event.clientY
+        x:
+          event.clientX,
+
+        y:
+          event.clientY
       }
     );
 
     if (
-      activePointers.size === 1
+      activePointers.size ===
+      1
     ) {
-      universeDragging = true;
+      universeDragging =
+        true;
 
       dragStartX =
         event.clientX;
@@ -1663,9 +2217,11 @@ app.addEventListener(
     }
 
     if (
-      activePointers.size === 2
+      activePointers.size ===
+      2
     ) {
-      universeDragging = false;
+      universeDragging =
+        false;
 
       app.classList.remove(
         "dragging"
@@ -1701,7 +2257,9 @@ app.addEventListener(
 app.addEventListener(
   "pointermove",
   event => {
-    if (telescopeActive) {
+    if (
+      telescopeActive
+    ) {
       return;
     }
 
@@ -1713,18 +2271,18 @@ app.addEventListener(
       activePointers.set(
         event.pointerId,
         {
-          x: event.clientX,
-          y: event.clientY
+          x:
+            event.clientX,
+
+          y:
+            event.clientY
         }
       );
     }
 
-    /*
-      Pinch zoom
-    */
-
     if (
-      activePointers.size === 2
+      activePointers.size ===
+      2
     ) {
       const points =
         Array.from(
@@ -1741,7 +2299,8 @@ app.addEventListener(
         );
 
       if (
-        pinchStartDistance > 0
+        pinchStartDistance >
+        0
       ) {
         const ratio =
           distance /
@@ -1750,8 +2309,10 @@ app.addEventListener(
         targetZoom =
           Math.max(
             MIN_ZOOM,
+
             Math.min(
               MAX_ZOOM,
+
               pinchStartZoom *
               ratio
             )
@@ -1761,11 +2322,9 @@ app.addEventListener(
       return;
     }
 
-    /*
-      Drag universe
-    */
-
-    if (universeDragging) {
+    if (
+      universeDragging
+    ) {
       targetX =
         dragCameraStartX +
         (
@@ -1786,8 +2345,12 @@ app.addEventListener(
 );
 
 
-function endUniversePointer(event) {
-  if (telescopeActive) {
+function endUniversePointer(
+  event
+) {
+  if (
+    telescopeActive
+  ) {
     return;
   }
 
@@ -1796,11 +2359,14 @@ function endUniversePointer(event) {
   );
 
   if (
-    activePointers.size === 0
+    activePointers.size ===
+    0
   ) {
-    universeDragging = false;
+    universeDragging =
+      false;
 
-    pinchStartDistance = 0;
+    pinchStartDistance =
+      0;
 
     app.classList.remove(
       "dragging"
@@ -1810,7 +2376,8 @@ function endUniversePointer(event) {
   }
 
   if (
-    activePointers.size === 1
+    activePointers.size ===
+    1
   ) {
     const remaining =
       Array.from(
@@ -1829,7 +2396,8 @@ function endUniversePointer(event) {
     dragCameraStartY =
       targetY;
 
-    universeDragging = true;
+    universeDragging =
+      true;
   }
 }
 
@@ -1838,7 +2406,6 @@ app.addEventListener(
   "pointerup",
   endUniversePointer
 );
-
 
 app.addEventListener(
   "pointercancel",
@@ -1853,7 +2420,9 @@ app.addEventListener(
 app.addEventListener(
   "wheel",
   event => {
-    if (telescopeActive) {
+    if (
+      telescopeActive
+    ) {
       return;
     }
 
@@ -1861,11 +2430,12 @@ app.addEventListener(
 
     targetZoom +=
       -event.deltaY *
-      0.001;
+      .001;
 
     targetZoom =
       Math.max(
         MIN_ZOOM,
+
         Math.min(
           MAX_ZOOM,
           targetZoom
@@ -1882,19 +2452,25 @@ app.addEventListener(
    NAVIGATION HINT
 ========================================================= */
 
-let navigationHintHidden = false;
+let navigationHintHidden =
+  false;
 
 
 function hideNavigationHint() {
-  if (navigationHintHidden) {
+  if (
+    navigationHintHidden
+  ) {
     return;
   }
 
-  navigationHintHidden = true;
+  navigationHintHidden =
+    true;
 
-  navigationHint.classList.add(
-    "hidden"
-  );
+  navigationHint
+    .classList
+    .add(
+      "hidden"
+    );
 }
 
 
@@ -1935,7 +2511,9 @@ window.addEventListener(
   () => {
     buildUniverseStars();
 
-    if (!telescopeActive) {
+    if (
+      !telescopeActive
+    ) {
       return;
     }
 
@@ -1945,11 +2523,17 @@ window.addEventListener(
         targetLensY
       );
 
-    lensX = position.x;
-    lensY = position.y;
+    lensX =
+      position.x;
 
-    targetLensX = position.x;
-    targetLensY = position.y;
+    lensY =
+      position.y;
+
+    targetLensX =
+      position.x;
+
+    targetLensY =
+      position.y;
 
     requestAnimationFrame(
       resizeTelescopeCanvas
@@ -1962,14 +2546,18 @@ window.addEventListener(
    ANIMATION LOOP
 ========================================================= */
 
-function animate(timestamp) {
+function animate(
+  timestamp
+) {
   renderCamera();
 
   updateOrionPosition();
 
   renderTelescope();
 
-  checkOrionFocus(timestamp);
+  checkOrionFocus(
+    timestamp
+  );
 
   requestAnimationFrame(
     animate
@@ -1983,9 +2571,12 @@ function animate(timestamp) {
 
 function initialise() {
   buildUniverseStars();
+
   buildTelescopeStars();
 
-  setTelescope(false);
+  setTelescope(
+    false
+  );
 
   requestAnimationFrame(
     animate

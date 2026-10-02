@@ -1392,6 +1392,8 @@ function updateOrionPosition() {
     rect.height / 2;
 }
 
+let orionRevealPausedAt = null;
+let orionRevealPausedDuration = 0;
 
 function getOrionDistance() {
 
@@ -1570,11 +1572,53 @@ function drawTelescopeOrion(
     return;
   }
 
+   const now =
+  performance.now();
 
-  const elapsed =
-    performance.now() -
-    orionRevealStartTime;
 
+/*
+  If Orion moves too far out of the
+  telescope during the reveal, freeze
+  the drawing exactly where it is.
+*/
+
+const orionStillInView =
+  distance <= 210;
+
+
+if (
+  !orionStillInView
+) {
+
+  if (
+    orionRevealPausedAt === null
+  ) {
+    orionRevealPausedAt = now;
+  }
+
+} else if (
+  orionRevealPausedAt !== null
+) {
+
+  orionRevealPausedDuration +=
+    now -
+    orionRevealPausedAt;
+
+  orionRevealPausedAt = null;
+}
+
+
+const effectiveNow =
+  orionRevealPausedAt === null
+    ? now
+    : orionRevealPausedAt;
+
+
+const elapsed =
+  effectiveNow -
+  orionRevealStartTime -
+  orionRevealPausedDuration;
+   
   const segmentTime =
     ORION_LINE_DURATION +
     ORION_LINE_PAUSE;
@@ -2282,61 +2326,93 @@ function discoverOrion() {
     return;
   }
 
-  orionRevealStarted =
-    true;
+   orionRevealStarted =
+  true;
 
-  orionRevealStartTime =
+orionRevealStartTime =
+  performance.now();
+
+orionRevealPausedAt =
+  null;
+
+orionRevealPausedDuration =
+  0;
+
+focusStartedAt =
+  null;
+
+ function waitForOrionReveal() {
+
+  const segmentTime =
+    ORION_LINE_DURATION +
+    ORION_LINE_PAUSE;
+
+  const requiredTime =
+    9 * segmentTime +
+    900;
+
+
+  const now =
     performance.now();
 
-  focusStartedAt =
-    null;
+  const effectiveNow =
+    orionRevealPausedAt === null
+      ? now
+      : orionRevealPausedAt;
 
-  const totalRevealTime =
-    (
-      9 *
-      (
-        ORION_LINE_DURATION +
-        ORION_LINE_PAUSE
-      )
-    ) +
-    900;
+  const elapsed =
+    effectiveNow -
+    orionRevealStartTime -
+    orionRevealPausedDuration;
+
+
+  if (
+    elapsed < requiredTime
+  ) {
+
+    requestAnimationFrame(
+      waitForOrionReveal
+    );
+
+    return;
+  }
+
+
+  orionDiscovered =
+    true;
+
+  discoveryNumber.textContent =
+    "1";
+
+  orion.classList.add(
+    "discovered"
+  );
+
+  navigationHint
+    .classList
+    .add(
+      "hidden"
+    );
+
+  navigationHintHidden =
+    true;
+
 
   setTimeout(
     () => {
 
-      orionDiscovered =
-        true;
-
-      discoveryNumber.textContent =
-        "1";
-
-      orion.classList.add(
-        "discovered"
-      );
-
-      navigationHint
-        .classList
-        .add(
-          "hidden"
-        );
-
-      navigationHintHidden =
-        true;
-
-      setTimeout(
-        () => {
-
-          setTelescope(
-            false
-          );
-
-        },
-        650
+      setTelescope(
+        false
       );
 
     },
-    totalRevealTime
+    650
   );
+}
+
+requestAnimationFrame(
+  waitForOrionReveal
+);
 }
 
 

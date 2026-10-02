@@ -574,7 +574,7 @@ button {
 
 #orion.discovered
 .constellation-label {
-  opacity: 1;
+  opacity: 0;
 
   transform:
     translate(

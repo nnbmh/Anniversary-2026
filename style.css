@@ -592,6 +592,25 @@ button {
 }
 
 
+#app #orion.completed
+.constellation-label {
+  opacity: 1;
+
+  transform:
+    translate(
+      -50%,
+      0
+    );
+}
+
+#app.entering-orion
+#orion.completed
+.constellation-label {
+  opacity: 0;
+}
+
+
+#app:not(.entering-orion)
 #orion.completed
 .constellation-label {
   opacity: 1;

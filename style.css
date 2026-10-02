@@ -1201,13 +1201,9 @@ button {
 ========================================================= */
 
 #orion.discovered {
-  pointer-events: auto;
-  cursor: pointer;
-
-  -webkit-tap-highlight-color:
-    transparent;
+  pointer-events: none;
+  
 }
-
 
 /* =========================================================
    ORION CHAPTER TRANSITION

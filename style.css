@@ -483,24 +483,22 @@ button {
 
 #orion.discovered
 .constellation-lines line {
-  stroke:
-    rgba(190, 209, 232, .5);
+  stroke: rgba(205, 224, 246, .78);
 
-  stroke-width: .38;
+  stroke-width: .7;
 
   stroke-dashoffset: 0;
 
-  opacity: .28;
+  opacity: .72;
 
   animation: none;
 
   filter:
     drop-shadow(
-      0 0 1px
-      rgba(205, 225, 250, .12)
+      0 0 2px
+      rgba(185, 215, 250, .18)
     );
 }
-
 
 /* =========================================================
    ORION LABEL

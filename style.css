@@ -1323,3 +1323,22 @@ button {
   }
 
 }
+
+#orion.discovered
+.constellation-lines line {
+  stroke: rgba(205, 224, 246, .78);
+
+  stroke-width: .7;
+
+  stroke-dashoffset: 0;
+
+  opacity: .72;
+
+  animation: none;
+
+  filter:
+    drop-shadow(
+      0 0 2px
+      rgba(185, 215, 250, .18)
+    );
+}

@@ -3947,7 +3947,6 @@ orionContinue.addEventListener(
   }
 );
 
-
 orionReturn.addEventListener(
   "click",
   event => {
@@ -3955,6 +3954,20 @@ orionReturn.addEventListener(
     event.preventDefault();
 
     event.stopPropagation();
+
+
+    /*
+      The final return button only exists
+      after Faris has completed the entire
+      Orion chapter.
+
+      This permanently unlocks Orion's
+      map label.
+    */
+
+    orion.classList.add(
+      "completed"
+    );
 
 
     leaveOrionChapter();

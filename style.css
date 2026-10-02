@@ -1195,3 +1195,295 @@ button {
       .01ms !important;
   }
 }
+
+/* =========================================================
+   ORION — CLICKABLE AFTER DISCOVERY
+========================================================= */
+
+#orion.discovered {
+  pointer-events: auto;
+  cursor: pointer;
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+
+/* =========================================================
+   ORION CHAPTER TRANSITION
+========================================================= */
+
+#app.entering-orion {
+  cursor: default;
+}
+
+
+/* Fade the normal interface away */
+
+#app.entering-orion #interface,
+#app.entering-orion #telescopeButton,
+#app.entering-orion #navigationHint {
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+
+/* Push the rest of the universe backwards */
+
+#app.entering-orion #starsDeep {
+  opacity: .08;
+  transition: opacity 2.2s ease;
+}
+
+#app.entering-orion #starsFar {
+  opacity: .10;
+  transition: opacity 2s ease;
+}
+
+#app.entering-orion #starsMid {
+  opacity: .13;
+  transition: opacity 1.8s ease;
+}
+
+#app.entering-orion #starsNear {
+  opacity: .16;
+  transition: opacity 1.6s ease;
+}
+
+#app.entering-orion #dustLayer {
+  opacity: .12;
+  transition: opacity 2s ease;
+}
+
+
+/* Orion itself becomes the focal point */
+
+#orion {
+  transition:
+    opacity 1s ease,
+    filter 1.8s ease;
+}
+
+#app.entering-orion #orion {
+  filter:
+    drop-shadow(
+      0 0 12px
+      rgba(185,215,255,.10)
+    );
+}
+
+
+/* Existing Orion label disappears during the flight */
+
+#app.entering-orion
+#orion .constellation-label {
+  opacity: 0;
+
+  transition:
+    opacity .6s ease;
+}
+
+
+/* =========================================================
+   CHAPTER INTRO OVERLAY
+========================================================= */
+
+#orionChapterIntro {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 150;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(5,13,24,.22) 0%,
+      rgba(1,5,12,.48) 42%,
+      rgba(0,2,7,.88) 100%
+    );
+
+  opacity: 0;
+  visibility: hidden;
+
+  pointer-events: none;
+
+  transition:
+    opacity 1.4s ease,
+    visibility 1.4s ease;
+}
+
+
+#orionChapterIntro.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* =========================================================
+   CHAPTER TYPOGRAPHY
+========================================================= */
+
+.orion-chapter-content {
+  position: relative;
+
+  width: min(
+    86vw,
+    520px
+  );
+
+  text-align: center;
+
+  transform:
+    translateY(14px);
+
+  opacity: 0;
+
+  transition:
+    transform 1.4s
+    cubic-bezier(.16,.8,.2,1),
+
+    opacity 1.2s ease;
+}
+
+
+#orionChapterIntro.show
+.orion-chapter-content {
+  transform:
+    translateY(0);
+
+  opacity: 1;
+}
+
+
+.orion-chapter-eyebrow {
+  display: block;
+
+  margin-bottom: 18px;
+
+  font-size: 7px;
+
+  letter-spacing: .38em;
+
+  padding-left: .38em;
+
+  color:
+    rgba(215,228,245,.42);
+}
+
+
+.orion-chapter-content h1 {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  font-size:
+    clamp(
+      30px,
+      7vw,
+      52px
+    );
+
+  font-weight: 300;
+
+  line-height: 1;
+
+  letter-spacing: .34em;
+
+  padding-left: .34em;
+
+  color:
+    rgba(247,249,255,.96);
+
+  text-shadow:
+    0 0 18px
+    rgba(175,210,250,.12);
+}
+
+
+.orion-chapter-content p {
+  margin-top: 15px;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      14px,
+      3vw,
+      18px
+    );
+
+  font-style: italic;
+
+  letter-spacing: .07em;
+
+  color:
+    rgba(224,234,247,.72);
+}
+
+
+.orion-chapter-dates {
+  display: block;
+
+  margin-top: 28px;
+
+  font-size: 7px;
+
+  letter-spacing: .26em;
+
+  padding-left: .26em;
+
+  color:
+    rgba(205,220,240,.34);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (
+  max-width: 600px
+) {
+
+  .orion-chapter-eyebrow {
+    font-size: 6px;
+
+    margin-bottom: 15px;
+  }
+
+
+  .orion-chapter-content h1 {
+    font-size: 30px;
+
+    letter-spacing: .29em;
+
+    padding-left: .29em;
+  }
+
+
+  .orion-chapter-content p {
+    margin-top: 12px;
+
+    font-size: 14px;
+  }
+
+
+  .orion-chapter-dates {
+    margin-top: 24px;
+
+    font-size: 6px;
+  }
+
+}

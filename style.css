@@ -368,32 +368,30 @@ button {
     rgba(218, 233, 255, .7);
 }
 
-
 /* =========================================================
-   ORION AFTER DISCOVERY
-   Realistic pinpoint stars
+   ORION — REVEALED STARS
+   Varied brightness + size
 ========================================================= */
 
 #orion.discovered .orion-star {
-  width: 1.4px;
-  height: 1.4px;
+  width: 1.35px;
+  height: 1.35px;
 
-  opacity: 1;
+  opacity: .95;
 
   border-radius: 50%;
 
-  background: #ffffff;
+  background: #f8fbff;
 
   box-shadow:
-    0 0 1px rgba(255,255,255,1),
-    0 0 3px rgba(220,235,255,.72),
-    0 0 7px rgba(170,205,245,.24);
+    0 0 1px rgba(255,255,255,.95),
+    0 0 3px rgba(215,232,255,.55);
 
   overflow: visible;
 }
 
 
-/* horizontal diffraction ray */
+/* subtle horizontal ray */
 
 #orion.discovered .orion-star::before {
   content: "";
@@ -403,29 +401,25 @@ button {
   left: 50%;
   top: 50%;
 
-  width: 10px;
-  height: .65px;
+  width: 6px;
+  height: .45px;
 
-  transform:
-    translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(220,238,255,.04) 15%,
-      rgba(235,246,255,.2) 34%,
-      rgba(255,255,255,.82) 50%,
-      rgba(235,246,255,.2) 66%,
-      rgba(220,238,255,.04) 85%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(230,242,255,.12),
+    rgba(255,255,255,.65),
+    rgba(230,242,255,.12),
+    transparent
+  );
 
   pointer-events: none;
 }
 
 
-/* vertical diffraction ray */
+/* subtle vertical ray */
 
 #orion.discovered .orion-star::after {
   content: "";
@@ -435,153 +429,177 @@ button {
   left: 50%;
   top: 50%;
 
-  width: .65px;
-  height: 11px;
+  width: .45px;
+  height: 7px;
 
-  transform:
-    translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 
-  background:
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(220,238,255,.04) 15%,
-      rgba(235,246,255,.18) 34%,
-      rgba(255,255,255,.78) 50%,
-      rgba(235,246,255,.18) 66%,
-      rgba(220,238,255,.04) 85%,
-      transparent 100%
-    );
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(230,242,255,.1),
+    rgba(255,255,255,.6),
+    rgba(230,242,255,.1),
+    transparent
+  );
 
   pointer-events: none;
 }
 
 
 /* =========================================================
-   SMALL ORION STARS
-========================================================= */
-
-#orion.discovered .orion-star.small {
-  width: 1.1px;
-  height: 1.1px;
-
-  opacity: .86;
-
-  box-shadow:
-    0 0 1px rgba(255,255,255,.9),
-    0 0 3px rgba(210,230,255,.42);
-}
-
-#orion.discovered .orion-star.small::before {
-  width: 6px;
-  opacity: .7;
-}
-
-#orion.discovered .orion-star.small::after {
-  height: 7px;
-  opacity: .7;
-}
-
-
-/* =========================================================
    BETELGEUSE
+   Big warm anchor
 ========================================================= */
 
 #orion.discovered .orion-star.warm {
-  width: 1.8px;
-  height: 1.8px;
+  width: 2.8px;
+  height: 2.8px;
 
-  background: #ffe5ce;
+  opacity: 1;
+
+  background: #ffe2c5;
 
   box-shadow:
-    0 0 1px rgba(255,245,235,1),
-    0 0 4px rgba(255,205,165,.7),
-    0 0 8px rgba(255,165,110,.25);
+    0 0 2px rgba(255,245,230,1),
+    0 0 5px rgba(255,194,145,.65),
+    0 0 10px rgba(255,155,100,.2);
+}
+
+#orion.discovered .orion-star.warm::before {
+  width: 11px;
+}
+
+#orion.discovered .orion-star.warm::after {
+  height: 12px;
 }
 
 
 /* =========================================================
    RIGEL
+   Brightest blue-white anchor
 ========================================================= */
 
 #orion.discovered .orion-star.cool {
-  width: 1.9px;
-  height: 1.9px;
+  width: 3.2px;
+  height: 3.2px;
 
-  background: #e8f2ff;
+  opacity: 1;
+
+  background: #edf6ff;
+
+  box-shadow:
+    0 0 2px rgba(255,255,255,1),
+    0 0 6px rgba(195,225,255,.72),
+    0 0 12px rgba(135,185,255,.22);
+}
+
+#orion.discovered .orion-star.cool::before {
+  width: 13px;
+}
+
+#orion.discovered .orion-star.cool::after {
+  height: 14px;
+}
+
+
+/* =========================================================
+   BELLATRIX
+   right shoulder — 71%, 23.5%
+========================================================= */
+
+#orion.discovered .orion-star[style*="71%"] {
+  width: 2px;
+  height: 2px;
+
+  opacity: 1;
 
   box-shadow:
     0 0 1px rgba(255,255,255,1),
-    0 0 4px rgba(205,228,255,.8),
-    0 0 8px rgba(145,190,255,.28);
+    0 0 4px rgba(215,232,255,.6);
 }
+
 
 /* =========================================================
-   ORION — INDIVIDUAL STAR SIZES
-
-   1  Betelgeuse
-   2  Bellatrix
-   3  Alnitak
-   4  Alnilam
-   5  Mintaka
-   6  Sword
-   7  Sword
-   8  Saiph
-   9  Rigel
+   ALNITAK
+   left belt — 41%
 ========================================================= */
 
-/* Betelgeuse */
-#orion.discovered .orion-star:nth-of-type(1) {
-  width: 2.3px;
-  height: 2.3px;
+#orion.discovered .orion-star[style*="41%"] {
+  width: 1.65px;
+  height: 1.65px;
+
+  opacity: .96;
 }
 
-/* Bellatrix */
-#orion.discovered .orion-star:nth-of-type(2) {
-  width: 1.7px;
-  height: 1.7px;
+
+/* =========================================================
+   ALNILAM
+   middle belt — 50%
+========================================================= */
+
+#orion.discovered .orion-star[style*="50%"] {
+  width: 2.15px;
+  height: 2.15px;
+
+  opacity: 1;
+
+  box-shadow:
+    0 0 1px rgba(255,255,255,1),
+    0 0 4px rgba(215,232,255,.62);
 }
 
-/* Alnitak */
-#orion.discovered .orion-star:nth-of-type(3) {
+
+/* =========================================================
+   MINTAKA
+   right belt — 59%
+========================================================= */
+
+#orion.discovered .orion-star[style*="59%"] {
   width: 1.55px;
   height: 1.55px;
+
+  opacity: .92;
 }
 
-/* Alnilam */
-#orion.discovered .orion-star:nth-of-type(4) {
+
+/* =========================================================
+   SAIPH
+   lower-left — 33%
+========================================================= */
+
+#orion.discovered .orion-star[style*="33%"] {
   width: 1.8px;
   height: 1.8px;
+
+  opacity: .95;
 }
 
-/* Mintaka */
-#orion.discovered .orion-star:nth-of-type(5) {
-  width: 1.45px;
-  height: 1.45px;
+
+/* =========================================================
+   SWORD
+   Deliberately much fainter/smaller
+========================================================= */
+
+#orion.discovered .orion-star.small {
+  width: .8px;
+  height: .8px;
+
+  opacity: .68;
+
+  box-shadow:
+    0 0 1px rgba(255,255,255,.72),
+    0 0 2px rgba(205,225,250,.25);
 }
 
-/* Sword — faint */
-#orion.discovered .orion-star:nth-of-type(6) {
-  width: .9px;
-  height: .9px;
+#orion.discovered .orion-star.small::before {
+  width: 3.5px;
+  opacity: .45;
 }
 
-/* Sword — faintest */
-#orion.discovered .orion-star:nth-of-type(7) {
-  width: .75px;
-  height: .75px;
-}
-
-/* Saiph */
-#orion.discovered .orion-star:nth-of-type(8) {
-  width: 1.45px;
-  height: 1.45px;
-}
-
-/* Rigel — brightest */
-#orion.discovered .orion-star:nth-of-type(9) {
-  width: 2.5px;
-  height: 2.5px;
+#orion.discovered .orion-star.small::after {
+  height: 4px;
+  opacity: .45;
 }
 
 /* =========================================================

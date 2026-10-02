@@ -3849,7 +3849,6 @@ function leaveOrionChapter() {
 
   app.classList.remove(
     "orion-memory-mode",
-    "entering-orion"
   );
 
 

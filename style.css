@@ -437,156 +437,179 @@ button {
 
 /* =========================================================
    INDIVIDUAL ORION STAR SIZES
-   CLEARLY DIFFERENT PHYSICAL STAR SIZES
+
+   Same hierarchy as telescope Orion.
+   Different sizes, but still pinpoint stars.
 ========================================================= */
 
 
-/* RIGEL — biggest */
-
+/* RIGEL — largest */
 #orion.discovered .star-rigel {
-  width: 9px;
-  height: 9px;
+  width: 3.2px;
+  height: 3.2px;
 
-  background: #eaf5ff;
+  background: #e8f3ff;
 
   box-shadow:
-    0 0 2px rgba(255,255,255,.9),
-    0 0 5px rgba(180,215,255,.35);
+    0 0 1px rgba(255,255,255,.95),
+    0 0 3px rgba(190,220,255,.45),
+    0 0 7px rgba(145,195,255,.12);
 }
 
 #orion.discovered .star-rigel::before {
-  width: 14px;
+  width: 10px;
 }
 
 #orion.discovered .star-rigel::after {
-  height: 14px;
+  height: 10px;
 }
 
 
-/* BETELGEUSE — second biggest */
-
+/* BETELGEUSE — second largest */
 #orion.discovered .star-betelgeuse {
-  width: 7.5px;
-  height: 7.5px;
+  width: 2.8px;
+  height: 2.8px;
 
-  background: #ffd9b8;
+  background: #ffe5ca;
 
   box-shadow:
-    0 0 2px rgba(255,235,215,.9),
-    0 0 5px rgba(255,175,120,.32);
+    0 0 1px rgba(255,245,235,.95),
+    0 0 3px rgba(255,195,145,.4),
+    0 0 7px rgba(255,175,120,.1);
 }
 
 #orion.discovered .star-betelgeuse::before {
-  width: 12px;
+  width: 9px;
 }
 
 #orion.discovered .star-betelgeuse::after {
-  height: 12px;
+  height: 9px;
 }
 
 
 /* BELLATRIX */
-
 #orion.discovered .star-bellatrix {
-  width: 5.5px;
-  height: 5.5px;
+  width: 2.1px;
+  height: 2.1px;
 
   box-shadow:
-    0 0 2px rgba(255,255,255,.75);
+    0 0 1px rgba(255,255,255,.9),
+    0 0 3px rgba(210,230,255,.3);
 }
 
 #orion.discovered .star-bellatrix::before {
-  width: 9px;
+  width: 7px;
 }
 
 #orion.discovered .star-bellatrix::after {
-  height: 9px;
+  height: 7px;
 }
 
 
-/* ALNILAM — brightest belt star */
-
+/* ALNILAM */
 #orion.discovered .star-alnilam {
-  width: 4.8px;
-  height: 4.8px;
+  width: 2px;
+  height: 2px;
 
   box-shadow:
-    0 0 2px rgba(255,255,255,.75);
+    0 0 1px rgba(255,255,255,.9),
+    0 0 3px rgba(210,230,255,.3);
 }
 
 #orion.discovered .star-alnilam::before {
-  width: 8px;
+  width: 7px;
 }
 
 #orion.discovered .star-alnilam::after {
-  height: 8px;
+  height: 7px;
 }
 
 
 /* SAIPH */
-
 #orion.discovered .star-saiph {
-  width: 4px;
-  height: 4px;
+  width: 1.7px;
+  height: 1.7px;
 
   box-shadow:
-    0 0 2px rgba(255,255,255,.6);
+    0 0 1px rgba(255,255,255,.85),
+    0 0 2px rgba(210,230,255,.25);
+}
+
+#orion.discovered .star-saiph::before {
+  width: 6px;
+}
+
+#orion.discovered .star-saiph::after {
+  height: 6px;
 }
 
 
 /* ALNITAK */
-
 #orion.discovered .star-alnitak {
-  width: 3.3px;
-  height: 3.3px;
+  width: 1.55px;
+  height: 1.55px;
 
   box-shadow:
-    0 0 2px rgba(255,255,255,.55);
+    0 0 1px rgba(255,255,255,.8),
+    0 0 2px rgba(210,230,255,.2);
+}
+
+#orion.discovered .star-alnitak::before {
+  width: 5px;
+}
+
+#orion.discovered .star-alnitak::after {
+  height: 5px;
 }
 
 
 /* MINTAKA */
-
 #orion.discovered .star-mintaka {
-  width: 2.5px;
-  height: 2.5px;
+  width: 1.35px;
+  height: 1.35px;
 
   box-shadow:
-    0 0 1px rgba(255,255,255,.5);
+    0 0 1px rgba(255,255,255,.75);
+}
+
+#orion.discovered .star-mintaka::before {
+  width: 4.5px;
+}
+
+#orion.discovered .star-mintaka::after {
+  height: 4.5px;
 }
 
 
 /* SWORD STAR 1 */
-
 #orion.discovered .star-sword-1 {
-  width: 1.5px;
-  height: 1.5px;
+  width: .85px;
+  height: .85px;
 
-  opacity: .82;
-
-  box-shadow: none;
+  opacity: .85;
+  box-shadow:
+    0 0 1px rgba(255,255,255,.65);
 }
 
 #orion.discovered .star-sword-1::before {
   width: 3px;
-  opacity: .25;
+  opacity: .4;
 }
 
 #orion.discovered .star-sword-1::after {
   height: 3px;
-  opacity: .25;
+  opacity: .4;
 }
 
 
-/* SWORD STAR 2 — tiniest */
-
+/* SWORD STAR 2 — smallest */
 #orion.discovered .star-sword-2 {
-  width: .8px;
-  height: .8px;
+  width: .55px;
+  height: .55px;
 
-  opacity: .7;
-
-  box-shadow: none;
+  opacity: .78;
+  box-shadow:
+    0 0 1px rgba(255,255,255,.55);
 }
 
 #orion.discovered .star-sword-2::before,

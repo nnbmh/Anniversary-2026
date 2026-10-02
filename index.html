@@ -77,13 +77,21 @@
         aria-label="Orion constellation"
       >
 
+        <!--
+          Orion's stars are now drawn onto this canvas.
+          The old HTML <span> stars have been removed.
+        -->
+
         <canvas
           id="orionStarCanvas"
           class="orion-star-canvas"
           aria-hidden="true"
-      ></canvas>
+        ></canvas>
 
-        <!-- constellation lines -->
+
+        <!-- ================================================
+             ORION CONSTELLATION LINES
+        ================================================= -->
 
         <svg
           class="constellation-lines"
@@ -175,144 +183,8 @@
 
 
         <!-- ================================================
-             INDIVIDUAL ORION STARS
-
-             Each star now has its OWN CLASS.
-             Their sizes are controlled independently in CSS.
+             ORION LABEL
         ================================================= -->
-
-
-        <!-- Betelgeuse -->
-
-        <span
-          class="
-            orion-star
-            warm
-            star-betelgeuse
-          "
-          style="
-            left:29%;
-            top:18.5%;
-          "
-        ></span>
-
-
-        <!-- Bellatrix -->
-
-        <span
-          class="
-            orion-star
-            star-bellatrix
-          "
-          style="
-            left:71%;
-            top:23.5%;
-          "
-        ></span>
-
-
-        <!-- Alnitak -->
-
-        <span
-          class="
-            orion-star
-            star-alnitak
-          "
-          style="
-            left:41%;
-            top:44.4%;
-          "
-        ></span>
-
-
-        <!-- Alnilam -->
-
-        <span
-          class="
-            orion-star
-            star-alnilam
-          "
-          style="
-            left:50%;
-            top:45.2%;
-          "
-        ></span>
-
-
-        <!-- Mintaka -->
-
-        <span
-          class="
-            orion-star
-            star-mintaka
-          "
-          style="
-            left:59%;
-            top:46%;
-          "
-        ></span>
-
-
-        <!-- Sword 1 -->
-
-        <span
-          class="
-            orion-star
-            small
-            star-sword-1
-          "
-          style="
-            left:49.6%;
-            top:56.5%;
-          "
-        ></span>
-
-
-        <!-- Sword 2 -->
-
-        <span
-          class="
-            orion-star
-            small
-            star-sword-2
-          "
-          style="
-            left:49%;
-            top:64.5%;
-          "
-        ></span>
-
-
-        <!-- Saiph -->
-
-        <span
-          class="
-            orion-star
-            star-saiph
-          "
-          style="
-            left:33%;
-            top:80%;
-          "
-        ></span>
-
-
-        <!-- Rigel -->
-
-        <span
-          class="
-            orion-star
-            cool
-            star-rigel
-          "
-          style="
-            left:73%;
-            top:80.5%;
-          "
-        ></span>
-
-
-        <!-- LABEL -->
 
         <div class="constellation-label">
 
@@ -460,6 +332,10 @@
     </div>
 
 
+    <!-- ================================================
+         VIGNETTE
+    ================================================= -->
+
     <div id="vignette"></div>
 
   </main>
@@ -469,4 +345,4 @@
 
 </body>
 
-</html>
+</html>g

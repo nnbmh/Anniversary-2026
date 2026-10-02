@@ -827,10 +827,6 @@ function drawStar(
 
 /* =========================================================
    SHARED BRIGHT CONSTELLATION STAR
-
-   IMPORTANT:
-   Both telescope Orion AND revealed Orion use this
-   exact same renderer.
 ========================================================= */
 
 function drawBrightStar(
@@ -852,13 +848,11 @@ function drawBrightStar(
       )
     );
 
-
   let coreColour =
     "255,255,255";
 
   let glowColour =
     "190,220,255";
-
 
   if (
     tone === "warm"
@@ -870,7 +864,6 @@ function drawBrightStar(
     glowColour =
       "255,183,125";
   }
-
 
   if (
     tone === "cool"
@@ -884,8 +877,6 @@ function drawBrightStar(
   }
 
 
-  /* HALO */
-
   if (
     glow > 0
   ) {
@@ -895,7 +886,6 @@ function drawBrightStar(
         3,
         radius * 2.6
       );
-
 
     const halo =
       context.createRadialGradient(
@@ -907,7 +897,6 @@ function drawBrightStar(
         haloRadius
       );
 
-
     halo.addColorStop(
       0,
       `rgba(
@@ -915,7 +904,6 @@ function drawBrightStar(
         ${.22 * glow}
       )`
     );
-
 
     halo.addColorStop(
       .35,
@@ -925,7 +913,6 @@ function drawBrightStar(
       )`
     );
 
-
     halo.addColorStop(
       1,
       `rgba(
@@ -933,7 +920,6 @@ function drawBrightStar(
         0
       )`
     );
-
 
     context.beginPath();
 
@@ -952,14 +938,11 @@ function drawBrightStar(
   }
 
 
-  /* DIFFRACTION RAYS */
-
   const rayLength =
     Math.max(
       4,
       radius * 3.2
     );
-
 
   const horizontal =
     context.createLinearGradient(
@@ -969,7 +952,6 @@ function drawBrightStar(
       y
     );
 
-
   horizontal.addColorStop(
     0,
     `rgba(
@@ -977,7 +959,6 @@ function drawBrightStar(
       0
     )`
   );
-
 
   horizontal.addColorStop(
     .5,
@@ -987,7 +968,6 @@ function drawBrightStar(
     )`
   );
 
-
   horizontal.addColorStop(
     1,
     `rgba(
@@ -995,7 +975,6 @@ function drawBrightStar(
       0
     )`
   );
-
 
   context.beginPath();
 
@@ -1026,7 +1005,6 @@ function drawBrightStar(
       y + rayLength
     );
 
-
   vertical.addColorStop(
     0,
     `rgba(
@@ -1034,7 +1012,6 @@ function drawBrightStar(
       0
     )`
   );
-
 
   vertical.addColorStop(
     .5,
@@ -1044,7 +1021,6 @@ function drawBrightStar(
     )`
   );
 
-
   vertical.addColorStop(
     1,
     `rgba(
@@ -1052,7 +1028,6 @@ function drawBrightStar(
       0
     )`
   );
-
 
   context.beginPath();
 
@@ -1075,8 +1050,6 @@ function drawBrightStar(
   context.stroke();
 
 
-  /* PHYSICAL STAR CORE */
-
   context.beginPath();
 
   context.arc(
@@ -1095,8 +1068,6 @@ function drawBrightStar(
 
   context.fill();
 
-
-  /* PINPOINT CENTRE */
 
   context.beginPath();
 
@@ -1120,19 +1091,6 @@ function drawBrightStar(
 
 /* =========================================================
    ORION STAR DATA
-
-   ONE shared hierarchy for BOTH telescope and reveal.
-
-   Sizes are deliberately different:
-   Rigel       3.2
-   Betelgeuse  2.8
-   Bellatrix   2.1
-   Alnilam     2.0
-   Saiph       1.7
-   Alnitak     1.55
-   Mintaka     1.35
-   Sword 1      .85
-   Sword 2      .55
 ========================================================= */
 
 const orionStars = [
@@ -1150,7 +1108,6 @@ const orionStars = [
     tone: "warm"
   },
 
-
   {
     name: "Bellatrix",
 
@@ -1163,7 +1120,6 @@ const orionStars = [
     size: 2.1,
     tone: "neutral"
   },
-
 
   {
     name: "Alnitak",
@@ -1178,7 +1134,6 @@ const orionStars = [
     tone: "neutral"
   },
 
-
   {
     name: "Alnilam",
 
@@ -1191,7 +1146,6 @@ const orionStars = [
     size: 2.0,
     tone: "neutral"
   },
-
 
   {
     name: "Mintaka",
@@ -1206,7 +1160,6 @@ const orionStars = [
     tone: "neutral"
   },
 
-
   {
     name: "Sword 1",
 
@@ -1219,7 +1172,6 @@ const orionStars = [
     size: .85,
     tone: "neutral"
   },
-
 
   {
     name: "Sword 2",
@@ -1234,7 +1186,6 @@ const orionStars = [
     tone: "neutral"
   },
 
-
   {
     name: "Saiph",
 
@@ -1247,7 +1198,6 @@ const orionStars = [
     size: 1.7,
     tone: "neutral"
   },
-
 
   {
     name: "Rigel",
@@ -1277,14 +1227,12 @@ function resizeOrionStarCanvas() {
   const cssHeight =
     orion.offsetHeight;
 
-
   if (
     cssWidth <= 0 ||
     cssHeight <= 0
   ) {
     return;
   }
-
 
   const dpr =
     Math.min(
@@ -1293,13 +1241,11 @@ function resizeOrionStarCanvas() {
       2
     );
 
-
   orionStarCanvas.width =
     Math.round(
       cssWidth *
       dpr
     );
-
 
   orionStarCanvas.height =
     Math.round(
@@ -1307,13 +1253,11 @@ function resizeOrionStarCanvas() {
       dpr
     );
 
-
   orionStarCanvas.style.width =
     `${cssWidth}px`;
 
   orionStarCanvas.style.height =
     `${cssHeight}px`;
-
 
   orionStarCtx.setTransform(
     dpr,
@@ -1326,12 +1270,6 @@ function resizeOrionStarCanvas() {
 }
 
 
-/* =========================================================
-   DRAW REVEALED ORION STARS
-
-   Uses EXACT SAME drawBrightStar() as telescope.
-========================================================= */
-
 function renderRevealedOrionStars() {
 
   const width =
@@ -1340,7 +1278,6 @@ function renderRevealedOrionStars() {
   const height =
     orion.offsetHeight;
 
-
   if (
     width <= 0 ||
     height <= 0
@@ -1348,14 +1285,12 @@ function renderRevealedOrionStars() {
     return;
   }
 
-
   orionStarCtx.clearRect(
     0,
     0,
     width,
     height
   );
-
 
   orionStars.forEach(
     star => {
@@ -1427,7 +1362,6 @@ function drawTelescopeOrion(
   const distance =
     getOrionDistance();
 
-
   if (
     distance > 320 &&
     !orionRevealStarted
@@ -1435,9 +1369,7 @@ function drawTelescopeOrion(
     return;
   }
 
-
   let intensity = .12;
-
 
   if (
     distance < 260
@@ -1445,13 +1377,11 @@ function drawTelescopeOrion(
     intensity = .20;
   }
 
-
   if (
     distance < 200
   ) {
     intensity = .32;
   }
-
 
   if (
     distance < 145
@@ -1459,13 +1389,11 @@ function drawTelescopeOrion(
     intensity = .48;
   }
 
-
   if (
     distance < 95
   ) {
     intensity = .72;
   }
-
 
   if (
     distance < 55
@@ -1481,7 +1409,6 @@ function drawTelescopeOrion(
       lensX
     ) *
     .55;
-
 
   const centreY =
     height / 2 +
@@ -1510,8 +1437,6 @@ function drawTelescopeOrion(
   ];
 
 
-  /* STARS */
-
   orionStars.forEach(
     (
       star,
@@ -1519,7 +1444,6 @@ function drawTelescopeOrion(
     ) => {
 
       let shimmer = 1;
-
 
       if (
         distance < 145 ||
@@ -1536,10 +1460,8 @@ function drawTelescopeOrion(
           .045;
       }
 
-
       let starIntensity =
         intensity;
-
 
       if (
         orionRevealStarted
@@ -1551,7 +1473,6 @@ function drawTelescopeOrion(
             .82
           );
       }
-
 
       drawBrightStar(
         ctx,
@@ -1599,7 +1520,6 @@ function drawTelescopeOrion(
     performance.now() -
     orionRevealStartTime;
 
-
   const segmentTime =
     ORION_LINE_DURATION +
     ORION_LINE_PAUSE;
@@ -1615,7 +1535,6 @@ function drawTelescopeOrion(
         index *
         segmentTime;
 
-
       const progress =
         Math.max(
           0,
@@ -1629,45 +1548,37 @@ function drawTelescopeOrion(
           )
         );
 
-
       if (
         progress <= 0
       ) {
         return;
       }
 
-
       const start =
         orionStars[
           connection[0]
         ];
-
 
       const end =
         orionStars[
           connection[1]
         ];
 
-
       const startX =
         centreX +
         start.telescopeX;
-
 
       const startY =
         centreY +
         start.telescopeY;
 
-
       const endX =
         centreX +
         end.telescopeX;
 
-
       const endY =
         centreY +
         end.telescopeY;
-
 
       const currentX =
         startX +
@@ -1676,7 +1587,6 @@ function drawTelescopeOrion(
           startX
         ) *
         progress;
-
 
       const currentY =
         startY +
@@ -1787,7 +1697,6 @@ function drawTelescopeBackground(
     height
   );
 
-
   const glow =
     ctx.createRadialGradient(
       width * .43,
@@ -1799,28 +1708,23 @@ function drawTelescopeBackground(
       width * .7
     );
 
-
   glow.addColorStop(
     0,
     "rgba(29,45,65,.10)"
   );
-
 
   glow.addColorStop(
     .55,
     "rgba(8,18,31,.035)"
   );
 
-
   glow.addColorStop(
     1,
     "rgba(0,2,7,0)"
   );
 
-
   ctx.fillStyle =
     glow;
-
 
   ctx.fillRect(
     0,
@@ -1854,7 +1758,6 @@ function drawTelescopeStars(
   const wrapHeight =
     900;
 
-
   telescopeStars.forEach(
     star => {
 
@@ -1863,12 +1766,10 @@ function drawTelescopeStars(
         star.x -
         fieldOffsetX;
 
-
       let y =
         height / 2 +
         star.y -
         fieldOffsetY;
-
 
       x =
         (
@@ -1878,7 +1779,6 @@ function drawTelescopeStars(
         ) %
         wrapWidth;
 
-
       y =
         (
           y +
@@ -1886,7 +1786,6 @@ function drawTelescopeStars(
           10
         ) %
         wrapHeight;
-
 
       if (
         x >
@@ -1897,7 +1796,6 @@ function drawTelescopeStars(
           wrapWidth;
       }
 
-
       if (
         y >
         height + 100
@@ -1907,7 +1805,6 @@ function drawTelescopeStars(
           wrapHeight;
       }
 
-
       if (
         x < -20 ||
         x > width + 20 ||
@@ -1916,7 +1813,6 @@ function drawTelescopeStars(
       ) {
         return;
       }
-
 
       drawStar(
         x,
@@ -1942,14 +1838,12 @@ function renderTelescope() {
     return;
   }
 
-
   lensX +=
     (
       targetLensX -
       lensX
     ) *
     .24;
-
 
   lensY +=
     (
@@ -1958,27 +1852,21 @@ function renderTelescope() {
     ) *
     .24;
 
-
   eyepiece.style.left =
     `${lensX}px`;
 
-
   eyepiece.style.top =
     `${lensY}px`;
-
 
   const rect =
     eyepiece
       .getBoundingClientRect();
 
-
   const width =
     rect.width;
 
-
   const height =
     rect.height;
-
 
   if (
     width <= 0 ||
@@ -1987,7 +1875,6 @@ function renderTelescope() {
     return;
   }
 
-
   ctx.clearRect(
     0,
     0,
@@ -1995,18 +1882,15 @@ function renderTelescope() {
     height
   );
 
-
   drawTelescopeBackground(
     width,
     height
   );
 
-
   drawTelescopeStars(
     width,
     height
   );
-
 
   drawTelescopeOrion(
     width,
@@ -2028,17 +1912,14 @@ function clampLens(
     eyepiece
       .getBoundingClientRect();
 
-
   const radius =
     Math.max(
       rect.width / 2,
       90
     );
 
-
   const padding =
     14;
-
 
   return {
 
@@ -2055,7 +1936,6 @@ function clampLens(
           x
         )
       ),
-
 
     y:
       Math.max(
@@ -2086,14 +1966,11 @@ function moveLens(
       y
     );
 
-
   targetLensX =
     position.x;
 
-
   targetLensY =
     position.y;
-
 
   focusStartedAt =
     null;
@@ -2111,12 +1988,10 @@ function setTelescope(
   telescopeActive =
     active;
 
-
   app.classList.toggle(
     "telescope-active",
     active
   );
-
 
   telescopeButton
     .classList
@@ -2124,7 +1999,6 @@ function setTelescope(
       "active",
       active
     );
-
 
   telescopeView
     .setAttribute(
@@ -2134,18 +2008,14 @@ function setTelescope(
         : "true"
     );
 
-
   telescopeDragging =
     false;
-
 
   telescopePointerId =
     null;
 
-
   focusStartedAt =
     null;
-
 
   if (
     active
@@ -2155,19 +2025,15 @@ function setTelescope(
       window.innerWidth /
       2;
 
-
     lensY =
       window.innerHeight /
       2;
 
-
     targetLensX =
       lensX;
 
-
     targetLensY =
       lensY;
-
 
     requestAnimationFrame(
       resizeTelescopeCanvas
@@ -2181,7 +2047,6 @@ telescopeButton.addEventListener(
   event => {
 
     event.stopPropagation();
-
 
     setTelescope(
       !telescopeActive
@@ -2204,20 +2069,16 @@ telescopeView.addEventListener(
       return;
     }
 
-
     telescopeDragging =
       true;
 
-
     telescopePointerId =
       event.pointerId;
-
 
     moveLens(
       event.clientX,
       event.clientY
     );
-
 
     try {
 
@@ -2227,7 +2088,6 @@ telescopeView.addEventListener(
         );
 
     } catch (error) {}
-
 
     event.preventDefault();
   }
@@ -2244,7 +2104,6 @@ telescopeView.addEventListener(
       return;
     }
 
-
     if (
       event.pointerType ===
       "mouse"
@@ -2258,7 +2117,6 @@ telescopeView.addEventListener(
       return;
     }
 
-
     if (
       !telescopeDragging ||
       event.pointerId !==
@@ -2267,12 +2125,10 @@ telescopeView.addEventListener(
       return;
     }
 
-
     moveLens(
       event.clientX,
       event.clientY
     );
-
 
     event.preventDefault();
   }
@@ -2290,10 +2146,8 @@ function endTelescopePointer(
     return;
   }
 
-
   telescopeDragging =
     false;
-
 
   telescopePointerId =
     null;
@@ -2304,7 +2158,6 @@ telescopeView.addEventListener(
   "pointerup",
   endTelescopePointer
 );
-
 
 telescopeView.addEventListener(
   "pointercancel",
@@ -2331,10 +2184,8 @@ function checkOrionFocus(
     return;
   }
 
-
   const distance =
     getOrionDistance();
-
 
   if (
     distance > 75 ||
@@ -2347,7 +2198,6 @@ function checkOrionFocus(
     return;
   }
 
-
   if (
     focusStartedAt ===
     null
@@ -2356,7 +2206,6 @@ function checkOrionFocus(
     focusStartedAt =
       timestamp;
   }
-
 
   if (
     timestamp -
@@ -2378,18 +2227,14 @@ function discoverOrion() {
     return;
   }
 
-
   orionRevealStarted =
     true;
-
 
   orionRevealStartTime =
     performance.now();
 
-
   focusStartedAt =
     null;
-
 
   const totalRevealTime =
     (
@@ -2401,22 +2246,18 @@ function discoverOrion() {
     ) +
     900;
 
-
   setTimeout(
     () => {
 
       orionDiscovered =
         true;
 
-
       discoveryNumber.textContent =
         "1";
-
 
       orion.classList.add(
         "discovered"
       );
-
 
       navigationHint
         .classList
@@ -2424,10 +2265,8 @@ function discoverOrion() {
           "hidden"
         );
 
-
       navigationHintHidden =
         true;
-
 
       setTimeout(
         () => {
@@ -2463,7 +2302,6 @@ app.addEventListener(
       return;
     }
 
-
     activePointers.set(
       event.pointerId,
       {
@@ -2475,7 +2313,6 @@ app.addEventListener(
       }
     );
 
-
     if (
       activePointers.size ===
       1
@@ -2484,28 +2321,22 @@ app.addEventListener(
       universeDragging =
         true;
 
-
       dragStartX =
         event.clientX;
-
 
       dragStartY =
         event.clientY;
 
-
       dragCameraStartX =
         targetX;
 
-
       dragCameraStartY =
         targetY;
-
 
       app.classList.add(
         "dragging"
       );
     }
-
 
     if (
       activePointers.size ===
@@ -2515,17 +2346,14 @@ app.addEventListener(
       universeDragging =
         false;
 
-
       app.classList.remove(
         "dragging"
       );
-
 
       const points =
         Array.from(
           activePointers.values()
         );
-
 
       pinchStartDistance =
         Math.hypot(
@@ -2536,11 +2364,9 @@ app.addEventListener(
           points[0].y
         );
 
-
       pinchStartZoom =
         targetZoom;
     }
-
 
     try {
 
@@ -2563,7 +2389,6 @@ app.addEventListener(
       return;
     }
 
-
     if (
       activePointers.has(
         event.pointerId
@@ -2582,7 +2407,6 @@ app.addEventListener(
       );
     }
 
-
     if (
       activePointers.size ===
       2
@@ -2593,7 +2417,6 @@ app.addEventListener(
           activePointers.values()
         );
 
-
       const distance =
         Math.hypot(
           points[1].x -
@@ -2603,7 +2426,6 @@ app.addEventListener(
           points[0].y
         );
 
-
       if (
         pinchStartDistance >
         0
@@ -2612,7 +2434,6 @@ app.addEventListener(
         const ratio =
           distance /
           pinchStartDistance;
-
 
         targetZoom =
           Math.max(
@@ -2627,10 +2448,8 @@ app.addEventListener(
           );
       }
 
-
       return;
     }
-
 
     if (
       universeDragging
@@ -2643,14 +2462,12 @@ app.addEventListener(
           dragStartX
         );
 
-
       targetY =
         dragCameraStartY +
         (
           event.clientY -
           dragStartY
         );
-
 
       clampCamera();
     }
@@ -2668,11 +2485,9 @@ function endUniversePointer(
     return;
   }
 
-
   activePointers.delete(
     event.pointerId
   );
-
 
   if (
     activePointers.size ===
@@ -2682,19 +2497,15 @@ function endUniversePointer(
     universeDragging =
       false;
 
-
     pinchStartDistance =
       0;
-
 
     app.classList.remove(
       "dragging"
     );
 
-
     return;
   }
-
 
   if (
     activePointers.size ===
@@ -2706,22 +2517,17 @@ function endUniversePointer(
         activePointers.values()
       )[0];
 
-
     dragStartX =
       remaining.x;
-
 
     dragStartY =
       remaining.y;
 
-
     dragCameraStartX =
       targetX;
 
-
     dragCameraStartY =
       targetY;
-
 
     universeDragging =
       true;
@@ -2733,7 +2539,6 @@ app.addEventListener(
   "pointerup",
   endUniversePointer
 );
-
 
 app.addEventListener(
   "pointercancel",
@@ -2755,14 +2560,11 @@ app.addEventListener(
       return;
     }
 
-
     event.preventDefault();
-
 
     targetZoom +=
       -event.deltaY *
       .001;
-
 
     targetZoom =
       Math.max(
@@ -2797,10 +2599,8 @@ function hideNavigationHint() {
     return;
   }
 
-
   navigationHintHidden =
     true;
-
 
   navigationHint
     .classList
@@ -2821,7 +2621,6 @@ app.addEventListener(
     ) {
       return;
     }
-
 
     hideNavigationHint();
   },
@@ -2850,12 +2649,9 @@ window.addEventListener(
 
     buildUniverseStars();
 
-
     resizeOrionStarCanvas();
 
-
     renderRevealedOrionStars();
-
 
     if (
       !telescopeActive
@@ -2863,29 +2659,23 @@ window.addEventListener(
       return;
     }
 
-
     const position =
       clampLens(
         targetLensX,
         targetLensY
       );
 
-
     lensX =
       position.x;
-
 
     lensY =
       position.y;
 
-
     targetLensX =
       position.x;
 
-
     targetLensY =
       position.y;
-
 
     requestAnimationFrame(
       resizeTelescopeCanvas
@@ -2904,17 +2694,13 @@ function animate(
 
   renderCamera();
 
-
   updateOrionPosition();
 
-
   renderTelescope();
-
 
   checkOrionFocus(
     timestamp
   );
-
 
   requestAnimationFrame(
     animate
@@ -2930,25 +2716,21 @@ function initialise() {
 
   buildUniverseStars();
 
-
   buildTelescopeStars();
-
 
   resizeOrionStarCanvas();
 
-
   renderRevealedOrionStars();
-
 
   setTelescope(
     false
   );
 
-
   requestAnimationFrame(
     animate
   );
 }
+
 
 /* =========================================================
    ORION CHAPTER ENTRANCE
@@ -2967,11 +2749,7 @@ function enterOrionChapter() {
     return;
   }
 
-
   enteringOrion = true;
-
-
-  /* Stop any existing universe drag */
 
   universeDragging = false;
 
@@ -2982,60 +2760,31 @@ function enterOrionChapter() {
   );
 
 
-  /*
-    Work out where Orion currently is
-    on the user's screen.
-  */
-
   const rect =
     orion.getBoundingClientRect();
-
 
   const orionCentreX =
     rect.left +
     rect.width / 2;
 
-
   const orionCentreY =
     rect.top +
     rect.height / 2;
 
-
-  /*
-    Difference between Orion and
-    the centre of the viewport.
-  */
-
   const deltaX =
     window.innerWidth / 2 -
     orionCentreX;
-
 
   const deltaY =
     window.innerHeight / 2 -
     orionCentreY;
 
 
-  /*
-    Move the camera so Orion travels
-    into the centre of the screen.
-  */
-
   targetX +=
     deltaX / zoom;
 
-
   targetY +=
     deltaY / zoom;
-
-
-  /*
-    Cinematic push-in.
-
-    1.65 is large enough to feel like
-    we're entering Orion without making
-    it explode off-screen.
-  */
 
   targetZoom =
     Math.min(
@@ -3043,9 +2792,7 @@ function enterOrionChapter() {
       1.65
     );
 
-
   clampCamera();
-
 
   app.classList.add(
     "entering-orion"
@@ -3053,8 +2800,8 @@ function enterOrionChapter() {
 
 
   /*
-    Give the camera time to begin moving
-    before introducing the chapter title.
+    Show ORION · The Beginning
+    once the camera has started arriving.
   */
 
   setTimeout(
@@ -3069,7 +2816,114 @@ function enterOrionChapter() {
     },
     1500
   );
+
+
+  /*
+    Leave the chapter title on screen
+    long enough to breathe, then begin
+    the first moment.
+  */
+
+  setTimeout(
+    () => {
+
+      beginFirstOrionMemory();
+
+    },
+    3800
+  );
 }
+
+
+/* =========================================================
+   ORION — FIRST MEMORY
+   04.05.2024
+========================================================= */
+
+function beginFirstOrionMemory() {
+
+  if (
+    !enteringOrion
+  ) {
+    return;
+  }
+
+
+  /*
+    Fade ORION · The Beginning away
+    and reveal the first date.
+  */
+
+  orionChapterIntro
+    .classList
+    .add(
+      "first-memory"
+    );
+
+
+  app.classList.add(
+    "orion-first-memory"
+  );
+
+
+  /*
+    Find Betelgeuse's current position
+    on the actual screen.
+  */
+
+  const rect =
+    orion.getBoundingClientRect();
+
+
+  const betelgeuseX =
+    rect.left +
+    rect.width *
+    orionStars[0].revealX;
+
+
+  const betelgeuseY =
+    rect.top +
+    rect.height *
+    orionStars[0].revealY;
+
+
+  /*
+    Move Betelgeuse toward the centre.
+  */
+
+  const deltaX =
+    window.innerWidth / 2 -
+    betelgeuseX;
+
+
+  const deltaY =
+    window.innerHeight / 2 -
+    betelgeuseY;
+
+
+  targetX +=
+    deltaX / zoom;
+
+
+  targetY +=
+    deltaY / zoom;
+
+
+  /*
+    Slightly closer than the Orion
+    chapter entrance.
+  */
+
+  targetZoom =
+    Math.min(
+      MAX_ZOOM,
+      1.82
+    );
+
+
+  clampCamera();
+}
+
 
 /* =========================================================
    TAP DISCOVERED ORION
@@ -3090,7 +2944,6 @@ app.addEventListener(
     ) {
       return;
     }
-
 
     appTapStartX =
       event.clientX;
@@ -3114,17 +2967,14 @@ app.addEventListener(
       return;
     }
 
-
     const moved =
       Math.hypot(
-        event.clientX - appTapStartX,
-        event.clientY - appTapStartY
+        event.clientX -
+        appTapStartX,
+
+        event.clientY -
+        appTapStartY
       );
-
-
-    /*
-      Ignore drags.
-    */
 
     if (
       moved >= 18
@@ -3133,20 +2983,8 @@ app.addEventListener(
     }
 
 
-    /*
-      Get Orion's ACTUAL visible position
-      after all camera movement and zoom.
-    */
-
     const rect =
       orion.getBoundingClientRect();
-
-
-    /*
-      Give the constellation a slightly
-      smaller clickable area than its
-      full rectangular container.
-    */
 
     const paddingX =
       rect.width * .12;
@@ -3181,5 +3019,10 @@ app.addEventListener(
   },
   true
 );
+
+
+/* =========================================================
+   INITIALISE
+========================================================= */
 
 initialise();

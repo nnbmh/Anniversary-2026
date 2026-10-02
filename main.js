@@ -2883,7 +2883,6 @@ const orionMemories = [
 
 ];
 
-
 /* =========================================================
    STAR SCREEN POSITION
 ========================================================= */
@@ -3109,10 +3108,205 @@ function showOrionMemory(
   );
 }
 
-
 /* =========================================================
    TRAVEL BETWEEN MEMORIES
 ========================================================= */
+
+function getOrionStarLocalPosition(
+  starIndex
+) {
+
+  const star =
+    orionStars[
+      starIndex
+    ];
+
+  return {
+
+    x:
+      star.revealX *
+      orion.offsetWidth,
+
+    y:
+      star.revealY *
+      orion.offsetHeight
+
+  };
+}
+
+
+function placeTravellingLight(
+  starIndex
+) {
+
+  const position =
+    getOrionStarLocalPosition(
+      starIndex
+    );
+
+
+  orionTravellingLight.style.left =
+    `${position.x}px`;
+
+
+  orionTravellingLight.style.top =
+    `${position.y}px`;
+}
+
+
+/*
+  Some memories are separated by more
+  than one real Orion segment.
+
+  Instead of cutting diagonally through
+  empty space, the light follows the
+  actual constellation.
+*/
+
+const orionMemoryRoutes = [
+
+  /*
+    04.05
+    Betelgeuse → Alnitak
+  */
+
+  [
+    0,
+    2
+  ],
+
+
+  /*
+    08.05
+    Alnitak → Alnilam
+  */
+
+  [
+    2,
+    3
+  ],
+
+
+  /*
+    13.07
+    Alnilam → Mintaka
+  */
+
+  [
+    3,
+    4
+  ],
+
+
+  /*
+    19.11
+    Mintaka → Rigel
+  */
+
+  [
+    4,
+    8
+  ]
+
+];
+
+
+function animateLightRoute(
+  route,
+  routeIndex,
+  onComplete
+) {
+
+  if (
+    routeIndex >=
+    route.length - 1
+  ) {
+
+    onComplete();
+
+    return;
+  }
+
+
+  const fromStar =
+    route[
+      routeIndex
+    ];
+
+
+  const toStar =
+    route[
+      routeIndex + 1
+    ];
+
+
+  placeTravellingLight(
+    fromStar
+  );
+
+
+  orionTravellingLight
+    .classList
+    .remove(
+      "travel"
+    );
+
+
+  /*
+    Force Safari to commit the start
+    point before enabling transition.
+  */
+
+  void orionTravellingLight.offsetWidth;
+
+
+  orionTravellingLight
+    .classList
+    .add(
+      "travel"
+    );
+
+
+  /*
+    Because both coordinates now belong
+    to #orion, this remains on the line
+    even while the universe moves.
+  */
+
+  requestAnimationFrame(
+    () => {
+
+      const destination =
+        getOrionStarLocalPosition(
+          toStar
+        );
+
+
+      orionTravellingLight.style.left =
+        `${destination.x}px`;
+
+
+      orionTravellingLight.style.top =
+        `${destination.y}px`;
+
+    }
+  );
+
+
+  setTimeout(
+    () => {
+
+      animateLightRoute(
+        route,
+        routeIndex + 1,
+        onComplete
+      );
+
+    },
+    1375
+  );
+}
+
 
 function travelToNextOrionMemory() {
 
@@ -3152,94 +3346,36 @@ function travelToNextOrionMemory() {
     );
 
 
-  const current =
+  const nextIndex =
+    orionMemoryIndex + 1;
+
+
+  const nextMemory =
     orionMemories[
+      nextIndex
+    ];
+
+
+  const route =
+    orionMemoryRoutes[
       orionMemoryIndex
     ];
 
 
-  const next =
-    orionMemories[
-      orionMemoryIndex + 1
-    ];
-
-
-  const startPosition =
-    getOrionStarScreenPosition(
-      current.starIndex
-    );
-
-
-  orionTravellingLight.style.left =
-    `${startPosition.x}px`;
-
-
-  orionTravellingLight.style.top =
-    `${startPosition.y}px`;
-
-
-  orionTravellingLight.classList.remove(
-    "travel"
-  );
-
-
   /*
-    Force Safari to acknowledge the
-    starting position before transition.
-  */
-
-  void orionTravellingLight.offsetWidth;
-
-
-  orionTravellingLight
-    .classList
-    .add(
-      "travel"
-    );
-
-
-  /*
-    Begin camera movement.
+    Move the camera toward the next
+    memory at the same time as the
+    constellation-bound light travels.
   */
 
   focusOrionStar(
-    next.starIndex
+    nextMemory.starIndex
   );
 
 
-  /*
-    Wait a frame for the universe to
-    begin moving, then calculate where
-    the destination star is heading.
-  */
-
-  requestAnimationFrame(
-    () => {
-
-      requestAnimationFrame(
-        () => {
-
-          const destination =
-            getOrionStarScreenPosition(
-              next.starIndex
-            );
-
-
-          orionTravellingLight.style.left =
-            `${destination.x}px`;
-
-
-          orionTravellingLight.style.top =
-            `${destination.y}px`;
-
-        }
-      );
-
-    }
-  );
-
-
-  setTimeout(
+  animateLightRoute(
+    route,
+    0,
     () => {
 
       orionTravellingLight
@@ -3249,15 +3385,25 @@ function travelToNextOrionMemory() {
         );
 
 
-      showOrionMemory(
-        orionMemoryIndex + 1
+      /*
+        Leave a tiny pause after the
+        light reaches the star.
+      */
+
+      setTimeout(
+        () => {
+
+          showOrionMemory(
+            nextIndex
+          );
+
+        },
+        180
       );
 
-    },
-    1500
+    }
   );
 }
-
 
 /* =========================================================
    ENTER ORION

@@ -816,6 +816,20 @@ button {
   opacity: .3;
 }
 
+/*
+  Telescope instructions sit over an
+  almost-black overlay, so don't apply
+  the extra dimming used by the normal
+  universe navigation hint.
+*/
+
+.telescope-instruction span {
+  opacity: .82;
+}
+
+.telescope-instruction small {
+  opacity: .58;
+}
 
 /* =========================================================
    TELESCOPE VIEW
@@ -1006,7 +1020,7 @@ button {
   text-align: center;
 
   color:
-    rgba(238,243,251,.42);
+    rgba(238,243,251,.92);
 
   pointer-events: none;
 

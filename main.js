@@ -2397,17 +2397,49 @@ focusStartedAt =
   navigationHintHidden =
     true;
 
+setTimeout(
+  () => {
 
-  setTimeout(
-    () => {
+    setTelescope(
+      false
+    );
 
-      setTelescope(
-        false
+
+    /*
+      Orion has now been fully discovered.
+      Tell Faris what to do next.
+    */
+
+    const hintTitle =
+      navigationHint.querySelector(
+        "p"
       );
 
-    },
-    650
-  );
+    const hintText =
+      navigationHint.querySelector(
+        "span"
+      );
+
+
+    hintTitle.textContent =
+      "You found something.";
+
+    hintText.textContent =
+      "Tap the constellation to step inside";
+
+
+    navigationHint
+      .classList
+      .remove(
+        "hidden"
+      );
+
+    navigationHintHidden =
+      false;
+
+  },
+  650
+ );
 }
 
 requestAnimationFrame(
@@ -3558,6 +3590,15 @@ function enterOrionChapter() {
 
 
   enteringOrion = true;
+
+   navigationHint
+  .classList
+  .add(
+    "hidden"
+  );
+
+navigationHintHidden =
+  true;
 
   orionMemoryIndex = -1;
 

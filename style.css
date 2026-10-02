@@ -1373,7 +1373,6 @@ button {
     rgba(215,228,245,.42);
 }
 
-
 .orion-chapter-content h1 {
   font-family:
     -apple-system,
@@ -1383,30 +1382,29 @@ button {
 
   font-size:
     clamp(
-      30px,
-      7vw,
-      52px
+      24px,
+      5vw,
+      38px
     );
 
-  font-weight: 300;
+  font-weight: 400;
 
   line-height: 1;
 
-  letter-spacing: .34em;
+  letter-spacing: .22em;
 
-  padding-left: .34em;
+  padding-left: .22em;
 
   color:
-    rgba(247,249,255,.96);
+    rgba(247,249,255,.94);
 
   text-shadow:
-    0 0 18px
-    rgba(175,210,250,.12);
+    0 0 14px
+    rgba(175,210,250,.10);
 }
 
-
 .orion-chapter-content p {
-  margin-top: 15px;
+  margin-top: 12px;
 
   font-family:
     Georgia,
@@ -1415,17 +1413,17 @@ button {
 
   font-size:
     clamp(
-      14px,
-      3vw,
-      18px
+      13px,
+      2.5vw,
+      16px
     );
 
   font-style: italic;
 
-  letter-spacing: .07em;
+  letter-spacing: .04em;
 
   color:
-    rgba(224,234,247,.72);
+    rgba(224,234,247,.66);
 }
 
 
@@ -1461,18 +1459,18 @@ button {
 
 
   .orion-chapter-content h1 {
-    font-size: 30px;
+    font-size: 26px;
 
-    letter-spacing: .29em;
+    letter-spacing: .22em;
 
-    padding-left: .29em;
+    padding-left: .22em;
   }
 
 
   .orion-chapter-content p {
-    margin-top: 12px;
+    margin-top: 11px;
 
-    font-size: 14px;
+    font-size: 13px;
   }
 
 

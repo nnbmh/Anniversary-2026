@@ -768,7 +768,8 @@ button {
   visibility: hidden;
 }
 
-#navigationHint p {
+#navigationHint p,
+.telescope-instruction span {
   font-family:
     Georgia,
     "Times New Roman",
@@ -781,7 +782,8 @@ button {
   opacity: .68;
 }
 
-#navigationHint span {
+#navigationHint span,
+.telescope-instruction small {
   display: block;
 
   margin-top: 6px;
@@ -998,48 +1000,6 @@ button {
 #app.telescope-active
 .telescope-instruction {
   opacity: 1;
-}
-
-.telescope-instruction span {
-  display: block;
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size: 12px;
-
-  font-style: italic;
-
-  letter-spacing: normal;
-
-  text-transform: none;
-
-  opacity: .68;
-}
-
-
-.telescope-instruction small {
-  display: block;
-
-  margin-top: 6px;
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  font-size: 7px;
-
-  font-style: normal;
-
-  letter-spacing: .14em;
-
-  text-transform: uppercase;
-
-  opacity: .3;
 }
 
 /* =========================================================

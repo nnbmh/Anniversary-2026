@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -10,7 +9,10 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   >
 
-  <meta name="theme-color" content="#010309">
+  <meta
+    name="theme-color"
+    content="#010309"
+  >
 
   <title>Our Little Universe</title>
 
@@ -18,39 +20,31 @@
     rel="stylesheet"
     href="style.css"
   >
-
 </head>
-
 
 <body>
 
   <main id="app">
 
-    <!-- =====================================================
-         MAIN UNIVERSE
-    ====================================================== -->
+    <!-- ================================================
+         UNIVERSE
+    ================================================= -->
 
     <div id="universe">
 
-      <!-- =================================================
-           DEEP SPACE / DUST
-      ================================================== -->
+      <!-- SPACE DUST -->
 
       <div id="dustLayer">
 
         <div class="dust dust-a"></div>
-
         <div class="dust dust-b"></div>
-
         <div class="dust dust-c"></div>
-
         <div class="dust dust-d"></div>
 
       </div>
 
-      <!-- =================================================
-           STAR DEPTH LAYERS
-      ================================================== -->
+
+      <!-- PROCEDURAL STAR LAYERS -->
 
       <div
         id="starsDeep"
@@ -72,16 +66,10 @@
         class="star-layer"
       ></div>
 
-      <!-- =================================================
+
+      <!-- ================================================
            ORION
-
-           Hidden among the normal stars initially.
-
-           After discovery:
-           - stars brighten
-           - lines draw
-           - label appears
-      ================================================== -->
+      ================================================= -->
 
       <section
         id="orion"
@@ -89,17 +77,13 @@
         aria-label="Orion constellation"
       >
 
-
-        <!-- =============================================
-             ORION CONSTELLATION LINES
-        ============================================== -->
+        <!-- constellation lines -->
 
         <svg
           class="constellation-lines"
           viewBox="0 0 500 620"
           aria-hidden="true"
         >
-
 
           <!-- shoulders -->
 
@@ -183,18 +167,26 @@
 
         </svg>
 
-        <!-- =============================================
-             ORION STARS
-        ============================================== -->
+
+        <!-- ================================================
+             INDIVIDUAL ORION STARS
+
+             Each star now has its OWN CLASS.
+             Their sizes are controlled independently in CSS.
+        ================================================= -->
 
 
         <!-- Betelgeuse -->
 
         <span
-          class="orion-star warm"
+          class="
+            orion-star
+            warm
+            star-betelgeuse
+          "
           style="
-            left: 29%;
-            top: 18.5%;
+            left:29%;
+            top:18.5%;
           "
         ></span>
 
@@ -202,10 +194,13 @@
         <!-- Bellatrix -->
 
         <span
-          class="orion-star"
+          class="
+            orion-star
+            star-bellatrix
+          "
           style="
-            left: 71%;
-            top: 23.5%;
+            left:71%;
+            top:23.5%;
           "
         ></span>
 
@@ -213,10 +208,13 @@
         <!-- Alnitak -->
 
         <span
-          class="orion-star"
+          class="
+            orion-star
+            star-alnitak
+          "
           style="
-            left: 41%;
-            top: 44.4%;
+            left:41%;
+            top:44.4%;
           "
         ></span>
 
@@ -224,10 +222,13 @@
         <!-- Alnilam -->
 
         <span
-          class="orion-star"
+          class="
+            orion-star
+            star-alnilam
+          "
           style="
-            left: 50%;
-            top: 45.2%;
+            left:50%;
+            top:45.2%;
           "
         ></span>
 
@@ -235,29 +236,43 @@
         <!-- Mintaka -->
 
         <span
-          class="orion-star"
+          class="
+            orion-star
+            star-mintaka
+          "
           style="
-            left: 59%;
-            top: 46%;
+            left:59%;
+            top:46%;
           "
         ></span>
 
 
-        <!-- Sword -->
+        <!-- Sword 1 -->
 
         <span
-          class="orion-star small"
+          class="
+            orion-star
+            small
+            star-sword-1
+          "
           style="
-            left: 49.6%;
-            top: 56.5%;
+            left:49.6%;
+            top:56.5%;
           "
         ></span>
 
+
+        <!-- Sword 2 -->
+
         <span
-          class="orion-star small"
+          class="
+            orion-star
+            small
+            star-sword-2
+          "
           style="
-            left: 49%;
-            top: 64.5%;
+            left:49%;
+            top:64.5%;
           "
         ></span>
 
@@ -265,10 +280,13 @@
         <!-- Saiph -->
 
         <span
-          class="orion-star"
+          class="
+            orion-star
+            star-saiph
+          "
           style="
-            left: 33%;
-            top: 80%;
+            left:33%;
+            top:80%;
           "
         ></span>
 
@@ -276,41 +294,46 @@
         <!-- Rigel -->
 
         <span
-          class="orion-star cool"
+          class="
+            orion-star
+            cool
+            star-rigel
+          "
           style="
-            left: 73%;
-            top: 80.5%;
+            left:73%;
+            top:80.5%;
           "
         ></span>
 
-        <!-- =============================================
-             ORION LABEL
-        ============================================== -->
 
-        <div class="constellation-label orion-label">
-          <div class="constellation-name">ORION</div>
-          <div class="constellation-subtitle">The Beginning</div>
+        <!-- LABEL -->
+
+        <div class="constellation-label">
+
+          <span class="constellation-name">
+            ORION
+          </span>
+
+          <span class="constellation-subtitle">
+            The Beginning
+          </span>
+
         </div>
 
       </section>
 
     </div>
 
-    <!-- =====================================================
-         NORMAL UNIVERSE INTERFACE
-    ====================================================== -->
 
-    <header id="interface">
+    <!-- ================================================
+         TOP INTERFACE
+    ================================================= -->
 
-
-      <!-- Project title -->
+    <div id="interface">
 
       <div class="site-title">
         OUR LITTLE UNIVERSE
       </div>
-
-
-      <!-- Discovery progress -->
 
       <div id="discoveryCounter">
 
@@ -323,7 +346,7 @@
         </span>
 
         <span>
-          ?
+          5
         </span>
 
         <small>
@@ -332,59 +355,30 @@
 
       </div>
 
-    </header>
+    </div>
 
-    <!-- =====================================================
-         TELESCOPE VIEW
 
-         When activated:
-         - normal universe fades to black
-         - circular eyepiece appears
-         - detailed telescope sky is rendered on canvas
-         - user drags the SKY, not the eyepiece
-    ====================================================== -->
+    <!-- ================================================
+         TELESCOPE
+    ================================================= -->
 
     <div
       id="telescopeView"
       aria-hidden="true"
     >
 
-      <!-- =================================================
-           EYEPIECE
-      ================================================== -->
-
       <div id="eyepiece">
-
-
-        <!--
-          Detailed telescope star field.
-
-          main.js renders this separately from the
-          naked-eye universe.
-        -->
 
         <canvas
           id="telescopeCanvas"
-          aria-hidden="true"
         ></canvas>
-
-
-        <!--
-          Optical falloff/reflection.
-
-          No visible metal ring or crosshair.
-        -->
 
         <div
           class="eyepiece-optics"
-          aria-hidden="true"
         ></div>
 
       </div>
 
-      <!-- =================================================
-           TELESCOPE INSTRUCTION
-      ================================================== -->
 
       <div class="telescope-instruction">
 
@@ -400,9 +394,10 @@
 
     </div>
 
-    <!-- =====================================================
+
+    <!-- ================================================
          TELESCOPE BUTTON
-    ====================================================== -->
+    ================================================= -->
 
     <button
       id="telescopeButton"
@@ -410,10 +405,7 @@
       aria-label="Toggle telescope"
     >
 
-      <span
-        class="telescope-icon"
-        aria-hidden="true"
-      >
+      <span class="telescope-icon">
         ◉
       </span>
 
@@ -423,30 +415,29 @@
 
     </button>
 
-    <!-- =====================================================
-         NORMAL NAVIGATION HINT
-    ====================================================== -->
+
+    <!-- ================================================
+         NAVIGATION HINT
+    ================================================= -->
 
     <div id="navigationHint">
 
-      <p id="hintMain">
+      <p>
         Drag to explore
       </p>
 
-      <span id="hintSub">
-        Pinch or scroll to move through the stars
+      <span>
+        Pinch or scroll to zoom
       </span>
 
     </div>
 
-    <!-- =====================================================
-         CONSTELLATION DISCOVERY MESSAGE
-    ====================================================== -->
 
-    <div
-      id="discoveryMessage"
-      aria-live="polite"
-    >
+    <!-- ================================================
+         DISCOVERY MESSAGE
+    ================================================= -->
+
+    <div id="discoveryMessage">
 
       <span class="discovery-eyebrow">
         CONSTELLATION DISCOVERED
@@ -462,20 +453,11 @@
 
     </div>
 
-    <!-- =====================================================
-         SCREEN VIGNETTE
-    ====================================================== -->
 
-    <div
-      id="vignette"
-      aria-hidden="true"
-    ></div>
+    <div id="vignette"></div>
 
   </main>
 
-  <!-- =======================================================
-       JAVASCRIPT
-  ======================================================== -->
 
   <script src="main.js"></script>
 

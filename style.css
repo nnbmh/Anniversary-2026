@@ -1677,3 +1677,126 @@ button {
     0 0 2px rgba(240, 247, 255, 1),
     0 0 6px rgba(160, 200, 255, .3) !important;
 }
+
+/* ===== NATURAL ORION STARS ===== */
+
+#orion.discovered .orion-star {
+  width: 2.2px !important;
+  height: 2.2px !important;
+
+  border-radius: 50% !important;
+
+  background: #ffffff !important;
+
+  box-shadow:
+    0 0 2px rgba(255, 255, 255, .95),
+    0 0 5px rgba(205, 225, 250, .32) !important;
+
+  overflow: visible !important;
+}
+
+
+/* tiny horizontal light ray */
+
+#orion.discovered .orion-star::before {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 7px;
+  height: .5px;
+
+  transform:
+    translate(-50%, -50%);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(230, 241, 255, .35),
+      rgba(255, 255, 255, .85),
+      rgba(230, 241, 255, .35),
+      transparent
+    );
+
+  pointer-events: none;
+}
+
+
+/* tiny vertical light ray */
+
+#orion.discovered .orion-star::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: .5px;
+  height: 7px;
+
+  transform:
+    translate(-50%, -50%);
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      rgba(230, 241, 255, .3),
+      rgba(255, 255, 255, .8),
+      rgba(230, 241, 255, .3),
+      transparent
+    );
+
+  pointer-events: none;
+}
+
+
+/* Belt / sword stars are more understated */
+
+#orion.discovered .orion-star.small {
+  width: 1.7px !important;
+  height: 1.7px !important;
+}
+
+#orion.discovered .orion-star.small::before {
+  width: 4px;
+  opacity: .55;
+}
+
+#orion.discovered .orion-star.small::after {
+  height: 4px;
+  opacity: .55;
+}
+
+
+/* Betelgeuse */
+
+#orion.discovered .orion-star.warm {
+  width: 2.6px !important;
+  height: 2.6px !important;
+
+  background: #ffe3ca !important;
+
+  box-shadow:
+    0 0 2px rgba(255, 236, 218, .95),
+    0 0 6px rgba(255, 178, 120, .3) !important;
+}
+
+
+/* Rigel */
+
+#orion.discovered .orion-star.cool {
+  width: 2.7px !important;
+  height: 2.7px !important;
+
+  background: #e5f0ff !important;
+
+  box-shadow:
+    0 0 2px rgba(240, 247, 255, 1),
+    0 0 6px rgba(160, 200, 255, .3) !important;
+}

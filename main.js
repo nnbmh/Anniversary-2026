@@ -3071,48 +3071,83 @@ function enterOrionChapter() {
   );
 }
 
-
 /* =========================================================
    TAP DISCOVERED ORION
 ========================================================= */
 
-orion.addEventListener(
-  "click",
-  event => {
+let orionTapStartX = 0;
+let orionTapStartY = 0;
 
-    if (
-      !orionDiscovered ||
-      enteringOrion
-    ) {
-      return;
-    }
-
-
-    event.stopPropagation();
-
-
-    enterOrionChapter();
-  }
-);
-
-
-/*
-  Prevent touching Orion from immediately
-  starting a universe drag on mobile.
-*/
 
 orion.addEventListener(
   "pointerdown",
   event => {
 
     if (
-      !orionDiscovered
+      !orionDiscovered ||
+      enteringOrion ||
+      telescopeActive
     ) {
       return;
     }
 
+
+    orionTapStartX =
+      event.clientX;
+
+    orionTapStartY =
+      event.clientY;
+
+
     event.stopPropagation();
   }
 );
+
+
+orion.addEventListener(
+  "pointerup",
+  event => {
+
+    if (
+      !orionDiscovered ||
+      enteringOrion ||
+      telescopeActive
+    ) {
+      return;
+    }
+
+
+    event.stopPropagation();
+
+
+    const moved =
+      Math.hypot(
+        event.clientX -
+        orionTapStartX,
+
+        event.clientY -
+        orionTapStartY
+      );
+
+
+    /*
+      Only open Orion when this was
+      actually a tap, not a drag.
+    */
+
+    if (
+      moved < 18
+    ) {
+
+      enterOrionChapter();
+
+    }
+  }
+);
+
+/*
+  Prevent touching Orion from immediately
+  starting a universe drag on mobile.
+*/
 
 initialise();

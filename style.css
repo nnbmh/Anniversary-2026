@@ -1342,3 +1342,47 @@ button {
       rgba(185, 215, 250, .18)
     );
 }
+
+/* ===== FINAL REVEALED ORION ===== */
+
+#orion.discovered .constellation-lines line {
+  stroke: rgba(215, 230, 248, .82) !important;
+  stroke-width: .65 !important;
+  opacity: .75 !important;
+  stroke-dashoffset: 0 !important;
+  animation: none !important;
+  filter: none !important;
+}
+
+#orion.discovered .orion-star {
+  width: 4px !important;
+  height: 4px !important;
+  opacity: 1 !important;
+  background: #f8fbff !important;
+  box-shadow:
+    0 0 2px rgba(255,255,255,.85),
+    0 0 6px rgba(190,215,245,.22) !important;
+}
+
+#orion.discovered .orion-star.small {
+  width: 2.5px !important;
+  height: 2.5px !important;
+}
+
+#orion.discovered .orion-star.warm {
+  width: 4.5px !important;
+  height: 4.5px !important;
+  background: #ffe0c2 !important;
+}
+
+#orion.discovered .orion-star.cool {
+  width: 4.5px !important;
+  height: 4.5px !important;
+  background: #e3efff !important;
+}
+
+/* Remove permanent ORION / The Beginning label */
+#orion .constellation-label,
+#orion.discovered .constellation-label {
+  display: none !important;
+}

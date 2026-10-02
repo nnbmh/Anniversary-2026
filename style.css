@@ -435,163 +435,164 @@ button {
   pointer-events: none;
 }
 
-
 /* =========================================================
    INDIVIDUAL ORION STAR SIZES
-
-   These are intentionally VERY different.
+   CLEARLY DIFFERENT PHYSICAL STAR SIZES
 ========================================================= */
 
 
-/* RIGEL — largest */
+/* RIGEL — biggest */
 
 #orion.discovered .star-rigel {
-  width: 5px;
-  height: 5px;
+  width: 9px;
+  height: 9px;
 
-  background: #e8f3ff;
+  background: #eaf5ff;
 
   box-shadow:
-    0 0 2px rgba(255,255,255,1),
-    0 0 6px rgba(205,230,255,.8),
-    0 0 12px rgba(145,190,255,.28);
+    0 0 2px rgba(255,255,255,.9),
+    0 0 5px rgba(180,215,255,.35);
 }
 
 #orion.discovered .star-rigel::before {
-  width: 15px;
-}
-
-#orion.discovered .star-rigel::after {
-  height: 16px;
-}
-
-
-/* BETELGEUSE — second largest */
-
-#orion.discovered .star-betelgeuse {
-  width: 4.4px;
-  height: 4.4px;
-
-  background: #ffe2c5;
-
-  box-shadow:
-    0 0 2px rgba(255,245,230,1),
-    0 0 6px rgba(255,200,155,.72),
-    0 0 11px rgba(255,160,105,.25);
-}
-
-#orion.discovered .star-betelgeuse::before {
   width: 14px;
 }
 
+#orion.discovered .star-rigel::after {
+  height: 14px;
+}
+
+
+/* BETELGEUSE — second biggest */
+
+#orion.discovered .star-betelgeuse {
+  width: 7.5px;
+  height: 7.5px;
+
+  background: #ffd9b8;
+
+  box-shadow:
+    0 0 2px rgba(255,235,215,.9),
+    0 0 5px rgba(255,175,120,.32);
+}
+
+#orion.discovered .star-betelgeuse::before {
+  width: 12px;
+}
+
 #orion.discovered .star-betelgeuse::after {
-  height: 15px;
+  height: 12px;
 }
 
 
 /* BELLATRIX */
 
 #orion.discovered .star-bellatrix {
-  width: 3.3px;
-  height: 3.3px;
+  width: 5.5px;
+  height: 5.5px;
+
+  box-shadow:
+    0 0 2px rgba(255,255,255,.75);
 }
 
 #orion.discovered .star-bellatrix::before {
-  width: 10px;
+  width: 9px;
 }
 
 #orion.discovered .star-bellatrix::after {
-  height: 11px;
+  height: 9px;
 }
 
 
 /* ALNILAM — brightest belt star */
 
 #orion.discovered .star-alnilam {
-  width: 3.1px;
-  height: 3.1px;
+  width: 4.8px;
+  height: 4.8px;
+
+  box-shadow:
+    0 0 2px rgba(255,255,255,.75);
 }
 
 #orion.discovered .star-alnilam::before {
-  width: 10px;
+  width: 8px;
 }
 
 #orion.discovered .star-alnilam::after {
-  height: 11px;
+  height: 8px;
 }
 
 
 /* SAIPH */
 
 #orion.discovered .star-saiph {
-  width: 2.7px;
-  height: 2.7px;
+  width: 4px;
+  height: 4px;
+
+  box-shadow:
+    0 0 2px rgba(255,255,255,.6);
 }
 
 
 /* ALNITAK */
 
 #orion.discovered .star-alnitak {
-  width: 2.4px;
-  height: 2.4px;
+  width: 3.3px;
+  height: 3.3px;
+
+  box-shadow:
+    0 0 2px rgba(255,255,255,.55);
 }
 
 
 /* MINTAKA */
 
 #orion.discovered .star-mintaka {
-  width: 2px;
-  height: 2px;
+  width: 2.5px;
+  height: 2.5px;
+
+  box-shadow:
+    0 0 1px rgba(255,255,255,.5);
 }
 
 
-/* SWORD 1 */
+/* SWORD STAR 1 */
 
 #orion.discovered .star-sword-1 {
-  width: 1.35px;
-  height: 1.35px;
+  width: 1.5px;
+  height: 1.5px;
 
-  opacity: .8;
+  opacity: .82;
+
+  box-shadow: none;
 }
 
 #orion.discovered .star-sword-1::before {
-  width: 4px;
-
-  opacity: .55;
+  width: 3px;
+  opacity: .25;
 }
 
 #orion.discovered .star-sword-1::after {
-  height: 5px;
-
-  opacity: .55;
+  height: 3px;
+  opacity: .25;
 }
 
 
-/* SWORD 2 — smallest */
+/* SWORD STAR 2 — tiniest */
 
 #orion.discovered .star-sword-2 {
   width: .8px;
   height: .8px;
 
-  opacity: .68;
+  opacity: .7;
 
-  box-shadow:
-    0 0 1px
-    rgba(255,255,255,.75);
+  box-shadow: none;
 }
 
-#orion.discovered .star-sword-2::before {
-  width: 3px;
-
-  opacity: .38;
-}
-
+#orion.discovered .star-sword-2::before,
 #orion.discovered .star-sword-2::after {
-  height: 3px;
-
-  opacity: .38;
+  display: none;
 }
-
 
 /* =========================================================
    CONSTELLATION SVG

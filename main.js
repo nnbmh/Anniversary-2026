@@ -2846,6 +2846,12 @@ const orionReturn =
   );
 
 
+const orionExit =
+  document.getElementById(
+    "orionExit"
+  );
+
+
 let enteringOrion = false;
 
 let orionMemoryIndex = -1;
@@ -3876,6 +3882,19 @@ orionReturn.addEventListener(
   }
 );
 
+orionExit.addEventListener(
+  "click",
+  event => {
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    leaveOrionChapter();
+
+  }
+);
 /* =========================================================
    TAP DISCOVERED ORION
 ========================================================= */

@@ -821,10 +821,15 @@ function drawStar(
 
 
 /* =========================================================
-   BRIGHT CONSTELLATION STAR
+   SHARED BRIGHT CONSTELLATION STAR
+
+   IMPORTANT:
+   Both telescope Orion AND revealed Orion use this
+   exact same renderer.
 ========================================================= */
 
 function drawBrightStar(
+  context,
   x,
   y,
   radius,
@@ -874,7 +879,7 @@ function drawBrightStar(
   }
 
 
-  /* halo */
+  /* HALO */
 
   if (
     glow > 0
@@ -886,8 +891,9 @@ function drawBrightStar(
         radius * 2.6
       );
 
+
     const halo =
-      ctx.createRadialGradient(
+      context.createRadialGradient(
         x,
         y,
         0,
@@ -895,6 +901,7 @@ function drawBrightStar(
         y,
         haloRadius
       );
+
 
     halo.addColorStop(
       0,
@@ -904,6 +911,7 @@ function drawBrightStar(
       )`
     );
 
+
     halo.addColorStop(
       .35,
       `rgba(
@@ -911,6 +919,7 @@ function drawBrightStar(
         ${.09 * glow}
       )`
     );
+
 
     halo.addColorStop(
       1,
@@ -920,9 +929,10 @@ function drawBrightStar(
       )`
     );
 
-    ctx.beginPath();
 
-    ctx.arc(
+    context.beginPath();
+
+    context.arc(
       x,
       y,
       haloRadius,
@@ -930,14 +940,14 @@ function drawBrightStar(
       Math.PI * 2
     );
 
-    ctx.fillStyle =
+    context.fillStyle =
       halo;
 
-    ctx.fill();
+    context.fill();
   }
 
 
-  /* rays */
+  /* DIFFRACTION RAYS */
 
   const rayLength =
     Math.max(
@@ -947,12 +957,13 @@ function drawBrightStar(
 
 
   const horizontal =
-    ctx.createLinearGradient(
+    context.createLinearGradient(
       x - rayLength,
       y,
       x + rayLength,
       y
     );
+
 
   horizontal.addColorStop(
     0,
@@ -961,6 +972,7 @@ function drawBrightStar(
       0
     )`
   );
+
 
   horizontal.addColorStop(
     .5,
@@ -970,6 +982,7 @@ function drawBrightStar(
     )`
   );
 
+
   horizontal.addColorStop(
     1,
     `rgba(
@@ -978,34 +991,36 @@ function drawBrightStar(
     )`
   );
 
-  ctx.beginPath();
 
-  ctx.moveTo(
+  context.beginPath();
+
+  context.moveTo(
     x - rayLength,
     y
   );
 
-  ctx.lineTo(
+  context.lineTo(
     x + rayLength,
     y
   );
 
-  ctx.strokeStyle =
+  context.strokeStyle =
     horizontal;
 
-  ctx.lineWidth =
+  context.lineWidth =
     .5;
 
-  ctx.stroke();
+  context.stroke();
 
 
   const vertical =
-    ctx.createLinearGradient(
+    context.createLinearGradient(
       x,
       y - rayLength,
       x,
       y + rayLength
     );
+
 
   vertical.addColorStop(
     0,
@@ -1014,6 +1029,7 @@ function drawBrightStar(
       0
     )`
   );
+
 
   vertical.addColorStop(
     .5,
@@ -1023,6 +1039,7 @@ function drawBrightStar(
     )`
   );
 
+
   vertical.addColorStop(
     1,
     `rgba(
@@ -1031,32 +1048,33 @@ function drawBrightStar(
     )`
   );
 
-  ctx.beginPath();
 
-  ctx.moveTo(
+  context.beginPath();
+
+  context.moveTo(
     x,
     y - rayLength
   );
 
-  ctx.lineTo(
+  context.lineTo(
     x,
     y + rayLength
   );
 
-  ctx.strokeStyle =
+  context.strokeStyle =
     vertical;
 
-  ctx.lineWidth =
+  context.lineWidth =
     .5;
 
-  ctx.stroke();
+  context.stroke();
 
 
-  /* actual star */
+  /* PHYSICAL STAR CORE */
 
-  ctx.beginPath();
+  context.beginPath();
 
-  ctx.arc(
+  context.arc(
     x,
     y,
     radius,
@@ -1064,20 +1082,20 @@ function drawBrightStar(
     Math.PI * 2
   );
 
-  ctx.fillStyle =
+  context.fillStyle =
     `rgba(
       ${coreColour},
       ${strength}
     )`;
 
-  ctx.fill();
+  context.fill();
 
 
-  /* centre */
+  /* PINPOINT CENTRE */
 
-  ctx.beginPath();
+  context.beginPath();
 
-  ctx.arc(
+  context.arc(
     x,
     y,
     Math.max(
@@ -1088,86 +1106,153 @@ function drawBrightStar(
     Math.PI * 2
   );
 
-  ctx.fillStyle =
+  context.fillStyle =
     "rgba(255,255,255,.98)";
 
-  ctx.fill();
+  context.fill();
 }
 
+
 /* =========================================================
-   REVEALED ORION CANVAS STARS
+   ORION STAR DATA
+
+   ONE shared hierarchy for BOTH telescope and reveal.
+
+   Sizes are deliberately different:
+   Rigel       3.2
+   Betelgeuse  2.8
+   Bellatrix   2.1
+   Alnilam     2.0
+   Saiph       1.7
+   Alnitak     1.55
+   Mintaka     1.35
+   Sword 1      .85
+   Sword 2      .55
 ========================================================= */
 
-const revealedOrionStars = [
+const orionStars = [
 
-  /* Betelgeuse */
   {
-    x: .29,
-    y: .185,
+    name: "Betelgeuse",
+
+    revealX: .29,
+    revealY: .185,
+
+    telescopeX: -58,
+    telescopeY: -72,
+
     size: 2.8,
     tone: "warm"
   },
 
-  /* Bellatrix */
+
   {
-    x: .71,
-    y: .235,
+    name: "Bellatrix",
+
+    revealX: .71,
+    revealY: .235,
+
+    telescopeX: 58,
+    telescopeY: -60,
+
     size: 2.1,
     tone: "neutral"
   },
 
-  /* Alnitak */
+
   {
-    x: .41,
-    y: .444,
+    name: "Alnitak",
+
+    revealX: .41,
+    revealY: .444,
+
+    telescopeX: -25,
+    telescopeY: 0,
+
     size: 1.55,
     tone: "neutral"
   },
 
-  /* Alnilam */
+
   {
-    x: .50,
-    y: .452,
+    name: "Alnilam",
+
+    revealX: .50,
+    revealY: .452,
+
+    telescopeX: 0,
+    telescopeY: 3,
+
     size: 2.0,
     tone: "neutral"
   },
 
-  /* Mintaka */
+
   {
-    x: .59,
-    y: .46,
+    name: "Mintaka",
+
+    revealX: .59,
+    revealY: .46,
+
+    telescopeX: 26,
+    telescopeY: 7,
+
     size: 1.35,
     tone: "neutral"
   },
 
-  /* Sword 1 */
+
   {
-    x: .496,
-    y: .565,
+    name: "Sword 1",
+
+    revealX: .496,
+    revealY: .565,
+
+    telescopeX: -1,
+    telescopeY: 42,
+
     size: .85,
     tone: "neutral"
   },
 
-  /* Sword 2 */
+
   {
-    x: .49,
-    y: .645,
+    name: "Sword 2",
+
+    revealX: .49,
+    revealY: .645,
+
+    telescopeX: -2,
+    telescopeY: 67,
+
     size: .55,
     tone: "neutral"
   },
 
-  /* Saiph */
+
   {
-    x: .33,
-    y: .80,
+    name: "Saiph",
+
+    revealX: .33,
+    revealY: .80,
+
+    telescopeX: -46,
+    telescopeY: 105,
+
     size: 1.7,
     tone: "neutral"
   },
 
-  /* Rigel */
+
   {
-    x: .73,
-    y: .805,
+    name: "Rigel",
+
+    revealX: .73,
+    revealY: .805,
+
+    telescopeX: 64,
+    telescopeY: 108,
+
     size: 3.2,
     tone: "cool"
   }
@@ -1176,19 +1261,10 @@ const revealedOrionStars = [
 
 
 /* =========================================================
-   SIZE REVEALED ORION CANVAS
+   REVEALED ORION CANVAS
 ========================================================= */
 
 function resizeOrionStarCanvas() {
-
-  const rect =
-    orion.getBoundingClientRect();
-
-  const dpr =
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
 
   const cssWidth =
     orion.offsetWidth;
@@ -1196,21 +1272,43 @@ function resizeOrionStarCanvas() {
   const cssHeight =
     orion.offsetHeight;
 
+
+  if (
+    cssWidth <= 0 ||
+    cssHeight <= 0
+  ) {
+    return;
+  }
+
+
+  const dpr =
+    Math.min(
+      window.devicePixelRatio ||
+      1,
+      2
+    );
+
+
   orionStarCanvas.width =
     Math.round(
-      cssWidth * dpr
+      cssWidth *
+      dpr
     );
+
 
   orionStarCanvas.height =
     Math.round(
-      cssHeight * dpr
+      cssHeight *
+      dpr
     );
+
 
   orionStarCanvas.style.width =
     `${cssWidth}px`;
 
   orionStarCanvas.style.height =
     `${cssHeight}px`;
+
 
   orionStarCtx.setTransform(
     dpr,
@@ -1224,234 +1322,9 @@ function resizeOrionStarCanvas() {
 
 
 /* =========================================================
-   DRAW ONE REVEALED STAR
+   DRAW REVEALED ORION STARS
 
-   Same visual recipe as telescope drawBrightStar()
-========================================================= */
-
-function drawRevealedOrionStar(
-  x,
-  y,
-  radius,
-  tone = "neutral"
-) {
-
-  let coreColour =
-    "255,255,255";
-
-  let glowColour =
-    "190,220,255";
-
-
-  if (tone === "warm") {
-
-    coreColour =
-      "255,229,202";
-
-    glowColour =
-      "255,183,125";
-  }
-
-
-  if (tone === "cool") {
-
-    coreColour =
-      "232,244,255";
-
-    glowColour =
-      "145,195,255";
-  }
-
-
-  /* soft halo */
-
-  const haloRadius =
-    Math.max(
-      3,
-      radius * 2.6
-    );
-
-  const halo =
-    orionStarCtx.createRadialGradient(
-      x,
-      y,
-      0,
-      x,
-      y,
-      haloRadius
-    );
-
-  halo.addColorStop(
-    0,
-    `rgba(${coreColour}, .22)`
-  );
-
-  halo.addColorStop(
-    .35,
-    `rgba(${glowColour}, .09)`
-  );
-
-  halo.addColorStop(
-    1,
-    `rgba(${glowColour}, 0)`
-  );
-
-  orionStarCtx.beginPath();
-
-  orionStarCtx.arc(
-    x,
-    y,
-    haloRadius,
-    0,
-    Math.PI * 2
-  );
-
-  orionStarCtx.fillStyle =
-    halo;
-
-  orionStarCtx.fill();
-
-
-  /* horizontal diffraction */
-
-  const rayLength =
-    Math.max(
-      4,
-      radius * 3.2
-    );
-
-  const horizontal =
-    orionStarCtx.createLinearGradient(
-      x - rayLength,
-      y,
-      x + rayLength,
-      y
-    );
-
-  horizontal.addColorStop(
-    0,
-    `rgba(${coreColour}, 0)`
-  );
-
-  horizontal.addColorStop(
-    .5,
-    `rgba(${coreColour}, .55)`
-  );
-
-  horizontal.addColorStop(
-    1,
-    `rgba(${coreColour}, 0)`
-  );
-
-  orionStarCtx.beginPath();
-
-  orionStarCtx.moveTo(
-    x - rayLength,
-    y
-  );
-
-  orionStarCtx.lineTo(
-    x + rayLength,
-    y
-  );
-
-  orionStarCtx.strokeStyle =
-    horizontal;
-
-  orionStarCtx.lineWidth =
-    .5;
-
-  orionStarCtx.stroke();
-
-
-  /* vertical diffraction */
-
-  const vertical =
-    orionStarCtx.createLinearGradient(
-      x,
-      y - rayLength,
-      x,
-      y + rayLength
-    );
-
-  vertical.addColorStop(
-    0,
-    `rgba(${coreColour}, 0)`
-  );
-
-  vertical.addColorStop(
-    .5,
-    `rgba(${coreColour}, .5)`
-  );
-
-  vertical.addColorStop(
-    1,
-    `rgba(${coreColour}, 0)`
-  );
-
-  orionStarCtx.beginPath();
-
-  orionStarCtx.moveTo(
-    x,
-    y - rayLength
-  );
-
-  orionStarCtx.lineTo(
-    x,
-    y + rayLength
-  );
-
-  orionStarCtx.strokeStyle =
-    vertical;
-
-  orionStarCtx.lineWidth =
-    .5;
-
-  orionStarCtx.stroke();
-
-
-  /* physical star */
-
-  orionStarCtx.beginPath();
-
-  orionStarCtx.arc(
-    x,
-    y,
-    radius,
-    0,
-    Math.PI * 2
-  );
-
-  orionStarCtx.fillStyle =
-    `rgba(${coreColour}, 1)`;
-
-  orionStarCtx.fill();
-
-
-  /* tiny white centre */
-
-  orionStarCtx.beginPath();
-
-  orionStarCtx.arc(
-    x,
-    y,
-    Math.max(
-      .25,
-      radius * .27
-    ),
-    0,
-    Math.PI * 2
-  );
-
-  orionStarCtx.fillStyle =
-    "rgba(255,255,255,.98)";
-
-  orionStarCtx.fill();
-}
-
-
-/* =========================================================
-   DRAW REVEALED ORION
+   Uses EXACT SAME drawBrightStar() as telescope.
 ========================================================= */
 
 function renderRevealedOrionStars() {
@@ -1479,100 +1352,30 @@ function renderRevealedOrionStars() {
   );
 
 
-  revealedOrionStars.forEach(
+  orionStars.forEach(
     star => {
 
-      drawRevealedOrionStar(
-        width * star.x,
-        height * star.y,
+      drawBrightStar(
+        orionStarCtx,
+
+        width *
+        star.revealX,
+
+        height *
+        star.revealY,
+
         star.size,
+
+        1,
+
+        1,
+
         star.tone
       );
+
     }
   );
 }
-
-/* =========================================================
-   ORION INSIDE TELESCOPE
-
-   Sizes deliberately match the hierarchy of the
-   revealed constellation.
-========================================================= */
-
-const telescopeOrionStars = [
-
-  /* Betelgeuse */
-  {
-    x: -58,
-    y: -72,
-    size: 2.8,
-    tone: "warm"
-  },
-
-  /* Bellatrix */
-  {
-    x: 58,
-    y: -60,
-    size: 2.1,
-    tone: "neutral"
-  },
-
-  /* Alnitak */
-  {
-    x: -25,
-    y: 0,
-    size: 1.55,
-    tone: "neutral"
-  },
-
-  /* Alnilam */
-  {
-    x: 0,
-    y: 3,
-    size: 2,
-    tone: "neutral"
-  },
-
-  /* Mintaka */
-  {
-    x: 26,
-    y: 7,
-    size: 1.35,
-    tone: "neutral"
-  },
-
-  /* Sword 1 */
-  {
-    x: -1,
-    y: 42,
-    size: .85,
-    tone: "neutral"
-  },
-
-  /* Sword 2 */
-  {
-    x: -2,
-    y: 67,
-    size: .55,
-    tone: "neutral"
-  },
-
-  /* Saiph */
-  {
-    x: -46,
-    y: 105,
-    size: 1.7,
-    tone: "neutral"
-  },
-
-  /* Rigel */
-  {
-    x: 64,
-    y: 108,
-    size: 3.2,
-    tone: "cool"
-  }
-];
 
 
 /* =========================================================
@@ -1619,6 +1422,7 @@ function drawTelescopeOrion(
   const distance =
     getOrionDistance();
 
+
   if (
     distance > 320 &&
     !orionRevealStarted
@@ -1629,11 +1433,13 @@ function drawTelescopeOrion(
 
   let intensity = .12;
 
+
   if (
     distance < 260
   ) {
     intensity = .20;
   }
+
 
   if (
     distance < 200
@@ -1641,17 +1447,20 @@ function drawTelescopeOrion(
     intensity = .32;
   }
 
+
   if (
     distance < 145
   ) {
     intensity = .48;
   }
 
+
   if (
     distance < 95
   ) {
     intensity = .72;
   }
+
 
   if (
     distance < 55
@@ -1667,6 +1476,7 @@ function drawTelescopeOrion(
       lensX
     ) *
     .55;
+
 
   const centreY =
     height / 2 +
@@ -1695,15 +1505,16 @@ function drawTelescopeOrion(
   ];
 
 
-  /* stars */
+  /* STARS */
 
-  telescopeOrionStars.forEach(
+  orionStars.forEach(
     (
       star,
       index
     ) => {
 
       let shimmer = 1;
+
 
       if (
         distance < 145 ||
@@ -1724,6 +1535,7 @@ function drawTelescopeOrion(
       let starIntensity =
         intensity;
 
+
       if (
         orionRevealStarted
       ) {
@@ -1737,11 +1549,13 @@ function drawTelescopeOrion(
 
 
       drawBrightStar(
+        ctx,
+
         centreX +
-        star.x,
+        star.telescopeX,
 
         centreY +
-        star.y,
+        star.telescopeY,
 
         star.size *
         (
@@ -1764,6 +1578,7 @@ function drawTelescopeOrion(
 
         star.tone
       );
+
     }
   );
 
@@ -1779,6 +1594,7 @@ function drawTelescopeOrion(
     performance.now() -
     orionRevealStartTime;
 
+
   const segmentTime =
     ORION_LINE_DURATION +
     ORION_LINE_PAUSE;
@@ -1793,6 +1609,7 @@ function drawTelescopeOrion(
       const startTime =
         index *
         segmentTime;
+
 
       const progress =
         Math.max(
@@ -1816,31 +1633,35 @@ function drawTelescopeOrion(
 
 
       const start =
-        telescopeOrionStars[
+        orionStars[
           connection[0]
         ];
 
+
       const end =
-        telescopeOrionStars[
+        orionStars[
           connection[1]
         ];
 
 
       const startX =
         centreX +
-        start.x;
+        start.telescopeX;
+
 
       const startY =
         centreY +
-        start.y;
+        start.telescopeY;
+
 
       const endX =
         centreX +
-        end.x;
+        end.telescopeX;
+
 
       const endY =
         centreY +
-        end.y;
+        end.telescopeY;
 
 
       const currentX =
@@ -1850,6 +1671,7 @@ function drawTelescopeOrion(
           startX
         ) *
         progress;
+
 
       const currentY =
         startY +
@@ -1927,11 +1749,13 @@ function drawTelescopeOrion(
       ) {
 
         drawBrightStar(
+          ctx,
           currentX,
           currentY,
           1,
           .95,
-          .8
+          .8,
+          "neutral"
         );
       }
     }
@@ -1970,23 +1794,28 @@ function drawTelescopeBackground(
       width * .7
     );
 
+
   glow.addColorStop(
     0,
     "rgba(29,45,65,.10)"
   );
+
 
   glow.addColorStop(
     .55,
     "rgba(8,18,31,.035)"
   );
 
+
   glow.addColorStop(
     1,
     "rgba(0,2,7,0)"
   );
 
+
   ctx.fillStyle =
     glow;
+
 
   ctx.fillRect(
     0,
@@ -2029,6 +1858,7 @@ function drawTelescopeStars(
         star.x -
         fieldOffsetX;
 
+
       let y =
         height / 2 +
         star.y -
@@ -2042,6 +1872,7 @@ function drawTelescopeStars(
           10
         ) %
         wrapWidth;
+
 
       y =
         (
@@ -2088,6 +1919,7 @@ function drawTelescopeStars(
         star.size,
         star.brightness
       );
+
     }
   );
 }
@@ -2113,6 +1945,7 @@ function renderTelescope() {
     ) *
     .24;
 
+
   lensY +=
     (
       targetLensY -
@@ -2124,6 +1957,7 @@ function renderTelescope() {
   eyepiece.style.left =
     `${lensX}px`;
 
+
   eyepiece.style.top =
     `${lensY}px`;
 
@@ -2132,8 +1966,10 @@ function renderTelescope() {
     eyepiece
       .getBoundingClientRect();
 
+
   const width =
     rect.width;
+
 
   const height =
     rect.height;
@@ -2160,10 +1996,12 @@ function renderTelescope() {
     height
   );
 
+
   drawTelescopeStars(
     width,
     height
   );
+
 
   drawTelescopeOrion(
     width,
@@ -2185,11 +2023,13 @@ function clampLens(
     eyepiece
       .getBoundingClientRect();
 
+
   const radius =
     Math.max(
       rect.width / 2,
       90
     );
+
 
   const padding =
     14;
@@ -2210,6 +2050,7 @@ function clampLens(
           x
         )
       ),
+
 
     y:
       Math.max(
@@ -2240,11 +2081,14 @@ function moveLens(
       y
     );
 
+
   targetLensX =
     position.x;
 
+
   targetLensY =
     position.y;
+
 
   focusStartedAt =
     null;
@@ -2289,8 +2133,10 @@ function setTelescope(
   telescopeDragging =
     false;
 
+
   telescopePointerId =
     null;
+
 
   focusStartedAt =
     null;
@@ -2304,15 +2150,19 @@ function setTelescope(
       window.innerWidth /
       2;
 
+
     lensY =
       window.innerHeight /
       2;
 
+
     targetLensX =
       lensX;
 
+
     targetLensY =
       lensY;
+
 
     requestAnimationFrame(
       resizeTelescopeCanvas
@@ -2326,6 +2176,7 @@ telescopeButton.addEventListener(
   event => {
 
     event.stopPropagation();
+
 
     setTelescope(
       !telescopeActive
@@ -2351,6 +2202,7 @@ telescopeView.addEventListener(
 
     telescopeDragging =
       true;
+
 
     telescopePointerId =
       event.pointerId;
@@ -2416,6 +2268,7 @@ telescopeView.addEventListener(
       event.clientY
     );
 
+
     event.preventDefault();
   }
 );
@@ -2432,8 +2285,10 @@ function endTelescopePointer(
     return;
   }
 
+
   telescopeDragging =
     false;
+
 
   telescopePointerId =
     null;
@@ -2444,6 +2299,7 @@ telescopeView.addEventListener(
   "pointerup",
   endTelescopePointer
 );
+
 
 telescopeView.addEventListener(
   "pointercancel",
@@ -2521,8 +2377,10 @@ function discoverOrion() {
   orionRevealStarted =
     true;
 
+
   orionRevealStartTime =
     performance.now();
+
 
   focusStartedAt =
     null;
@@ -2621,17 +2479,22 @@ app.addEventListener(
       universeDragging =
         true;
 
+
       dragStartX =
         event.clientX;
+
 
       dragStartY =
         event.clientY;
 
+
       dragCameraStartX =
         targetX;
 
+
       dragCameraStartY =
         targetY;
+
 
       app.classList.add(
         "dragging"
@@ -2646,6 +2509,7 @@ app.addEventListener(
 
       universeDragging =
         false;
+
 
       app.classList.remove(
         "dragging"
@@ -2758,6 +2622,7 @@ app.addEventListener(
           );
       }
 
+
       return;
     }
 
@@ -2812,12 +2677,15 @@ function endUniversePointer(
     universeDragging =
       false;
 
+
     pinchStartDistance =
       0;
+
 
     app.classList.remove(
       "dragging"
     );
+
 
     return;
   }
@@ -2837,14 +2705,18 @@ function endUniversePointer(
     dragStartX =
       remaining.x;
 
+
     dragStartY =
       remaining.y;
+
 
     dragCameraStartX =
       targetX;
 
+
     dragCameraStartY =
       targetY;
+
 
     universeDragging =
       true;
@@ -2856,6 +2728,7 @@ app.addEventListener(
   "pointerup",
   endUniversePointer
 );
+
 
 app.addEventListener(
   "pointercancel",
@@ -2972,14 +2845,19 @@ window.addEventListener(
 
     buildUniverseStars();
 
-   resizeOrionStarCanvas();
-   renderRevealedOrionStars();
+
+    resizeOrionStarCanvas();
+
+
+    renderRevealedOrionStars();
+
 
     if (
       !telescopeActive
     ) {
       return;
     }
+
 
     const position =
       clampLens(
@@ -2991,11 +2869,14 @@ window.addEventListener(
     lensX =
       position.x;
 
+
     lensY =
       position.y;
 
+
     targetLensX =
       position.x;
+
 
     targetLensY =
       position.y;
@@ -3018,13 +2899,17 @@ function animate(
 
   renderCamera();
 
+
   updateOrionPosition();
 
+
   renderTelescope();
+
 
   checkOrionFocus(
     timestamp
   );
+
 
   requestAnimationFrame(
     animate
@@ -3040,19 +2925,25 @@ function initialise() {
 
   buildUniverseStars();
 
+
   buildTelescopeStars();
+
 
   resizeOrionStarCanvas();
 
+
   renderRevealedOrionStars();
+
 
   setTelescope(
     false
   );
 
+
   requestAnimationFrame(
     animate
   );
 }
+
 
 initialise();

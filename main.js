@@ -58,6 +58,11 @@ const discoveryMessage =
 const discoveryNumber =
   document.getElementById("discoveryNumber");
 
+const orionChapterIntro =
+  document.getElementById(
+    "orionChapterIntro"
+  );
+
 const ctx =
   telescopeCanvas.getContext("2d");
 
@@ -2945,5 +2950,169 @@ function initialise() {
   );
 }
 
+/* =========================================================
+   ORION CHAPTER ENTRANCE
+========================================================= */
+
+let enteringOrion = false;
+
+
+function enterOrionChapter() {
+
+  if (
+    !orionDiscovered ||
+    enteringOrion ||
+    telescopeActive
+  ) {
+    return;
+  }
+
+
+  enteringOrion = true;
+
+
+  /* Stop any existing universe drag */
+
+  universeDragging = false;
+
+  activePointers.clear();
+
+  app.classList.remove(
+    "dragging"
+  );
+
+
+  /*
+    Work out where Orion currently is
+    on the user's screen.
+  */
+
+  const rect =
+    orion.getBoundingClientRect();
+
+
+  const orionCentreX =
+    rect.left +
+    rect.width / 2;
+
+
+  const orionCentreY =
+    rect.top +
+    rect.height / 2;
+
+
+  /*
+    Difference between Orion and
+    the centre of the viewport.
+  */
+
+  const deltaX =
+    window.innerWidth / 2 -
+    orionCentreX;
+
+
+  const deltaY =
+    window.innerHeight / 2 -
+    orionCentreY;
+
+
+  /*
+    Move the camera so Orion travels
+    into the centre of the screen.
+  */
+
+  targetX +=
+    deltaX / zoom;
+
+
+  targetY +=
+    deltaY / zoom;
+
+
+  /*
+    Cinematic push-in.
+
+    1.65 is large enough to feel like
+    we're entering Orion without making
+    it explode off-screen.
+  */
+
+  targetZoom =
+    Math.min(
+      MAX_ZOOM,
+      1.65
+    );
+
+
+  clampCamera();
+
+
+  app.classList.add(
+    "entering-orion"
+  );
+
+
+  /*
+    Give the camera time to begin moving
+    before introducing the chapter title.
+  */
+
+  setTimeout(
+    () => {
+
+      orionChapterIntro
+        .classList
+        .add(
+          "show"
+        );
+
+    },
+    1500
+  );
+}
+
+
+/* =========================================================
+   TAP DISCOVERED ORION
+========================================================= */
+
+orion.addEventListener(
+  "click",
+  event => {
+
+    if (
+      !orionDiscovered ||
+      enteringOrion
+    ) {
+      return;
+    }
+
+
+    event.stopPropagation();
+
+
+    enterOrionChapter();
+  }
+);
+
+
+/*
+  Prevent touching Orion from immediately
+  starting a universe drag on mobile.
+*/
+
+orion.addEventListener(
+  "pointerdown",
+  event => {
+
+    if (
+      !orionDiscovered
+    ) {
+      return;
+    }
+
+    event.stopPropagation();
+  }
+);
 
 initialise();

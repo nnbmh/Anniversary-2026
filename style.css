@@ -268,14 +268,134 @@ button {
     rgba(196,217,255,.2);
 }
 
+/* =========================================================
+   NATURAL STAR COLOURS
+========================================================= */
+
+/* warm cream / pale gold */
 .sky-star.warm {
-  background: #ffe8c8;
+  background:
+    rgb(255, 225, 178);
+
+  box-shadow:
+    0 0 4px
+    rgba(255,220,165,.45),
+
+    0 0 10px
+    rgba(255,185,110,.12);
 }
 
+
+/* icy blue */
 .sky-star.cool {
-  background: #dbe9ff;
+  background:
+    rgb(205, 226, 255);
+
+  box-shadow:
+    0 0 4px
+    rgba(190,220,255,.5),
+
+    0 0 10px
+    rgba(120,175,255,.14);
 }
 
+
+/* stronger blue-white stars */
+.sky-star.blue {
+  background:
+    rgb(178, 211, 255);
+
+  box-shadow:
+    0 0 5px
+    rgba(170,210,255,.55),
+
+    0 0 13px
+    rgba(100,165,255,.16);
+}
+
+
+/* rare orange stars */
+.sky-star.orange {
+  background:
+    rgb(255, 190, 125);
+
+  box-shadow:
+    0 0 5px
+    rgba(255,185,115,.55),
+
+    0 0 13px
+    rgba(255,135,70,.14);
+}
+
+/* =========================================================
+   NATURAL STAR COLOURS
+========================================================= */
+
+/* warm cream / pale gold */
+.sky-star.warm {
+  background:
+    rgb(255, 225, 178);
+
+  box-shadow:
+    0 0 4px
+    rgba(255,220,165,.45),
+
+    0 0 10px
+    rgba(255,185,110,.12);
+}
+
+
+/* icy blue */
+.sky-star.cool {
+  background:
+    rgb(205, 226, 255);
+
+  box-shadow:
+    0 0 4px
+    rgba(190,220,255,.5),
+
+    0 0 10px
+    rgba(120,175,255,.14);
+}
+
+
+/* stronger blue-white stars */
+.sky-star.blue {
+  background:
+    rgb(178, 211, 255);
+
+  box-shadow:
+    0 0 5px
+    rgba(170,210,255,.55),
+
+    0 0 13px
+    rgba(100,165,255,.16);
+}
+
+
+/* rare orange stars */
+.sky-star.orange {
+  background:
+    rgb(255, 190, 125);
+
+  box-shadow:
+    0 0 5px
+    rgba(255,185,115,.55),
+
+    0 0 13px
+    rgba(255,135,70,.14);
+}
+
+
+/* slightly creamy white */
+.sky-star.cream {
+  background:
+    rgb(255, 241, 213);
+
+  box-shadow:
+    0 0 4px
+    rgba(255,235,195,.35);
+}
 
 /* =========================================================
    TWINKLE

@@ -572,9 +572,29 @@ button {
     transform .8s ease;
 }
 
+/*
+  Discovering Orion reveals the constellation,
+  but NOT its map label.
+
+  The label only appears once the chapter
+  has actually been completed.
+*/
+
 #orion.discovered
 .constellation-label {
   opacity: 0;
+
+  transform:
+    translate(
+      -50%,
+      5px
+    );
+}
+
+
+#orion.completed
+.constellation-label {
+  opacity: 1;
 
   transform:
     translate(

@@ -3912,6 +3912,10 @@ function leaveOrionChapter() {
           "true"
         );
 
+       app.classList.remove(
+          "entering-orion"
+       );
+
 
       enteringOrion = false;
 

@@ -516,6 +516,73 @@ button {
     0 0 8px rgba(145,190,255,.28);
 }
 
+/* =========================================================
+   ORION — INDIVIDUAL STAR SIZES
+
+   1  Betelgeuse
+   2  Bellatrix
+   3  Alnitak
+   4  Alnilam
+   5  Mintaka
+   6  Sword
+   7  Sword
+   8  Saiph
+   9  Rigel
+========================================================= */
+
+/* Betelgeuse */
+#orion.discovered .orion-star:nth-of-type(1) {
+  width: 2.3px;
+  height: 2.3px;
+}
+
+/* Bellatrix */
+#orion.discovered .orion-star:nth-of-type(2) {
+  width: 1.7px;
+  height: 1.7px;
+}
+
+/* Alnitak */
+#orion.discovered .orion-star:nth-of-type(3) {
+  width: 1.55px;
+  height: 1.55px;
+}
+
+/* Alnilam */
+#orion.discovered .orion-star:nth-of-type(4) {
+  width: 1.8px;
+  height: 1.8px;
+}
+
+/* Mintaka */
+#orion.discovered .orion-star:nth-of-type(5) {
+  width: 1.45px;
+  height: 1.45px;
+}
+
+/* Sword — faint */
+#orion.discovered .orion-star:nth-of-type(6) {
+  width: .9px;
+  height: .9px;
+}
+
+/* Sword — faintest */
+#orion.discovered .orion-star:nth-of-type(7) {
+  width: .75px;
+  height: .75px;
+}
+
+/* Saiph */
+#orion.discovered .orion-star:nth-of-type(8) {
+  width: 1.45px;
+  height: 1.45px;
+}
+
+/* Rigel — brightest */
+#orion.discovered .orion-star:nth-of-type(9) {
+  width: 2.5px;
+  height: 2.5px;
+}
 
 /* =========================================================
    CONSTELLATION LINES

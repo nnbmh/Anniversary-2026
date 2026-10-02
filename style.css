@@ -1386,3 +1386,108 @@ button {
 #orion.discovered .constellation-label {
   display: none !important;
 }
+
+/* =========================================================
+   FINAL VISIBILITY TUNING
+========================================================= */
+
+/* Revealed Orion — clearly visible without looking neon */
+
+#orion.discovered .constellation-lines line {
+  stroke: rgba(220, 234, 250, .92) !important;
+  stroke-width: 1px !important;
+  opacity: .9 !important;
+
+  stroke-dashoffset: 0 !important;
+  animation: none !important;
+
+  filter:
+    drop-shadow(
+      0 0 2px
+      rgba(175, 210, 250, .28)
+    ) !important;
+}
+
+
+/* Orion anchor stars */
+
+#orion.discovered .orion-star {
+  width: 4.5px !important;
+  height: 4.5px !important;
+
+  opacity: 1 !important;
+
+  background: #fbfdff !important;
+
+  box-shadow:
+    0 0 2px rgba(255,255,255,.95),
+    0 0 7px rgba(195,220,250,.32) !important;
+}
+
+
+/* Smaller sword stars */
+
+#orion.discovered .orion-star.small {
+  width: 3px !important;
+  height: 3px !important;
+}
+
+
+/* Betelgeuse */
+
+#orion.discovered .orion-star.warm {
+  width: 5px !important;
+  height: 5px !important;
+
+  background: #ffe0c2 !important;
+}
+
+
+/* Rigel */
+
+#orion.discovered .orion-star.cool {
+  width: 5px !important;
+  height: 5px !important;
+
+  background: #e2efff !important;
+}
+
+
+/* Keep the permanent constellation label hidden */
+
+#orion .constellation-label,
+#orion.discovered .constellation-label {
+  display: none !important;
+}
+
+
+/* Discovery announcement */
+
+#discoveryMessage strong {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+
+  letter-spacing: .4em !important;
+
+  color: rgba(245, 248, 253, .94) !important;
+}
+
+
+#discoveryMessage small {
+  margin-top: 7px !important;
+
+  font-size: 12px !important;
+
+  letter-spacing: .06em !important;
+
+  color: rgba(225, 233, 244, .76) !important;
+}
+
+
+.discovery-eyebrow {
+  font-size: 8px !important;
+
+  letter-spacing: .3em !important;
+
+  color: rgba(220, 230, 242, .55) !important;
+}

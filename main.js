@@ -193,12 +193,24 @@ function createStar(
   }
 
   if (options.warm) {
-    star.classList.add("warm");
-  }
+  star.classList.add("warm");
+}
 
-  if (options.cool) {
-    star.classList.add("cool");
-  }
+if (options.cool) {
+  star.classList.add("cool");
+}
+
+if (options.blue) {
+  star.classList.add("blue");
+}
+
+if (options.orange) {
+  star.classList.add("orange");
+}
+
+if (options.cream) {
+  star.classList.add("cream");
+}
 
   if (options.twinkle) {
 
@@ -327,12 +339,32 @@ function buildSparseField(
           type === "near" &&
           sizeChance > .94,
 
-        warm:
-          colourChance > .975,
+       /*
+  Most stars remain white.
 
-        cool:
-          colourChance < .035,
+  The coloured stars are deliberately
+  uncommon so the field still looks
+  natural rather than rainbow-like.
+*/
 
+orange:
+  colourChance > .985,
+
+warm:
+  colourChance > .945 &&
+  colourChance <= .985,
+
+cream:
+  colourChance > .885 &&
+  colourChance <= .945,
+
+blue:
+  colourChance < .025,
+
+cool:
+  colourChance >= .025 &&
+  colourChance < .085,
+         
         twinkle:
           type !== "deep" &&
           twinkleChance > .91,
@@ -410,6 +442,11 @@ function buildCluster(
         seed * 14.4
       );
 
+     const colourChance =
+        seededRandom(
+           seed * 16.7
+        );
+
     createStar(
       layer,
       x,
@@ -421,6 +458,24 @@ function buildCluster(
         large:
           type === "near" &&
           sizeChance > .985,
+
+         orange:
+            colourChance > .992,
+         
+         warm:
+            colourChance > .962 &&
+            colourChance <= .992,
+         
+         cream:
+            colourChance > .91 &&
+            colourChance <= .962,
+         
+         blue:
+            colourChance < .018,
+         
+         cool:
+            colourChance >= .018 &&
+            colourChance < .065,
 
         twinkle:
           type !== "deep" &&

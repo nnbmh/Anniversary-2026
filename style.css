@@ -34,6 +34,7 @@ button {
   font: inherit;
 }
 
+
 /* =========================================================
    APP
 ========================================================= */
@@ -319,7 +320,12 @@ button {
   z-index: 20;
 
   pointer-events: none;
+
+  transition:
+    opacity 1s ease,
+    filter 1.8s ease;
 }
+
 
 /* =========================================================
    ORION CANVAS STARS
@@ -328,17 +334,25 @@ button {
 .orion-star-canvas {
   position: absolute;
   inset: 0;
+
   width: 100%;
   height: 100%;
+
   z-index: 2;
+
   pointer-events: none;
+
   opacity: .48;
-  transition: opacity .8s ease;
+
+  transition:
+    opacity .8s ease;
 }
 
-#orion.discovered .orion-star-canvas {
+#orion.discovered
+.orion-star-canvas {
   opacity: 1;
 }
+
 
 /* =========================================================
    CONSTELLATION SVG
@@ -382,7 +396,8 @@ button {
 
 #orion.discovered
 .constellation-lines line {
-  stroke: rgba(225, 237, 252, .88);
+  stroke:
+    rgba(225,237,252,.88);
 
   stroke-width: .9;
 
@@ -393,9 +408,16 @@ button {
   animation: none;
 
   filter:
-    drop-shadow(0 0 1px rgba(210, 230, 255, .28))
-    drop-shadow(0 0 3px rgba(175, 210, 250, .10));
+    drop-shadow(
+      0 0 1px
+      rgba(210,230,255,.28)
+    )
+    drop-shadow(
+      0 0 3px
+      rgba(175,210,250,.10)
+    );
 }
+
 
 /* =========================================================
    ORION LABEL
@@ -405,6 +427,7 @@ button {
   position: absolute;
 
   left: 50%;
+
   top:
     calc(
       100% + 24px
@@ -1196,14 +1219,15 @@ button {
   }
 }
 
+
 /* =========================================================
    ORION — CLICKABLE AFTER DISCOVERY
 ========================================================= */
 
 #orion.discovered {
   pointer-events: none;
-  
 }
+
 
 /* =========================================================
    ORION CHAPTER TRANSITION
@@ -1229,37 +1253,41 @@ button {
 
 #app.entering-orion #starsDeep {
   opacity: .08;
-  transition: opacity 2.2s ease;
+
+  transition:
+    opacity 2.2s ease;
 }
 
 #app.entering-orion #starsFar {
   opacity: .10;
-  transition: opacity 2s ease;
+
+  transition:
+    opacity 2s ease;
 }
 
 #app.entering-orion #starsMid {
   opacity: .13;
-  transition: opacity 1.8s ease;
+
+  transition:
+    opacity 1.8s ease;
 }
 
 #app.entering-orion #starsNear {
   opacity: .16;
-  transition: opacity 1.6s ease;
+
+  transition:
+    opacity 1.6s ease;
 }
 
 #app.entering-orion #dustLayer {
   opacity: .12;
-  transition: opacity 2s ease;
-}
 
-
-/* Orion itself becomes the focal point */
-
-#orion {
   transition:
-    opacity 1s ease,
-    filter 1.8s ease;
+    opacity 2s ease;
 }
+
+
+/* Orion becomes the focal point */
 
 #app.entering-orion #orion {
   filter:
@@ -1270,7 +1298,7 @@ button {
 }
 
 
-/* Existing Orion label disappears during the flight */
+/* Hide the original Orion label */
 
 #app.entering-orion
 #orion .constellation-label {
@@ -1282,7 +1310,7 @@ button {
 
 
 /* =========================================================
-   CHAPTER INTRO OVERLAY
+   ORION CHAPTER OVERLAY
 ========================================================= */
 
 #orionChapterIntro {
@@ -1315,7 +1343,6 @@ button {
     visibility 1.4s ease;
 }
 
-
 #orionChapterIntro.show {
   opacity: 1;
   visibility: visible;
@@ -1323,16 +1350,17 @@ button {
 
 
 /* =========================================================
-   CHAPTER TYPOGRAPHY
+   ORION CHAPTER TITLE
 ========================================================= */
 
 .orion-chapter-content {
   position: relative;
 
-  width: min(
-    86vw,
-    520px
-  );
+  width:
+    min(
+      86vw,
+      520px
+    );
 
   text-align: center;
 
@@ -1344,10 +1372,8 @@ button {
   transition:
     transform 1.4s
     cubic-bezier(.16,.8,.2,1),
-
     opacity 1.2s ease;
 }
-
 
 #orionChapterIntro.show
 .orion-chapter-content {
@@ -1355,22 +1381,6 @@ button {
     translateY(0);
 
   opacity: 1;
-}
-
-
-.orion-chapter-eyebrow {
-  display: block;
-
-  margin-bottom: 18px;
-
-  font-size: 7px;
-
-  letter-spacing: .38em;
-
-  padding-left: .38em;
-
-  color:
-    rgba(215,228,245,.42);
 }
 
 .orion-chapter-content h1 {
@@ -1427,36 +1437,133 @@ button {
 }
 
 
-.orion-chapter-dates {
-  display: block;
+/* =========================================================
+   ORION TITLE → FIRST MEMORY
+========================================================= */
 
-  margin-top: 28px;
+#orionChapterIntro.first-memory
+.orion-chapter-content {
+  opacity: 0;
 
-  font-size: 7px;
+  transform:
+    translateY(-8px);
 
-  letter-spacing: .26em;
-
-  padding-left: .26em;
-
-  color:
-    rgba(205,220,240,.34);
+  pointer-events: none;
 }
 
 
 /* =========================================================
-   MOBILE
+   ORION MEMORY
 ========================================================= */
 
-@media (
-  max-width: 600px
-) {
+.orion-memory {
+  position: absolute;
 
-  .orion-chapter-eyebrow {
-    font-size: 6px;
+  left: 50%;
+  top: 50%;
 
-    margin-bottom: 15px;
-  }
+  width:
+    min(
+      82vw,
+      420px
+    );
 
+  text-align: center;
+
+  transform:
+    translate(
+      -50%,
+      -42%
+    );
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition:
+    opacity 1.2s ease,
+    transform 1.5s
+    cubic-bezier(.16,.8,.2,1);
+}
+
+#orionChapterIntro.first-memory
+#orionFirstMemory {
+  opacity: 1;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+}
+
+.orion-memory-date {
+  display: block;
+
+  font-size: 9px;
+  font-weight: 500;
+
+  letter-spacing: .32em;
+
+  padding-left: .32em;
+
+  color:
+    rgba(239,244,252,.88);
+
+  text-shadow:
+    0 0 10px
+    rgba(185,215,255,.12);
+}
+
+.orion-memory-text {
+  margin-top: 13px;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      15px,
+      3vw,
+      18px
+    );
+
+  font-style: italic;
+
+  letter-spacing: .025em;
+
+  color:
+    rgba(224,234,247,.72);
+}
+
+
+/* =========================================================
+   FIRST MEMORY CONSTELLATION STATE
+========================================================= */
+
+#app.orion-first-memory
+#orion {
+  filter:
+    brightness(.72)
+    drop-shadow(
+      0 0 10px
+      rgba(185,215,255,.08)
+    );
+}
+
+#app.orion-first-memory
+#orion .constellation-label {
+  opacity: 0;
+}
+
+
+/* =========================================================
+   ORION MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
 
   .orion-chapter-content h1 {
     font-size: 26px;
@@ -1466,18 +1573,23 @@ button {
     padding-left: .22em;
   }
 
-
   .orion-chapter-content p {
     margin-top: 11px;
 
     font-size: 13px;
   }
 
+  .orion-memory-date {
+    font-size: 8px;
 
-  .orion-chapter-dates {
-    margin-top: 24px;
+    letter-spacing: .28em;
 
-    font-size: 6px;
+    padding-left: .28em;
   }
 
+  .orion-memory-text {
+    margin-top: 11px;
+
+    font-size: 14px;
+  }
 }

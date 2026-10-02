@@ -3075,11 +3075,11 @@ function enterOrionChapter() {
    TAP DISCOVERED ORION
 ========================================================= */
 
-let orionTapStartX = 0;
-let orionTapStartY = 0;
+let appTapStartX = 0;
+let appTapStartY = 0;
 
 
-orion.addEventListener(
+app.addEventListener(
   "pointerdown",
   event => {
 
@@ -3092,19 +3092,17 @@ orion.addEventListener(
     }
 
 
-    orionTapStartX =
+    appTapStartX =
       event.clientX;
 
-    orionTapStartY =
+    appTapStartY =
       event.clientY;
-
-
-    event.stopPropagation();
-  }
+  },
+  true
 );
 
 
-orion.addEventListener(
+app.addEventListener(
   "pointerup",
   event => {
 
@@ -3117,37 +3115,71 @@ orion.addEventListener(
     }
 
 
-    event.stopPropagation();
-
-
     const moved =
       Math.hypot(
-        event.clientX -
-        orionTapStartX,
-
-        event.clientY -
-        orionTapStartY
+        event.clientX - appTapStartX,
+        event.clientY - appTapStartY
       );
 
 
     /*
-      Only open Orion when this was
-      actually a tap, not a drag.
+      Ignore drags.
     */
 
     if (
-      moved < 18
+      moved >= 18
     ) {
+      return;
+    }
+
+
+    /*
+      Get Orion's ACTUAL visible position
+      after all camera movement and zoom.
+    */
+
+    const rect =
+      orion.getBoundingClientRect();
+
+
+    /*
+      Give the constellation a slightly
+      smaller clickable area than its
+      full rectangular container.
+    */
+
+    const paddingX =
+      rect.width * .12;
+
+    const paddingY =
+      rect.height * .08;
+
+
+    const insideOrion =
+      event.clientX >=
+        rect.left + paddingX &&
+
+      event.clientX <=
+        rect.right - paddingX &&
+
+      event.clientY >=
+        rect.top + paddingY &&
+
+      event.clientY <=
+        rect.bottom - paddingY;
+
+
+    if (
+      insideOrion
+    ) {
+
+      event.preventDefault();
 
       enterOrionChapter();
 
     }
-  }
+  },
+  true
 );
-
-/*
-  Prevent touching Orion from immediately
-  starting a universe drag on mobile.
-*/
 
 initialise();

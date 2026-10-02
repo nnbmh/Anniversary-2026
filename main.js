@@ -2731,13 +2731,537 @@ function initialise() {
   );
 }
 
-
 /* =========================================================
-   ORION CHAPTER ENTRANCE
+   ORION CHAPTER
 ========================================================= */
+
+const orionChapter =
+  document.getElementById(
+    "orionChapter"
+  );
+
+const orionMemoryStage =
+  document.getElementById(
+    "orionMemoryStage"
+  );
+
+const orionMemoryCard =
+  document.getElementById(
+    "orionMemoryCard"
+  );
+
+const orionMemoryDate =
+  document.getElementById(
+    "orionMemoryDate"
+  );
+
+const orionMemoryTitle =
+  document.getElementById(
+    "orionMemoryTitle"
+  );
+
+const orionMemoryText =
+  document.getElementById(
+    "orionMemoryText"
+  );
+
+const orionContinue =
+  document.getElementById(
+    "orionContinue"
+  );
+
+const orionProgress =
+  document.getElementById(
+    "orionProgress"
+  );
+
+const orionTravellingLight =
+  document.getElementById(
+    "orionTravellingLight"
+  );
+
+const orionEnding =
+  document.getElementById(
+    "orionEnding"
+  );
+
+const orionReturn =
+  document.getElementById(
+    "orionReturn"
+  );
+
 
 let enteringOrion = false;
 
+let orionMemoryIndex = -1;
+
+let orionTransitioning = false;
+
+
+/*
+  Five moments.
+
+  starIndex tells the chapter which
+  real Orion star to travel toward.
+*/
+
+const orionMemories = [
+
+  {
+    date:
+      "04.05.2024",
+
+    title:
+      "We matched.",
+
+    text:
+      "Just one match on Muzz. Neither of us knew what it was going to become yet.",
+
+    starIndex:
+      0
+  },
+
+
+  {
+    date:
+      "08.05.2024",
+
+    title:
+      "Our first date.",
+
+    text:
+      "You were late. I made that stupid fat gesture at you. Then my Apple Watch decided to expose an OKC notification. Somehow, we just laughed.",
+
+    starIndex:
+      2
+  },
+
+
+  {
+    date:
+      "13.07.2024",
+
+    title:
+      "Just us.",
+
+    text:
+      "We became exclusive.",
+
+    starIndex:
+      3
+  },
+
+
+  {
+    date:
+      "19.11.2024",
+
+    title:
+      "I asked you.",
+
+    text:
+      "On the way back from JB, I asked you to be my boyfriend.",
+
+    starIndex:
+      4
+  },
+
+
+  {
+    date:
+      "02.12.2024",
+
+    title:
+      "And then there was us.",
+
+    text:
+      "The day we became us.",
+
+    starIndex:
+      8
+  }
+
+];
+
+
+/* =========================================================
+   STAR SCREEN POSITION
+========================================================= */
+
+function getOrionStarScreenPosition(
+  starIndex
+) {
+
+  const rect =
+    orion.getBoundingClientRect();
+
+  const star =
+    orionStars[
+      starIndex
+    ];
+
+  return {
+
+    x:
+      rect.left +
+      rect.width *
+      star.revealX,
+
+    y:
+      rect.top +
+      rect.height *
+      star.revealY
+
+  };
+}
+
+
+/* =========================================================
+   CAMERA TO STAR
+========================================================= */
+
+function focusOrionStar(
+  starIndex,
+  zoomLevel = 1.82
+) {
+
+  const position =
+    getOrionStarScreenPosition(
+      starIndex
+    );
+
+
+  /*
+    Keep the star slightly ABOVE centre,
+    leaving breathing room for the copy.
+  */
+
+  const desiredX =
+    window.innerWidth /
+    2;
+
+
+  const desiredY =
+    window.innerHeight *
+    .36;
+
+
+  const deltaX =
+    desiredX -
+    position.x;
+
+
+  const deltaY =
+    desiredY -
+    position.y;
+
+
+  targetX +=
+    deltaX /
+    zoom;
+
+
+  targetY +=
+    deltaY /
+    zoom;
+
+
+  targetZoom =
+    Math.min(
+      MAX_ZOOM,
+      zoomLevel
+    );
+
+
+  clampCamera();
+}
+
+
+/* =========================================================
+   ACTIVE STAR
+========================================================= */
+
+function setActiveMemoryStar(
+  starIndex
+) {
+
+  const star =
+    orionStars[
+      starIndex
+    ];
+
+
+  orion.style.setProperty(
+    "--memory-star-x",
+    `${star.revealX * 100}%`
+  );
+
+
+  orion.style.setProperty(
+    "--memory-star-y",
+    `${star.revealY * 100}%`
+  );
+
+
+  orion.classList.add(
+    "memory-star-active"
+  );
+}
+
+
+/* =========================================================
+   SHOW MEMORY
+========================================================= */
+
+function showOrionMemory(
+  index
+) {
+
+  const memory =
+    orionMemories[
+      index
+    ];
+
+
+  orionMemoryIndex =
+    index;
+
+
+  orionMemoryDate.textContent =
+    memory.date;
+
+
+  orionMemoryTitle.textContent =
+    memory.title;
+
+
+  orionMemoryText.textContent =
+    memory.text;
+
+
+  const dots =
+    orionProgress
+      .querySelectorAll(
+        ".orion-progress-dot"
+      );
+
+
+  dots.forEach(
+    (
+      dot,
+      dotIndex
+    ) => {
+
+      dot.classList.toggle(
+        "active",
+        dotIndex === index
+      );
+
+
+      dot.classList.toggle(
+        "past",
+        dotIndex < index
+      );
+
+    }
+  );
+
+
+  setActiveMemoryStar(
+    memory.starIndex
+  );
+
+
+  orionMemoryStage
+    .classList
+    .add(
+      "show"
+    );
+
+
+  requestAnimationFrame(
+    () => {
+
+      orionMemoryCard
+        .classList
+        .add(
+          "show"
+        );
+
+    }
+  );
+
+
+  setTimeout(
+    () => {
+
+      orionMemoryStage
+        .classList
+        .add(
+          "ready"
+        );
+
+      orionTransitioning =
+        false;
+
+    },
+    900
+  );
+}
+
+
+/* =========================================================
+   TRAVEL BETWEEN MEMORIES
+========================================================= */
+
+function travelToNextOrionMemory() {
+
+  if (
+    orionTransitioning
+  ) {
+    return;
+  }
+
+
+  if (
+    orionMemoryIndex >=
+    orionMemories.length - 1
+  ) {
+
+    finishOrionChapter();
+
+    return;
+  }
+
+
+  orionTransitioning =
+    true;
+
+
+  orionMemoryStage
+    .classList
+    .remove(
+      "ready"
+    );
+
+
+  orionMemoryCard
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  const current =
+    orionMemories[
+      orionMemoryIndex
+    ];
+
+
+  const next =
+    orionMemories[
+      orionMemoryIndex + 1
+    ];
+
+
+  const startPosition =
+    getOrionStarScreenPosition(
+      current.starIndex
+    );
+
+
+  orionTravellingLight.style.left =
+    `${startPosition.x}px`;
+
+
+  orionTravellingLight.style.top =
+    `${startPosition.y}px`;
+
+
+  orionTravellingLight.classList.remove(
+    "travel"
+  );
+
+
+  /*
+    Force Safari to acknowledge the
+    starting position before transition.
+  */
+
+  void orionTravellingLight.offsetWidth;
+
+
+  orionTravellingLight
+    .classList
+    .add(
+      "travel"
+    );
+
+
+  /*
+    Begin camera movement.
+  */
+
+  focusOrionStar(
+    next.starIndex
+  );
+
+
+  /*
+    Wait a frame for the universe to
+    begin moving, then calculate where
+    the destination star is heading.
+  */
+
+  requestAnimationFrame(
+    () => {
+
+      requestAnimationFrame(
+        () => {
+
+          const destination =
+            getOrionStarScreenPosition(
+              next.starIndex
+            );
+
+
+          orionTravellingLight.style.left =
+            `${destination.x}px`;
+
+
+          orionTravellingLight.style.top =
+            `${destination.y}px`;
+
+        }
+      );
+
+    }
+  );
+
+
+  setTimeout(
+    () => {
+
+      orionTravellingLight
+        .classList
+        .remove(
+          "travel"
+        );
+
+
+      showOrionMemory(
+        orionMemoryIndex + 1
+      );
+
+    },
+    1500
+  );
+}
+
+
+/* =========================================================
+   ENTER ORION
+========================================================= */
 
 function enterOrionChapter() {
 
@@ -2749,7 +3273,13 @@ function enterOrionChapter() {
     return;
   }
 
+
   enteringOrion = true;
+
+  orionMemoryIndex = -1;
+
+  orionTransitioning = true;
+
 
   universeDragging = false;
 
@@ -2760,39 +3290,65 @@ function enterOrionChapter() {
   );
 
 
+  orionChapter
+    .classList
+    .add(
+      "active"
+    );
+
+
+  orionChapter
+    .setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+
+  /*
+    Centre Orion first.
+  */
+
   const rect =
     orion.getBoundingClientRect();
 
-  const orionCentreX =
+
+  const centreX =
     rect.left +
     rect.width / 2;
 
-  const orionCentreY =
+
+  const centreY =
     rect.top +
     rect.height / 2;
 
-  const deltaX =
-    window.innerWidth / 2 -
-    orionCentreX;
-
-  const deltaY =
-    window.innerHeight / 2 -
-    orionCentreY;
-
 
   targetX +=
-    deltaX / zoom;
+    (
+      window.innerWidth /
+      2 -
+      centreX
+    ) /
+    zoom;
+
 
   targetY +=
-    deltaY / zoom;
+    (
+      window.innerHeight /
+      2 -
+      centreY
+    ) /
+    zoom;
+
 
   targetZoom =
     Math.min(
       MAX_ZOOM,
-      1.65
+      1.55
     );
 
+
   clampCamera();
+
 
   app.classList.add(
     "entering-orion"
@@ -2800,8 +3356,7 @@ function enterOrionChapter() {
 
 
   /*
-    Show ORION · The Beginning
-    once the camera has started arriving.
+    Opening title.
   */
 
   setTimeout(
@@ -2814,116 +3369,311 @@ function enterOrionChapter() {
         );
 
     },
-    1500
+    1100
   );
 
 
   /*
-    Leave the chapter title on screen
-    long enough to breathe, then begin
-    the first moment.
+    Fade title away.
   */
 
   setTimeout(
     () => {
 
-      beginFirstOrionMemory();
+      orionChapterIntro
+        .classList
+        .remove(
+          "show"
+        );
+
+
+      app.classList.add(
+        "orion-memory-mode"
+      );
+
+
+      focusOrionStar(
+        orionMemories[0]
+          .starIndex
+      );
 
     },
-    3800
+    3300
+  );
+
+
+  /*
+    First memory.
+  */
+
+  setTimeout(
+    () => {
+
+      showOrionMemory(
+        0
+      );
+
+    },
+    4550
   );
 }
 
 
 /* =========================================================
-   ORION — FIRST MEMORY
-   04.05.2024
+   FINISH ORION
 ========================================================= */
 
-function beginFirstOrionMemory() {
+function finishOrionChapter() {
 
   if (
-    !enteringOrion
+    orionTransitioning
   ) {
     return;
   }
 
 
-  /*
-    Fade ORION · The Beginning away
-    and reveal the first date.
-  */
+  orionTransitioning =
+    true;
 
-  orionChapterIntro
+
+  orionMemoryStage
     .classList
-    .add(
-      "first-memory"
+    .remove(
+      "ready"
     );
 
 
-  app.classList.add(
-    "orion-first-memory"
+  orionMemoryCard
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  orion.classList.remove(
+    "memory-star-active"
   );
 
 
   /*
-    Find Betelgeuse's current position
-    on the actual screen.
+    Pull back and reveal Orion again.
   */
+
+  app.classList.remove(
+    "orion-memory-mode"
+  );
+
 
   const rect =
     orion.getBoundingClientRect();
 
 
-  const betelgeuseX =
+  const centreX =
     rect.left +
-    rect.width *
-    orionStars[0].revealX;
+    rect.width / 2;
 
 
-  const betelgeuseY =
+  const centreY =
     rect.top +
-    rect.height *
-    orionStars[0].revealY;
-
-
-  /*
-    Move Betelgeuse toward the centre.
-  */
-
-  const deltaX =
-    window.innerWidth / 2 -
-    betelgeuseX;
-
-
-  const deltaY =
-    window.innerHeight / 2 -
-    betelgeuseY;
+    rect.height / 2;
 
 
   targetX +=
-    deltaX / zoom;
+    (
+      window.innerWidth /
+      2 -
+      centreX
+    ) /
+    zoom;
 
 
   targetY +=
-    deltaY / zoom;
+    (
+      window.innerHeight /
+      2 -
+      centreY
+    ) /
+    zoom;
 
 
-  /*
-    Slightly closer than the Orion
-    chapter entrance.
-  */
-
-  targetZoom =
-    Math.min(
-      MAX_ZOOM,
-      1.82
-    );
+  targetZoom = 1.22;
 
 
   clampCamera();
+
+
+  setTimeout(
+    () => {
+
+      orionMemoryStage
+        .classList
+        .remove(
+          "show"
+        );
+
+
+      orionEnding
+        .classList
+        .add(
+          "show"
+        );
+
+    },
+    1400
+  );
 }
 
+
+/* =========================================================
+   RETURN TO UNIVERSE
+========================================================= */
+
+function leaveOrionChapter() {
+
+  orionEnding
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  orionChapterIntro
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  orionMemoryStage
+    .classList
+    .remove(
+      "show",
+      "ready"
+    );
+
+
+  orionMemoryCard
+    .classList
+    .remove(
+      "show"
+    );
+
+
+  orion.classList.remove(
+    "memory-star-active"
+  );
+
+
+  app.classList.remove(
+    "orion-memory-mode",
+    "entering-orion"
+  );
+
+
+  /*
+    Return to a comfortable universe
+    view centred around Orion.
+  */
+
+  targetZoom = 1;
+
+
+  const rect =
+    orion.getBoundingClientRect();
+
+
+  const centreX =
+    rect.left +
+    rect.width / 2;
+
+
+  const centreY =
+    rect.top +
+    rect.height / 2;
+
+
+  targetX +=
+    (
+      window.innerWidth /
+      2 -
+      centreX
+    ) /
+    zoom;
+
+
+  targetY +=
+    (
+      window.innerHeight /
+      2 -
+      centreY
+    ) /
+    zoom;
+
+
+  clampCamera();
+
+
+  setTimeout(
+    () => {
+
+      orionChapter
+        .classList
+        .remove(
+          "active"
+        );
+
+
+      orionChapter
+        .setAttribute(
+          "aria-hidden",
+          "true"
+        );
+
+
+      enteringOrion = false;
+
+      orionTransitioning = false;
+
+      orionMemoryIndex = -1;
+
+    },
+    900
+  );
+}
+
+
+/* =========================================================
+   ORION CONTROLS
+========================================================= */
+
+orionContinue.addEventListener(
+  "click",
+  event => {
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    travelToNextOrionMemory();
+
+  }
+);
+
+
+orionReturn.addEventListener(
+  "click",
+  event => {
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    leaveOrionChapter();
+
+  }
+);
 
 /* =========================================================
    TAP DISCOVERED ORION

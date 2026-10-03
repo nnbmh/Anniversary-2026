@@ -156,6 +156,29 @@ let focusStartedAt = null;
 
 const HOLD_TO_DISCOVER = 1800;
 
+/* =========================================================
+   VIRGO DISCOVERY
+========================================================= */
+
+let virgoScreenX =
+  window.innerWidth / 2;
+
+let virgoScreenY =
+  window.innerHeight / 2;
+
+let virgoDiscovered = false;
+
+let virgoRevealStarted = false;
+
+let virgoRevealStartTime = 0;
+
+let virgoRevealPausedAt = null;
+let virgoRevealPausedDuration = 0;
+
+let virgoFocusStartedAt = null;
+
+const VIRGO_LINE_DURATION = 420;
+const VIRGO_LINE_PAUSE = 90;
 
 /* =========================================================
    RANDOM
@@ -1998,6 +2021,279 @@ const elapsed =
   );
 }
 
+/* =========================================================
+   DRAW TELESCOPE VIRGO
+========================================================= */
+
+function drawTelescopeVirgo(
+  width,
+  height
+) {
+
+  const distance =
+    getVirgoDistance();
+
+  if (
+    distance > 320 &&
+    !virgoRevealStarted
+  ) {
+    return;
+  }
+
+  let intensity = .12;
+
+  if (distance < 260) {
+    intensity = .20;
+  }
+
+  if (distance < 200) {
+    intensity = .32;
+  }
+
+  if (distance < 145) {
+    intensity = .48;
+  }
+
+  if (distance < 95) {
+    intensity = .72;
+  }
+
+  if (distance < 55) {
+    intensity = 1;
+  }
+
+  const centreX =
+    width / 2 +
+    (
+      virgoScreenX -
+      lensX
+    ) *
+    .55;
+
+  const centreY =
+    height / 2 +
+    (
+      virgoScreenY -
+      lensY
+    ) *
+    .55;
+
+  const connections = [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [2, 4],
+    [4, 5],
+    [2, 6],
+    [6, 7]
+  ];
+
+  virgoStars.forEach(
+    (
+      star,
+      index
+    ) => {
+
+      let shimmer = 1;
+
+      if (
+        distance < 145 ||
+        virgoRevealStarted
+      ) {
+
+        shimmer =
+          1 +
+          Math.sin(
+            performance.now() /
+            470 +
+            index * .9
+          ) *
+          .045;
+      }
+
+      let starIntensity =
+        intensity;
+
+      if (
+        virgoRevealStarted
+      ) {
+
+        starIntensity =
+          Math.max(
+            starIntensity,
+            .82
+          );
+      }
+
+      drawBrightStar(
+        ctx,
+
+        centreX +
+        star.telescopeX,
+
+        centreY +
+        star.telescopeY,
+
+        star.size *
+        (
+          .78 +
+          starIntensity *
+          .22
+        ) *
+        shimmer,
+
+        .2 +
+        starIntensity *
+        .78,
+
+        (
+          distance < 145 ||
+          virgoRevealStarted
+        )
+          ? starIntensity
+          : 0,
+
+        star.tone
+      );
+    }
+  );
+
+  if (
+    !virgoRevealStarted
+  ) {
+    return;
+  }
+
+  const now =
+    performance.now();
+
+  const virgoStillInView =
+    distance <= 210;
+
+  if (
+    !virgoStillInView
+  ) {
+
+    if (
+      virgoRevealPausedAt === null
+    ) {
+      virgoRevealPausedAt = now;
+    }
+
+  } else if (
+    virgoRevealPausedAt !== null
+  ) {
+
+    virgoRevealPausedDuration +=
+      now -
+      virgoRevealPausedAt;
+
+    virgoRevealPausedAt =
+      null;
+  }
+
+  const effectiveNow =
+    virgoRevealPausedAt === null
+      ? now
+      : virgoRevealPausedAt;
+
+  const elapsed =
+    effectiveNow -
+    virgoRevealStartTime -
+    virgoRevealPausedDuration;
+
+  const segmentTime =
+    VIRGO_LINE_DURATION +
+    VIRGO_LINE_PAUSE;
+
+  connections.forEach(
+    (
+      connection,
+      index
+    ) => {
+
+      const startTime =
+        index *
+        segmentTime;
+
+      const progress =
+        Math.max(
+          0,
+          Math.min(
+            1,
+            (
+              elapsed -
+              startTime
+            ) /
+            VIRGO_LINE_DURATION
+          )
+        );
+
+      if (
+        progress <= 0
+      ) {
+        return;
+      }
+
+      const start =
+        virgoStars[
+          connection[0]
+        ];
+
+      const end =
+        virgoStars[
+          connection[1]
+        ];
+
+      const startX =
+        centreX +
+        start.telescopeX;
+
+      const startY =
+        centreY +
+        start.telescopeY;
+
+      const endX =
+        centreX +
+        end.telescopeX;
+
+      const endY =
+        centreY +
+        end.telescopeY;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        startX,
+        startY
+      );
+
+      ctx.lineTo(
+        startX +
+        (
+          endX -
+          startX
+        ) *
+        progress,
+
+        startY +
+        (
+          endY -
+          startY
+        ) *
+        progress
+      );
+
+      ctx.strokeStyle =
+        "rgba(225,237,252,.72)";
+
+      ctx.lineWidth =
+        .8;
+
+      ctx.stroke();
+    }
+  );
+}
 
 /* =========================================================
    TELESCOPE BACKGROUND
@@ -2214,6 +2510,11 @@ function renderTelescope() {
   );
 
   drawTelescopeOrion(
+    width,
+    height
+  );
+
+  drawTelescopeVirgo(
     width,
     height
   );
@@ -2669,6 +2970,173 @@ requestAnimationFrame(
 );
 }
 
+/* =========================================================
+   VIRGO DISCOVERY
+========================================================= */
+
+function checkVirgoFocus(
+  timestamp
+) {
+
+  if (
+    !telescopeActive ||
+    virgoDiscovered
+  ) {
+
+    virgoFocusStartedAt =
+      null;
+
+    return;
+  }
+
+  const distance =
+    getVirgoDistance();
+
+  if (
+    distance > 75 ||
+    telescopeDragging
+  ) {
+
+    virgoFocusStartedAt =
+      null;
+
+    return;
+  }
+
+  if (
+    virgoFocusStartedAt ===
+    null
+  ) {
+
+    virgoFocusStartedAt =
+      timestamp;
+  }
+
+  if (
+    timestamp -
+    virgoFocusStartedAt >=
+    HOLD_TO_DISCOVER
+  ) {
+
+    discoverVirgo();
+  }
+}
+
+
+function discoverVirgo() {
+
+  if (
+    virgoDiscovered ||
+    virgoRevealStarted
+  ) {
+    return;
+  }
+
+  virgoRevealStarted =
+    true;
+
+  virgoRevealStartTime =
+    performance.now();
+
+  virgoRevealPausedAt =
+    null;
+
+  virgoRevealPausedDuration =
+    0;
+
+  virgoFocusStartedAt =
+    null;
+
+
+  function waitForVirgoReveal() {
+
+    const segmentTime =
+      VIRGO_LINE_DURATION +
+      VIRGO_LINE_PAUSE;
+
+    const requiredTime =
+      7 *
+      segmentTime +
+      900;
+
+    const now =
+      performance.now();
+
+    const effectiveNow =
+      virgoRevealPausedAt === null
+        ? now
+        : virgoRevealPausedAt;
+
+    const elapsed =
+      effectiveNow -
+      virgoRevealStartTime -
+      virgoRevealPausedDuration;
+
+    if (
+      elapsed <
+      requiredTime
+    ) {
+
+      requestAnimationFrame(
+        waitForVirgoReveal
+      );
+
+      return;
+    }
+
+    virgoDiscovered =
+      true;
+
+    discoveryNumber.textContent =
+      orionDiscovered
+        ? "2"
+        : "1";
+
+    virgo.classList.add(
+      "discovered"
+    );
+
+    setTimeout(
+      () => {
+
+        setTelescope(
+          false
+        );
+
+        const hintTitle =
+          navigationHint.querySelector(
+            "p"
+          );
+
+        const hintText =
+          navigationHint.querySelector(
+            "span"
+          );
+
+        hintTitle.textContent =
+          "You found something.";
+
+        hintText.textContent =
+          "Tap the constellation to step inside";
+
+        navigationHint
+          .classList
+          .remove(
+            "hidden"
+          );
+
+        navigationHintHidden =
+          false;
+
+      },
+      650
+    );
+  }
+
+  requestAnimationFrame(
+    waitForVirgoReveal
+  );
+}
 
 /* =========================================================
    NORMAL UNIVERSE POINTER
@@ -3081,13 +3549,18 @@ function animate(
   timestamp
 ) {
 
-  renderCamera();
+    renderCamera();
 
   updateOrionPosition();
+  updateVirgoPosition();
 
   renderTelescope();
 
   checkOrionFocus(
+    timestamp
+  );
+
+  checkVirgoFocus(
     timestamp
   );
 

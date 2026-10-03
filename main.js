@@ -686,22 +686,31 @@ function clampCamera() {
     );
 }
 
-
 function renderCamera() {
+
+  /*
+    Follow the finger closely while dragging,
+    then return to the softer cinematic easing.
+  */
+
+  const movementEasing =
+    universeDragging
+      ? .32
+      : CAMERA_EASING;
 
   cameraX +=
     (
       targetX -
       cameraX
     ) *
-    CAMERA_EASING;
+    movementEasing;
 
   cameraY +=
     (
       targetY -
       cameraY
     ) *
-    CAMERA_EASING;
+    movementEasing;
 
   zoom +=
     (

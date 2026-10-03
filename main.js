@@ -3044,7 +3044,12 @@ const orionMemories = [
       "Our day.",
 
     text:
-      "Okay technically we were already us by then HAHAHA. We just decided our actual anniversary was way too close to my birthday, so 02.12 became ours instead. And now I get to celebrate another year of us with you sayang."
+      "Okay technically we were already us by then HAHAHA. We just decided our actual anniversary was way too close to my birthday, so 02.12 became ours instead. And now I get to celebrate another year of us with you sayang.",
+
+     starIndex:
+        8
+  }
+];
        
        
 /* ========================================================= */

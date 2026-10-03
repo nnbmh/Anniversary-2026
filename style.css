@@ -2730,23 +2730,58 @@ button {
    VIRGO — THROUGH MY EYES
 ========================================================= */
 
+/*
+  The REAL #virgo remains the visual constellation.
+
+  When the chapter opens, it stays above the dimmed
+  universe and becomes the focus of the experience.
+*/
+
+#app.entering-virgo #virgo {
+  z-index: 160;
+
+  filter:
+    blur(.7px)
+    brightness(.82);
+
+  transition:
+    filter 1.2s ease;
+}
+
+
+#app.entering-virgo
+#virgo.virgo-focused {
+  filter:
+    blur(0)
+    brightness(1);
+}
+
+
+/*
+  Chapter interaction layer.
+  No constellation is drawn here.
+*/
+
 .virgo-experience {
   position: fixed;
-  inset: 0;
-  z-index: 155;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  left: 0;
+  top: 0;
+
+  width: 100vw;
+  height: 100dvh;
+
+  z-index: 165;
 
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 
   transition:
-    opacity 1.4s ease,
-    visibility 1.4s ease;
+    opacity 1s ease,
+    visibility 1s ease;
 }
+
 
 .virgo-experience.show {
   opacity: 1;
@@ -2755,188 +2790,89 @@ button {
 }
 
 
-/* CONSTELLATION */
+/* =========================================================
+   INVISIBLE STAR HIT LAYER
+========================================================= */
 
-.virgo-stage {
-  position: relative;
+.virgo-hit-layer {
+  position: fixed;
 
-  width: min(68vw, 620px);
-  aspect-ratio: 620 / 520;
+  /*
+    JS sets these four values to match
+    the real Virgo's exact screen rectangle.
+  */
 
-  transform: translateX(-10vw);
-}
+  left: var(--virgo-left, 0px);
+  top: var(--virgo-top, 0px);
 
-.virgo-chapter-constellation {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
+  width: var(--virgo-width, 620px);
+  height: var(--virgo-height, 520px);
 
-
-/* LINES */
-
-.virgo-chapter-lines line {
-  stroke: rgba(218,231,248,.24);
-  stroke-width: .8;
-
-  vector-effect: non-scaling-stroke;
-
-  filter: blur(.35px);
-
-  transition:
-    stroke .8s ease,
-    opacity .8s ease;
+  pointer-events: none;
 }
 
 
-/* STARS */
+/*
+  These buttons are intentionally invisible.
+
+  They only create comfortable touch targets
+  over the REAL Virgo stars.
+*/
 
 .virgo-memory-star {
-  fill: rgba(231,239,250,.58);
-
-  stroke: rgba(235,244,255,.16);
-  stroke-width: 18;
-
-  paint-order: stroke;
-
-  cursor: pointer;
-
-  filter:
-    blur(1.5px)
-    drop-shadow(
-      0 0 8px
-      rgba(206,225,250,.24)
-    );
-
-  transform-box: fill-box;
-  transform-origin: center;
-
-  transition:
-    fill .7s ease,
-    filter .8s ease,
-    opacity .7s ease,
-    transform .7s cubic-bezier(.16,.8,.2,1);
-
-  -webkit-tap-highlight-color: transparent;
-}
-
-
-.virgo-memory-star:not(.locked) {
-  animation:
-    virgoStarBreathe
-    3.8s ease-in-out
-    infinite alternate;
-}
-
-
-@keyframes virgoStarBreathe {
-
-  from {
-    opacity: .55;
-  }
-
-  to {
-    opacity: .9;
-  }
-
-}
-
-
-/* ACTIVE STAR */
-
-.virgo-memory-star.active {
-  fill: rgba(249,251,255,1);
-
-  filter:
-    blur(0)
-    drop-shadow(
-      0 0 5px
-      rgba(224,238,255,.8)
-    )
-    drop-shadow(
-      0 0 14px
-      rgba(188,216,250,.35)
-    );
-
-  transform: scale(1.28);
-
-  animation: none;
-}
-
-
-/* VISITED */
-
-.virgo-memory-star.visited {
-  fill: rgba(240,247,255,.88);
-
-  filter:
-    blur(.25px)
-    drop-shadow(
-      0 0 6px
-      rgba(205,226,250,.45)
-    );
-}
-
-
-/* SPICA */
-
-.virgo-memory-star.spica.locked {
-  opacity: .2;
-
-  cursor: default;
-
-  filter: blur(2px);
-
-  animation: none;
-}
-
-
-.virgo-memory-star.spica.unlocked {
-  opacity: 1;
-
-  fill: rgba(225,240,255,.95);
-
-  filter:
-    blur(0)
-    drop-shadow(
-      0 0 7px
-      rgba(205,229,255,.8)
-    )
-    drop-shadow(
-      0 0 20px
-      rgba(175,211,255,.38)
-    );
-
-  animation:
-    spicaWake
-    2.2s ease-in-out
-    infinite alternate;
-}
-
-
-@keyframes spicaWake {
-
-  from {
-    transform: scale(1);
-  }
-
-  to {
-    transform: scale(1.25);
-  }
-
-}
-
-
-/* HINT */
-
-.virgo-explore-hint {
   position: absolute;
 
-  left: 50%;
-  bottom: -24px;
+  left: var(--x);
+  top: var(--y);
 
-  transform: translateX(-50%);
+  width: 46px;
+  height: 46px;
+
+  padding: 0;
+  margin: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+
+  transform:
+    translate(-50%,-50%);
+
+  pointer-events: auto;
+  cursor: pointer;
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+
+.virgo-memory-star:focus {
+  outline: none;
+}
+
+
+.virgo-memory-star.locked {
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HINT
+========================================================= */
+
+.virgo-explore-hint {
+  position: fixed;
+
+  left: 50%;
+  bottom:
+    max(
+      32px,
+      env(safe-area-inset-bottom)
+    );
+
+  transform:
+    translateX(-50%);
 
   margin: 0;
 
@@ -2948,9 +2884,15 @@ button {
   font-size: 11px;
   font-style: italic;
 
-  color: rgba(220,231,245,.42);
+  letter-spacing: .04em;
 
-  transition: opacity .6s ease;
+  color:
+    rgba(220,231,245,.46);
+
+  pointer-events: none;
+
+  transition:
+    opacity .6s ease;
 }
 
 
@@ -2959,47 +2901,76 @@ button {
 }
 
 
-/* MEMORY */
+/* =========================================================
+   MEMORY COPY
+========================================================= */
 
 .virgo-memory {
-  position: absolute;
+  position: fixed;
 
-  right: max(7vw,50px);
-  top: 50%;
+  left: 50%;
 
-  width: min(30vw,330px);
+  /*
+    Keep the copy safely underneath Virgo.
+    JS updates this based on Virgo's actual
+    position on the screen.
+  */
 
-  transform: translateY(-44%);
+  top:
+    var(
+      --virgo-memory-top,
+      72%
+    );
+
+  width:
+    min(
+      78vw,
+      520px
+    );
+
+  transform:
+    translate(-50%,10px);
+
+  text-align: center;
 
   opacity: 0;
+  pointer-events: none;
 
   transition:
-    opacity .7s ease,
-    transform .8s cubic-bezier(.16,.8,.2,1);
+    opacity .6s ease,
+    transform .7s
+      cubic-bezier(.16,.8,.2,1);
 }
 
 
 .virgo-memory.show {
   opacity: 1;
 
-  transform: translateY(-50%);
+  transform:
+    translate(-50%,0);
 }
 
 
 .virgo-memory-number {
   display: block;
 
-  margin-bottom: 13px;
+  margin-bottom: 10px;
 
   font-size: 7px;
+
   letter-spacing: .2em;
 
-  color: rgba(207,223,243,.32);
+  text-transform: uppercase;
+
+  color:
+    rgba(207,223,243,.38);
 }
 
 
 .virgo-memory-text {
-  margin: 0;
+  margin: 0 auto;
+
+  max-width: 480px;
 
   font-family:
     Georgia,
@@ -3007,58 +2978,36 @@ button {
     serif;
 
   font-size:
-    clamp(14px,1.8vw,18px);
+    clamp(
+      14px,
+      2vw,
+      18px
+    );
 
-  line-height: 1.7;
+  line-height: 1.65;
 
-  color: rgba(233,240,250,.82);
+  color:
+    rgba(233,240,250,.86);
 }
 
 
-/* MOBILE / IPAD */
+/* =========================================================
+   IPAD / SMALLER SCREENS
+========================================================= */
 
-@media (max-width: 700px) {
-
-  .virgo-experience {
-    align-items: flex-start;
-  }
-
-  .virgo-stage {
-    width: 88vw;
-
-    margin-top: 17vh;
-
-    transform: none;
-  }
+@media (max-width: 900px) {
 
   .virgo-memory {
-    left: 50%;
-    right: auto;
-
-    top: auto;
-
-    bottom:
-      max(
-        54px,
-        env(safe-area-inset-bottom)
-      );
-
-    width: min(82vw,360px);
-
-    transform:
-      translate(-50%,8px);
-
-    text-align: center;
-  }
-
-  .virgo-memory.show {
-    transform:
-      translate(-50%,0);
+    width: min(84vw,500px);
   }
 
   .virgo-memory-text {
     font-size: 14px;
-    line-height: 1.6;
+  }
+
+  .virgo-memory-star {
+    width: 50px;
+    height: 50px;
   }
 
 }

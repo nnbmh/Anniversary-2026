@@ -37,6 +37,15 @@ const orionStarCanvas =
 const orionStarCtx =
   orionStarCanvas.getContext("2d");
 
+const virgo =
+  document.getElementById("virgo");
+
+const virgoStarCanvas =
+  document.getElementById("virgoStarCanvas");
+
+const virgoStarCtx =
+  virgoStarCanvas.getContext("2d");
+
 const telescopeView =
   document.getElementById("telescopeView");
 
@@ -1269,6 +1278,118 @@ const orionStars = [
 
 ];
 
+/* =========================================================
+   VIRGO STAR DATA
+========================================================= */
+
+const virgoStars = [
+
+  {
+    name: "Vindemiatrix",
+
+    revealX: 490 / 620,
+    revealY: 105 / 520,
+
+    telescopeX: 82,
+    telescopeY: -78,
+
+    size: 2.0,
+    tone: "warm"
+  },
+
+  {
+    name: "Auva",
+
+    revealX: 410 / 620,
+    revealY: 185 / 520,
+
+    telescopeX: 46,
+    telescopeY: -42,
+
+    size: 1.45,
+    tone: "neutral"
+  },
+
+  {
+    name: "Porrima",
+
+    revealX: 330 / 620,
+    revealY: 260 / 520,
+
+    telescopeX: 8,
+    telescopeY: -5,
+
+    size: 2.1,
+    tone: "neutral"
+  },
+
+  {
+    name: "Spica",
+
+    revealX: 235 / 620,
+    revealY: 410 / 520,
+
+    telescopeX: -38,
+    telescopeY: 66,
+
+    size: 3.25,
+    tone: "cool"
+  },
+
+  {
+    name: "Zaniah",
+
+    revealX: 255 / 620,
+    revealY: 205 / 520,
+
+    telescopeX: -28,
+    telescopeY: -30,
+
+    size: 1.35,
+    tone: "neutral"
+  },
+
+  {
+    name: "Zavijava",
+
+    revealX: 145 / 620,
+    revealY: 175 / 520,
+
+    telescopeX: -82,
+    telescopeY: -44,
+
+    size: 1.65,
+    tone: "neutral"
+  },
+
+  {
+    name: "Heze",
+
+    revealX: 415 / 620,
+    revealY: 320 / 520,
+
+    telescopeX: 48,
+    telescopeY: 24,
+
+    size: 1.25,
+    tone: "neutral"
+  },
+
+  {
+    name: "Syrma",
+
+    revealX: 500 / 620,
+    revealY: 385 / 520,
+
+    telescopeX: 88,
+    telescopeY: 55,
+
+    size: 1.4,
+    tone: "neutral"
+  }
+
+];
+
 
 /* =========================================================
    REVEALED ORION CANVAS
@@ -1372,6 +1493,207 @@ function renderRevealedOrionStars() {
   );
 }
 
+/* =========================================================
+   REVEALED VIRGO CANVAS
+========================================================= */
+
+function resizeVirgoStarCanvas() {
+
+  const cssWidth =
+    virgo.offsetWidth;
+
+  const cssHeight =
+    virgo.offsetHeight;
+
+  if (
+    cssWidth <= 0 ||
+    cssHeight <= 0
+  ) {
+    return;
+  }
+
+  const dpr =
+    Math.min(
+      window.devicePixelRatio ||
+      1,
+      2
+    );
+
+  virgoStarCanvas.width =
+    Math.round(
+      cssWidth *
+      dpr
+    );
+
+  virgoStarCanvas.height =
+    Math.round(
+      cssHeight *
+      dpr
+    );
+
+  virgoStarCanvas.style.width =
+    `${cssWidth}px`;
+
+  virgoStarCanvas.style.height =
+    `${cssHeight}px`;
+
+  virgoStarCtx.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
+  );
+}
+
+
+function renderRevealedVirgoStars() {
+
+  const width =
+    virgo.offsetWidth;
+
+  const height =
+    virgo.offsetHeight;
+
+  if (
+    width <= 0 ||
+    height <= 0
+  ) {
+    return;
+  }
+
+  virgoStarCtx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+  virgoStars.forEach(
+    star => {
+
+      drawBrightStar(
+        virgoStarCtx,
+
+        width *
+        star.revealX,
+
+        height *
+        star.revealY,
+
+        star.size,
+
+        1,
+
+        1,
+
+        star.tone
+      );
+
+    }
+  );
+}/* =========================================================
+   REVEALED VIRGO CANVAS
+========================================================= */
+
+function resizeVirgoStarCanvas() {
+
+  const cssWidth =
+    virgo.offsetWidth;
+
+  const cssHeight =
+    virgo.offsetHeight;
+
+  if (
+    cssWidth <= 0 ||
+    cssHeight <= 0
+  ) {
+    return;
+  }
+
+  const dpr =
+    Math.min(
+      window.devicePixelRatio ||
+      1,
+      2
+    );
+
+  virgoStarCanvas.width =
+    Math.round(
+      cssWidth *
+      dpr
+    );
+
+  virgoStarCanvas.height =
+    Math.round(
+      cssHeight *
+      dpr
+    );
+
+  virgoStarCanvas.style.width =
+    `${cssWidth}px`;
+
+  virgoStarCanvas.style.height =
+    `${cssHeight}px`;
+
+  virgoStarCtx.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
+  );
+}
+
+
+function renderRevealedVirgoStars() {
+
+  const width =
+    virgo.offsetWidth;
+
+  const height =
+    virgo.offsetHeight;
+
+  if (
+    width <= 0 ||
+    height <= 0
+  ) {
+    return;
+  }
+
+  virgoStarCtx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+  virgoStars.forEach(
+    star => {
+
+      drawBrightStar(
+        virgoStarCtx,
+
+        width *
+        star.revealX,
+
+        height *
+        star.revealY,
+
+        star.size,
+
+        1,
+
+        1,
+
+        star.tone
+      );
+
+    }
+  );
+}
 
 /* =========================================================
    ORION POSITION
@@ -2811,13 +3133,17 @@ window.addEventListener(
   () => {
 
     buildUniverseStars();
+     
+     resizeOrionStarCanvas();
+     renderRevealedOrionStars();
+     
+     resizeVirgoStarCanvas();
+     renderRevealedVirgoStars();
 
-    resizeOrionStarCanvas();
+if (
+  !telescopeActive
 
-    renderRevealedOrionStars();
 
-    if (
-      !telescopeActive
     ) {
       return;
     }
@@ -2882,10 +3208,12 @@ function initialise() {
   buildTelescopeStars();
 
   resizeOrionStarCanvas();
-
   renderRevealedOrionStars();
 
-  setTelescope(
+   resizeVirgoStarCanvas();
+   renderRevealedVirgoStars();
+
+setTelescope(
     false
   );
 

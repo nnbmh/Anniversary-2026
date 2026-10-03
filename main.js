@@ -1651,6 +1651,35 @@ function getOrionDistance() {
   );
 }
 
+/* =========================================================
+   VIRGO POSITION
+========================================================= */
+
+function updateVirgoPosition() {
+
+  const rect =
+    virgo.getBoundingClientRect();
+
+  virgoScreenX =
+    rect.left +
+    rect.width / 2;
+
+  virgoScreenY =
+    rect.top +
+    rect.height / 2;
+}
+
+
+function getVirgoDistance() {
+
+  return Math.hypot(
+    lensX -
+    virgoScreenX,
+
+    lensY -
+    virgoScreenY
+  );
+}
 
 /* =========================================================
    DRAW TELESCOPE ORION

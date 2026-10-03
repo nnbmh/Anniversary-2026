@@ -3569,6 +3569,123 @@ if (
   }
 );
 
+/* =========================================================
+   VIRGO GUIDANCE
+========================================================= */
+
+function updateVirgoGuidance(
+  timestamp
+) {
+
+  /*
+    Virgo only starts calling attention
+    to itself after Orion has been found.
+
+    Once Virgo itself is discovered,
+    the guidance disappears.
+  */
+
+  if (
+    !orionDiscovered ||
+    virgoDiscovered ||
+    enteringOrion ||
+    enteringVirgo
+  ) {
+
+    app.style.setProperty(
+      "--virgo-guidance",
+      "0"
+    );
+
+    return;
+  }
+
+
+  /*
+    Measure Virgo from the centre
+    of the screen rather than from
+    the telescope.
+  */
+
+  const centreX =
+    window.innerWidth / 2;
+
+  const centreY =
+    window.innerHeight / 2;
+
+  const distance =
+    Math.hypot(
+      virgoScreenX -
+      centreX,
+
+      virgoScreenY -
+      centreY
+    );
+
+
+  /*
+    Nothing noticeable when Virgo
+    is very far away.
+
+    The effect gradually strengthens
+    as Faris moves toward it.
+  */
+
+  const farDistance =
+    Math.min(
+      window.innerWidth,
+      window.innerHeight
+    ) * 1.35;
+
+  const nearDistance =
+    Math.min(
+      window.innerWidth,
+      window.innerHeight
+    ) * .32;
+
+  const proximity =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        (
+          farDistance -
+          distance
+        ) /
+        (
+          farDistance -
+          nearDistance
+        )
+      )
+    );
+
+
+  /*
+    Slow natural pulse.
+
+    It becomes easier to notice
+    only when Virgo is nearby.
+  */
+
+  const pulse =
+    .72 +
+    Math.sin(
+      timestamp * .0022
+    ) * .28;
+
+  const strength =
+    proximity *
+    (
+      .55 +
+      pulse * .45
+    );
+
+
+  app.style.setProperty(
+    "--virgo-guidance",
+    strength.toFixed(3)
+  );
+}
 
 /* =========================================================
    LOOP
@@ -3579,12 +3696,16 @@ function animate(
 ) {
 
     renderCamera();
-
-  updateOrionPosition();
-  updateVirgoPosition();
+   
+   updateOrionPosition();
+   updateVirgoPosition();
+   
+   updateVirgoGuidance(
+    timestamp
+  );
 
   renderTelescope();
-
+   
   checkOrionFocus(
     timestamp
   );

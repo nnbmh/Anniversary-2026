@@ -3026,10 +3026,10 @@ const orionMemories = [
       "19.11.2024",
 
     title:
-      "I asked you.",
+      "We became us.",
 
     text:
-      "On the way back from JB, I asked you to be my boyfriend.",
+      "On the way back from JB, I asked you to be my boyfriend. After months of getting to know each other, whatever this was between us finally had a name... you were my boyfriend and I was your girlfriend.",
 
     starIndex:
       4
@@ -3041,52 +3041,13 @@ const orionMemories = [
       "02.12.2024",
 
     title:
-      "And then there was us.",
+      "Our day.",
 
     text:
-      "The day we became us.",
-
-    starIndex:
-      8
-  }
-
-];
-
-/* =========================================================
-   STAR SCREEN POSITION
-========================================================= */
-
-function getOrionStarScreenPosition(
-  starIndex
-) {
-
-  const rect =
-    orion.getBoundingClientRect();
-
-  const star =
-    orionStars[
-      starIndex
-    ];
-
-  return {
-
-    x:
-      rect.left +
-      rect.width *
-      star.revealX,
-
-    y:
-      rect.top +
-      rect.height *
-      star.revealY
-
-  };
-}
-
-
-/* =========================================================
-   CAMERA TO STAR
-========================================================= */
+      "Okay technically we were already us by then HAHAHA. We just decided our actual anniversary was way too close to my birthday, so 02.12 became ours instead. And now I get to celebrate another year of us with you sayang."
+       
+       
+/* ========================================================= */
 
 function focusOrionStar(
   starIndex,

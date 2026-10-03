@@ -558,7 +558,7 @@
 
   </div>
 
-  <!-- VIRGO STAR EXPERIENCE -->
+   <!-- VIRGO STAR EXPERIENCE -->
 
   <div
     id="virgoExperience"
@@ -566,109 +566,91 @@
     aria-hidden="true"
   >
 
-    <div class="virgo-stage">
+    <!--
+      Invisible interaction layer.
+      This uses the same 620 × 520 coordinate system
+      as the REAL Virgo constellation.
+    -->
 
-      <svg
-        id="virgoChapterConstellation"
-        class="virgo-chapter-constellation"
-        viewBox="0 0 620 520"
-        aria-label="Virgo constellation"
-      >
+    <div
+      id="virgoHitLayer"
+      class="virgo-hit-layer"
+      aria-label="Explore Virgo"
+    >
 
-        <g class="virgo-chapter-lines">
+      <button
+        class="virgo-memory-star"
+        data-star="Vindemiatrix"
+        style="--x:79.03%; --y:20.19%;"
+        type="button"
+        aria-label="Explore star"
+      ></button>
 
-          <line x1="490" y1="105" x2="410" y2="185"></line>
-          <line x1="410" y1="185" x2="330" y2="260"></line>
-          <line x1="330" y1="260" x2="235" y2="410"></line>
+      <button
+        class="virgo-memory-star"
+        data-star="Auva"
+        style="--x:66.13%; --y:35.58%;"
+        type="button"
+        aria-label="Explore star"
+      ></button>
 
-          <line x1="330" y1="260" x2="255" y2="205"></line>
-          <line x1="255" y1="205" x2="145" y2="175"></line>
+      <button
+        class="virgo-memory-star"
+        data-star="Porrima"
+        style="--x:53.23%; --y:50%;"
+        type="button"
+        aria-label="Explore star"
+      ></button>
 
-          <line x1="330" y1="260" x2="415" y2="320"></line>
-          <line x1="415" y1="320" x2="500" y2="385"></line>
+      <button
+        class="virgo-memory-star spica locked"
+        data-star="Spica"
+        style="--x:37.90%; --y:78.85%;"
+        type="button"
+        aria-label="Spica"
+      ></button>
 
-        </g>
+      <button
+        class="virgo-memory-star"
+        data-star="Zaniah"
+        style="--x:41.13%; --y:39.42%;"
+        type="button"
+        aria-label="Explore star"
+      ></button>
 
+      <button
+        class="virgo-memory-star"
+        data-star="Zavijava"
+        style="--x:23.39%; --y:33.65%;"
+        type="button"
+        aria-label="Explore star"
+      ></button>
 
-        <g class="virgo-chapter-stars">
+      <button
+        class="virgo-memory-star"
+        data-star="Heze"
+        style="--x:66.94%; --y:61.54%;"
+        type="button"
+        aria-label="Explore star"
+      ></button>
 
-          <circle
-            class="virgo-memory-star"
-            data-star="Vindemiatrix"
-            cx="490"
-            cy="105"
-            r="8"
-          ></circle>
-
-          <circle
-            class="virgo-memory-star"
-            data-star="Auva"
-            cx="410"
-            cy="185"
-            r="8"
-          ></circle>
-
-          <circle
-            class="virgo-memory-star"
-            data-star="Porrima"
-            cx="330"
-            cy="260"
-            r="8"
-          ></circle>
-
-          <circle
-            class="virgo-memory-star spica locked"
-            data-star="Spica"
-            cx="235"
-            cy="410"
-            r="10"
-          ></circle>
-
-          <circle
-            class="virgo-memory-star"
-            data-star="Zaniah"
-            cx="255"
-            cy="205"
-            r="8"
-          ></circle>
-
-          <circle
-            class="virgo-memory-star"
-            data-star="Zavijava"
-            cx="145"
-            cy="175"
-            r="8"
-          ></circle>
-
-          <circle
-            class="virgo-memory-star"
-            data-star="Heze"
-            cx="415"
-            cy="320"
-            r="8"
-          ></circle>
-
-          <circle
-            class="virgo-memory-star"
-            data-star="Syrma"
-            cx="500"
-            cy="385"
-            r="8"
-          ></circle>
-
-        </g>
-
-      </svg>
-
-
-      <p
-        id="virgoExploreHint"
-        class="virgo-explore-hint"
-      >
-        touch a star
-      </p>
+      <button
+        class="virgo-memory-star"
+        data-star="Syrma"
+        style="--x:80.65%; --y:74.04%;"
+        type="button"
+        aria-label="Explore star"
+      ></button>
 
     </div>
+
+
+    <p
+      id="virgoExploreHint"
+      class="virgo-explore-hint"
+    >
+      touch a star
+    </p>
 
 
     <div

@@ -2652,3 +2652,65 @@ button {
     rgba(218,229,244,.55);
 }
 
+/* =========================================================
+   VIRGO GUIDANCE
+========================================================= */
+
+#app {
+  --virgo-guidance: 0;
+}
+
+
+/*
+  The universe becomes a little more
+  alive as Virgo gets closer.
+
+  Near stars react most strongly.
+*/
+
+#starsNear {
+  filter:
+    brightness(
+      calc(
+        1 +
+        var(--virgo-guidance) * .32
+      )
+    );
+}
+
+
+#starsMid {
+  filter:
+    brightness(
+      calc(
+        1 +
+        var(--virgo-guidance) * .16
+      )
+    );
+}
+
+
+/*
+  A tiny glow increase on the larger
+  foreground stars.
+
+  Deliberately restrained so it doesn't
+  look like a flashing navigation arrow.
+*/
+
+#starsNear .sky-star.large {
+  box-shadow:
+    0 0
+    calc(
+      4px +
+      var(--virgo-guidance) * 3px
+    )
+    rgba(255,255,255,.75),
+
+    0 0
+    calc(
+      10px +
+      var(--virgo-guidance) * 8px
+    )
+    rgba(196,217,255,.2);
+}

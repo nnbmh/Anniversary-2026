@@ -446,6 +446,79 @@ button {
     filter 1.8s ease;
 }
 
+/* =========================================================
+   VIRGO
+========================================================= */
+
+#virgo {
+  position: absolute;
+
+  width: 620px;
+  height: 520px;
+
+  left: 620px;
+  top: 430px;
+
+  z-index: 20;
+
+  pointer-events: none;
+
+  transition:
+    opacity 1s ease,
+    filter 1.8s ease;
+}
+
+
+#virgo .orion-star-canvas {
+  opacity: .48;
+}
+
+
+#virgo.discovered .orion-star-canvas {
+  opacity: 1;
+}
+
+
+#virgo.discovered
+.constellation-lines line {
+  stroke: rgba(225,237,252,.88);
+
+  stroke-width: .9;
+
+  stroke-dashoffset: 0;
+
+  opacity: .82;
+
+  animation: none;
+
+  filter:
+    drop-shadow(
+      0 0 1px
+      rgba(210,230,255,.28)
+    )
+    drop-shadow(
+      0 0 3px
+      rgba(175,210,250,.10)
+    );
+}
+
+
+#virgo.discovered
+.constellation-label {
+  opacity: 0;
+}
+
+
+#app #virgo.completed
+.constellation-label {
+  opacity: 1;
+
+  transform:
+    translate(
+      -50%,
+      0
+    );
+}
 
 /* =========================================================
    ORION CANVAS STARS
@@ -1263,6 +1336,14 @@ button {
 
     left: 1205px;
     top: 880px;
+  }
+
+     #virgo {
+    width: 480px;
+    height: 403px;
+
+    left: 470px;
+    top: 360px;
   }
 
   #eyepiece {

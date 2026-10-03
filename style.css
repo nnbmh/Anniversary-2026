@@ -2725,3 +2725,340 @@ button {
     )
     rgba(196,217,255,.2);
 }
+
+/* =========================================================
+   VIRGO — THROUGH MY EYES
+========================================================= */
+
+.virgo-experience {
+  position: fixed;
+  inset: 0;
+  z-index: 155;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 1.4s ease,
+    visibility 1.4s ease;
+}
+
+.virgo-experience.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+
+/* CONSTELLATION */
+
+.virgo-stage {
+  position: relative;
+
+  width: min(68vw, 620px);
+  aspect-ratio: 620 / 520;
+
+  transform: translateX(-10vw);
+}
+
+.virgo-chapter-constellation {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+
+/* LINES */
+
+.virgo-chapter-lines line {
+  stroke: rgba(218,231,248,.24);
+  stroke-width: .8;
+
+  vector-effect: non-scaling-stroke;
+
+  filter: blur(.35px);
+
+  transition:
+    stroke .8s ease,
+    opacity .8s ease;
+}
+
+
+/* STARS */
+
+.virgo-memory-star {
+  fill: rgba(231,239,250,.58);
+
+  stroke: rgba(235,244,255,.16);
+  stroke-width: 18;
+
+  paint-order: stroke;
+
+  cursor: pointer;
+
+  filter:
+    blur(1.5px)
+    drop-shadow(
+      0 0 8px
+      rgba(206,225,250,.24)
+    );
+
+  transform-box: fill-box;
+  transform-origin: center;
+
+  transition:
+    fill .7s ease,
+    filter .8s ease,
+    opacity .7s ease,
+    transform .7s cubic-bezier(.16,.8,.2,1);
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+.virgo-memory-star:not(.locked) {
+  animation:
+    virgoStarBreathe
+    3.8s ease-in-out
+    infinite alternate;
+}
+
+
+@keyframes virgoStarBreathe {
+
+  from {
+    opacity: .55;
+  }
+
+  to {
+    opacity: .9;
+  }
+
+}
+
+
+/* ACTIVE STAR */
+
+.virgo-memory-star.active {
+  fill: rgba(249,251,255,1);
+
+  filter:
+    blur(0)
+    drop-shadow(
+      0 0 5px
+      rgba(224,238,255,.8)
+    )
+    drop-shadow(
+      0 0 14px
+      rgba(188,216,250,.35)
+    );
+
+  transform: scale(1.28);
+
+  animation: none;
+}
+
+
+/* VISITED */
+
+.virgo-memory-star.visited {
+  fill: rgba(240,247,255,.88);
+
+  filter:
+    blur(.25px)
+    drop-shadow(
+      0 0 6px
+      rgba(205,226,250,.45)
+    );
+}
+
+
+/* SPICA */
+
+.virgo-memory-star.spica.locked {
+  opacity: .2;
+
+  cursor: default;
+
+  filter: blur(2px);
+
+  animation: none;
+}
+
+
+.virgo-memory-star.spica.unlocked {
+  opacity: 1;
+
+  fill: rgba(225,240,255,.95);
+
+  filter:
+    blur(0)
+    drop-shadow(
+      0 0 7px
+      rgba(205,229,255,.8)
+    )
+    drop-shadow(
+      0 0 20px
+      rgba(175,211,255,.38)
+    );
+
+  animation:
+    spicaWake
+    2.2s ease-in-out
+    infinite alternate;
+}
+
+
+@keyframes spicaWake {
+
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.25);
+  }
+
+}
+
+
+/* HINT */
+
+.virgo-explore-hint {
+  position: absolute;
+
+  left: 50%;
+  bottom: -24px;
+
+  transform: translateX(-50%);
+
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 11px;
+  font-style: italic;
+
+  color: rgba(220,231,245,.42);
+
+  transition: opacity .6s ease;
+}
+
+
+.virgo-explore-hint.hidden {
+  opacity: 0;
+}
+
+
+/* MEMORY */
+
+.virgo-memory {
+  position: absolute;
+
+  right: max(7vw,50px);
+  top: 50%;
+
+  width: min(30vw,330px);
+
+  transform: translateY(-44%);
+
+  opacity: 0;
+
+  transition:
+    opacity .7s ease,
+    transform .8s cubic-bezier(.16,.8,.2,1);
+}
+
+
+.virgo-memory.show {
+  opacity: 1;
+
+  transform: translateY(-50%);
+}
+
+
+.virgo-memory-number {
+  display: block;
+
+  margin-bottom: 13px;
+
+  font-size: 7px;
+  letter-spacing: .2em;
+
+  color: rgba(207,223,243,.32);
+}
+
+
+.virgo-memory-text {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(14px,1.8vw,18px);
+
+  line-height: 1.7;
+
+  color: rgba(233,240,250,.82);
+}
+
+
+/* MOBILE / IPAD */
+
+@media (max-width: 700px) {
+
+  .virgo-experience {
+    align-items: flex-start;
+  }
+
+  .virgo-stage {
+    width: 88vw;
+
+    margin-top: 17vh;
+
+    transform: none;
+  }
+
+  .virgo-memory {
+    left: 50%;
+    right: auto;
+
+    top: auto;
+
+    bottom:
+      max(
+        54px,
+        env(safe-area-inset-bottom)
+      );
+
+    width: min(82vw,360px);
+
+    transform:
+      translate(-50%,8px);
+
+    text-align: center;
+  }
+
+  .virgo-memory.show {
+    transform:
+      translate(-50%,0);
+  }
+
+  .virgo-memory-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+}

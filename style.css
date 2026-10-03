@@ -2825,8 +2825,8 @@ button {
   left: var(--x);
   top: var(--y);
 
-  width: 46px;
-  height: 46px;
+  width: 70px;
+  height: 70px;
 
   padding: 0;
   margin: 0;
@@ -3006,8 +3006,8 @@ button {
   }
 
   .virgo-memory-star {
-    width: 50px;
-    height: 50px;
+    width: 76px;
+    height: 76px;
   }
 
 }

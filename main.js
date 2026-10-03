@@ -4819,6 +4819,279 @@ app.addEventListener(
   true
 );
 
+/* =========================================================
+   VIRGO CHAPTER
+========================================================= */
+
+const virgoChapter =
+  document.getElementById(
+    "virgoChapter"
+  );
+
+const virgoChapterIntro =
+  document.getElementById(
+    "virgoChapterIntro"
+  );
+
+const virgoExit =
+  document.getElementById(
+    "virgoExit"
+  );
+
+let enteringVirgo = false;
+
+
+/* =========================================================
+   ENTER VIRGO
+========================================================= */
+
+function enterVirgoChapter() {
+
+  if (
+    !virgoDiscovered ||
+    enteringVirgo ||
+    telescopeActive
+  ) {
+    return;
+  }
+
+  enteringVirgo = true;
+
+  navigationHint
+    .classList
+    .add(
+      "hidden"
+    );
+
+  navigationHintHidden =
+    true;
+
+  universeDragging = false;
+
+  activePointers.clear();
+
+  app.classList.remove(
+    "dragging"
+  );
+
+  virgoChapter
+    .classList
+    .add(
+      "active"
+    );
+
+  virgoChapter
+    .setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+  app.classList.add(
+    "entering-virgo"
+  );
+
+
+  /*
+    Bring Virgo toward the centre
+    before showing the chapter title.
+  */
+
+  const rect =
+    virgo.getBoundingClientRect();
+
+  const centreX =
+    rect.left +
+    rect.width / 2;
+
+  const centreY =
+    rect.top +
+    rect.height / 2;
+
+  targetX +=
+    (
+      window.innerWidth / 2 -
+      centreX
+    ) /
+    zoom;
+
+  targetY +=
+    (
+      window.innerHeight / 2 -
+      centreY
+    ) /
+    zoom;
+
+  targetZoom =
+    Math.min(
+      MAX_ZOOM,
+      1.45
+    );
+
+  clampCamera();
+
+
+  setTimeout(
+    () => {
+
+      virgoChapterIntro
+        .classList
+        .add(
+          "show"
+        );
+
+    },
+    900
+  );
+}
+
+
+/* =========================================================
+   LEAVE VIRGO
+========================================================= */
+
+function leaveVirgoChapter() {
+
+  virgoChapterIntro
+    .classList
+    .remove(
+      "show"
+    );
+
+  setTimeout(
+    () => {
+
+      virgoChapter
+        .classList
+        .remove(
+          "active"
+        );
+
+      virgoChapter
+        .setAttribute(
+          "aria-hidden",
+          "true"
+        );
+
+      app.classList.remove(
+        "entering-virgo"
+      );
+
+      enteringVirgo = false;
+
+    },
+    650
+  );
+}
+
+
+virgoExit.addEventListener(
+  "click",
+  event => {
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+    leaveVirgoChapter();
+
+  }
+);
+
+
+/* =========================================================
+   TAP DISCOVERED VIRGO
+========================================================= */
+
+let virgoTapStartX = 0;
+let virgoTapStartY = 0;
+
+
+app.addEventListener(
+  "pointerdown",
+  event => {
+
+    if (
+      !virgoDiscovered ||
+      enteringVirgo ||
+      enteringOrion ||
+      telescopeActive
+    ) {
+      return;
+    }
+
+    virgoTapStartX =
+      event.clientX;
+
+    virgoTapStartY =
+      event.clientY;
+
+  },
+  true
+);
+
+
+app.addEventListener(
+  "pointerup",
+  event => {
+
+    if (
+      !virgoDiscovered ||
+      enteringVirgo ||
+      enteringOrion ||
+      telescopeActive
+    ) {
+      return;
+    }
+
+    const moved =
+      Math.hypot(
+        event.clientX -
+        virgoTapStartX,
+
+        event.clientY -
+        virgoTapStartY
+      );
+
+    if (
+      moved >= 18
+    ) {
+      return;
+    }
+
+    const rect =
+      virgo.getBoundingClientRect();
+
+    const paddingX =
+      rect.width * .10;
+
+    const paddingY =
+      rect.height * .08;
+
+    const insideVirgo =
+      event.clientX >=
+        rect.left + paddingX &&
+
+      event.clientX <=
+        rect.right - paddingX &&
+
+      event.clientY >=
+        rect.top + paddingY &&
+
+      event.clientY <=
+        rect.bottom - paddingY;
+
+    if (
+      insideVirgo
+    ) {
+
+      event.preventDefault();
+
+      enterVirgoChapter();
+
+    }
+  },
+  true
+);
 
 /* =========================================================
    INITIALISE

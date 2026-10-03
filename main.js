@@ -5053,35 +5053,43 @@ function enterVirgoChapter() {
   const desiredY =
     window.innerHeight * .40;
 
+   const moveX =
+  (
+    desiredX -
+    centreX
+  ) /
+  zoom;
 
-  targetX +=
-    (
-      desiredX -
-      centreX
-    ) /
-    zoom;
-
-  targetY +=
-    (
-      desiredY -
-      centreY
-    ) /
-    zoom;
+const moveY =
+  (
+    desiredY -
+    centreY
+  ) /
+  zoom;
 
 
-  /*
-    Keep the current scale unless Virgo
-    is already excessively zoomed in.
-  */
+/*
+  Move Virgo immediately to its
+  chapter position instead of leaving
+  the universe camera easing behind it.
+*/
 
-  targetZoom =
-    Math.min(
-      zoom,
-      1.08
-    );
+cameraX += moveX;
+cameraY += moveY;
 
-  clampCamera();
+targetX = cameraX;
+targetY = cameraY;
 
+
+/*
+  Keep the current zoom.
+  The Virgo chapter should never
+  zoom further in when opened.
+*/
+
+targetZoom = zoom;
+
+clampCamera();
 
   resetVirgoExperience();
 

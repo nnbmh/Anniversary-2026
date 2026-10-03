@@ -5059,6 +5059,24 @@ function enterVirgoChapter() {
 
   clampCamera();
 
+  resetVirgoExperience();
+
+  virgoExperience
+    .classList
+    .remove(
+      "show"
+    );
+
+  virgoExperience
+    .setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+
+  /*
+    Show Virgo title.
+  */
 
   setTimeout(
     () => {
@@ -5072,6 +5090,48 @@ function enterVirgoChapter() {
     },
     900
   );
+
+
+  /*
+    Fade title away.
+  */
+
+  setTimeout(
+    () => {
+
+      virgoChapterIntro
+        .classList
+        .remove(
+          "show"
+        );
+
+    },
+    2900
+  );
+
+
+  /*
+    Reveal the interactive Virgo.
+  */
+
+  setTimeout(
+    () => {
+
+      virgoExperience
+        .classList
+        .add(
+          "show"
+        );
+
+      virgoExperience
+        .setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+    },
+    3650
+  );
 }
 
 
@@ -5080,6 +5140,18 @@ function enterVirgoChapter() {
 ========================================================= */
 
 function leaveVirgoChapter() {
+
+  virgoExperience
+    .classList
+    .remove(
+      "show"
+    );
+
+  virgoExperience
+    .setAttribute(
+      "aria-hidden",
+      "true"
+    );
 
   virgoChapterIntro
     .classList

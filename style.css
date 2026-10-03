@@ -2533,25 +2533,36 @@ button {
   opacity: 0;
 }
 
-
 #virgoChapter {
   position: fixed;
-  inset: 0;
+
+  left: 0;
+  top: 0;
+
+  width: 100vw;
+  height: 100dvh;
 
   z-index: 150;
 
   visibility: hidden;
   pointer-events: none;
+
+  transform: none !important;
 }
 
 #virgoChapter.active {
   visibility: visible;
+  pointer-events: auto;
 }
 
-
 .virgo-chapter-screen {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+
+  left: 0;
+  top: 0;
+
+  width: 100vw;
+  height: 100dvh;
 
   display: flex;
   align-items: center;

@@ -5113,6 +5113,259 @@ function leaveVirgoChapter() {
   );
 }
 
+/* =========================================================
+   VIRGO — THROUGH MY EYES
+========================================================= */
+
+const virgoExperience =
+  document.getElementById(
+    "virgoExperience"
+  );
+
+const virgoMemory =
+  document.getElementById(
+    "virgoMemory"
+  );
+
+const virgoMemoryNumber =
+  document.getElementById(
+    "virgoMemoryNumber"
+  );
+
+const virgoMemoryText =
+  document.getElementById(
+    "virgoMemoryText"
+  );
+
+const virgoExploreHint =
+  document.getElementById(
+    "virgoExploreHint"
+  );
+
+const virgoMemoryStars =
+  Array.from(
+    document.querySelectorAll(
+      ".virgo-memory-star"
+    )
+  );
+
+
+const virgoChapterMemories = {
+
+  Vindemiatrix: {
+    number: "01",
+    text:
+      "Something I notice about you will go here."
+  },
+
+  Auva: {
+    number: "02",
+    text:
+      "Another little thing I see in you will go here."
+  },
+
+  Porrima: {
+    number: "03",
+    text:
+      "This one can be a habit, a moment, or something you do without realising."
+  },
+
+  Zaniah: {
+    number: "04",
+    text:
+      "One of the things that feels unmistakably you."
+  },
+
+  Zavijava: {
+    number: "05",
+    text:
+      "Something about you that I notice more than you probably think."
+  },
+
+  Heze: {
+    number: "06",
+    text:
+      "This can eventually hold one of the quieter things I love about you."
+  },
+
+  Syrma: {
+    number: "07",
+    text:
+      "And another piece of you that I get to see from where I stand."
+  },
+
+  Spica: {
+    number: "",
+    text:
+      "I wish you could see yourself through my eyes sometimes."
+  }
+
+};
+
+
+const virgoVisited =
+  new Set();
+
+
+function resetVirgoExperience() {
+
+  virgoVisited.clear();
+
+  virgoMemoryStars.forEach(
+    star => {
+
+      star.classList.remove(
+        "active",
+        "visited",
+        "unlocked"
+      );
+
+      if (
+        star.dataset.star ===
+        "Spica"
+      ) {
+
+        star.classList.add(
+          "locked"
+        );
+
+      }
+
+    }
+  );
+
+  virgoMemory.classList.remove(
+    "show"
+  );
+
+  virgoExploreHint.classList.remove(
+    "hidden"
+  );
+}
+
+
+function openVirgoMemory(
+  star
+) {
+
+  const starName =
+    star.dataset.star;
+
+  const memory =
+    virgoChapterMemories[
+      starName
+    ];
+
+  if (!memory) {
+    return;
+  }
+
+
+  if (
+    starName === "Spica" &&
+    star.classList.contains(
+      "locked"
+    )
+  ) {
+    return;
+  }
+
+
+  virgoMemoryStars.forEach(
+    item => {
+
+      item.classList.remove(
+        "active"
+      );
+
+    }
+  );
+
+
+  star.classList.add(
+    "active",
+    "visited"
+  );
+
+
+  if (
+    starName !== "Spica"
+  ) {
+
+    virgoVisited.add(
+      starName
+    );
+
+  }
+
+
+  virgoMemory.classList.remove(
+    "show"
+  );
+
+
+  setTimeout(
+    () => {
+
+      virgoMemoryNumber.textContent =
+        memory.number;
+
+      virgoMemoryText.textContent =
+        memory.text;
+
+      virgoMemory.classList.add(
+        "show"
+      );
+
+    },
+    180
+  );
+
+
+  virgoExploreHint.classList.add(
+    "hidden"
+  );
+
+
+  if (
+    virgoVisited.size >= 7
+  ) {
+
+    const spica =
+      document.querySelector(
+        '.virgo-memory-star[data-star="Spica"]'
+      );
+
+    spica.classList.remove(
+      "locked"
+    );
+
+    spica.classList.add(
+      "unlocked"
+    );
+  }
+}
+
+
+virgoMemoryStars.forEach(
+  star => {
+
+    star.addEventListener(
+      "pointerup",
+      event => {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        openVirgoMemory(
+          star
+        );
+
+      }
+    );
+
+  }
+);
 
 virgoExit.addEventListener(
   "click",

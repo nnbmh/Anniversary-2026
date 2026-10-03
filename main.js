@@ -4985,6 +4985,7 @@ function enterVirgoChapter() {
     return;
   }
 
+
   enteringVirgo = true;
 
   navigationHint
@@ -5004,6 +5005,7 @@ function enterVirgoChapter() {
     "dragging"
   );
 
+
   virgoChapter
     .classList
     .add(
@@ -5022,8 +5024,10 @@ function enterVirgoChapter() {
 
 
   /*
-    Bring Virgo toward the centre
-    before showing the chapter title.
+    Move the REAL Virgo toward the centre.
+
+    Important:
+    don't zoom further in.
   */
 
   const rect =
@@ -5037,29 +5041,53 @@ function enterVirgoChapter() {
     rect.top +
     rect.height / 2;
 
+
+  /*
+    Place Virgo slightly above centre,
+    leaving room underneath for copy.
+  */
+
+  const desiredX =
+    window.innerWidth / 2;
+
+  const desiredY =
+    window.innerHeight * .40;
+
+
   targetX +=
     (
-      window.innerWidth / 2 -
+      desiredX -
       centreX
     ) /
     zoom;
 
   targetY +=
     (
-      window.innerHeight / 2 -
+      desiredY -
       centreY
     ) /
     zoom;
 
+
+  /*
+    Keep the current scale unless Virgo
+    is already excessively zoomed in.
+  */
+
   targetZoom =
     Math.min(
-      MAX_ZOOM,
-      1.45
+      zoom,
+      1.08
     );
 
   clampCamera();
 
+
   resetVirgoExperience();
+
+  virgo.classList.remove(
+    "virgo-focused"
+  );
 
   virgoExperience
     .classList
@@ -5075,7 +5103,7 @@ function enterVirgoChapter() {
 
 
   /*
-    Show Virgo title.
+    Intro.
   */
 
   setTimeout(
@@ -5088,12 +5116,12 @@ function enterVirgoChapter() {
         );
 
     },
-    900
+    650
   );
 
 
   /*
-    Fade title away.
+    Fade intro.
   */
 
   setTimeout(
@@ -5106,16 +5134,20 @@ function enterVirgoChapter() {
         );
 
     },
-    2900
+    2400
   );
 
 
   /*
-    Reveal the interactive Virgo.
+    Camera has settled by now.
+    Position the invisible buttons over
+    the REAL Virgo and begin interaction.
   */
 
   setTimeout(
     () => {
+
+      positionVirgoExperience();
 
       virgoExperience
         .classList
@@ -5130,10 +5162,9 @@ function enterVirgoChapter() {
         );
 
     },
-    3650
+    3100
   );
 }
-
 
 /* =========================================================
    LEAVE VIRGO
@@ -5213,6 +5244,67 @@ const virgoExploreHint =
   document.getElementById(
     "virgoExploreHint"
   );
+
+const virgoHitLayer =
+  document.getElementById(
+    "virgoHitLayer"
+  );
+
+
+function positionVirgoExperience() {
+
+  const rect =
+    virgo.getBoundingClientRect();
+
+
+  /*
+    Make the invisible buttons sit directly
+    over the REAL Virgo constellation.
+  */
+
+  virgoHitLayer.style.setProperty(
+    "--virgo-left",
+    `${rect.left}px`
+  );
+
+  virgoHitLayer.style.setProperty(
+    "--virgo-top",
+    `${rect.top}px`
+  );
+
+  virgoHitLayer.style.setProperty(
+    "--virgo-width",
+    `${rect.width}px`
+  );
+
+  virgoHitLayer.style.setProperty(
+    "--virgo-height",
+    `${rect.height}px`
+  );
+
+
+  /*
+    Put the copy below Virgo, but never allow
+    it to fall outside the visible screen.
+  */
+
+  const preferredTop =
+    rect.bottom + 20;
+
+  const maximumTop =
+    window.innerHeight - 120;
+
+  const memoryTop =
+    Math.min(
+      preferredTop,
+      maximumTop
+    );
+
+  virgoExperience.style.setProperty(
+    "--virgo-memory-top",
+    `${memoryTop}px`
+  );
+}
 
 const virgoMemoryStars =
   Array.from(
@@ -5359,6 +5451,9 @@ function openVirgoMemory(
     "visited"
   );
 
+   virgo.classList.add(
+  "virgo-focused"
+);
 
   if (
     starName !== "Spica"

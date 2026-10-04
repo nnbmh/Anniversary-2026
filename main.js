@@ -3715,13 +3715,14 @@ function animate(
 
 
   /*
-    Keep Virgo's invisible touch targets
-    attached to the real constellation
-    while the camera is still moving.
+    Keep Virgo's invisible controls
+    attached to Virgo while its position
+    changes on screen.
   */
 
   if (
     enteringVirgo &&
+    virgoExperience &&
     virgoExperience.classList.contains(
       "show"
     )

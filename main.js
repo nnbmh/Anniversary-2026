@@ -3704,17 +3704,36 @@ function animate(
   timestamp
 ) {
 
-    renderCamera();
-   
-   updateOrionPosition();
-   updateVirgoPosition();
-   
-   updateVirgoGuidance(
+  renderCamera();
+
+  updateOrionPosition();
+  updateVirgoPosition();
+
+  updateVirgoGuidance(
     timestamp
   );
 
+
+  /*
+    Keep Virgo's invisible touch targets
+    attached to the real constellation
+    while the camera is still moving.
+  */
+
+  if (
+    enteringVirgo &&
+    virgoExperience.classList.contains(
+      "show"
+    )
+  ) {
+
+    positionVirgoExperience();
+
+  }
+
+
   renderTelescope();
-   
+
   checkOrionFocus(
     timestamp
   );

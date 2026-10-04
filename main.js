@@ -5251,7 +5251,8 @@ function resetVirgoExperience() {
         "unlocked"
       );
 
-
+  delete star.dataset.discoveryNumber;
+       
       if (
         star.dataset.star ===
         "Spica"
@@ -5481,18 +5482,8 @@ function openVirgoMemory(
       starName
     );
 
-
     updateVirgoFocus();
      
-    virgoVisited.add(
-      starName
-    );
-
-
-    updateVirgoFocus();
-
-  }
-
 
   /*
     Reveal this star's message.

@@ -1602,8 +1602,28 @@ function renderRevealedVirgoStars() {
     height
   );
 
-  virgoStars.forEach(
+    virgoStars.forEach(
     star => {
+
+      /*
+        Make the actual Virgo stars more prominent
+        than the constellation lines.
+
+        Keep their natural size differences so
+        the constellation doesn't look artificial.
+      */
+
+      const displaySize =
+        star.name === "Spica"
+          ? star.size * 1.9
+          : star.size * 1.65;
+
+
+      const starGlow =
+        star.name === "Spica"
+          ? 1.35
+          : 1.15;
+
 
       drawBrightStar(
         virgoStarCtx,
@@ -1614,11 +1634,11 @@ function renderRevealedVirgoStars() {
         height *
         star.revealY,
 
-        star.size,
+        displaySize,
 
         1,
 
-        1,
+        starGlow,
 
         star.tone
       );

@@ -3026,3 +3026,431 @@ button {
   }
 
 }
+
+/* =========================================================
+   VIRGO — THROUGH MY EYES · FINAL INTERACTION
+========================================================= */
+
+/*
+  RESPONSIVE INVISIBLE TAP AREAS
+
+  The actual stars remain tiny.
+  These only make them easier to tap/click.
+*/
+
+/* Laptop / desktop */
+.virgo-memory-star {
+  width: 58px;
+  height: 58px;
+}
+
+
+/* iPad / tablet */
+@media (max-width: 1100px) {
+
+  .virgo-memory-star {
+    width: 76px;
+    height: 76px;
+  }
+
+}
+
+
+/* Mobile */
+@media (max-width: 600px) {
+
+  .virgo-memory-star {
+    width: 68px;
+    height: 68px;
+  }
+
+}
+
+
+/* =========================================================
+   SPICA
+========================================================= */
+
+/*
+  IMPORTANT:
+  Spica is "locked" narratively, but it must still
+  receive taps so it can say "not this one yet, bb."
+*/
+
+.virgo-memory-star.locked {
+  pointer-events: auto;
+}
+
+
+/*
+  Spica starts quieter than the other stars.
+*/
+
+#app.entering-virgo
+.virgo-memory-star.spica::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 20px;
+  height: 20px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border-radius: 50%;
+
+  border:
+    1px solid
+    rgba(205,226,255,.10);
+
+  box-shadow:
+    0 0 10px
+    rgba(185,215,255,.06);
+
+  opacity: .34;
+
+  pointer-events: none;
+
+  transition:
+    width .9s ease,
+    height .9s ease,
+    opacity .9s ease,
+    box-shadow .9s ease;
+}
+
+
+/*
+  After all seven memories have been found,
+  Spica wakes up.
+*/
+
+#app.entering-virgo
+.virgo-memory-star.spica.unlocked::after {
+
+  width: 31px;
+  height: 31px;
+
+  opacity: .95;
+
+  border-color:
+    rgba(220,235,255,.28);
+
+  box-shadow:
+    0 0 10px
+      rgba(220,235,255,.24),
+
+    0 0 25px
+      rgba(165,205,255,.13);
+
+  animation:
+    spicaReadyPulse
+    2.2s
+    ease-in-out
+    infinite;
+}
+
+
+@keyframes spicaReadyPulse {
+
+  0%,
+  100% {
+
+    transform:
+      translate(-50%,-50%)
+      scale(.9);
+
+    opacity: .68;
+  }
+
+  50% {
+
+    transform:
+      translate(-50%,-50%)
+      scale(1.14);
+
+    opacity: 1;
+  }
+
+}
+
+
+/* =========================================================
+   NORMAL VIRGO STARS — DISCOVERY CUE
+========================================================= */
+
+/*
+  Tiny soft halos tell Faris which stars
+  are available to explore.
+
+  These do NOT make the actual stars bigger.
+*/
+
+#app.entering-virgo
+.virgo-memory-star:not(.spica)::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 15px;
+  height: 15px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border-radius: 50%;
+
+  border:
+    1px solid
+    rgba(225,237,252,.12);
+
+  box-shadow:
+    0 0 8px
+      rgba(225,237,252,.10),
+
+    0 0 18px
+      rgba(180,210,248,.05);
+
+  opacity: .68;
+
+  pointer-events: none;
+
+  animation:
+    virgoAvailablePulse
+    3.4s
+    ease-in-out
+    infinite;
+}
+
+
+/*
+  Once a star has been visited,
+  its cue settles down.
+*/
+
+#app.entering-virgo
+.virgo-memory-star.visited::after {
+
+  opacity: .28;
+
+  animation: none;
+}
+
+
+@keyframes virgoAvailablePulse {
+
+  0%,
+  100% {
+
+    opacity: .36;
+
+    transform:
+      translate(-50%,-50%)
+      scale(.86);
+  }
+
+  50% {
+
+    opacity: .76;
+
+    transform:
+      translate(-50%,-50%)
+      scale(1.12);
+  }
+
+}
+
+
+/* =========================================================
+   VIRGO FOCUS PROGRESSION
+========================================================= */
+
+/*
+  Virgo begins slightly out of focus.
+
+  Every new memory makes it a little clearer.
+*/
+
+#app.entering-virgo #virgo {
+
+  filter:
+    blur(1.15px)
+    brightness(.74);
+
+  transition:
+    filter
+    1.2s
+    ease;
+}
+
+
+#app.entering-virgo
+#virgo.virgo-focus-1 {
+
+  filter:
+    blur(1px)
+    brightness(.78);
+}
+
+
+#app.entering-virgo
+#virgo.virgo-focus-2 {
+
+  filter:
+    blur(.86px)
+    brightness(.81);
+}
+
+
+#app.entering-virgo
+#virgo.virgo-focus-3 {
+
+  filter:
+    blur(.70px)
+    brightness(.84);
+}
+
+
+#app.entering-virgo
+#virgo.virgo-focus-4 {
+
+  filter:
+    blur(.54px)
+    brightness(.88);
+}
+
+
+#app.entering-virgo
+#virgo.virgo-focus-5 {
+
+  filter:
+    blur(.38px)
+    brightness(.92);
+}
+
+
+#app.entering-virgo
+#virgo.virgo-focus-6 {
+
+  filter:
+    blur(.20px)
+    brightness(.96);
+}
+
+
+#app.entering-virgo
+#virgo.virgo-focus-7 {
+
+  filter:
+    blur(.08px)
+    brightness(.99);
+}
+
+
+/*
+  Spica completes the chapter and brings
+  Virgo completely into focus.
+*/
+
+#app.entering-virgo
+#virgo.virgo-focus-complete {
+
+  filter:
+    blur(0)
+    brightness(1.06);
+}
+
+
+/* =========================================================
+   VIRGO INSTRUCTIONS
+========================================================= */
+
+.virgo-explore-hint {
+
+  width:
+    min(
+      82vw,
+      520px
+    );
+
+  text-align: center;
+}
+
+
+.virgo-explore-hint span,
+.virgo-explore-hint small {
+
+  display: block;
+}
+
+
+.virgo-explore-hint span {
+
+  font-size: 11px;
+
+  line-height: 1.55;
+}
+
+
+.virgo-explore-hint small {
+
+  margin-top: 7px;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  font-size: 7px;
+
+  font-style: normal;
+
+  letter-spacing: .14em;
+
+  text-transform: uppercase;
+
+  opacity: .55;
+}
+
+
+/*
+  After all seven normal stars:
+*/
+
+.virgo-explore-hint.one-more span {
+
+  font-size: 13px;
+}
+
+
+.virgo-explore-hint.one-more small {
+
+  display: none;
+}
+
+
+/* =========================================================
+   VIRGO — SMALL SCREEN POLISH
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .virgo-explore-hint {
+
+    width:
+      min(
+        86vw,
+        390px
+      );
+  }
+
+}

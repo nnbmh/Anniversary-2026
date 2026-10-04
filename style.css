@@ -2795,22 +2795,16 @@ button {
 ========================================================= */
 
 .virgo-hit-layer {
-  position: fixed;
+  position: absolute;
+  inset: 0;
 
-  /*
-    JS sets these four values to match
-    the real Virgo's exact screen rectangle.
-  */
+  width: 100%;
+  height: 100%;
 
-  left: var(--virgo-left, 0px);
-  top: var(--virgo-top, 0px);
-
-  width: var(--virgo-width, 620px);
-  height: var(--virgo-height, 520px);
+  z-index: 10;
 
   pointer-events: none;
 }
-
 
 /*
   These buttons are intentionally invisible.

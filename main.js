@@ -5483,6 +5483,7 @@ function openVirgoMemory(
     );
 
     updateVirgoFocus();
+  }
      
 
   /*

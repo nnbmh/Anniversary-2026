@@ -3186,6 +3186,7 @@ app.addEventListener(
 
     if (
       telescopeActive ||
+      enteringVirgo ||
       event.target.closest(
         "#telescopeButton"
       )
@@ -3445,8 +3446,9 @@ app.addEventListener(
   "wheel",
   event => {
 
-    if (
-      telescopeActive
+        if (
+      telescopeActive ||
+      enteringVirgo
     ) {
       return;
     }
@@ -5007,6 +5009,24 @@ function enterVirgoChapter() {
 
 
   enteringVirgo = true;
+
+     /*
+    Virgo is a reading experience.
+    Freeze normal universe navigation
+    until Faris returns to the map.
+  */
+
+  universeDragging =
+    false;
+
+  activePointers.clear();
+
+  pinchStartDistance =
+    0;
+
+  app.classList.remove(
+    "dragging"
+  );
 
   navigationHint
     .classList

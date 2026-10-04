@@ -886,34 +886,33 @@ const orionStars = [
   }
 ];
 
-
 const virgoStars = [
   {
     name: "Vindemiatrix",
-    revealX: 490 / 620,
-    revealY: 105 / 520,
-    telescopeX: 82,
-    telescopeY: -78,
+    revealX: 380 / 620,
+    revealY: 72 / 520,
+    telescopeX: 34,
+    telescopeY: -105,
     size: 2,
     tone: "warm"
   },
 
   {
     name: "Auva",
-    revealX: 410 / 620,
-    revealY: 185 / 520,
-    telescopeX: 46,
-    telescopeY: -42,
+    revealX: 360 / 620,
+    revealY: 145 / 520,
+    telescopeX: 24,
+    telescopeY: -70,
     size: 1.45,
     tone: "neutral"
   },
 
   {
     name: "Porrima",
-    revealX: 330 / 620,
-    revealY: 260 / 520,
-    telescopeX: 8,
-    telescopeY: -5,
+    revealX: 290 / 620,
+    revealY: 235 / 520,
+    telescopeX: -10,
+    telescopeY: -26,
     size: 2.1,
     tone: "neutral"
   },
@@ -921,50 +920,112 @@ const virgoStars = [
   {
     name: "Spica",
     revealX: 235 / 620,
-    revealY: 410 / 520,
-    telescopeX: -38,
-    telescopeY: 66,
+    revealY: 395 / 520,
+    telescopeX: -37,
+    telescopeY: 52,
     size: 3.25,
     tone: "cool"
   },
 
   {
     name: "Zaniah",
-    revealX: 255 / 620,
-    revealY: 205 / 520,
-    telescopeX: -28,
-    telescopeY: -30,
+    revealX: 215 / 620,
+    revealY: 160 / 520,
+    telescopeX: -47,
+    telescopeY: -63,
     size: 1.35,
     tone: "neutral"
   },
 
   {
     name: "Zavijava",
-    revealX: 145 / 620,
-    revealY: 175 / 520,
-    telescopeX: -82,
-    telescopeY: -44,
+    revealX: 125 / 620,
+    revealY: 140 / 520,
+    telescopeX: -91,
+    telescopeY: -73,
     size: 1.65,
     tone: "neutral"
   },
 
   {
     name: "Heze",
-    revealX: 415 / 620,
-    revealY: 320 / 520,
-    telescopeX: 48,
-    telescopeY: 24,
+    revealX: 355 / 620,
+    revealY: 275 / 520,
+    telescopeX: 22,
+    telescopeY: -7,
     size: 1.25,
     tone: "neutral"
   },
 
   {
     name: "Syrma",
-    revealX: 500 / 620,
-    revealY: 385 / 520,
-    telescopeX: 88,
-    telescopeY: 55,
+    revealX: 410 / 620,
+    revealY: 350 / 520,
+    telescopeX: 49,
+    telescopeY: 30,
     size: 1.4,
+    tone: "neutral"
+  }
+];
+
+
+/*
+  Extra Virgo stars complete the fuller constellation shape.
+  These are visual only — they do NOT contain memories.
+*/
+
+const virgoVisualStars = [
+  {
+    revealX: 380 / 620,
+    revealY: 20 / 520,
+    telescopeX: 34,
+    telescopeY: -130,
+    size: 1.15,
+    tone: "neutral"
+  },
+
+  {
+    revealX: 190 / 620,
+    revealY: 260 / 520,
+    telescopeX: -59,
+    telescopeY: -14,
+    size: 1.1,
+    tone: "neutral"
+  },
+
+  {
+    revealX: 145 / 620,
+    revealY: 350 / 520,
+    telescopeX: -81,
+    telescopeY: 30,
+    size: 1.15,
+    tone: "warm"
+  },
+
+  {
+    revealX: 335 / 620,
+    revealY: 415 / 520,
+    telescopeX: 12,
+    telescopeY: 62,
+    size: 1.05,
+    tone: "cool"
+  },
+
+  {
+    revealX: 300 / 620,
+    revealY: 455 / 520,
+    telescopeX: -5,
+    telescopeY: 82,
+    size: 1.05,
+    tone: "neutral"
+  },
+
+  {
+    revealX: 275 / 620,
+    revealY: 495 / 520,
+    telescopeX: -17,
+    telescopeY: 102,
+    size: 1.1,
     tone: "neutral"
   }
 ];
@@ -1594,6 +1655,19 @@ function renderRevealedVirgoStars(
       star.name,
       time,
       1
+    );
+  });
+
+     virgoVisualStars.forEach((star, index) => {
+    drawConstellationStar(
+      virgoStarCtx,
+      width * star.revealX,
+      height * star.revealY,
+      star.size,
+      star.tone,
+      `VirgoVisual${index}`,
+      time,
+      .82
     );
   });
 }

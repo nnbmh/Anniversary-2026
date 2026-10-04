@@ -2922,6 +2922,12 @@ button {
       72%
     );
 
+     bottom:
+    var(
+      --virgo-memory-bottom,
+      28px
+    );
+
   width:
     min(
       86vw,
@@ -2930,6 +2936,12 @@ button {
 
   transform:
     translate(-50%,10px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  overflow: hidden;
 
   text-align: center;
 
@@ -2969,8 +2981,8 @@ button {
 
 .virgo-memory-text {
   margin: 0 auto;
-
   max-width: 680px;
+  max-height: 100%;
 
   font-family:
     Georgia,
@@ -2978,11 +2990,7 @@ button {
     serif;
 
   font-size:
-    clamp(
-      12px,
-      1.7vw,
-      16px
-    );
+    clamp(12px, 1.7vw, 16px);
 
   line-height: 1.65;
 

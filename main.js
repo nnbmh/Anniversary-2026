@@ -1579,6 +1579,433 @@ function resizeVirgoStarCanvas() {
   );
 }
 
+function drawVirgoStar(
+  context,
+  x,
+  y,
+  radius,
+  tone = "neutral",
+  isSpica = false
+) {
+
+  let core =
+    "255,250,235";
+
+  let glow =
+    "205,225,255";
+
+
+  if (
+    tone === "warm"
+  ) {
+    core =
+      "255,236,210";
+
+    glow =
+      "255,196,145";
+  }
+
+
+  if (
+    tone === "cool"
+  ) {
+    core =
+      "238,248,255";
+
+    glow =
+      "165,205,255";
+  }
+
+
+  context.save();
+
+
+  /*
+    SOFT OUTER ATMOSPHERIC GLOW
+
+    Very faint and much wider than the core.
+  */
+
+  const outerRadius =
+    isSpica
+      ? radius * 6
+      : radius * 4.5;
+
+
+  const outerGlow =
+    context.createRadialGradient(
+      x,
+      y,
+      0,
+      x,
+      y,
+      outerRadius
+    );
+
+
+  outerGlow.addColorStop(
+    0,
+    `rgba(${glow},.20)`
+  );
+
+  outerGlow.addColorStop(
+    .18,
+    `rgba(${glow},.10)`
+  );
+
+  outerGlow.addColorStop(
+    .48,
+    `rgba(${glow},.035)`
+  );
+
+  outerGlow.addColorStop(
+    1,
+    `rgba(${glow},0)`
+  );
+
+
+  context.beginPath();
+
+  context.arc(
+    x,
+    y,
+    outerRadius,
+    0,
+    Math.PI * 2
+  );
+
+  context.fillStyle =
+    outerGlow;
+
+  context.fill();
+
+
+  /*
+    LONG DIFFRACTION RAYS
+
+    Slightly uneven so the star doesn't
+    look like a perfect "+" symbol.
+  */
+
+  const longRay =
+    isSpica
+      ? radius * 6.2
+      : radius * 4.8;
+
+
+  const shortRay =
+    isSpica
+      ? radius * 3.4
+      : radius * 2.6;
+
+
+  context.lineCap =
+    "round";
+
+
+  /*
+    Vertical ray
+  */
+
+  const vertical =
+    context.createLinearGradient(
+      x,
+      y - longRay,
+      x,
+      y + longRay
+    );
+
+
+  vertical.addColorStop(
+    0,
+    `rgba(${core},0)`
+  );
+
+  vertical.addColorStop(
+    .36,
+    `rgba(${core},.08)`
+  );
+
+  vertical.addColorStop(
+    .5,
+    `rgba(${core},.82)`
+  );
+
+  vertical.addColorStop(
+    .64,
+    `rgba(${core},.08)`
+  );
+
+  vertical.addColorStop(
+    1,
+    `rgba(${core},0)`
+  );
+
+
+  context.beginPath();
+
+  context.moveTo(
+    x,
+    y - longRay
+  );
+
+  context.lineTo(
+    x,
+    y + longRay
+  );
+
+  context.strokeStyle =
+    vertical;
+
+  context.lineWidth =
+    isSpica
+      ? .75
+      : .55;
+
+  context.stroke();
+
+
+  /*
+    Horizontal ray — intentionally shorter.
+  */
+
+  const horizontal =
+    context.createLinearGradient(
+      x - shortRay,
+      y,
+      x + shortRay,
+      y
+    );
+
+
+  horizontal.addColorStop(
+    0,
+    `rgba(${core},0)`
+  );
+
+  horizontal.addColorStop(
+    .30,
+    `rgba(${core},.06)`
+  );
+
+  horizontal.addColorStop(
+    .5,
+    `rgba(${core},.62)`
+  );
+
+  horizontal.addColorStop(
+    .70,
+    `rgba(${core},.06)`
+  );
+
+  horizontal.addColorStop(
+    1,
+    `rgba(${core},0)`
+  );
+
+
+  context.beginPath();
+
+  context.moveTo(
+    x - shortRay,
+    y
+  );
+
+  context.lineTo(
+    x + shortRay,
+    y
+  );
+
+  context.strokeStyle =
+    horizontal;
+
+  context.lineWidth =
+    .45;
+
+  context.stroke();
+
+
+  /*
+    VERY FAINT DIAGONAL FLARES
+
+    These stop the stars looking like
+    perfectly geometric crosses.
+  */
+
+  const diagonal =
+    radius *
+    (
+      isSpica
+        ? 2.7
+        : 2
+    );
+
+
+  context.strokeStyle =
+    `rgba(${core},.18)`;
+
+  context.lineWidth =
+    .35;
+
+
+  context.beginPath();
+
+  context.moveTo(
+    x - diagonal,
+    y - diagonal
+  );
+
+  context.lineTo(
+    x + diagonal,
+    y + diagonal
+  );
+
+  context.stroke();
+
+
+  context.beginPath();
+
+  context.moveTo(
+    x + diagonal * .8,
+    y - diagonal * .8
+  );
+
+  context.lineTo(
+    x - diagonal * .8,
+    y + diagonal * .8
+  );
+
+  context.stroke();
+
+
+  /*
+    POINTED STAR BODY
+
+    Not a circle — eight uneven points.
+  */
+
+  const points = 8;
+
+  const outer =
+    isSpica
+      ? radius * 1.75
+      : radius * 1.45;
+
+  const inner =
+    radius * .34;
+
+
+  context.beginPath();
+
+
+  for (
+    let i = 0;
+    i < points * 2;
+    i++
+  ) {
+
+    const angle =
+      -Math.PI / 2 +
+      i * Math.PI / points;
+
+
+    /*
+      Alternate long and short points.
+      Tiny variation prevents perfect geometry.
+    */
+
+    let distance =
+      i % 2 === 0
+        ? outer
+        : inner;
+
+
+    if (
+      i === 4 ||
+      i === 12
+    ) {
+      distance *= .78;
+    }
+
+
+    const px =
+      x +
+      Math.cos(angle) *
+      distance;
+
+    const py =
+      y +
+      Math.sin(angle) *
+      distance;
+
+
+    if (
+      i === 0
+    ) {
+
+      context.moveTo(
+        px,
+        py
+      );
+
+    } else {
+
+      context.lineTo(
+        px,
+        py
+      );
+
+    }
+  }
+
+
+  context.closePath();
+
+
+  context.fillStyle =
+    `rgba(${core},.96)`;
+
+  context.shadowColor =
+    `rgba(${glow},.72)`;
+
+  context.shadowBlur =
+    isSpica
+      ? 7
+      : 4;
+
+  context.fill();
+
+
+  /*
+    Tiny white-hot centre.
+  */
+
+  context.shadowBlur =
+    3;
+
+
+  context.beginPath();
+
+  context.arc(
+    x,
+    y,
+    Math.max(
+      .45,
+      radius * .23
+    ),
+    0,
+    Math.PI * 2
+  );
+
+
+  context.fillStyle =
+    "rgba(255,255,255,1)";
+
+  context.fill();
+
+
+  context.restore();
+}
 
 function renderRevealedVirgoStars() {
 

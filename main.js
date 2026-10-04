@@ -2137,15 +2137,32 @@ function drawTelescopeVirgo(
     ) *
     .55;
 
-  const connections = [
-    [0, 1],
-    [1, 2],
-    [2, 3],
-    [2, 4],
-    [4, 5],
-    [2, 6],
-    [6, 7]
-  ];
+  const telescopeVirgoStars = [
+  ...virgoStars,
+  ...virgoVisualStars
+];
+
+const connections = [
+  [8, 0],   // upper extra → Vindemiatrix
+  [0, 1],   // Vindemiatrix → Auva
+  [1, 2],   // Auva → Porrima
+
+  [1, 4],   // Auva → Zaniah
+  [4, 5],   // Zaniah → Zavijava
+  [4, 2],   // Zaniah → Porrima
+
+  [2, 9],   // Porrima → left extra
+  [9, 10],  // left extra → lower-left extra
+
+  [2, 6],   // Porrima → Heze
+  [6, 7],   // Heze → Syrma
+
+  [2, 3],   // Porrima → Spica
+
+  [7, 11],  // Syrma → lower extra
+  [11, 12], // lower extra → next
+  [12, 13]  // next → final lower star
+];
 
   const time =
     performance.now() /
@@ -2155,6 +2172,48 @@ function drawTelescopeVirgo(
     star => {
       let starIntensity =
         intensity;
+
+     virgoVisualStars.forEach(
+    (star, index) => {
+      let starIntensity =
+        intensity;
+
+      if (
+        virgoRevealStarted
+      ) {
+        starIntensity =
+          Math.max(
+            starIntensity,
+            .82
+          );
+      }
+
+      drawConstellationStar(
+        ctx,
+
+        centreX +
+        star.telescopeX,
+
+        centreY +
+        star.telescopeY,
+
+        Math.max(
+          1.05,
+          star.size * 1.08
+        ),
+
+        star.tone,
+
+        `VirgoVisual${index}`,
+
+        time,
+
+        .18 +
+        starIntensity *
+        .72
+      );
+    }
+  );
 
       if (
         virgoRevealStarted
@@ -2287,12 +2346,12 @@ function drawTelescopeVirgo(
       }
 
       const start =
-        virgoStars[
+        telescopeVirgoStars[
           connection[0]
         ];
 
       const end =
-        virgoStars[
+        telescopeVirgoStars[
           connection[1]
         ];
 

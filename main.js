@@ -650,6 +650,67 @@ function buildUniverseStars() {
     18000,
     "mid"
   );
+
+     /*
+    VIRGO REGION
+
+    Virgo sits around x 620 / y 430 in the
+    universe. Add a richer local field around
+    it so this part of the sky doesn't feel
+    empty compared with Orion.
+  */
+
+  buildCluster(
+    starsDeep,
+    930,
+    690,
+    760,
+    500,
+    190,
+    22000,
+    "deep"
+  );
+
+
+  buildCluster(
+    starsFar,
+    930,
+    690,
+    650,
+    430,
+    72,
+    24000,
+    "far"
+  );
+
+
+  buildCluster(
+    starsMid,
+    930,
+    690,
+    540,
+    350,
+    24,
+    26000,
+    "mid"
+  );
+
+
+  /*
+    A few nearer stars give the Virgo region
+    depth without competing with Virgo itself.
+  */
+
+  buildCluster(
+    starsNear,
+    930,
+    690,
+    500,
+    320,
+    7,
+    28000,
+    "near"
+  );
 }
 
 
@@ -1589,80 +1650,98 @@ function drawVirgoStar(
   time = 0
 ) {
 
+  /*
+    STAR PERSONALITIES
+
+    flareV = vertical ray length
+    flareH = horizontal ray length
+    glow   = surrounding bloom
+    speed/phase = individual twinkle
+  */
+
   const designs = {
 
     Vindemiatrix: {
-      v: 1.30,
-      h: .82,
-      speed: 1.45,
+      flareV: 1.35,
+      flareH: 1.05,
+      glow: 1.05,
+      speed: .72,
       phase: .3
     },
 
     Auva: {
-      v: 1.05,
-      h: .72,
-      speed: 1.15,
-      phase: 1.4
+      flareV: .95,
+      flareH: .78,
+      glow: .82,
+      speed: .58,
+      phase: 1.6
     },
 
     Porrima: {
-      v: 1.18,
-      h: .84,
-      speed: 1.32,
-      phase: 2.7
+      flareV: 1.22,
+      flareH: .94,
+      glow: 1,
+      speed: .66,
+      phase: 2.8
     },
 
     Spica: {
-      v: 2.15,
-      h: .92,
-      speed: 1.55,
+      flareV: 2.45,
+      flareH: 1.55,
+      glow: 1.75,
+      speed: .78,
       phase: .8
     },
 
     Zaniah: {
-      v: .92,
-      h: .66,
-      speed: 1.08,
-      phase: 3.6
+      flareV: .76,
+      flareH: .62,
+      glow: .7,
+      speed: .53,
+      phase: 3.7
     },
 
     Zavijava: {
-      v: 1.08,
-      h: .76,
-      speed: 1.28,
-      phase: 4.4
+      flareV: 1.02,
+      flareH: .82,
+      glow: .86,
+      speed: .63,
+      phase: 4.5
     },
 
     Heze: {
-      v: .82,
-      h: .62,
-      speed: 1.18,
-      phase: 2
+      flareV: .68,
+      flareH: .55,
+      glow: .64,
+      speed: .49,
+      phase: 2.1
     },
 
     Syrma: {
-      v: 1,
-      h: .70,
-      speed: 1.38,
-      phase: 5
+      flareV: .9,
+      flareH: .7,
+      glow: .76,
+      speed: .6,
+      phase: 5.3
     }
 
   };
 
 
   const design =
-    designs[starName] ||
-    {
-      v: 1,
-      h: .72,
-      speed: 1.2,
+    designs[starName] || {
+      flareV: 1,
+      flareH: .8,
+      glow: .8,
+      speed: .6,
       phase: 0
     };
 
 
   /*
-    0 → 1 → 0 individual twinkle.
-    Different timing for every star.
+    INDEPENDENT TWINKLE
+
+    Never switches off completely.
   */
 
   const wave =
@@ -1677,23 +1756,23 @@ function drawVirgoStar(
     ) / 2;
 
 
+  const brightness =
+    .58 +
+    wave * .42;
+
+
   /*
-    Keep them visible at their dimmest,
-    but make the bright moment obvious.
+    Rays gently lengthen when the star
+    reaches the bright part of its twinkle.
   */
 
-  const brightness =
-    .55 +
-    wave * .45;
-
-
-  const breathe =
+  const flarePulse =
     .88 +
-    wave * .18;
+    wave * .22;
 
 
   let core =
-    "255,249,230";
+    "255,250,236";
 
   let glow =
     "205,225,255";
@@ -1704,10 +1783,10 @@ function drawVirgoStar(
   ) {
 
     core =
-      "255,229,190";
+      "255,235,205";
 
     glow =
-      "255,193,135";
+      "255,205,160";
   }
 
 
@@ -1716,64 +1795,63 @@ function drawVirgoStar(
   ) {
 
     core =
-      "240,249,255";
+      "244,250,255";
 
     glow =
-      "165,210,255";
+      "170,210,255";
   }
 
 
   context.save();
 
 
-  /* ============================================
-     VERY SOFT GLOW
-  ============================================ */
+  /* =====================================================
+     LARGE SOFT BLOOM
+  ===================================================== */
 
-  const haloSize =
+  const bloomRadius =
     size *
+    7 *
+    design.glow *
     (
-      starName === "Spica"
-        ? 7
-        : 5
-    ) *
-    breathe;
+      .9 +
+      wave * .14
+    );
 
 
-  const halo =
+  const bloom =
     context.createRadialGradient(
       x,
       y,
       0,
       x,
       y,
-      haloSize
+      bloomRadius
     );
 
 
-  halo.addColorStop(
+  bloom.addColorStop(
     0,
-    `rgba(${core},${.22 * brightness})`
+    `rgba(${core},${.32 * brightness})`
   );
 
-  halo.addColorStop(
-    .18,
-    `rgba(${glow},${.12 * brightness})`
+
+  bloom.addColorStop(
+    .12,
+    `rgba(${glow},${.18 * brightness})`
   );
 
-  halo.addColorStop(
-    .48,
-    `rgba(${glow},${.035 * brightness})`
+
+  bloom.addColorStop(
+    .36,
+    `rgba(${glow},${.065 * brightness})`
   );
 
-  halo.addColorStop(
+
+  bloom.addColorStop(
     1,
     `rgba(${glow},0)`
   );
-
-
-  context.fillStyle =
-    halo;
 
 
   context.beginPath();
@@ -1781,173 +1859,293 @@ function drawVirgoStar(
   context.arc(
     x,
     y,
-    haloSize,
+    bloomRadius,
     0,
     Math.PI * 2
   );
 
+  context.fillStyle =
+    bloom;
+
   context.fill();
 
 
-  /* ============================================
-     ✦ STAR BODY
+  /* =====================================================
+     THIN VERTICAL LIGHT RAY
+  ===================================================== */
 
-     Long elegant points.
-     No horizontal blur/smear.
-  ============================================ */
-
-  const vertical =
+  const verticalLength =
     size *
-    3.15 *
-    design.v *
-    breathe;
+    7 *
+    design.flareV *
+    flarePulse;
 
 
-  const horizontal =
+  const verticalGradient =
+    context.createLinearGradient(
+      x,
+      y - verticalLength,
+      x,
+      y + verticalLength
+    );
+
+
+  verticalGradient.addColorStop(
+    0,
+    `rgba(${glow},0)`
+  );
+
+  verticalGradient.addColorStop(
+    .38,
+    `rgba(${glow},${.08 * brightness})`
+  );
+
+  verticalGradient.addColorStop(
+    .49,
+    `rgba(${core},${.5 * brightness})`
+  );
+
+  verticalGradient.addColorStop(
+    .5,
+    `rgba(255,255,255,${.92 * brightness})`
+  );
+
+  verticalGradient.addColorStop(
+    .51,
+    `rgba(${core},${.5 * brightness})`
+  );
+
+  verticalGradient.addColorStop(
+    .62,
+    `rgba(${glow},${.08 * brightness})`
+  );
+
+  verticalGradient.addColorStop(
+    1,
+    `rgba(${glow},0)`
+  );
+
+
+  context.beginPath();
+
+  context.moveTo(
+    x,
+    y - verticalLength
+  );
+
+  context.lineTo(
+    x,
+    y + verticalLength
+  );
+
+  context.strokeStyle =
+    verticalGradient;
+
+  context.lineWidth =
+    starName === "Spica"
+      ? .7
+      : .45;
+
+  context.stroke();
+
+
+  /* =====================================================
+     THIN HORIZONTAL LIGHT RAY
+  ===================================================== */
+
+  const horizontalLength =
     size *
-    2.65 *
-    design.h *
-    breathe;
+    6 *
+    design.flareH *
+    flarePulse;
 
 
-  /*
-    Very narrow centre creates the ✦ silhouette.
-  */
+  const horizontalGradient =
+    context.createLinearGradient(
+      x - horizontalLength,
+      y,
+      x + horizontalLength,
+      y
+    );
 
-  const neck =
+
+  horizontalGradient.addColorStop(
+    0,
+    `rgba(${glow},0)`
+  );
+
+  horizontalGradient.addColorStop(
+    .38,
+    `rgba(${glow},${.07 * brightness})`
+  );
+
+  horizontalGradient.addColorStop(
+    .49,
+    `rgba(${core},${.45 * brightness})`
+  );
+
+  horizontalGradient.addColorStop(
+    .5,
+    `rgba(255,255,255,${.8 * brightness})`
+  );
+
+  horizontalGradient.addColorStop(
+    .51,
+    `rgba(${core},${.45 * brightness})`
+  );
+
+  horizontalGradient.addColorStop(
+    .62,
+    `rgba(${glow},${.07 * brightness})`
+  );
+
+  horizontalGradient.addColorStop(
+    1,
+    `rgba(${glow},0)`
+  );
+
+
+  context.beginPath();
+
+  context.moveTo(
+    x - horizontalLength,
+    y
+  );
+
+  context.lineTo(
+    x + horizontalLength,
+    y
+  );
+
+  context.strokeStyle =
+    horizontalGradient;
+
+  context.lineWidth =
+    starName === "Spica"
+      ? .6
+      : .4;
+
+  context.stroke();
+
+
+  /* =====================================================
+     SMALL ✦ CORE
+
+     The visible solid part stays tiny.
+     Most apparent size comes from light.
+  ===================================================== */
+
+  const coreVertical =
+    size *
+    (
+      starName === "Spica"
+        ? 1.8
+        : 1.25
+    );
+
+
+  const coreHorizontal =
+    size *
+    (
+      starName === "Spica"
+        ? 1.25
+        : .95
+    );
+
+
+  const waist =
     Math.max(
-      .35,
-      size * .20
+      .28,
+      size * .16
     );
 
 
   context.beginPath();
 
 
-  /* top */
-
   context.moveTo(
     x,
-    y - vertical
+    y - coreVertical
   );
 
 
-  /*
-    Pull sharply into the centre,
-    then out to the right point.
-  */
-
   context.quadraticCurveTo(
-    x + neck,
-    y - neck,
-    x + horizontal,
+    x + waist,
+    y - waist,
+    x + coreHorizontal,
     y
   );
 
 
   context.quadraticCurveTo(
-    x + neck,
-    y + neck,
+    x + waist,
+    y + waist,
     x,
-    y + vertical
+    y + coreVertical
   );
 
 
-  /* bottom */
-
   context.quadraticCurveTo(
-    x - neck,
-    y + neck,
-    x - horizontal,
+    x - waist,
+    y + waist,
+    x - coreHorizontal,
     y
   );
 
 
-  /* left */
-
   context.quadraticCurveTo(
-    x - neck,
-    y - neck,
+    x - waist,
+    y - waist,
     x,
-    y - vertical
+    y - coreVertical
   );
 
 
   context.closePath();
 
 
-  /*
-    Slight gradient across the actual star.
-  */
-
-  const body =
-    context.createRadialGradient(
-      x,
-      y,
-      0,
-      x,
-      y,
-      Math.max(
-        vertical,
-        horizontal
-      )
-    );
-
-
-  body.addColorStop(
-    0,
-    `rgba(255,255,255,${brightness})`
-  );
-
-  body.addColorStop(
-    .16,
-    `rgba(${core},${brightness})`
-  );
-
-  body.addColorStop(
-    1,
-    `rgba(${core},${.72 * brightness})`
-  );
-
-
-  context.fillStyle =
-    body;
-
-
   context.shadowColor =
-    `rgba(${glow},${.65 * brightness})`;
+    `rgba(${glow},${.9 * brightness})`;
 
 
   context.shadowBlur =
-    (
-      starName === "Spica"
-        ? 7
-        : 4
-    ) *
-    brightness;
+    starName === "Spica"
+      ? 8 + wave * 5
+      : 4 + wave * 3;
+
+
+  context.fillStyle =
+    `rgba(${core},${.82 + wave * .18})`;
 
 
   context.fill();
 
 
-  /* ============================================
-     TINY BRIGHT CENTRE
-  ============================================ */
+  /* WHITE-HOT CENTRE */
 
   context.shadowBlur =
-    4 * brightness;
+    4 + wave * 3;
+
+
+  context.beginPath();
+
+  context.arc(
+    x,
+    y,
+    Math.max(
+      .35,
+      size * .16
+    ),
+    0,
+    Math.PI * 2
+  );
 
 
   context.fillStyle =
-    `rgba(255,255,255,${.82 + wave * .18})`;
+    "rgba(255,255,255,.98)";
 
 
-  context.fillRect(
-    x - .45,
-    y - .45,
-    .9,
-    .9
-  );
+  context.fill();
 
 
   context.restore();

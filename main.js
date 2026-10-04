@@ -1589,110 +1589,111 @@ function drawVirgoStar(
   time = 0
 ) {
 
-  /*
-    Each Virgo star gets slightly different
-    proportions so they don't look like
-    identical symbols at different sizes.
-  */
-
-  const shapes = {
+  const designs = {
 
     Vindemiatrix: {
-      vertical: 1.35,
-      horizontal: .88,
-      twinkle: 1.9,
-      phase: .4
+      v: 1.30,
+      h: .82,
+      speed: 1.45,
+      phase: .3
     },
 
     Auva: {
-      vertical: 1.08,
-      horizontal: .78,
-      twinkle: 2.4,
-      phase: 1.7
+      v: 1.05,
+      h: .72,
+      speed: 1.15,
+      phase: 1.4
     },
 
     Porrima: {
-      vertical: 1.22,
-      horizontal: .92,
-      twinkle: 2.1,
-      phase: 2.8
+      v: 1.18,
+      h: .84,
+      speed: 1.32,
+      phase: 2.7
     },
 
     Spica: {
-      vertical: 2.15,
-      horizontal: 1.05,
-      twinkle: 1.7,
-      phase: .9
+      v: 2.15,
+      h: .92,
+      speed: 1.55,
+      phase: .8
     },
 
     Zaniah: {
-      vertical: .95,
-      horizontal: .72,
-      twinkle: 2.6,
-      phase: 3.2
+      v: .92,
+      h: .66,
+      speed: 1.08,
+      phase: 3.6
     },
 
     Zavijava: {
-      vertical: 1.12,
-      horizontal: .82,
-      twinkle: 2.2,
-      phase: 4.1
+      v: 1.08,
+      h: .76,
+      speed: 1.28,
+      phase: 4.4
     },
 
     Heze: {
-      vertical: .88,
-      horizontal: .68,
-      twinkle: 2.8,
-      phase: 2.1
+      v: .82,
+      h: .62,
+      speed: 1.18,
+      phase: 2
     },
 
     Syrma: {
-      vertical: 1.05,
-      horizontal: .76,
-      twinkle: 2.35,
-      phase: 5.2
+      v: 1,
+      h: .70,
+      speed: 1.38,
+      phase: 5
     }
 
   };
 
 
-  const shape =
-    shapes[starName] || {
-      vertical: 1,
-      horizontal: .8,
-      twinkle: 2.3,
+  const design =
+    designs[starName] ||
+    {
+      v: 1,
+      h: .72,
+      speed: 1.2,
       phase: 0
     };
 
 
   /*
-    Individual twinkle.
-
-    They don't blink together and they never
-    completely disappear.
+    0 → 1 → 0 individual twinkle.
+    Different timing for every star.
   */
 
-  const pulse =
-    .82 +
-    Math.sin(
-      time *
-      shape.twinkle +
-      shape.phase
-    ) * .18;
+  const wave =
+    (
+      Math.sin(
+        time *
+        design.speed *
+        Math.PI * 2 +
+        design.phase
+      ) +
+      1
+    ) / 2;
 
 
   /*
-    The points very slightly stretch while
-    the star brightens.
+    Keep them visible at their dimmest,
+    but make the bright moment obvious.
   */
 
-  const stretch =
-    .94 +
-    pulse * .08;
+  const brightness =
+    .55 +
+    wave * .45;
+
+
+  const breathe =
+    .88 +
+    wave * .18;
 
 
   let core =
-    "255,250,238";
+    "255,249,230";
 
   let glow =
     "205,225,255";
@@ -1703,10 +1704,10 @@ function drawVirgoStar(
   ) {
 
     core =
-      "255,235,205";
+      "255,229,190";
 
     glow =
-      "255,192,135";
+      "255,193,135";
   }
 
 
@@ -1715,28 +1716,28 @@ function drawVirgoStar(
   ) {
 
     core =
-      "238,248,255";
+      "240,249,255";
 
     glow =
-      "160,205,255";
+      "165,210,255";
   }
 
 
   context.save();
 
 
-  /*
-    SOFT GLOW
-  */
+  /* ============================================
+     VERY SOFT GLOW
+  ============================================ */
 
-  const glowRadius =
+  const haloSize =
     size *
     (
       starName === "Spica"
-        ? 5.2
-        : 3.8
+        ? 7
+        : 5
     ) *
-    pulse;
+    breathe;
 
 
   const halo =
@@ -1746,27 +1747,24 @@ function drawVirgoStar(
       0,
       x,
       y,
-      glowRadius
+      haloSize
     );
 
 
   halo.addColorStop(
     0,
-    `rgba(${core},${.28 * pulse})`
+    `rgba(${core},${.22 * brightness})`
   );
-
 
   halo.addColorStop(
-    .22,
-    `rgba(${glow},${.14 * pulse})`
+    .18,
+    `rgba(${glow},${.12 * brightness})`
   );
-
 
   halo.addColorStop(
-    .55,
-    `rgba(${glow},${.045 * pulse})`
+    .48,
+    `rgba(${glow},${.035 * brightness})`
   );
-
 
   halo.addColorStop(
     1,
@@ -1774,65 +1772,59 @@ function drawVirgoStar(
   );
 
 
+  context.fillStyle =
+    halo;
+
+
   context.beginPath();
 
   context.arc(
     x,
     y,
-    glowRadius,
+    haloSize,
     0,
     Math.PI * 2
   );
 
-  context.fillStyle =
-    halo;
-
   context.fill();
 
 
-  /*
-    ✦ SHAPE
+  /* ============================================
+     ✦ STAR BODY
 
-          top
-           |
-       left + right
-           |
-         bottom
-
-    The vertical and horizontal points can
-    have completely different lengths.
-  */
+     Long elegant points.
+     No horizontal blur/smear.
+  ============================================ */
 
   const vertical =
     size *
-    2.8 *
-    shape.vertical *
-    stretch;
+    3.15 *
+    design.v *
+    breathe;
 
 
   const horizontal =
     size *
-    2.4 *
-    shape.horizontal *
-    stretch;
+    2.65 *
+    design.h *
+    breathe;
 
 
   /*
-    Narrow waist gives us the sharp ✦ shape
-    rather than a diamond.
+    Very narrow centre creates the ✦ silhouette.
   */
 
-  const waist =
+  const neck =
     Math.max(
-      .55,
-      size * .32
+      .35,
+      size * .20
     );
 
 
   context.beginPath();
 
 
-  /* TOP */
+  /* top */
 
   context.moveTo(
     x,
@@ -1840,53 +1832,42 @@ function drawVirgoStar(
   );
 
 
-  /* upper-right inward curve */
+  /*
+    Pull sharply into the centre,
+    then out to the right point.
+  */
 
   context.quadraticCurveTo(
-    x + waist * .32,
-    y - waist * .35,
-
-    x + waist,
-    y
-  );
-
-
-  /* RIGHT POINT */
-
-  context.lineTo(
+    x + neck,
+    y - neck,
     x + horizontal,
     y
   );
 
 
-  /* lower-right inward curve */
-
   context.quadraticCurveTo(
-    x + waist * .32,
-    y + waist * .35,
-
+    x + neck,
+    y + neck,
     x,
     y + vertical
   );
 
 
-  /* BOTTOM POINT */
+  /* bottom */
 
   context.quadraticCurveTo(
-    x - waist * .32,
-    y + waist * .35,
-
+    x - neck,
+    y + neck,
     x - horizontal,
     y
   );
 
 
-  /* LEFT POINT */
+  /* left */
 
   context.quadraticCurveTo(
-    x - waist * .32,
-    y - waist * .35,
-
+    x - neck,
+    y - neck,
     x,
     y - vertical
   );
@@ -1896,56 +1877,77 @@ function drawVirgoStar(
 
 
   /*
-    The body itself glows slightly.
+    Slight gradient across the actual star.
   */
 
-  context.shadowColor =
-    `rgba(${glow},${.75 * pulse})`;
+  const body =
+    context.createRadialGradient(
+      x,
+      y,
+      0,
+      x,
+      y,
+      Math.max(
+        vertical,
+        horizontal
+      )
+    );
 
 
-  context.shadowBlur =
-    starName === "Spica"
-      ? 8 * pulse
-      : 5 * pulse;
-
-
-  context.fillStyle =
-    `rgba(${core},${.88 + pulse * .12})`;
-
-
-  context.fill();
-
-
-  /*
-    WHITE-HOT CENTRE
-
-    Very small so it doesn't turn back
-    into a circular dot.
-  */
-
-  context.shadowBlur =
-    3 * pulse;
-
-
-  context.beginPath();
-
-  context.arc(
-    x,
-    y,
-    Math.max(
-      .35,
-      size * .18
-    ),
+  body.addColorStop(
     0,
-    Math.PI * 2
+    `rgba(255,255,255,${brightness})`
+  );
+
+  body.addColorStop(
+    .16,
+    `rgba(${core},${brightness})`
+  );
+
+  body.addColorStop(
+    1,
+    `rgba(${core},${.72 * brightness})`
   );
 
 
   context.fillStyle =
-    "rgba(255,255,255,.98)";
+    body;
+
+
+  context.shadowColor =
+    `rgba(${glow},${.65 * brightness})`;
+
+
+  context.shadowBlur =
+    (
+      starName === "Spica"
+        ? 7
+        : 4
+    ) *
+    brightness;
 
 
   context.fill();
+
+
+  /* ============================================
+     TINY BRIGHT CENTRE
+  ============================================ */
+
+  context.shadowBlur =
+    4 * brightness;
+
+
+  context.fillStyle =
+    `rgba(255,255,255,${.82 + wave * .18})`;
+
+
+  context.fillRect(
+    x - .45,
+    y - .45,
+    .9,
+    .9
+  );
 
 
   context.restore();
@@ -1986,15 +1988,16 @@ function renderRevealedVirgoStars(
     star => {
 
       /*
-        Use the existing astronomical size data,
-        but don't exaggerate it too much.
-
-        The renderer itself now creates the
-        visible ✦ points.
+        Preserve the different actual sizes.
+        Spica's special shape makes it longer
+        without simply turning it into a huge star.
       */
 
       const displaySize =
-        star.size * .92;
+        Math.max(
+          1.15,
+          star.size * .95
+        );
 
 
       drawVirgoStar(
@@ -2017,22 +2020,6 @@ function renderRevealedVirgoStars(
 
     }
   );
-
-
-  /*
-    Keep redrawing while Virgo is visible
-    so every star twinkles independently.
-  */
-
-  if (
-    enteringVirgo
-  ) {
-
-    requestAnimationFrame(
-      renderRevealedVirgoStars
-    );
-
-  }
 }
 
 /* =========================================================
@@ -4123,6 +4110,19 @@ function animate(
     timestamp
   );
 
+     /*
+    Animate Virgo's actual ✦ stars continuously.
+  */
+
+  if (
+    virgoDiscovered
+  ) {
+
+    renderRevealedVirgoStars(
+      timestamp
+    );
+
+  }
 
   /*
     Keep Virgo's invisible controls

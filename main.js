@@ -5321,55 +5321,54 @@ const virgoMemoryStars =
     )
   );
 
-
 const virgoChapterMemories = {
 
   Vindemiatrix: {
-    number: "01",
+    number: "01 · the faces you make",
     text:
-      "Something I notice about you will go here."
+      "i swear i know so many of your faces by now. the face you make when you're judging me, when you're trying not to laugh, when you're annoyed with me... even that stupid pleased-with-yourself look after you purposely annoy me. sometimes i already know what you're thinking before you even say anything."
   },
 
   Auva: {
-    number: "02",
+    number: "02 · your voice",
     text:
-      "Another little thing I see in you will go here."
+      "you know how you always say you can't sing? i genuinely like listening to you sing bb. especially when you're just randomly singing while doing something and you're not even thinking about it. sometimes i don't say anything cos i don't want you to stop HAHAHA."
   },
 
   Porrima: {
-    number: "03",
+    number: "03 · when something excites you",
     text:
-      "This one can be a habit, a moment, or something you do without realising."
+      "i like watching you talk about something you're actually excited about. you start explaining everything to me and suddenly you have so much to say. even when i don't know half of what you're talking about, i like listening cos i like seeing you like that."
   },
 
   Zaniah: {
-    number: "04",
+    number: "04 · the little ways you care for me",
     text:
-      "One of the things that feels unmistakably you."
+      "i don't think you realise how many little things you do that make me feel cared for. they're probably nothing to you because you just... do them. but i notice them bb."
   },
 
   Zavijava: {
-    number: "05",
+    number: "05 · the you i get to see",
     text:
-      "Something about you that I notice more than you probably think."
+      "and then there's this version of you. the random noises, stupid jokes, you purposely annoying me and then looking so happy with yourself when it works. i don't think this is the version of you everyone gets to see... but he's one of my favourites."
   },
 
   Heze: {
-    number: "06",
+    number: "06 · give yourself some credit",
     text:
-      "This can eventually hold one of the quieter things I love about you."
+      "i've heard you call yourself useless, say you've failed, or feel like you're behind everyone else. and i know me telling you otherwise doesn't magically make you believe it. but from where i'm standing, i see someone who keeps trying even when he's tired and doesn't believe in himself anymore. i wish you'd give that version of you a little more credit."
   },
 
   Syrma: {
-    number: "07",
+    number: "07 · the person i see",
     text:
-      "And another piece of you that I get to see from where I stand."
+      "and yes... i look at you. a lot actually HAHAHA. your face when you're concentrating, your eyes, your smile, your hair when it's doing whatever tf it wants, the way you look when you've just woken up... there are so many versions of you that have somehow become my favourite face."
   },
 
   Spica: {
-    number: "",
+    number: "SPICA",
     text:
-      "I wish you could see yourself through my eyes sometimes."
+      "I know you don't always see yourself the way I see you. Sometimes you're so much harsher on yourself than I could ever be. And I wish, just for a little while, I could lend you my eyes so you could see the person I'm looking at when I look at you. Not some perfect version of you. Just you. All the little things you've just seen — the things you probably don't even think twice about — they're part of the person I've gotten to know and love. I wish you could see yourself through my eyes sometimes, sayang."
   }
 
 };
@@ -5379,9 +5378,27 @@ const virgoVisited =
   new Set();
 
 
+/* =========================================================
+   RESET VIRGO
+========================================================= */
+
 function resetVirgoExperience() {
 
   virgoVisited.clear();
+
+
+  virgo.classList.remove(
+    "virgo-focused",
+    "virgo-focus-1",
+    "virgo-focus-2",
+    "virgo-focus-3",
+    "virgo-focus-4",
+    "virgo-focus-5",
+    "virgo-focus-6",
+    "virgo-focus-7",
+    "virgo-focus-complete"
+  );
+
 
   virgoMemoryStars.forEach(
     star => {
@@ -5391,6 +5408,7 @@ function resetVirgoExperience() {
         "visited",
         "unlocked"
       );
+
 
       if (
         star.dataset.star ===
@@ -5406,15 +5424,107 @@ function resetVirgoExperience() {
     }
   );
 
+
   virgoMemory.classList.remove(
     "show"
   );
 
+
+  virgoMemoryNumber.textContent =
+    "";
+
+
+  virgoMemoryText.textContent =
+    "";
+
+
   virgoExploreHint.classList.remove(
-    "hidden"
+    "hidden",
+    "one-more"
+  );
+
+
+  virgoExploreHint.innerHTML =
+    `
+      <span>
+        There are things I see in you that you don't always see in yourself.
+      </span>
+
+      <small>
+        TOUCH THE GLOWING STARS TO SEE WHAT I MEAN
+      </small>
+    `;
+}
+
+
+/* =========================================================
+   VIRGO FOCUS
+========================================================= */
+
+function updateVirgoFocus() {
+
+  virgo.classList.remove(
+    "virgo-focus-1",
+    "virgo-focus-2",
+    "virgo-focus-3",
+    "virgo-focus-4",
+    "virgo-focus-5",
+    "virgo-focus-6",
+    "virgo-focus-7"
+  );
+
+
+  if (
+    virgoVisited.size > 0 &&
+    virgoVisited.size <= 7
+  ) {
+
+    virgo.classList.add(
+      `virgo-focus-${virgoVisited.size}`
+    );
+
+  }
+}
+
+
+/* =========================================================
+   SHOW VIRGO MEMORY
+========================================================= */
+
+function showVirgoCopy(
+  number,
+  text
+) {
+
+  virgoMemory.classList.remove(
+    "show"
+  );
+
+
+  setTimeout(
+    () => {
+
+      virgoMemoryNumber.textContent =
+        number;
+
+
+      virgoMemoryText.textContent =
+        text;
+
+
+      virgoMemory.classList.add(
+        "show"
+      );
+
+    },
+    180
   );
 }
 
+
+/* =========================================================
+   OPEN VIRGO STAR
+========================================================= */
 
 function openVirgoMemory(
   star
@@ -5423,15 +5533,24 @@ function openVirgoMemory(
   const starName =
     star.dataset.star;
 
+
   const memory =
     virgoChapterMemories[
       starName
     ];
 
+
   if (!memory) {
     return;
   }
 
+
+  /*
+    SPICA BEFORE THE OTHER SEVEN
+
+    Spica still reacts when Faris taps it.
+    It just won't reveal the final message yet.
+  */
 
   if (
     starName === "Spica" &&
@@ -5439,9 +5558,36 @@ function openVirgoMemory(
       "locked"
     )
   ) {
+
+    virgoMemoryStars.forEach(
+      item => {
+
+        item.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+    star.classList.add(
+      "active"
+    );
+
+
+    showVirgoCopy(
+      "",
+      "not this one yet, bb."
+    );
+
+
     return;
   }
 
+
+  /*
+    Clear the previous active star.
+  */
 
   virgoMemoryStars.forEach(
     item => {
@@ -5459,9 +5605,10 @@ function openVirgoMemory(
     "visited"
   );
 
-   virgo.classList.add(
-  "virgo-focused"
-);
+
+  /* =======================================================
+     NORMAL SEVEN STARS
+  ======================================================= */
 
   if (
     starName !== "Spica"
@@ -5471,29 +5618,19 @@ function openVirgoMemory(
       starName
     );
 
+
+    updateVirgoFocus();
+
   }
 
 
-  virgoMemory.classList.remove(
-    "show"
-  );
+  /*
+    Reveal this star's message.
+  */
 
-
-  setTimeout(
-    () => {
-
-      virgoMemoryNumber.textContent =
-        memory.number;
-
-      virgoMemoryText.textContent =
-        memory.text;
-
-      virgoMemory.classList.add(
-        "show"
-      );
-
-    },
-    180
+  showVirgoCopy(
+    memory.number,
+    memory.text
   );
 
 
@@ -5502,8 +5639,13 @@ function openVirgoMemory(
   );
 
 
+  /* =======================================================
+     ALL SEVEN FOUND — WAKE SPICA
+  ======================================================= */
+
   if (
-    virgoVisited.size >= 7
+    virgoVisited.size >= 7 &&
+    starName !== "Spica"
   ) {
 
     const spica =
@@ -5511,16 +5653,96 @@ function openVirgoMemory(
         '.virgo-memory-star[data-star="Spica"]'
       );
 
-    spica.classList.remove(
-      "locked"
+
+    if (spica) {
+
+      spica.classList.remove(
+        "locked"
+      );
+
+
+      spica.classList.add(
+        "unlocked"
+      );
+
+    }
+
+
+    /*
+      Let the current memory stay visible
+      briefly before inviting him to Spica.
+    */
+
+    setTimeout(
+      () => {
+
+        if (
+          virgoVisited.size >= 7 &&
+          !virgo.classList.contains(
+            "virgo-focus-complete"
+          )
+        ) {
+
+          virgoExploreHint.innerHTML =
+            `
+              <span>
+                one more.
+              </span>
+            `;
+
+
+          virgoExploreHint.classList.add(
+            "one-more"
+          );
+
+
+          virgoExploreHint.classList.remove(
+            "hidden"
+          );
+
+        }
+
+      },
+      900
+    );
+  }
+
+
+  /* =======================================================
+     SPICA — FINAL REVEAL
+  ======================================================= */
+
+  if (
+    starName === "Spica"
+  ) {
+
+    virgo.classList.remove(
+      "virgo-focus-1",
+      "virgo-focus-2",
+      "virgo-focus-3",
+      "virgo-focus-4",
+      "virgo-focus-5",
+      "virgo-focus-6",
+      "virgo-focus-7"
     );
 
-    spica.classList.add(
-      "unlocked"
+
+    virgo.classList.add(
+      "virgo-focus-complete"
     );
+
+
+    virgoExploreHint.classList.add(
+      "hidden"
+    );
+
   }
 }
 
+
+/* =========================================================
+   VIRGO STAR CONTROLS
+========================================================= */
 
 virgoMemoryStars.forEach(
   star => {
@@ -5530,7 +5752,9 @@ virgoMemoryStars.forEach(
       event => {
 
         event.preventDefault();
+
         event.stopPropagation();
+
 
         openVirgoMemory(
           star

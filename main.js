@@ -889,143 +889,143 @@ const orionStars = [
 const virgoStars = [
   {
     name: "Vindemiatrix",
-    revealX: 380 / 620,
-    revealY: 72 / 520,
-    telescopeX: 34,
-    telescopeY: -105,
-    size: 2,
+    revealX: 395 / 620,
+    revealY: 112 / 520,
+    telescopeX: 42,
+    telescopeY: -82,
+    size: 2.25,
     tone: "warm"
   },
 
   {
     name: "Auva",
-    revealX: 360 / 620,
-    revealY: 145 / 520,
-    telescopeX: 24,
-    telescopeY: -70,
-    size: 1.45,
-    tone: "neutral"
-  },
-
-  {
-    name: "Porrima",
-    revealX: 290 / 620,
-    revealY: 235 / 520,
-    telescopeX: -10,
-    telescopeY: -26,
-    size: 2.1,
-    tone: "neutral"
-  },
-
-  {
-    name: "Spica",
-    revealX: 235 / 620,
-    revealY: 395 / 520,
-    telescopeX: -37,
-    telescopeY: 52,
-    size: 3.25,
-    tone: "cool"
-  },
-
-  {
-    name: "Zaniah",
-    revealX: 215 / 620,
-    revealY: 160 / 520,
-    telescopeX: -47,
-    telescopeY: -63,
-    size: 1.35,
-    tone: "neutral"
-  },
-
-  {
-    name: "Zavijava",
-    revealX: 125 / 620,
-    revealY: 140 / 520,
-    telescopeX: -91,
-    telescopeY: -73,
+    revealX: 370 / 620,
+    revealY: 185 / 520,
+    telescopeX: 30,
+    telescopeY: -47,
     size: 1.65,
     tone: "neutral"
   },
 
   {
+    name: "Porrima",
+    revealX: 300 / 620,
+    revealY: 265 / 520,
+    telescopeX: -4,
+    telescopeY: -8,
+    size: 2.15,
+    tone: "neutral"
+  },
+
+  {
+    name: "Spica",
+    revealX: 225 / 620,
+    revealY: 405 / 520,
+    telescopeX: -41,
+    telescopeY: 60,
+    size: 3.05,
+    tone: "cool"
+  },
+
+  {
+    name: "Zaniah",
+    revealX: 250 / 620,
+    revealY: 190 / 520,
+    telescopeX: -28,
+    telescopeY: -45,
+    size: 1.75,
+    tone: "neutral"
+  },
+
+  {
+    name: "Zavijava",
+    revealX: 135 / 620,
+    revealY: 165 / 520,
+    telescopeX: -84,
+    telescopeY: -57,
+    size: 1.95,
+    tone: "neutral"
+  },
+
+  {
     name: "Heze",
-    revealX: 355 / 620,
-    revealY: 275 / 520,
-    telescopeX: 22,
-    telescopeY: -7,
-    size: 1.25,
+    revealX: 365 / 620,
+    revealY: 315 / 520,
+    telescopeX: 28,
+    telescopeY: 16,
+    size: 1.5,
     tone: "neutral"
   },
 
   {
     name: "Syrma",
-    revealX: 410 / 620,
-    revealY: 350 / 520,
-    telescopeX: 49,
-    telescopeY: 30,
-    size: 1.4,
+    revealX: 420 / 620,
+    revealY: 385 / 520,
+    telescopeX: 55,
+    telescopeY: 50,
+    size: 1.8,
     tone: "neutral"
   }
 ];
 
 
 /*
-  Extra Virgo stars complete the fuller constellation shape.
-  These are visual only — they do NOT contain memories.
+  Extra stars complete Virgo's silhouette.
+  Visual only — no memories attached.
 */
 
 const virgoVisualStars = [
   {
-    revealX: 380 / 620,
-    revealY: 20 / 520,
-    telescopeX: 34,
-    telescopeY: -130,
-    size: 1.15,
+    revealX: 395 / 620,
+    revealY: 35 / 520,
+    telescopeX: 42,
+    telescopeY: -120,
+    size: 1.7,
     tone: "neutral"
   },
 
   {
-    revealX: 190 / 620,
-    revealY: 260 / 520,
-    telescopeX: -59,
-    telescopeY: -14,
-    size: 1.1,
+    revealX: 395 / 620,
+    revealY: 75 / 520,
+    telescopeX: 42,
+    telescopeY: -100,
+    size: 1.3,
     tone: "neutral"
   },
 
   {
-    revealX: 145 / 620,
-    revealY: 350 / 520,
-    telescopeX: -81,
-    telescopeY: 30,
-    size: 1.15,
+    revealX: 195 / 620,
+    revealY: 305 / 520,
+    telescopeX: -56,
+    telescopeY: 12,
+    size: 1.55,
     tone: "warm"
   },
 
   {
-    revealX: 335 / 620,
-    revealY: 415 / 520,
-    telescopeX: 12,
-    telescopeY: 62,
-    size: 1.05,
-    tone: "cool"
-  },
-
-  {
-    revealX: 300 / 620,
-    revealY: 455 / 520,
-    telescopeX: -5,
-    telescopeY: 82,
-    size: 1.05,
+    revealX: 145 / 620,
+    revealY: 390 / 520,
+    telescopeX: -80,
+    telescopeY: 53,
+    size: 1.25,
     tone: "neutral"
   },
 
   {
-    revealX: 275 / 620,
-    revealY: 495 / 520,
-    telescopeX: -17,
-    telescopeY: 102,
-    size: 1.1,
+    revealX: 345 / 620,
+    revealY: 420 / 520,
+    telescopeX: 18,
+    telescopeY: 67,
+    size: 1.6,
+    tone: "cool"
+  },
+
+  {
+    revealX: 305 / 620,
+    revealY: 475 / 520,
+    telescopeX: -2,
+    telescopeY: 94,
+    size: 1.35,
     tone: "neutral"
   }
 ];
@@ -2091,96 +2091,122 @@ function drawTelescopeVirgo(
 
   let intensity = .12;
 
-  if (
-    distance < 260
-  ) {
-    intensity = .20;
-  }
-
-  if (
-    distance < 200
-  ) {
-    intensity = .32;
-  }
-
-  if (
-    distance < 145
-  ) {
-    intensity = .48;
-  }
-
-  if (
-    distance < 95
-  ) {
-    intensity = .72;
-  }
-
-  if (
-    distance < 55
-  ) {
-    intensity = 1;
-  }
+  if (distance < 260) intensity = .20;
+  if (distance < 200) intensity = .32;
+  if (distance < 145) intensity = .48;
+  if (distance < 95) intensity = .72;
+  if (distance < 55) intensity = 1;
 
   const centreX =
     width / 2 +
-    (
-      virgoScreenX -
-      lensX
-    ) *
-    .55;
+    (virgoScreenX - lensX) * .55;
 
   const centreY =
     height / 2 +
-    (
-      virgoScreenY -
-      lensY
-    ) *
-    .55;
+    (virgoScreenY - lensY) * .55;
 
   const telescopeVirgoStars = [
-  ...virgoStars,
-  ...virgoVisualStars
-];
+    ...virgoStars,
+    ...virgoVisualStars
+  ];
 
-const connections = [
-  [8, 0],   // upper extra → Vindemiatrix
-  [0, 1],   // Vindemiatrix → Auva
-  [1, 2],   // Auva → Porrima
+  /*
+    0 Vindemiatrix
+    1 Auva
+    2 Porrima
+    3 Spica
+    4 Zaniah
+    5 Zavijava
+    6 Heze
+    7 Syrma
 
-  [1, 4],   // Auva → Zaniah
-  [4, 5],   // Zaniah → Zavijava
-  [4, 2],   // Zaniah → Porrima
+    8-13 visual-only stars
+  */
 
-  [2, 9],   // Porrima → left extra
-  [9, 10],  // left extra → lower-left extra
+  const connections = [
+    [8, 9],
+    [9, 0],
+    [0, 1],
 
-  [2, 6],   // Porrima → Heze
-  [6, 7],   // Heze → Syrma
+    [5, 4],
+    [4, 1],
 
-  [2, 3],   // Porrima → Spica
+    [4, 2],
+    [1, 6],
+    [2, 6],
 
-  [7, 11],  // Syrma → lower extra
-  [11, 12], // lower extra → next
-  [12, 13]  // next → final lower star
-];
+    [2, 10],
+    [10, 11],
+
+    [6, 7],
+    [7, 12],
+    [12, 13],
+
+    [7, 3]
+  ];
 
   const time =
-    performance.now() /
-    1000;
+    performance.now() / 1000;
+
+  /*
+    Main named Virgo stars
+  */
 
   virgoStars.forEach(
     star => {
       let starIntensity =
         intensity;
 
-     virgoVisualStars.forEach(
+      if (virgoRevealStarted) {
+        starIntensity =
+          Math.max(
+            starIntensity,
+            .82
+          );
+      }
+
+      let telescopeSize =
+        Math.max(
+          1.45,
+          star.size * 1.15
+        );
+
+      if (star.name === "Spica") {
+        telescopeSize =
+          star.size * 1.32;
+      }
+
+      if (
+        star.name === "Vindemiatrix" ||
+        star.name === "Porrima"
+      ) {
+        telescopeSize =
+          star.size * 1.2;
+      }
+
+      drawConstellationStar(
+        ctx,
+        centreX + star.telescopeX,
+        centreY + star.telescopeY,
+        telescopeSize,
+        star.tone,
+        star.name,
+        time,
+        .2 + starIntensity * .8
+      );
+    }
+  );
+
+  /*
+    Smaller visual-only stars
+  */
+
+  virgoVisualStars.forEach(
     (star, index) => {
       let starIntensity =
         intensity;
 
-      if (
-        virgoRevealStarted
-      ) {
+      if (virgoRevealStarted) {
         starIntensity =
           Math.max(
             starIntensity,
@@ -2190,87 +2216,21 @@ const connections = [
 
       drawConstellationStar(
         ctx,
-
-        centreX +
-        star.telescopeX,
-
-        centreY +
-        star.telescopeY,
-
+        centreX + star.telescopeX,
+        centreY + star.telescopeY,
         Math.max(
-          1.05,
-          star.size * 1.08
+          1.2,
+          star.size * 1.1
         ),
-
         star.tone,
-
         `VirgoVisual${index}`,
-
         time,
-
-        .18 +
-        starIntensity *
-        .72
+        .18 + starIntensity * .75
       );
     }
   );
 
-      if (
-        virgoRevealStarted
-      ) {
-        starIntensity =
-          Math.max(
-            starIntensity,
-            .82
-          );
-      }
-
-      /*
-        Virgo uses the exact same
-        luminous star renderer.
-
-        Spica stays noticeably larger
-        and longer than the rest.
-      */
-
-      const telescopeSize =
-        star.name ===
-        "Spica"
-          ? star.size *
-            1.46
-          : Math.max(
-              1.3,
-              star.size *
-              1.12
-            );
-
-      drawConstellationStar(
-        ctx,
-
-        centreX +
-        star.telescopeX,
-
-        centreY +
-        star.telescopeY,
-
-        telescopeSize,
-
-        star.tone,
-
-        star.name,
-
-        time,
-
-        .2 +
-        starIntensity *
-        .8
-      );
-    }
-  );
-
-  if (
-    !virgoRevealStarted
-  ) {
+  if (!virgoRevealStarted) {
     return;
   }
 
@@ -2280,31 +2240,23 @@ const connections = [
   const virgoStillInView =
     distance <= 210;
 
-  if (
-    !virgoStillInView
-  ) {
-    if (
-      virgoRevealPausedAt ===
-      null
-    ) {
+  if (!virgoStillInView) {
+    if (virgoRevealPausedAt === null) {
       virgoRevealPausedAt =
         now;
     }
   } else if (
-    virgoRevealPausedAt !==
-    null
+    virgoRevealPausedAt !== null
   ) {
     virgoRevealPausedDuration +=
-      now -
-      virgoRevealPausedAt;
+      now - virgoRevealPausedAt;
 
     virgoRevealPausedAt =
       null;
   }
 
   const effectiveNow =
-    virgoRevealPausedAt ===
-    null
+    virgoRevealPausedAt === null
       ? now
       : virgoRevealPausedAt;
 
@@ -2318,13 +2270,9 @@ const connections = [
     VIRGO_LINE_PAUSE;
 
   connections.forEach(
-    (
-      connection,
-      index
-    ) => {
+    (connection, index) => {
       const startTime =
-        index *
-        segmentTime;
+        index * segmentTime;
 
       const progress =
         Math.max(
@@ -2339,9 +2287,7 @@ const connections = [
           )
         );
 
-      if (
-        progress <= 0
-      ) {
+      if (progress <= 0) {
         return;
       }
 
@@ -2380,31 +2326,23 @@ const connections = [
 
       ctx.lineTo(
         startX +
-        (
-          endX -
-          startX
-        ) *
+        (endX - startX) *
         progress,
 
         startY +
-        (
-          endY -
-          startY
-        ) *
+        (endY - startY) *
         progress
       );
 
       ctx.strokeStyle =
         "rgba(225,237,252,.72)";
 
-      ctx.lineWidth =
-        .8;
+      ctx.lineWidth = .8;
 
       ctx.stroke();
     }
   );
 }
-
 
 /* =========================================================
    TELESCOPE BACKGROUND
@@ -5191,8 +5129,8 @@ const virgoChapterMemories = {
 
   Vindemiatrix: {
 
-    number:
-      "01 · the faces you make",
+    title:
+      "the faces you make",
 
     text:
       "i swear i know so many of your faces by now. the face you make when you're judging me, when you're trying not to laugh, when you're annoyed with me... even that stupid pleased-with-yourself look after you purposely annoy me. sometimes i already know what you're thinking before you even say anything."
@@ -5202,8 +5140,8 @@ const virgoChapterMemories = {
 
   Auva: {
 
-    number:
-      "02 · your voice",
+    title:
+      "your voice",
 
     text:
       "you know how you always say you can't sing? i genuinely like listening to you sing bb. especially when you're just randomly singing while doing something and you're not even thinking about it. sometimes i don't say anything cos i don't want you to stop HAHAHA."
@@ -5213,8 +5151,8 @@ const virgoChapterMemories = {
 
   Porrima: {
 
-    number:
-      "03 · when something excites you",
+    title:
+      "when something excites you",
 
     text:
       "i like watching you talk about something you're actually excited about. you start explaining everything to me and suddenly you have so much to say. even when i don't know half of what you're talking about, i like listening cos i like seeing you like that."
@@ -5224,8 +5162,8 @@ const virgoChapterMemories = {
 
   Zaniah: {
 
-    number:
-      "04 · the little ways you care for me",
+    title:
+      "the little ways you care for me",
 
     text:
       "i don't think you realise how many little things you do that make me feel cared for. they're probably nothing to you because you just... do them. but i notice them bb."
@@ -5235,8 +5173,8 @@ const virgoChapterMemories = {
 
   Zavijava: {
 
-    number:
-      "05 · the you i get to see",
+    title:
+      "the you i get to see",
 
     text:
       "and then there's this version of you. the random noises, stupid jokes, you purposely annoying me and then looking so happy with yourself when it works. i don't think this is the version of you everyone gets to see... but he's one of my favourites."
@@ -5246,8 +5184,8 @@ const virgoChapterMemories = {
 
   Heze: {
 
-    number:
-      "06 · give yourself some credit",
+    title:
+      "give yourself some credit",
 
     text:
       "i've heard you call yourself useless, say you've failed, or feel like you're behind everyone else. and i know me telling you otherwise doesn't magically make you believe it. but from where i'm standing, i see someone who keeps trying even when he's tired and doesn't believe in himself anymore. i wish you'd give that version of you a little more credit."
@@ -5257,8 +5195,8 @@ const virgoChapterMemories = {
 
   Syrma: {
 
-    number:
-      "07 · the person i see",
+    title:
+      "the person i see",
 
     text:
       "and yes... i look at you. a lot actually HAHAHA. your face when you're concentrating, your eyes, your smile, your hair when it's doing whatever tf it wants, the way you look when you've just woken up... there are so many versions of you that have somehow become my favourite face."
@@ -5268,7 +5206,7 @@ const virgoChapterMemories = {
 
   Spica: {
 
-    number:
+    title:
       "SPICA",
 
     text:
@@ -5524,6 +5462,28 @@ function openVirgoMemory(
     starName !== "Spica"
   ) {
 
+    const alreadyVisited =
+      virgoVisited.has(starName);
+
+    const discoveryNumber =
+      alreadyVisited
+        ? star.dataset.discoveryNumber
+        : String(
+            virgoVisited.size + 1
+          ).padStart(2, "0");
+
+    if (!alreadyVisited) {
+      star.dataset.discoveryNumber =
+        discoveryNumber;
+    }
+
+    virgoVisited.add(
+      starName
+    );
+
+
+    updateVirgoFocus();
+     
     virgoVisited.add(
       starName
     );
@@ -5538,11 +5498,15 @@ function openVirgoMemory(
     Reveal this star's message.
   */
 
-  showVirgoCopy(
-    memory.number,
-    memory.text
-  );
+const memoryHeading =
+  starName === "Spica"
+    ? "SPICA"
+    : `${star.dataset.discoveryNumber} · ${memory.title}`;
 
+showVirgoCopy(
+  memoryHeading,
+  memory.text
+);
 
   virgoExploreHint.classList.add(
     "hidden"

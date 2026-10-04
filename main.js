@@ -5330,27 +5330,39 @@ function positionVirgoExperience() {
     `${rect.height}px`
   );
 
-
   /*
-    Put the copy below Virgo, but never allow
-    it to fall outside the visible screen.
+    Keep the writing underneath Virgo,
+    but reserve enough room for long
+    memories such as Spica.
   */
 
   const preferredTop =
-    rect.bottom + 20;
+    rect.bottom + 18;
 
-  const maximumTop =
-    window.innerHeight - 120;
+
+  const latestSafeTop =
+    window.innerHeight * .67;
+
 
   const memoryTop =
     Math.min(
       preferredTop,
-      maximumTop
+      latestSafeTop
     );
+
 
   virgoExperience.style.setProperty(
     "--virgo-memory-top",
     `${memoryTop}px`
+  );
+
+
+  virgoExperience.style.setProperty(
+    "--virgo-memory-bottom",
+    `${Math.max(
+      28,
+      window.innerHeight * .035
+    )}px`
   );
 }
 

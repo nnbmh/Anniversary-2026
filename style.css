@@ -2970,7 +2970,7 @@ button {
 .virgo-memory-text {
   margin: 0 auto;
 
-  max-width: 480px;
+  max-width: 430px;
 
   font-family:
     Georgia,
@@ -2979,9 +2979,9 @@ button {
 
   font-size:
     clamp(
-      14px,
-      2vw,
-      18px
+      12px,
+      1.7vw,
+      16px
     );
 
   line-height: 1.65;
@@ -3002,7 +3002,7 @@ button {
   }
 
   .virgo-memory-text {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .virgo-memory-star {
@@ -3266,4 +3266,52 @@ button {
       );
   }
 
+}
+
+/* =========================================================
+   VIRGO — STAR TWINKLE
+========================================================= */
+
+/*
+  The constellation itself gently breathes while blurred.
+  No rings, buttons or circles are shown.
+*/
+
+#app.entering-virgo
+#virgo:not(.virgo-focus-complete)
+.orion-star-canvas {
+
+  animation:
+    virgoStarTwinkle
+    2.8s
+    ease-in-out
+    infinite;
+}
+
+
+@keyframes virgoStarTwinkle {
+
+  0%,
+  100% {
+    opacity: .68;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+}
+
+
+/*
+  Once Spica completes Virgo,
+  everything settles into full clarity.
+*/
+
+#app.entering-virgo
+#virgo.virgo-focus-complete
+.orion-star-canvas {
+
+  animation: none;
+  opacity: 1;
 }

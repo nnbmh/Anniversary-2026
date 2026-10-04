@@ -2,78 +2,38 @@
    OUR LITTLE UNIVERSE
 ========================================================= */
 
-
 /* =========================================================
    ELEMENTS
 ========================================================= */
 
-const app =
-  document.getElementById("app");
+const app = document.getElementById("app");
+const universe = document.getElementById("universe");
+const dustLayer = document.getElementById("dustLayer");
 
-const universe =
-  document.getElementById("universe");
+const starsDeep = document.getElementById("starsDeep");
+const starsFar = document.getElementById("starsFar");
+const starsMid = document.getElementById("starsMid");
+const starsNear = document.getElementById("starsNear");
 
-const dustLayer =
-  document.getElementById("dustLayer");
+const orion = document.getElementById("orion");
+const orionStarCanvas = document.getElementById("orionStarCanvas");
+const orionStarCtx = orionStarCanvas.getContext("2d");
 
-const starsDeep =
-  document.getElementById("starsDeep");
+const virgo = document.getElementById("virgo");
+const virgoStarCanvas = document.getElementById("virgoStarCanvas");
+const virgoStarCtx = virgoStarCanvas.getContext("2d");
 
-const starsFar =
-  document.getElementById("starsFar");
+const telescopeView = document.getElementById("telescopeView");
+const eyepiece = document.getElementById("eyepiece");
+const telescopeCanvas = document.getElementById("telescopeCanvas");
+const telescopeButton = document.getElementById("telescopeButton");
 
-const starsMid =
-  document.getElementById("starsMid");
+const navigationHint = document.getElementById("navigationHint");
+const discoveryMessage = document.getElementById("discoveryMessage");
+const discoveryNumber = document.getElementById("discoveryNumber");
+const orionChapterIntro = document.getElementById("orionChapterIntro");
 
-const starsNear =
-  document.getElementById("starsNear");
-
-const orion =
-  document.getElementById("orion");
-
-const orionStarCanvas =
-  document.getElementById("orionStarCanvas");
-
-const orionStarCtx =
-  orionStarCanvas.getContext("2d");
-
-const virgo =
-  document.getElementById("virgo");
-
-const virgoStarCanvas =
-  document.getElementById("virgoStarCanvas");
-
-const virgoStarCtx =
-  virgoStarCanvas.getContext("2d");
-
-const telescopeView =
-  document.getElementById("telescopeView");
-
-const eyepiece =
-  document.getElementById("eyepiece");
-
-const telescopeCanvas =
-  document.getElementById("telescopeCanvas");
-
-const telescopeButton =
-  document.getElementById("telescopeButton");
-
-const navigationHint =
-  document.getElementById("navigationHint");
-
-const discoveryMessage =
-  document.getElementById("discoveryMessage");
-
-const discoveryNumber =
-  document.getElementById("discoveryNumber");
-
-const orionChapterIntro =
-  document.getElementById(
-    "orionChapterIntro"
-  );
-
-const ctx =
-  telescopeCanvas.getContext("2d");
+const ctx = telescopeCanvas.getContext("2d");
 
 
 /* =========================================================
@@ -82,7 +42,6 @@ const ctx =
 
 let cameraX = 0;
 let cameraY = 0;
-
 let targetX = 0;
 let targetY = 0;
 
@@ -91,7 +50,6 @@ let targetZoom = 1;
 
 const MIN_ZOOM = .62;
 const MAX_ZOOM = 1.9;
-
 const CAMERA_EASING = .105;
 const ZOOM_EASING = .09;
 
@@ -100,14 +58,12 @@ const ZOOM_EASING = .09;
    INPUT
 ========================================================= */
 
-const activePointers =
-  new Map();
+const activePointers = new Map();
 
 let universeDragging = false;
 
 let dragStartX = 0;
 let dragStartY = 0;
-
 let dragCameraStartX = 0;
 let dragCameraStartY = 0;
 
@@ -123,11 +79,8 @@ let telescopeActive = false;
 let telescopeDragging = false;
 let telescopePointerId = null;
 
-let lensX =
-  window.innerWidth / 2;
-
-let lensY =
-  window.innerHeight / 2;
+let lensX = window.innerWidth / 2;
+let lensY = window.innerHeight / 2;
 
 let targetLensX = lensX;
 let targetLensY = lensY;
@@ -137,39 +90,32 @@ let targetLensY = lensY;
    ORION DISCOVERY
 ========================================================= */
 
-let orionScreenX =
-  window.innerWidth / 2;
-
-let orionScreenY =
-  window.innerHeight / 2;
+let orionScreenX = window.innerWidth / 2;
+let orionScreenY = window.innerHeight / 2;
 
 let orionDiscovered = false;
-
 let orionRevealStarted = false;
-
 let orionRevealStartTime = 0;
+
+let orionRevealPausedAt = null;
+let orionRevealPausedDuration = 0;
 
 const ORION_LINE_DURATION = 420;
 const ORION_LINE_PAUSE = 90;
 
 let focusStartedAt = null;
-
 const HOLD_TO_DISCOVER = 1800;
+
 
 /* =========================================================
    VIRGO DISCOVERY
 ========================================================= */
 
-let virgoScreenX =
-  window.innerWidth / 2;
-
-let virgoScreenY =
-  window.innerHeight / 2;
+let virgoScreenX = window.innerWidth / 2;
+let virgoScreenY = window.innerHeight / 2;
 
 let virgoDiscovered = false;
-
 let virgoRevealStarted = false;
-
 let virgoRevealStartTime = 0;
 
 let virgoRevealPausedAt = null;
@@ -180,22 +126,14 @@ let virgoFocusStartedAt = null;
 const VIRGO_LINE_DURATION = 420;
 const VIRGO_LINE_PAUSE = 90;
 
+
 /* =========================================================
    RANDOM
 ========================================================= */
 
 function seededRandom(seed) {
-
-  const value =
-    Math.sin(
-      seed * 91.3458
-    ) *
-    47453.5453;
-
-  return (
-    value -
-    Math.floor(value)
-  );
+  const value = Math.sin(seed * 91.3458) * 47453.5453;
+  return value - Math.floor(value);
 }
 
 
@@ -203,52 +141,22 @@ function seededRandom(seed) {
    NORMAL STAR FIELD
 ========================================================= */
 
-function createStar(
-  layer,
-  x,
-  y,
-  options = {}
-) {
+function createStar(layer, x, y, options = {}) {
+  const star = document.createElement("span");
 
-  const star =
-    document.createElement("span");
+  star.className = "sky-star";
 
-  star.className =
-    "sky-star";
+  if (options.tiny) star.classList.add("tiny");
+  if (options.large) star.classList.add("large");
 
-  if (options.tiny) {
-    star.classList.add("tiny");
-  }
-
-  if (options.large) {
-    star.classList.add("large");
-  }
-
-  if (options.warm) {
-  star.classList.add("warm");
-}
-
-if (options.cool) {
-  star.classList.add("cool");
-}
-
-if (options.blue) {
-  star.classList.add("blue");
-}
-
-if (options.orange) {
-  star.classList.add("orange");
-}
-
-if (options.cream) {
-  star.classList.add("cream");
-}
+  if (options.warm) star.classList.add("warm");
+  if (options.cool) star.classList.add("cool");
+  if (options.blue) star.classList.add("blue");
+  if (options.orange) star.classList.add("orange");
+  if (options.cream) star.classList.add("cream");
 
   if (options.twinkle) {
-
-    star.classList.add(
-      "twinkle"
-    );
+    star.classList.add("twinkle");
 
     star.style.setProperty(
       "--twinkle-duration",
@@ -266,18 +174,11 @@ if (options.cream) {
     );
   }
 
-  star.style.left =
-    `${x}px`;
+  star.style.left = `${x}px`;
+  star.style.top = `${y}px`;
 
-  star.style.top =
-    `${y}px`;
-
-  if (
-    options.opacity !==
-    undefined
-  ) {
-    star.style.opacity =
-      options.opacity;
+  if (options.opacity !== undefined) {
+    star.style.opacity = options.opacity;
   }
 
   layer.appendChild(star);
@@ -292,132 +193,76 @@ function buildSparseField(
   height,
   type
 ) {
+  for (let i = 0; i < count; i++) {
+    const seed = i + seedOffset;
 
-  for (
-    let i = 0;
-    i < count;
-    i++
-  ) {
+    const x = seededRandom(seed * 2.31) * width;
+    const y = seededRandom(seed * 5.17) * height;
 
-    const seed =
-      i + seedOffset;
+    const emptyRegionA = Math.hypot(
+      x - width * .25,
+      y - height * .34
+    );
 
-    const x =
-      seededRandom(
-        seed * 2.31
-      ) *
-      width;
-
-    const y =
-      seededRandom(
-        seed * 5.17
-      ) *
-      height;
-
-    const emptyRegionA =
-      Math.hypot(
-        x - width * .25,
-        y - height * .34
-      );
-
-    const emptyRegionB =
-      Math.hypot(
-        x - width * .73,
-        y - height * .69
-      );
+    const emptyRegionB = Math.hypot(
+      x - width * .73,
+      y - height * .69
+    );
 
     if (
       emptyRegionA < 370 &&
-      seededRandom(
-        seed * 8.4
-      ) < .62
+      seededRandom(seed * 8.4) < .62
     ) {
       continue;
     }
 
     if (
       emptyRegionB < 430 &&
-      seededRandom(
-        seed * 9.1
-      ) < .55
+      seededRandom(seed * 9.1) < .55
     ) {
       continue;
     }
 
-    const sizeChance =
-      seededRandom(
-        seed * 11.4
-      );
+    const sizeChance = seededRandom(seed * 11.4);
+    const colourChance = seededRandom(seed * 13.7);
+    const twinkleChance = seededRandom(seed * 17.1);
 
-    const colourChance =
-      seededRandom(
-        seed * 13.7
-      );
+    createStar(layer, x, y, {
+      tiny: sizeChance < .44,
 
-    const twinkleChance =
-      seededRandom(
-        seed * 17.1
-      );
+      large:
+        type === "near" &&
+        sizeChance > .94,
 
-    createStar(
-      layer,
-      x,
-      y,
-      {
-        tiny:
-          sizeChance < .44,
+      orange: colourChance > .985,
 
-        large:
-          type === "near" &&
-          sizeChance > .94,
+      warm:
+        colourChance > .945 &&
+        colourChance <= .985,
 
-       /*
-  Most stars remain white.
+      cream:
+        colourChance > .885 &&
+        colourChance <= .945,
 
-  The coloured stars are deliberately
-  uncommon so the field still looks
-  natural rather than rainbow-like.
-*/
+      blue: colourChance < .025,
 
-orange:
-  colourChance > .985,
+      cool:
+        colourChance >= .025 &&
+        colourChance < .085,
 
-warm:
-  colourChance > .945 &&
-  colourChance <= .985,
+      twinkle:
+        type !== "deep" &&
+        twinkleChance > .91,
 
-cream:
-  colourChance > .885 &&
-  colourChance <= .945,
+      duration:
+        6 +
+        seededRandom(seed * 21.3) * 8,
 
-blue:
-  colourChance < .025,
-
-cool:
-  colourChance >= .025 &&
-  colourChance < .085,
-         
-        twinkle:
-          type !== "deep" &&
-          twinkleChance > .91,
-
-        duration:
-          6 +
-          seededRandom(
-            seed * 21.3
-          ) *
-          8,
-
-        opacity:
-          type === "deep"
-            ? .12 +
-              seededRandom(
-                seed * 25.2
-              ) *
-              .24
-            : undefined
-      }
-    );
+      opacity:
+        type === "deep"
+          ? .12 + seededRandom(seed * 25.2) * .24
+          : undefined
+    });
   }
 }
 
@@ -432,28 +277,15 @@ function buildCluster(
   seedOffset,
   type
 ) {
-
-  for (
-    let i = 0;
-    i < count;
-    i++
-  ) {
-
-    const seed =
-      i + seedOffset;
+  for (let i = 0; i < count; i++) {
+    const seed = i + seedOffset;
 
     const distance =
-      seededRandom(
-        seed * 3.2
-      ) *
-      seededRandom(
-        seed * 7.7
-      );
+      seededRandom(seed * 3.2) *
+      seededRandom(seed * 7.7);
 
     const angle =
-      seededRandom(
-        seed * 10.1
-      ) *
+      seededRandom(seed * 10.1) *
       Math.PI *
       2;
 
@@ -469,80 +301,147 @@ function buildCluster(
       radiusY *
       distance;
 
+    const sizeChance = seededRandom(seed * 14.4);
+    const colourChance = seededRandom(seed * 16.7);
+
+    createStar(layer, x, y, {
+      tiny: sizeChance < .66,
+
+      large:
+        type === "near" &&
+        sizeChance > .985,
+
+      orange: colourChance > .992,
+
+      warm:
+        colourChance > .962 &&
+        colourChance <= .992,
+
+      cream:
+        colourChance > .91 &&
+        colourChance <= .962,
+
+      blue: colourChance < .018,
+
+      cool:
+        colourChance >= .018 &&
+        colourChance < .065,
+
+      twinkle:
+        type !== "deep" &&
+        seededRandom(seed * 18.8) > .965,
+
+      duration:
+        7 +
+        seededRandom(seed * 22.4) * 7,
+
+      opacity:
+        type === "deep"
+          ? .10 + seededRandom(seed * 26.8) * .22
+          : undefined
+    });
+  }
+}
+
+
+/*
+  Extra Virgo stars live around the constellation
+  rather than piling directly behind it.
+*/
+function buildAnnulusCluster(
+  layer,
+  centreX,
+  centreY,
+  innerX,
+  innerY,
+  outerX,
+  outerY,
+  count,
+  seedOffset,
+  type
+) {
+  for (let i = 0; i < count; i++) {
+    const seed = i + seedOffset;
+
+    const angle =
+      seededRandom(seed * 10.1) *
+      Math.PI *
+      2;
+
+    const distance =
+      .15 +
+      seededRandom(seed * 3.2) *
+      .85;
+
+    const radiusX =
+      innerX +
+      (outerX - innerX) *
+      distance;
+
+    const radiusY =
+      innerY +
+      (outerY - innerY) *
+      distance;
+
+    const x =
+      centreX +
+      Math.cos(angle) *
+      radiusX;
+
+    const y =
+      centreY +
+      Math.sin(angle) *
+      radiusY;
+
     const sizeChance =
-      seededRandom(
-        seed * 14.4
-      );
+      seededRandom(seed * 14.4);
 
-     const colourChance =
-        seededRandom(
-           seed * 16.7
-        );
+    const colourChance =
+      seededRandom(seed * 16.7);
 
-    createStar(
-      layer,
-      x,
-      y,
-      {
-        tiny:
-          sizeChance < .66,
+    createStar(layer, x, y, {
+      tiny: sizeChance < .72,
 
-        large:
-          type === "near" &&
-          sizeChance > .985,
+      large:
+        type === "near" &&
+        sizeChance > .992,
 
-         orange:
-            colourChance > .992,
-         
-         warm:
-            colourChance > .962 &&
-            colourChance <= .992,
-         
-         cream:
-            colourChance > .91 &&
-            colourChance <= .962,
-         
-         blue:
-            colourChance < .018,
-         
-         cool:
-            colourChance >= .018 &&
-            colourChance < .065,
+      orange: colourChance > .994,
 
-        twinkle:
-          type !== "deep" &&
-          seededRandom(
-            seed * 18.8
-          ) > .965,
+      warm:
+        colourChance > .968 &&
+        colourChance <= .994,
 
-        duration:
-          7 +
-          seededRandom(
-            seed * 22.4
-          ) *
-          7,
+      cream:
+        colourChance > .92 &&
+        colourChance <= .968,
 
-        opacity:
-          type === "deep"
-            ? .10 +
-              seededRandom(
-                seed * 26.8
-              ) *
-              .22
-            : undefined
-      }
-    );
+      blue: colourChance < .016,
+
+      cool:
+        colourChance >= .016 &&
+        colourChance < .06,
+
+      twinkle:
+        type !== "deep" &&
+        seededRandom(seed * 18.8) > .97,
+
+      duration:
+        7 +
+        seededRandom(seed * 22.4) * 7,
+
+      opacity:
+        type === "deep"
+          ? .10 + seededRandom(seed * 26.8) * .20
+          : undefined
+    });
   }
 }
 
 
 function buildUniverseStars() {
-
-  const width =
-    universe.offsetWidth;
-
-  const height =
-    universe.offsetHeight;
+  const width = universe.offsetWidth;
+  const height = universe.offsetHeight;
 
   starsDeep.innerHTML = "";
   starsFar.innerHTML = "";
@@ -651,63 +550,61 @@ function buildUniverseStars() {
     "mid"
   );
 
-     /*
+  /*
     VIRGO REGION
 
-    Virgo sits around x 620 / y 430 in the
-    universe. Add a richer local field around
-    it so this part of the sky doesn't feel
-    empty compared with Orion.
+    Keep the middle around Virgo quieter while
+    making the surrounding sky richer.
   */
 
-  buildCluster(
+  buildAnnulusCluster(
     starsDeep,
     930,
     690,
+    300,
+    235,
     760,
-    500,
-    190,
+    520,
+    155,
     22000,
     "deep"
   );
 
-
-  buildCluster(
+  buildAnnulusCluster(
     starsFar,
     930,
     690,
+    290,
+    225,
     650,
-    430,
-    72,
+    455,
+    52,
     24000,
     "far"
   );
 
-
-  buildCluster(
+  buildAnnulusCluster(
     starsMid,
     930,
     690,
-    540,
-    350,
-    24,
+    285,
+    215,
+    560,
+    390,
+    15,
     26000,
     "mid"
   );
 
-
-  /*
-    A few nearer stars give the Virgo region
-    depth without competing with Virgo itself.
-  */
-
-  buildCluster(
+  buildAnnulusCluster(
     starsNear,
     930,
     690,
-    500,
     320,
-    7,
+    245,
+    520,
+    360,
+    4,
     28000,
     "near"
   );
@@ -719,65 +616,40 @@ function buildUniverseStars() {
 ========================================================= */
 
 function clampCamera() {
-
   const limitX =
-    universe.offsetWidth *
-    .34;
+    universe.offsetWidth * .34;
 
   const limitY =
-    universe.offsetHeight *
-    .34;
+    universe.offsetHeight * .34;
 
-  targetX =
-    Math.max(
-      -limitX,
-      Math.min(
-        limitX,
-        targetX
-      )
-    );
+  targetX = Math.max(
+    -limitX,
+    Math.min(limitX, targetX)
+  );
 
-  targetY =
-    Math.max(
-      -limitY,
-      Math.min(
-        limitY,
-        targetY
-      )
-    );
+  targetY = Math.max(
+    -limitY,
+    Math.min(limitY, targetY)
+  );
 }
 
+
 function renderCamera() {
-
-  /*
-    Follow the finger closely while dragging,
-    then return to the softer cinematic easing.
-  */
-
   const movementEasing =
     universeDragging
       ? .32
       : CAMERA_EASING;
 
   cameraX +=
-    (
-      targetX -
-      cameraX
-    ) *
+    (targetX - cameraX) *
     movementEasing;
 
   cameraY +=
-    (
-      targetY -
-      cameraY
-    ) *
+    (targetY - cameraY) *
     movementEasing;
 
   zoom +=
-    (
-      targetZoom -
-      zoom
-    ) *
+    (targetZoom - zoom) *
     ZOOM_EASING;
 
   universe.style.transform = `
@@ -788,40 +660,20 @@ function renderCamera() {
     scale(${zoom})
   `;
 
-  starsDeep.style.transform = `
-    translate(
-      ${-cameraX * .018}px,
-      ${-cameraY * .018}px
-    )
-  `;
+  starsDeep.style.transform =
+    `translate(${-cameraX * .018}px, ${-cameraY * .018}px)`;
 
-  starsFar.style.transform = `
-    translate(
-      ${-cameraX * .032}px,
-      ${-cameraY * .032}px
-    )
-  `;
+  starsFar.style.transform =
+    `translate(${-cameraX * .032}px, ${-cameraY * .032}px)`;
 
-  starsMid.style.transform = `
-    translate(
-      ${-cameraX * .052}px,
-      ${-cameraY * .052}px
-    )
-  `;
+  starsMid.style.transform =
+    `translate(${-cameraX * .052}px, ${-cameraY * .052}px)`;
 
-  starsNear.style.transform = `
-    translate(
-      ${-cameraX * .075}px,
-      ${-cameraY * .075}px
-    )
-  `;
+  starsNear.style.transform =
+    `translate(${-cameraX * .075}px, ${-cameraY * .075}px)`;
 
-  dustLayer.style.transform = `
-    translate(
-      ${-cameraX * .012}px,
-      ${-cameraY * .012}px
-    )
-  `;
+  dustLayer.style.transform =
+    `translate(${-cameraX * .012}px, ${-cameraY * .012}px)`;
 }
 
 
@@ -830,10 +682,8 @@ function renderCamera() {
 ========================================================= */
 
 function resizeTelescopeCanvas() {
-
   const rect =
-    eyepiece
-      .getBoundingClientRect();
+    eyepiece.getBoundingClientRect();
 
   if (
     rect.width <= 0 ||
@@ -842,24 +692,16 @@ function resizeTelescopeCanvas() {
     return;
   }
 
-  const dpr =
-    Math.min(
-      window.devicePixelRatio ||
-      1,
-      2
-    );
+  const dpr = Math.min(
+    window.devicePixelRatio || 1,
+    2
+  );
 
   telescopeCanvas.width =
-    Math.round(
-      rect.width *
-      dpr
-    );
+    Math.round(rect.width * dpr);
 
   telescopeCanvas.height =
-    Math.round(
-      rect.height *
-      dpr
-    );
+    Math.round(rect.height * dpr);
 
   ctx.setTransform(
     dpr,
@@ -880,64 +722,36 @@ const telescopeStars = [];
 
 
 function buildTelescopeStars() {
-
   telescopeStars.length = 0;
 
-  for (
-    let i = 0;
-    i < 1500;
-    i++
-  ) {
-
+  for (let i = 0; i < 1500; i++) {
     const x =
       (
-        seededRandom(
-          i * 2.13 + 40
-        ) -
+        seededRandom(i * 2.13 + 40) -
         .5
       ) *
       1200;
 
     const y =
       (
-        seededRandom(
-          i * 4.71 + 80
-        ) -
+        seededRandom(i * 4.71 + 80) -
         .5
       ) *
       900;
 
     const brightness =
       .10 +
-      seededRandom(
-        i * 7.37 + 120
-      ) *
+      seededRandom(i * 7.37 + 120) *
       .50;
 
     const chance =
-      seededRandom(
-        i * 11.91 + 160
-      );
+      seededRandom(i * 11.91 + 160);
 
     let size = .42;
 
-    if (
-      chance > .70
-    ) {
-      size = .62;
-    }
-
-    if (
-      chance > .91
-    ) {
-      size = .9;
-    }
-
-    if (
-      chance > .978
-    ) {
-      size = 1.2;
-    }
+    if (chance > .70) size = .62;
+    if (chance > .91) size = .9;
+    if (chance > .978) size = 1.2;
 
     telescopeStars.push({
       x,
@@ -959,7 +773,6 @@ function drawStar(
   radius,
   brightness
 ) {
-
   ctx.beginPath();
 
   ctx.arc(
@@ -971,530 +784,646 @@ function drawStar(
   );
 
   ctx.fillStyle =
-    `rgba(
-      231,
-      239,
-      251,
-      ${brightness}
-    )`;
+    `rgba(231,239,251,${brightness})`;
 
   ctx.fill();
 }
 
 
 /* =========================================================
-   SHARED BRIGHT CONSTELLATION STAR
-========================================================= */
-
-function drawBrightStar(
-  context,
-  x,
-  y,
-  radius,
-  brightness,
-  glow,
-  tone = "neutral"
-) {
-
-  const strength =
-    Math.max(
-      0,
-      Math.min(
-        1,
-        brightness
-      )
-    );
-
-  let coreColour =
-    "255,255,255";
-
-  let glowColour =
-    "190,220,255";
-
-  if (
-    tone === "warm"
-  ) {
-
-    coreColour =
-      "255,229,202";
-
-    glowColour =
-      "255,183,125";
-  }
-
-  if (
-    tone === "cool"
-  ) {
-
-    coreColour =
-      "232,244,255";
-
-    glowColour =
-      "145,195,255";
-  }
-
-
-  if (
-    glow > 0
-  ) {
-
-    const haloRadius =
-      Math.max(
-        3,
-        radius * 2.6
-      );
-
-    const halo =
-      context.createRadialGradient(
-        x,
-        y,
-        0,
-        x,
-        y,
-        haloRadius
-      );
-
-    halo.addColorStop(
-      0,
-      `rgba(
-        ${coreColour},
-        ${.22 * glow}
-      )`
-    );
-
-    halo.addColorStop(
-      .35,
-      `rgba(
-        ${glowColour},
-        ${.09 * glow}
-      )`
-    );
-
-    halo.addColorStop(
-      1,
-      `rgba(
-        ${glowColour},
-        0
-      )`
-    );
-
-    context.beginPath();
-
-    context.arc(
-      x,
-      y,
-      haloRadius,
-      0,
-      Math.PI * 2
-    );
-
-    context.fillStyle =
-      halo;
-
-    context.fill();
-  }
-
-
-  const rayLength =
-    Math.max(
-      4,
-      radius * 3.2
-    );
-
-  const horizontal =
-    context.createLinearGradient(
-      x - rayLength,
-      y,
-      x + rayLength,
-      y
-    );
-
-  horizontal.addColorStop(
-    0,
-    `rgba(
-      ${coreColour},
-      0
-    )`
-  );
-
-  horizontal.addColorStop(
-    .5,
-    `rgba(
-      ${coreColour},
-      ${.55 * strength}
-    )`
-  );
-
-  horizontal.addColorStop(
-    1,
-    `rgba(
-      ${coreColour},
-      0
-    )`
-  );
-
-  context.beginPath();
-
-  context.moveTo(
-    x - rayLength,
-    y
-  );
-
-  context.lineTo(
-    x + rayLength,
-    y
-  );
-
-  context.strokeStyle =
-    horizontal;
-
-  context.lineWidth =
-    .5;
-
-  context.stroke();
-
-
-  const vertical =
-    context.createLinearGradient(
-      x,
-      y - rayLength,
-      x,
-      y + rayLength
-    );
-
-  vertical.addColorStop(
-    0,
-    `rgba(
-      ${coreColour},
-      0
-    )`
-  );
-
-  vertical.addColorStop(
-    .5,
-    `rgba(
-      ${coreColour},
-      ${.5 * strength}
-    )`
-  );
-
-  vertical.addColorStop(
-    1,
-    `rgba(
-      ${coreColour},
-      0
-    )`
-  );
-
-  context.beginPath();
-
-  context.moveTo(
-    x,
-    y - rayLength
-  );
-
-  context.lineTo(
-    x,
-    y + rayLength
-  );
-
-  context.strokeStyle =
-    vertical;
-
-  context.lineWidth =
-    .5;
-
-  context.stroke();
-
-
-  context.beginPath();
-
-  context.arc(
-    x,
-    y,
-    radius,
-    0,
-    Math.PI * 2
-  );
-
-  context.fillStyle =
-    `rgba(
-      ${coreColour},
-      ${strength}
-    )`;
-
-  context.fill();
-
-
-  context.beginPath();
-
-  context.arc(
-    x,
-    y,
-    Math.max(
-      .25,
-      radius * .27
-    ),
-    0,
-    Math.PI * 2
-  );
-
-  context.fillStyle =
-    "rgba(255,255,255,.98)";
-
-  context.fill();
-}
-
-
-/* =========================================================
-   ORION STAR DATA
+   CONSTELLATION STAR DATA
 ========================================================= */
 
 const orionStars = [
-
   {
     name: "Betelgeuse",
-
     revealX: .29,
     revealY: .185,
-
     telescopeX: -58,
     telescopeY: -72,
-
     size: 2.8,
     tone: "warm"
   },
 
   {
     name: "Bellatrix",
-
     revealX: .71,
     revealY: .235,
-
     telescopeX: 58,
     telescopeY: -60,
-
     size: 2.1,
     tone: "neutral"
   },
 
   {
     name: "Alnitak",
-
     revealX: .41,
     revealY: .444,
-
     telescopeX: -25,
     telescopeY: 0,
-
     size: 1.55,
     tone: "neutral"
   },
 
   {
     name: "Alnilam",
-
     revealX: .50,
     revealY: .452,
-
     telescopeX: 0,
     telescopeY: 3,
-
-    size: 2.0,
+    size: 2,
     tone: "neutral"
   },
 
   {
     name: "Mintaka",
-
     revealX: .59,
     revealY: .46,
-
     telescopeX: 26,
     telescopeY: 7,
-
     size: 1.35,
     tone: "neutral"
   },
 
   {
     name: "Sword 1",
-
     revealX: .496,
     revealY: .565,
-
     telescopeX: -1,
     telescopeY: 42,
-
     size: .85,
     tone: "neutral"
   },
 
   {
     name: "Sword 2",
-
     revealX: .49,
     revealY: .645,
-
     telescopeX: -2,
     telescopeY: 67,
-
     size: .55,
     tone: "neutral"
   },
 
   {
     name: "Saiph",
-
     revealX: .33,
     revealY: .80,
-
     telescopeX: -46,
     telescopeY: 105,
-
     size: 1.7,
     tone: "neutral"
   },
 
   {
     name: "Rigel",
-
     revealX: .73,
     revealY: .805,
-
     telescopeX: 64,
     telescopeY: 108,
-
     size: 3.2,
     tone: "cool"
   }
-
 ];
 
-/* =========================================================
-   VIRGO STAR DATA
-========================================================= */
 
 const virgoStars = [
-
   {
     name: "Vindemiatrix",
-
     revealX: 490 / 620,
     revealY: 105 / 520,
-
     telescopeX: 82,
     telescopeY: -78,
-
-    size: 2.0,
+    size: 2,
     tone: "warm"
   },
 
   {
     name: "Auva",
-
     revealX: 410 / 620,
     revealY: 185 / 520,
-
     telescopeX: 46,
     telescopeY: -42,
-
     size: 1.45,
     tone: "neutral"
   },
 
   {
     name: "Porrima",
-
     revealX: 330 / 620,
     revealY: 260 / 520,
-
     telescopeX: 8,
     telescopeY: -5,
-
     size: 2.1,
     tone: "neutral"
   },
 
   {
     name: "Spica",
-
     revealX: 235 / 620,
     revealY: 410 / 520,
-
     telescopeX: -38,
     telescopeY: 66,
-
     size: 3.25,
     tone: "cool"
   },
 
   {
     name: "Zaniah",
-
     revealX: 255 / 620,
     revealY: 205 / 520,
-
     telescopeX: -28,
     telescopeY: -30,
-
     size: 1.35,
     tone: "neutral"
   },
 
   {
     name: "Zavijava",
-
     revealX: 145 / 620,
     revealY: 175 / 520,
-
     telescopeX: -82,
     telescopeY: -44,
-
     size: 1.65,
     tone: "neutral"
   },
 
   {
     name: "Heze",
-
     revealX: 415 / 620,
     revealY: 320 / 520,
-
     telescopeX: 48,
     telescopeY: 24,
-
     size: 1.25,
     tone: "neutral"
   },
 
   {
     name: "Syrma",
-
     revealX: 500 / 620,
     revealY: 385 / 520,
-
     telescopeX: 88,
     telescopeY: 55,
-
     size: 1.4,
     tone: "neutral"
   }
-
 ];
 
+/* =========================================================
+   SHARED CONSTELLATION STAR APPEARANCE
+========================================================= */
+
+const constellationStarDesigns = {
+  Vindemiatrix: {
+    flareV: 1.35,
+    flareH: 1.05,
+    glow: 1.05,
+    speed: .72,
+    phase: .3
+  },
+
+  Auva: {
+    flareV: .95,
+    flareH: .78,
+    glow: .82,
+    speed: .58,
+    phase: 1.6
+  },
+
+  Porrima: {
+    flareV: 1.22,
+    flareH: .94,
+    glow: 1,
+    speed: .66,
+    phase: 2.8
+  },
+
+  Spica: {
+    flareV: 2.75,
+    flareH: 1.65,
+    glow: 1.95,
+    speed: .78,
+    phase: .8
+  },
+
+  Zaniah: {
+    flareV: .76,
+    flareH: .62,
+    glow: .7,
+    speed: .53,
+    phase: 3.7
+  },
+
+  Zavijava: {
+    flareV: 1.02,
+    flareH: .82,
+    glow: .86,
+    speed: .63,
+    phase: 4.5
+  },
+
+  Heze: {
+    flareV: .68,
+    flareH: .55,
+    glow: .64,
+    speed: .49,
+    phase: 2.1
+  },
+
+  Syrma: {
+    flareV: .9,
+    flareH: .7,
+    glow: .76,
+    speed: .6,
+    phase: 5.3
+  },
+
+  Betelgeuse: {
+    flareV: 1.55,
+    flareH: 1.18,
+    glow: 1.35,
+    speed: .62,
+    phase: .5
+  },
+
+  Bellatrix: {
+    flareV: 1.12,
+    flareH: .9,
+    glow: .95,
+    speed: .7,
+    phase: 1.4
+  },
+
+  Alnitak: {
+    flareV: .9,
+    flareH: .72,
+    glow: .75,
+    speed: .57,
+    phase: 2.1
+  },
+
+  Alnilam: {
+    flareV: 1.05,
+    flareH: .82,
+    glow: .9,
+    speed: .64,
+    phase: 3.2
+  },
+
+  Mintaka: {
+    flareV: .82,
+    flareH: .66,
+    glow: .7,
+    speed: .54,
+    phase: 4.1
+  },
+
+  "Sword 1": {
+    flareV: .68,
+    flareH: .52,
+    glow: .55,
+    speed: .74,
+    phase: 2.7
+  },
+
+  "Sword 2": {
+    flareV: .55,
+    flareH: .44,
+    glow: .45,
+    speed: .6,
+    phase: 5.2
+  },
+
+  Saiph: {
+    flareV: 1.02,
+    flareH: .78,
+    glow: .85,
+    speed: .59,
+    phase: 3.8
+  },
+
+  Rigel: {
+    flareV: 1.85,
+    flareH: 1.35,
+    glow: 1.55,
+    speed: .76,
+    phase: 1
+  }
+};
+
+
+function drawConstellationStar(
+  context,
+  x,
+  y,
+  size,
+  tone = "neutral",
+  starName = "",
+  time = 0,
+  intensity = 1
+) {
+  const design =
+    constellationStarDesigns[starName] || {
+      flareV: 1,
+      flareH: .8,
+      glow: .8,
+      speed: .6,
+      phase: 0
+    };
+
+  const wave =
+    (
+      Math.sin(
+        time *
+        design.speed *
+        Math.PI *
+        2 +
+        design.phase
+      ) +
+      1
+    ) / 2;
+
+  const alpha =
+    Math.max(
+      .08,
+      Math.min(1, intensity)
+    );
+
+  const brightness =
+    (.58 + wave * .42) *
+    alpha;
+
+  const flarePulse =
+    .88 +
+    wave * .22;
+
+  let core = "255,250,236";
+  let glow = "205,225,255";
+
+  if (tone === "warm") {
+    core = "255,235,205";
+    glow = "255,205,160";
+  }
+
+  if (tone === "cool") {
+    core = "244,250,255";
+    glow = "170,210,255";
+  }
+
+  context.save();
+
+  /* soft bloom */
+
+  const bloomRadius =
+    size *
+    7.4 *
+    design.glow *
+    (.9 + wave * .14);
+
+  const bloom =
+    context.createRadialGradient(
+      x,
+      y,
+      0,
+      x,
+      y,
+      bloomRadius
+    );
+
+  bloom.addColorStop(
+    0,
+    `rgba(${core},${.32 * brightness})`
+  );
+
+  bloom.addColorStop(
+    .12,
+    `rgba(${glow},${.18 * brightness})`
+  );
+
+  bloom.addColorStop(
+    .36,
+    `rgba(${glow},${.065 * brightness})`
+  );
+
+  bloom.addColorStop(
+    1,
+    `rgba(${glow},0)`
+  );
+
+  context.beginPath();
+
+  context.arc(
+    x,
+    y,
+    bloomRadius,
+    0,
+    Math.PI * 2
+  );
+
+  context.fillStyle = bloom;
+  context.fill();
+
+  /* vertical ray */
+
+  const verticalLength =
+    size *
+    7.4 *
+    design.flareV *
+    flarePulse;
+
+  const verticalGradient =
+    context.createLinearGradient(
+      x,
+      y - verticalLength,
+      x,
+      y + verticalLength
+    );
+
+  verticalGradient.addColorStop(0, `rgba(${glow},0)`);
+  verticalGradient.addColorStop(.38, `rgba(${glow},${.08 * brightness})`);
+  verticalGradient.addColorStop(.49, `rgba(${core},${.5 * brightness})`);
+  verticalGradient.addColorStop(.5, `rgba(255,255,255,${.92 * brightness})`);
+  verticalGradient.addColorStop(.51, `rgba(${core},${.5 * brightness})`);
+  verticalGradient.addColorStop(.62, `rgba(${glow},${.08 * brightness})`);
+  verticalGradient.addColorStop(1, `rgba(${glow},0)`);
+  
+  context.beginPath();
+  context.moveTo(
+    x,
+    y - verticalLength
+  );
+
+  context.lineTo(
+    x,
+    y + verticalLength
+  );
+
+  context.strokeStyle = verticalGradient;
+
+  context.lineWidth =
+    starName === "Spica"
+      ? .78
+      : starName === "Rigel"
+        ? .7
+        : .45;
+
+  context.stroke();
+
+  /* horizontal ray */
+
+  const horizontalLength =
+    size *
+    6.2 *
+    design.flareH *
+    flarePulse;
+
+  const horizontalGradient =
+    context.createLinearGradient(
+      x - horizontalLength,
+      y,
+      x + horizontalLength,
+      y
+    );
+
+  horizontalGradient.addColorStop(0, `rgba(${glow},0)`);
+  horizontalGradient.addColorStop(.38, `rgba(${glow},${.07 * brightness})`);
+  horizontalGradient.addColorStop(.49, `rgba(${core},${.45 * brightness})`);
+  horizontalGradient.addColorStop(.5, `rgba(255,255,255,${.8 * brightness})`);
+  horizontalGradient.addColorStop(.51, `rgba(${core},${.45 * brightness})`);
+  horizontalGradient.addColorStop(.62, `rgba(${glow},${.07 * brightness})`);
+  horizontalGradient.addColorStop(1, `rgba(${glow},0)`);
+
+  context.beginPath();
+  context.moveTo(
+    x - horizontalLength,
+    y
+  );
+
+  context.lineTo(
+    x + horizontalLength,
+    y
+  );
+
+  context.strokeStyle = horizontalGradient;
+
+  context.lineWidth =
+    starName === "Spica"
+      ? .66
+      : starName === "Rigel"
+        ? .58
+        : .4;
+
+  context.stroke();
+
+  /* ✦ core */
+
+  const majorStar =
+    starName === "Spica" ||
+    starName === "Rigel" ||
+    starName === "Betelgeuse";
+
+  const coreVertical =
+    size *
+    (
+      starName === "Spica"
+        ? 1.95
+        : majorStar
+          ? 1.55
+          : 1.25
+    );
+
+  const coreHorizontal =
+    size *
+    (
+      starName === "Spica"
+        ? 1.32
+        : majorStar
+          ? 1.1
+          : .95
+    );
+
+  const waist =
+    Math.max(
+      .28,
+      size * .16
+    );
+
+  context.beginPath();
+  context.moveTo(
+    x,
+    y - coreVertical
+  );
+
+  context.quadraticCurveTo(
+    x + waist,
+    y - waist,
+    x + coreHorizontal,
+    y
+  );
+
+  context.quadraticCurveTo(
+    x + waist,
+    y + waist,
+    x,
+    y + coreVertical
+  );
+
+  context.quadraticCurveTo(
+    x - waist,
+    y + waist,
+    x - coreHorizontal,
+    y
+  );
+
+  context.quadraticCurveTo(
+    x - waist,
+    y - waist,
+    x,
+    y - coreVertical
+  );
+
+  context.closePath();
+  context.shadowColor = `rgba(${glow},${.9 * brightness})`;
+
+  context.shadowBlur =
+    majorStar
+      ? 8 + wave * 5
+      : 4 + wave * 3;
+
+  context.fillStyle = `rgba(${core},${(.82 + wave * .18) * alpha})`;
+  context.fill();
+
+  /* white-hot centre */
+
+  context.shadowBlur =
+    4 +
+    wave * 3;
+
+  context.beginPath();
+
+  context.arc(
+    x,
+    y,
+    Math.max(
+      .35,
+      size * .16
+    ),
+    0,
+    Math.PI * 2
+  );
+
+  context.fillStyle = `rgba(255,255,255,${.98 * alpha})`;
+  context.fill();
+  context.restore();
+}
 
 /* =========================================================
    REVEALED ORION CANVAS
 ========================================================= */
 
 function resizeOrionStarCanvas() {
-
-  const cssWidth =
-    orion.offsetWidth;
-
-  const cssHeight =
-    orion.offsetHeight;
+  const cssWidth = orion.offsetWidth;
+  const cssHeight = orion.offsetHeight;
 
   if (
     cssWidth <= 0 ||
@@ -1503,24 +1432,16 @@ function resizeOrionStarCanvas() {
     return;
   }
 
-  const dpr =
-    Math.min(
-      window.devicePixelRatio ||
-      1,
-      2
-    );
+  const dpr = Math.min(
+    window.devicePixelRatio || 1,
+    2
+  );
 
   orionStarCanvas.width =
-    Math.round(
-      cssWidth *
-      dpr
-    );
+    Math.round(cssWidth * dpr);
 
   orionStarCanvas.height =
-    Math.round(
-      cssHeight *
-      dpr
-    );
+    Math.round(cssHeight * dpr);
 
   orionStarCanvas.style.width =
     `${cssWidth}px`;
@@ -1538,14 +1459,11 @@ function resizeOrionStarCanvas() {
   );
 }
 
-
-function renderRevealedOrionStars() {
-
-  const width =
-    orion.offsetWidth;
-
-  const height =
-    orion.offsetHeight;
+function renderRevealedOrionStars(
+  timestamp = performance.now()
+) {
+  const width = orion.offsetWidth;
+  const height = orion.offsetHeight;
 
   if (
     width <= 0 ||
@@ -1561,29 +1479,37 @@ function renderRevealedOrionStars() {
     height
   );
 
-  orionStars.forEach(
-    star => {
+  const time =
+    timestamp / 1000;
 
-      drawBrightStar(
-        orionStarCtx,
-
-        width *
-        star.revealX,
-
-        height *
-        star.revealY,
-
-        star.size,
-
-        1,
-
-        1,
-
-        star.tone
+  orionStars.forEach(star => {
+    let displaySize =
+      Math.max(
+        1.05,
+        star.size * 1.16
       );
 
+    if (star.name === "Rigel") {
+      displaySize =
+        star.size * 1.28;
     }
-  );
+
+    if (star.name === "Betelgeuse") {
+      displaySize =
+        star.size * 1.22;
+    }
+
+    drawConstellationStar(
+      orionStarCtx,
+      width * star.revealX,
+      height * star.revealY,
+      displaySize,
+      star.tone,
+      star.name,
+      time,
+      1
+    );
+  });
 }
 
 /* =========================================================
@@ -1591,12 +1517,8 @@ function renderRevealedOrionStars() {
 ========================================================= */
 
 function resizeVirgoStarCanvas() {
-
-  const cssWidth =
-    virgo.offsetWidth;
-
-  const cssHeight =
-    virgo.offsetHeight;
+  const cssWidth = virgo.offsetWidth;
+  const cssHeight = virgo.offsetHeight;
 
   if (
     cssWidth <= 0 ||
@@ -1605,24 +1527,16 @@ function resizeVirgoStarCanvas() {
     return;
   }
 
-  const dpr =
-    Math.min(
-      window.devicePixelRatio ||
-      1,
-      2
-    );
+  const dpr = Math.min(
+    window.devicePixelRatio || 1,
+    2
+  );
 
   virgoStarCanvas.width =
-    Math.round(
-      cssWidth *
-      dpr
-    );
+    Math.round(cssWidth * dpr);
 
   virgoStarCanvas.height =
-    Math.round(
-      cssHeight *
-      dpr
-    );
+    Math.round(cssHeight * dpr);
 
   virgoStarCanvas.style.width =
     `${cssWidth}px`;
@@ -1640,527 +1554,11 @@ function resizeVirgoStarCanvas() {
   );
 }
 
-function drawVirgoStar(
-  context,
-  x,
-  y,
-  size,
-  tone = "neutral",
-  starName = "",
-  time = 0
-) {
-
-  /*
-    STAR PERSONALITIES
-
-    flareV = vertical ray length
-    flareH = horizontal ray length
-    glow   = surrounding bloom
-    speed/phase = individual twinkle
-  */
-
-  const designs = {
-
-    Vindemiatrix: {
-      flareV: 1.35,
-      flareH: 1.05,
-      glow: 1.05,
-      speed: .72,
-      phase: .3
-    },
-
-    Auva: {
-      flareV: .95,
-      flareH: .78,
-      glow: .82,
-      speed: .58,
-      phase: 1.6
-    },
-
-    Porrima: {
-      flareV: 1.22,
-      flareH: .94,
-      glow: 1,
-      speed: .66,
-      phase: 2.8
-    },
-
-    Spica: {
-      flareV: 2.45,
-      flareH: 1.55,
-      glow: 1.75,
-      speed: .78,
-      phase: .8
-    },
-
-    Zaniah: {
-      flareV: .76,
-      flareH: .62,
-      glow: .7,
-      speed: .53,
-      phase: 3.7
-    },
-
-    Zavijava: {
-      flareV: 1.02,
-      flareH: .82,
-      glow: .86,
-      speed: .63,
-      phase: 4.5
-    },
-
-    Heze: {
-      flareV: .68,
-      flareH: .55,
-      glow: .64,
-      speed: .49,
-      phase: 2.1
-    },
-
-    Syrma: {
-      flareV: .9,
-      flareH: .7,
-      glow: .76,
-      speed: .6,
-      phase: 5.3
-    }
-
-  };
-
-
-  const design =
-    designs[starName] || {
-      flareV: 1,
-      flareH: .8,
-      glow: .8,
-      speed: .6,
-      phase: 0
-    };
-
-
-  /*
-    INDEPENDENT TWINKLE
-
-    Never switches off completely.
-  */
-
-  const wave =
-    (
-      Math.sin(
-        time *
-        design.speed *
-        Math.PI * 2 +
-        design.phase
-      ) +
-      1
-    ) / 2;
-
-
-  const brightness =
-    .58 +
-    wave * .42;
-
-
-  /*
-    Rays gently lengthen when the star
-    reaches the bright part of its twinkle.
-  */
-
-  const flarePulse =
-    .88 +
-    wave * .22;
-
-
-  let core =
-    "255,250,236";
-
-  let glow =
-    "205,225,255";
-
-
-  if (
-    tone === "warm"
-  ) {
-
-    core =
-      "255,235,205";
-
-    glow =
-      "255,205,160";
-  }
-
-
-  if (
-    tone === "cool"
-  ) {
-
-    core =
-      "244,250,255";
-
-    glow =
-      "170,210,255";
-  }
-
-
-  context.save();
-
-
-  /* =====================================================
-     LARGE SOFT BLOOM
-  ===================================================== */
-
-  const bloomRadius =
-    size *
-    7 *
-    design.glow *
-    (
-      .9 +
-      wave * .14
-    );
-
-
-  const bloom =
-    context.createRadialGradient(
-      x,
-      y,
-      0,
-      x,
-      y,
-      bloomRadius
-    );
-
-
-  bloom.addColorStop(
-    0,
-    `rgba(${core},${.32 * brightness})`
-  );
-
-
-  bloom.addColorStop(
-    .12,
-    `rgba(${glow},${.18 * brightness})`
-  );
-
-
-  bloom.addColorStop(
-    .36,
-    `rgba(${glow},${.065 * brightness})`
-  );
-
-
-  bloom.addColorStop(
-    1,
-    `rgba(${glow},0)`
-  );
-
-
-  context.beginPath();
-
-  context.arc(
-    x,
-    y,
-    bloomRadius,
-    0,
-    Math.PI * 2
-  );
-
-  context.fillStyle =
-    bloom;
-
-  context.fill();
-
-
-  /* =====================================================
-     THIN VERTICAL LIGHT RAY
-  ===================================================== */
-
-  const verticalLength =
-    size *
-    7 *
-    design.flareV *
-    flarePulse;
-
-
-  const verticalGradient =
-    context.createLinearGradient(
-      x,
-      y - verticalLength,
-      x,
-      y + verticalLength
-    );
-
-
-  verticalGradient.addColorStop(
-    0,
-    `rgba(${glow},0)`
-  );
-
-  verticalGradient.addColorStop(
-    .38,
-    `rgba(${glow},${.08 * brightness})`
-  );
-
-  verticalGradient.addColorStop(
-    .49,
-    `rgba(${core},${.5 * brightness})`
-  );
-
-  verticalGradient.addColorStop(
-    .5,
-    `rgba(255,255,255,${.92 * brightness})`
-  );
-
-  verticalGradient.addColorStop(
-    .51,
-    `rgba(${core},${.5 * brightness})`
-  );
-
-  verticalGradient.addColorStop(
-    .62,
-    `rgba(${glow},${.08 * brightness})`
-  );
-
-  verticalGradient.addColorStop(
-    1,
-    `rgba(${glow},0)`
-  );
-
-
-  context.beginPath();
-
-  context.moveTo(
-    x,
-    y - verticalLength
-  );
-
-  context.lineTo(
-    x,
-    y + verticalLength
-  );
-
-  context.strokeStyle =
-    verticalGradient;
-
-  context.lineWidth =
-    starName === "Spica"
-      ? .7
-      : .45;
-
-  context.stroke();
-
-
-  /* =====================================================
-     THIN HORIZONTAL LIGHT RAY
-  ===================================================== */
-
-  const horizontalLength =
-    size *
-    6 *
-    design.flareH *
-    flarePulse;
-
-
-  const horizontalGradient =
-    context.createLinearGradient(
-      x - horizontalLength,
-      y,
-      x + horizontalLength,
-      y
-    );
-
-
-  horizontalGradient.addColorStop(
-    0,
-    `rgba(${glow},0)`
-  );
-
-  horizontalGradient.addColorStop(
-    .38,
-    `rgba(${glow},${.07 * brightness})`
-  );
-
-  horizontalGradient.addColorStop(
-    .49,
-    `rgba(${core},${.45 * brightness})`
-  );
-
-  horizontalGradient.addColorStop(
-    .5,
-    `rgba(255,255,255,${.8 * brightness})`
-  );
-
-  horizontalGradient.addColorStop(
-    .51,
-    `rgba(${core},${.45 * brightness})`
-  );
-
-  horizontalGradient.addColorStop(
-    .62,
-    `rgba(${glow},${.07 * brightness})`
-  );
-
-  horizontalGradient.addColorStop(
-    1,
-    `rgba(${glow},0)`
-  );
-
-
-  context.beginPath();
-
-  context.moveTo(
-    x - horizontalLength,
-    y
-  );
-
-  context.lineTo(
-    x + horizontalLength,
-    y
-  );
-
-  context.strokeStyle =
-    horizontalGradient;
-
-  context.lineWidth =
-    starName === "Spica"
-      ? .6
-      : .4;
-
-  context.stroke();
-
-
-  /* =====================================================
-     SMALL ✦ CORE
-
-     The visible solid part stays tiny.
-     Most apparent size comes from light.
-  ===================================================== */
-
-  const coreVertical =
-    size *
-    (
-      starName === "Spica"
-        ? 1.8
-        : 1.25
-    );
-
-
-  const coreHorizontal =
-    size *
-    (
-      starName === "Spica"
-        ? 1.25
-        : .95
-    );
-
-
-  const waist =
-    Math.max(
-      .28,
-      size * .16
-    );
-
-
-  context.beginPath();
-
-
-  context.moveTo(
-    x,
-    y - coreVertical
-  );
-
-
-  context.quadraticCurveTo(
-    x + waist,
-    y - waist,
-    x + coreHorizontal,
-    y
-  );
-
-
-  context.quadraticCurveTo(
-    x + waist,
-    y + waist,
-    x,
-    y + coreVertical
-  );
-
-
-  context.quadraticCurveTo(
-    x - waist,
-    y + waist,
-    x - coreHorizontal,
-    y
-  );
-
-
-  context.quadraticCurveTo(
-    x - waist,
-    y - waist,
-    x,
-    y - coreVertical
-  );
-
-
-  context.closePath();
-
-
-  context.shadowColor =
-    `rgba(${glow},${.9 * brightness})`;
-
-
-  context.shadowBlur =
-    starName === "Spica"
-      ? 8 + wave * 5
-      : 4 + wave * 3;
-
-
-  context.fillStyle =
-    `rgba(${core},${.82 + wave * .18})`;
-
-
-  context.fill();
-
-
-  /* WHITE-HOT CENTRE */
-
-  context.shadowBlur =
-    4 + wave * 3;
-
-
-  context.beginPath();
-
-  context.arc(
-    x,
-    y,
-    Math.max(
-      .35,
-      size * .16
-    ),
-    0,
-    Math.PI * 2
-  );
-
-
-  context.fillStyle =
-    "rgba(255,255,255,.98)";
-
-
-  context.fill();
-
-
-  context.restore();
-}
-
 function renderRevealedVirgoStars(
   timestamp = performance.now()
 ) {
-
-  const width =
-    virgo.offsetWidth;
-
-  const height =
-    virgo.offsetHeight;
-
+  const width = virgo.offsetWidth;
+  const height = virgo.offsetHeight;
 
   if (
     width <= 0 ||
@@ -2169,7 +1567,6 @@ function renderRevealedVirgoStars(
     return;
   }
 
-
   virgoStarCtx.clearRect(
     0,
     0,
@@ -2177,47 +1574,28 @@ function renderRevealedVirgoStars(
     height
   );
 
+  const time = timestamp / 1000;
 
-  const time =
-    timestamp / 1000;
+  virgoStars.forEach(star => {
+    const displaySize =
+      star.name === "Spica"
+        ? star.size * 1.52
+        : Math.max(
+            1.5,
+            star.size * 1.2
+          );
 
-
-  virgoStars.forEach(
-    star => {
-
-      /*
-        Preserve the different actual sizes.
-        Spica's special shape makes it longer
-        without simply turning it into a huge star.
-      */
-
-      const displaySize =
-        Math.max(
-          1.15,
-          star.size * .95
-        );
-
-
-      drawVirgoStar(
-        virgoStarCtx,
-
-        width *
-        star.revealX,
-
-        height *
-        star.revealY,
-
-        displaySize,
-
-        star.tone,
-
-        star.name,
-
-        time
-      );
-
-    }
-  );
+    drawConstellationStar(
+      virgoStarCtx,
+      width * star.revealX,
+      height * star.revealY,
+      displaySize,
+      star.tone,
+      star.name,
+      time,
+      1
+    );
+  });
 }
 
 /* =========================================================
@@ -2225,10 +1603,8 @@ function renderRevealedVirgoStars(
 ========================================================= */
 
 function updateOrionPosition() {
-
   const rect =
-    orion
-      .getBoundingClientRect();
+    orion.getBoundingClientRect();
 
   orionScreenX =
     rect.left +
@@ -2239,17 +1615,10 @@ function updateOrionPosition() {
     rect.height / 2;
 }
 
-let orionRevealPausedAt = null;
-let orionRevealPausedDuration = 0;
-
 function getOrionDistance() {
-
   return Math.hypot(
-    lensX -
-    orionScreenX,
-
-    lensY -
-    orionScreenY
+    lensX - orionScreenX,
+    lensY - orionScreenY
   );
 }
 
@@ -2258,7 +1627,6 @@ function getOrionDistance() {
 ========================================================= */
 
 function updateVirgoPosition() {
-
   const rect =
     virgo.getBoundingClientRect();
 
@@ -2271,15 +1639,10 @@ function updateVirgoPosition() {
     rect.height / 2;
 }
 
-
 function getVirgoDistance() {
-
   return Math.hypot(
-    lensX -
-    virgoScreenX,
-
-    lensY -
-    virgoScreenY
+    lensX - virgoScreenX,
+    lensY - virgoScreenY
   );
 }
 
@@ -2291,7 +1654,6 @@ function drawTelescopeOrion(
   width,
   height
 ) {
-
   const distance =
     getOrionDistance();
 
@@ -2304,36 +1666,25 @@ function drawTelescopeOrion(
 
   let intensity = .12;
 
-  if (
-    distance < 260
-  ) {
+  if (distance < 260) {
     intensity = .20;
   }
 
-  if (
-    distance < 200
-  ) {
+  if (distance < 200) {
     intensity = .32;
   }
 
-  if (
-    distance < 145
-  ) {
+  if (distance < 145) {
     intensity = .48;
   }
 
-  if (
-    distance < 95
-  ) {
+  if (distance < 95) {
     intensity = .72;
   }
 
-  if (
-    distance < 55
-  ) {
+  if (distance < 55) {
     intensity = 1;
   }
-
 
   const centreX =
     width / 2 +
@@ -2351,55 +1702,30 @@ function drawTelescopeOrion(
     ) *
     .55;
 
-
   const connections = [
-
     [0, 1],
-
     [0, 2],
     [2, 3],
     [3, 4],
     [4, 1],
-
     [2, 7],
     [4, 8],
-
     [3, 5],
     [5, 6]
-
   ];
 
+  const time =
+    performance.now() /
+    1000;
 
   orionStars.forEach(
-    (
-      star,
-      index
-    ) => {
-
-      let shimmer = 1;
-
-      if (
-        distance < 145 ||
-        orionRevealStarted
-      ) {
-
-        shimmer =
-          1 +
-          Math.sin(
-            performance.now() /
-            470 +
-            index * .9
-          ) *
-          .045;
-      }
-
+    star => {
       let starIntensity =
         intensity;
 
       if (
         orionRevealStarted
       ) {
-
         starIntensity =
           Math.max(
             starIntensity,
@@ -2407,7 +1733,31 @@ function drawTelescopeOrion(
           );
       }
 
-      drawBrightStar(
+      let telescopeSize =
+        star.size *
+        (
+          .9 +
+          starIntensity *
+          .2
+        );
+
+      if (
+        star.name ===
+        "Rigel"
+      ) {
+        telescopeSize *=
+          1.18;
+      }
+
+      if (
+        star.name ===
+        "Betelgeuse"
+      ) {
+        telescopeSize *=
+          1.12;
+      }
+
+      drawConstellationStar(
         ctx,
 
         centreX +
@@ -2416,31 +1766,20 @@ function drawTelescopeOrion(
         centreY +
         star.telescopeY,
 
-        star.size *
-        (
-          .78 +
-          starIntensity *
-          .22
-        ) *
-        shimmer,
+        telescopeSize,
+
+        star.tone,
+
+        star.name,
+
+        time,
 
         .2 +
         starIntensity *
-        .78,
-
-        (
-          distance < 145 ||
-          orionRevealStarted
-        )
-          ? starIntensity
-          : 0,
-
-        star.tone
+        .8
       );
-
     }
   );
-
 
   if (
     !orionRevealStarted
@@ -2448,64 +1787,59 @@ function drawTelescopeOrion(
     return;
   }
 
-   const now =
-  performance.now();
+  const now =
+    performance.now();
 
+  /*
+    Pause the reveal if Orion moves
+    outside the telescope.
+  */
 
-/*
-  If Orion moves too far out of the
-  telescope during the reveal, freeze
-  the drawing exactly where it is.
-*/
-
-const orionStillInView =
-  distance <= 210;
-
-
-if (
-  !orionStillInView
-) {
+  const orionStillInView =
+    distance <= 210;
 
   if (
-    orionRevealPausedAt === null
+    !orionStillInView
   ) {
-    orionRevealPausedAt = now;
+    if (
+      orionRevealPausedAt ===
+      null
+    ) {
+      orionRevealPausedAt =
+        now;
+    }
+  } else if (
+    orionRevealPausedAt !==
+    null
+  ) {
+    orionRevealPausedDuration +=
+      now -
+      orionRevealPausedAt;
+
+    orionRevealPausedAt =
+      null;
   }
 
-} else if (
-  orionRevealPausedAt !== null
-) {
+  const effectiveNow =
+    orionRevealPausedAt ===
+    null
+      ? now
+      : orionRevealPausedAt;
 
-  orionRevealPausedDuration +=
-    now -
-    orionRevealPausedAt;
+  const elapsed =
+    effectiveNow -
+    orionRevealStartTime -
+    orionRevealPausedDuration;
 
-  orionRevealPausedAt = null;
-}
-
-
-const effectiveNow =
-  orionRevealPausedAt === null
-    ? now
-    : orionRevealPausedAt;
-
-
-const elapsed =
-  effectiveNow -
-  orionRevealStartTime -
-  orionRevealPausedDuration;
-   
   const segmentTime =
     ORION_LINE_DURATION +
     ORION_LINE_PAUSE;
-
 
   connections.forEach(
     (
       connection,
       index
     ) => {
-
       const startTime =
         index *
         segmentTime;
@@ -2571,6 +1905,9 @@ const elapsed =
         ) *
         progress;
 
+      /*
+        Soft glow underneath.
+      */
 
       ctx.save();
 
@@ -2605,6 +1942,9 @@ const elapsed =
 
       ctx.restore();
 
+      /*
+        Main constellation line.
+      */
 
       ctx.save();
 
@@ -2633,24 +1973,29 @@ const elapsed =
 
       ctx.restore();
 
+      /*
+        Small travelling point while
+        the segment is being drawn.
+      */
 
       if (
         progress < 1
       ) {
-
-        drawBrightStar(
+        drawConstellationStar(
           ctx,
           currentX,
           currentY,
           1,
-          .95,
-          .8,
-          "neutral"
+          "neutral",
+          "",
+          time,
+          .95
         );
       }
     }
   );
 }
+
 
 /* =========================================================
    DRAW TELESCOPE VIRGO
@@ -2660,7 +2005,6 @@ function drawTelescopeVirgo(
   width,
   height
 ) {
-
   const distance =
     getVirgoDistance();
 
@@ -2673,23 +2017,33 @@ function drawTelescopeVirgo(
 
   let intensity = .12;
 
-  if (distance < 260) {
+  if (
+    distance < 260
+  ) {
     intensity = .20;
   }
 
-  if (distance < 200) {
+  if (
+    distance < 200
+  ) {
     intensity = .32;
   }
 
-  if (distance < 145) {
+  if (
+    distance < 145
+  ) {
     intensity = .48;
   }
 
-  if (distance < 95) {
+  if (
+    distance < 95
+  ) {
     intensity = .72;
   }
 
-  if (distance < 55) {
+  if (
+    distance < 55
+  ) {
     intensity = 1;
   }
 
@@ -2719,36 +2073,18 @@ function drawTelescopeVirgo(
     [6, 7]
   ];
 
+  const time =
+    performance.now() /
+    1000;
+
   virgoStars.forEach(
-    (
-      star,
-      index
-    ) => {
-
-      let shimmer = 1;
-
-      if (
-        distance < 145 ||
-        virgoRevealStarted
-      ) {
-
-        shimmer =
-          1 +
-          Math.sin(
-            performance.now() /
-            470 +
-            index * .9
-          ) *
-          .045;
-      }
-
+    star => {
       let starIntensity =
         intensity;
 
       if (
         virgoRevealStarted
       ) {
-
         starIntensity =
           Math.max(
             starIntensity,
@@ -2756,7 +2092,26 @@ function drawTelescopeVirgo(
           );
       }
 
-      drawBrightStar(
+      /*
+        Virgo uses the exact same
+        luminous star renderer.
+
+        Spica stays noticeably larger
+        and longer than the rest.
+      */
+
+      const telescopeSize =
+        star.name ===
+        "Spica"
+          ? star.size *
+            1.46
+          : Math.max(
+              1.3,
+              star.size *
+              1.12
+            );
+
+      drawConstellationStar(
         ctx,
 
         centreX +
@@ -2765,26 +2120,17 @@ function drawTelescopeVirgo(
         centreY +
         star.telescopeY,
 
-        star.size *
-        (
-          .78 +
-          starIntensity *
-          .22
-        ) *
-        shimmer,
+        telescopeSize,
+
+        star.tone,
+
+        star.name,
+
+        time,
 
         .2 +
         starIntensity *
-        .78,
-
-        (
-          distance < 145 ||
-          virgoRevealStarted
-        )
-          ? starIntensity
-          : 0,
-
-        star.tone
+        .8
       );
     }
   );
@@ -2804,17 +2150,17 @@ function drawTelescopeVirgo(
   if (
     !virgoStillInView
   ) {
-
     if (
-      virgoRevealPausedAt === null
+      virgoRevealPausedAt ===
+      null
     ) {
-      virgoRevealPausedAt = now;
+      virgoRevealPausedAt =
+        now;
     }
-
   } else if (
-    virgoRevealPausedAt !== null
+    virgoRevealPausedAt !==
+    null
   ) {
-
     virgoRevealPausedDuration +=
       now -
       virgoRevealPausedAt;
@@ -2824,7 +2170,8 @@ function drawTelescopeVirgo(
   }
 
   const effectiveNow =
-    virgoRevealPausedAt === null
+    virgoRevealPausedAt ===
+    null
       ? now
       : virgoRevealPausedAt;
 
@@ -2842,7 +2189,6 @@ function drawTelescopeVirgo(
       connection,
       index
     ) => {
-
       const startTime =
         index *
         segmentTime;
@@ -2926,6 +2272,7 @@ function drawTelescopeVirgo(
   );
 }
 
+
 /* =========================================================
    TELESCOPE BACKGROUND
 ========================================================= */
@@ -2934,7 +2281,6 @@ function drawTelescopeBackground(
   width,
   height
 ) {
-
   ctx.fillStyle =
     "#07111d";
 
@@ -2991,7 +2337,6 @@ function drawTelescopeStars(
   width,
   height
 ) {
-
   const fieldOffsetX =
     lensX *
     .52;
@@ -3008,7 +2353,6 @@ function drawTelescopeStars(
 
   telescopeStars.forEach(
     star => {
-
       let x =
         width / 2 +
         star.x -
@@ -3039,7 +2383,6 @@ function drawTelescopeStars(
         x >
         width + 100
       ) {
-
         x -=
           wrapWidth;
       }
@@ -3048,7 +2391,6 @@ function drawTelescopeStars(
         y >
         height + 100
       ) {
-
         y -=
           wrapHeight;
       }
@@ -3068,7 +2410,6 @@ function drawTelescopeStars(
         star.size,
         star.brightness
       );
-
     }
   );
 }
@@ -3079,7 +2420,6 @@ function drawTelescopeStars(
 ========================================================= */
 
 function renderTelescope() {
-
   if (
     !telescopeActive
   ) {
@@ -3151,19 +2491,13 @@ function renderTelescope() {
   );
 }
 
-
 /* =========================================================
    LENS MOVEMENT
 ========================================================= */
 
-function clampLens(
-  x,
-  y
-) {
-
+function clampLens(x, y) {
   const rect =
-    eyepiece
-      .getBoundingClientRect();
+    eyepiece.getBoundingClientRect();
 
   const radius =
     Math.max(
@@ -3171,53 +2505,37 @@ function clampLens(
       90
     );
 
-  const padding =
-    14;
+  const padding = 14;
 
   return {
-
     x:
       Math.max(
-        radius +
-        padding,
-
+        radius + padding,
         Math.min(
           window.innerWidth -
           radius -
           padding,
-
           x
         )
       ),
 
     y:
       Math.max(
-        radius +
-        padding,
-
+        radius + padding,
         Math.min(
           window.innerHeight -
           radius -
           padding,
-
           y
         )
       )
-
   };
 }
 
 
-function moveLens(
-  x,
-  y
-) {
-
+function moveLens(x, y) {
   const position =
-    clampLens(
-      x,
-      y
-    );
+    clampLens(x, y);
 
   targetLensX =
     position.x;
@@ -3225,8 +2543,7 @@ function moveLens(
   targetLensY =
     position.y;
 
-  focusStartedAt =
-    null;
+  focusStartedAt = null;
 }
 
 
@@ -3234,53 +2551,36 @@ function moveLens(
    TELESCOPE TOGGLE
 ========================================================= */
 
-function setTelescope(
-  active
-) {
-
-  telescopeActive =
-    active;
+function setTelescope(active) {
+  telescopeActive = active;
 
   app.classList.toggle(
     "telescope-active",
     active
   );
 
-  telescopeButton
-    .classList
-    .toggle(
-      "active",
-      active
-    );
-
-  telescopeView
-    .setAttribute(
-      "aria-hidden",
-      active
-        ? "false"
-        : "true"
-    );
-
-  telescopeDragging =
-    false;
-
-  telescopePointerId =
-    null;
-
-  focusStartedAt =
-    null;
-
-  if (
+  telescopeButton.classList.toggle(
+    "active",
     active
-  ) {
+  );
 
+  telescopeView.setAttribute(
+    "aria-hidden",
+    active
+      ? "false"
+      : "true"
+  );
+
+  telescopeDragging = false;
+  telescopePointerId = null;
+  focusStartedAt = null;
+
+  if (active) {
     lensX =
-      window.innerWidth /
-      2;
+      window.innerWidth / 2;
 
     lensY =
-      window.innerHeight /
-      2;
+      window.innerHeight / 2;
 
     targetLensX =
       lensX;
@@ -3298,7 +2598,6 @@ function setTelescope(
 telescopeButton.addEventListener(
   "click",
   event => {
-
     event.stopPropagation();
 
     setTelescope(
@@ -3315,7 +2614,6 @@ telescopeButton.addEventListener(
 telescopeView.addEventListener(
   "pointerdown",
   event => {
-
     if (
       !telescopeActive
     ) {
@@ -3334,12 +2632,9 @@ telescopeView.addEventListener(
     );
 
     try {
-
-      telescopeView
-        .setPointerCapture(
-          event.pointerId
-        );
-
+      telescopeView.setPointerCapture(
+        event.pointerId
+      );
     } catch (error) {}
 
     event.preventDefault();
@@ -3350,7 +2645,6 @@ telescopeView.addEventListener(
 telescopeView.addEventListener(
   "pointermove",
   event => {
-
     if (
       !telescopeActive
     ) {
@@ -3361,7 +2655,6 @@ telescopeView.addEventListener(
       event.pointerType ===
       "mouse"
     ) {
-
       moveLens(
         event.clientX,
         event.clientY
@@ -3391,7 +2684,6 @@ telescopeView.addEventListener(
 function endTelescopePointer(
   event
 ) {
-
   if (
     event.pointerId !==
     telescopePointerId
@@ -3412,6 +2704,7 @@ telescopeView.addEventListener(
   endTelescopePointer
 );
 
+
 telescopeView.addEventListener(
   "pointercancel",
   endTelescopePointer
@@ -3419,18 +2712,16 @@ telescopeView.addEventListener(
 
 
 /* =========================================================
-   DISCOVERY
+   ORION DISCOVERY
 ========================================================= */
 
 function checkOrionFocus(
   timestamp
 ) {
-
   if (
     !telescopeActive ||
     orionDiscovered
   ) {
-
     focusStartedAt =
       null;
 
@@ -3444,7 +2735,6 @@ function checkOrionFocus(
     distance > 75 ||
     telescopeDragging
   ) {
-
     focusStartedAt =
       null;
 
@@ -3455,7 +2745,6 @@ function checkOrionFocus(
     focusStartedAt ===
     null
   ) {
-
     focusStartedAt =
       timestamp;
   }
@@ -3465,14 +2754,12 @@ function checkOrionFocus(
     focusStartedAt >=
     HOLD_TO_DISCOVER
   ) {
-
     discoverOrion();
   }
 }
 
 
 function discoverOrion() {
-
   if (
     orionDiscovered ||
     orionRevealStarted
@@ -3480,126 +2767,111 @@ function discoverOrion() {
     return;
   }
 
-   orionRevealStarted =
-  true;
-
-orionRevealStartTime =
-  performance.now();
-
-orionRevealPausedAt =
-  null;
-
-orionRevealPausedDuration =
-  0;
-
-focusStartedAt =
-  null;
-
- function waitForOrionReveal() {
-
-  const segmentTime =
-    ORION_LINE_DURATION +
-    ORION_LINE_PAUSE;
-
-  const requiredTime =
-    9 * segmentTime +
-    900;
-
-
-  const now =
-    performance.now();
-
-  const effectiveNow =
-    orionRevealPausedAt === null
-      ? now
-      : orionRevealPausedAt;
-
-  const elapsed =
-    effectiveNow -
-    orionRevealStartTime -
-    orionRevealPausedDuration;
-
-
-  if (
-    elapsed < requiredTime
-  ) {
-
-    requestAnimationFrame(
-      waitForOrionReveal
-    );
-
-    return;
-  }
-
-
-  orionDiscovered =
+  orionRevealStarted =
     true;
 
-  discoveryNumber.textContent =
-    "1";
+  orionRevealStartTime =
+    performance.now();
 
-  orion.classList.add(
-    "discovered"
-  );
+  orionRevealPausedAt =
+    null;
 
-  navigationHint
-    .classList
-    .add(
+  orionRevealPausedDuration =
+    0;
+
+  focusStartedAt =
+    null;
+
+  function waitForOrionReveal() {
+    const segmentTime =
+      ORION_LINE_DURATION +
+      ORION_LINE_PAUSE;
+
+    const requiredTime =
+      9 *
+      segmentTime +
+      900;
+
+    const now =
+      performance.now();
+
+    const effectiveNow =
+      orionRevealPausedAt ===
+      null
+        ? now
+        : orionRevealPausedAt;
+
+    const elapsed =
+      effectiveNow -
+      orionRevealStartTime -
+      orionRevealPausedDuration;
+
+    if (
+      elapsed <
+      requiredTime
+    ) {
+      requestAnimationFrame(
+        waitForOrionReveal
+      );
+
+      return;
+    }
+
+    orionDiscovered =
+      true;
+
+    discoveryNumber.textContent =
+      "1";
+
+    orion.classList.add(
+      "discovered"
+    );
+
+    navigationHint.classList.add(
       "hidden"
     );
 
-  navigationHintHidden =
-    true;
-
-setTimeout(
-  () => {
-
-    setTelescope(
-      false
-    );
-
-
-    /*
-      Orion has now been fully discovered.
-      Tell Faris what to do next.
-    */
-
-    const hintTitle =
-      navigationHint.querySelector(
-        "p"
-      );
-
-    const hintText =
-      navigationHint.querySelector(
-        "span"
-      );
-
-
-    hintTitle.textContent =
-      "You found something.";
-
-    hintText.textContent =
-      "Tap the constellation to step inside";
-
-
-    navigationHint
-      .classList
-      .remove(
-        "hidden"
-      );
-
     navigationHintHidden =
-      false;
+      true;
 
-  },
-  650
- );
+    setTimeout(
+      () => {
+        setTelescope(
+          false
+        );
+
+        const hintTitle =
+          navigationHint.querySelector(
+            "p"
+          );
+
+        const hintText =
+          navigationHint.querySelector(
+            "span"
+          );
+
+        hintTitle.textContent =
+          "You found something.";
+
+        hintText.textContent =
+          "Tap the constellation to step inside";
+
+        navigationHint.classList.remove(
+          "hidden"
+        );
+
+        navigationHintHidden =
+          false;
+      },
+      650
+    );
+  }
+
+  requestAnimationFrame(
+    waitForOrionReveal
+  );
 }
 
-requestAnimationFrame(
-  waitForOrionReveal
-);
-}
 
 /* =========================================================
    VIRGO DISCOVERY
@@ -3608,12 +2880,10 @@ requestAnimationFrame(
 function checkVirgoFocus(
   timestamp
 ) {
-
   if (
     !telescopeActive ||
     virgoDiscovered
   ) {
-
     virgoFocusStartedAt =
       null;
 
@@ -3627,7 +2897,6 @@ function checkVirgoFocus(
     distance > 75 ||
     telescopeDragging
   ) {
-
     virgoFocusStartedAt =
       null;
 
@@ -3638,7 +2907,6 @@ function checkVirgoFocus(
     virgoFocusStartedAt ===
     null
   ) {
-
     virgoFocusStartedAt =
       timestamp;
   }
@@ -3648,14 +2916,12 @@ function checkVirgoFocus(
     virgoFocusStartedAt >=
     HOLD_TO_DISCOVER
   ) {
-
     discoverVirgo();
   }
 }
 
 
 function discoverVirgo() {
-
   if (
     virgoDiscovered ||
     virgoRevealStarted
@@ -3678,9 +2944,7 @@ function discoverVirgo() {
   virgoFocusStartedAt =
     null;
 
-
   function waitForVirgoReveal() {
-
     const segmentTime =
       VIRGO_LINE_DURATION +
       VIRGO_LINE_PAUSE;
@@ -3694,7 +2958,8 @@ function discoverVirgo() {
       performance.now();
 
     const effectiveNow =
-      virgoRevealPausedAt === null
+      virgoRevealPausedAt ===
+      null
         ? now
         : virgoRevealPausedAt;
 
@@ -3707,7 +2972,6 @@ function discoverVirgo() {
       elapsed <
       requiredTime
     ) {
-
       requestAnimationFrame(
         waitForVirgoReveal
       );
@@ -3729,7 +2993,6 @@ function discoverVirgo() {
 
     setTimeout(
       () => {
-
         setTelescope(
           false
         );
@@ -3750,15 +3013,12 @@ function discoverVirgo() {
         hintText.textContent =
           "Tap the constellation to step inside";
 
-        navigationHint
-          .classList
-          .remove(
-            "hidden"
-          );
+        navigationHint.classList.remove(
+          "hidden"
+        );
 
         navigationHintHidden =
           false;
-
       },
       650
     );
@@ -3769,6 +3029,7 @@ function discoverVirgo() {
   );
 }
 
+
 /* =========================================================
    NORMAL UNIVERSE POINTER
 ========================================================= */
@@ -3776,7 +3037,6 @@ function discoverVirgo() {
 app.addEventListener(
   "pointerdown",
   event => {
-
     if (
       telescopeActive ||
       enteringVirgo ||
@@ -3802,7 +3062,6 @@ app.addEventListener(
       activePointers.size ===
       1
     ) {
-
       universeDragging =
         true;
 
@@ -3827,7 +3086,6 @@ app.addEventListener(
       activePointers.size ===
       2
     ) {
-
       universeDragging =
         false;
 
@@ -3854,11 +3112,9 @@ app.addEventListener(
     }
 
     try {
-
       app.setPointerCapture(
         event.pointerId
       );
-
     } catch (error) {}
   }
 );
@@ -3867,7 +3123,6 @@ app.addEventListener(
 app.addEventListener(
   "pointermove",
   event => {
-
     if (
       telescopeActive
     ) {
@@ -3879,7 +3134,6 @@ app.addEventListener(
         event.pointerId
       )
     ) {
-
       activePointers.set(
         event.pointerId,
         {
@@ -3896,7 +3150,6 @@ app.addEventListener(
       activePointers.size ===
       2
     ) {
-
       const points =
         Array.from(
           activePointers.values()
@@ -3915,7 +3168,6 @@ app.addEventListener(
         pinchStartDistance >
         0
       ) {
-
         const ratio =
           distance /
           pinchStartDistance;
@@ -3923,10 +3175,8 @@ app.addEventListener(
         targetZoom =
           Math.max(
             MIN_ZOOM,
-
             Math.min(
               MAX_ZOOM,
-
               pinchStartZoom *
               ratio
             )
@@ -3939,7 +3189,6 @@ app.addEventListener(
     if (
       universeDragging
     ) {
-
       targetX =
         dragCameraStartX +
         (
@@ -3963,7 +3212,6 @@ app.addEventListener(
 function endUniversePointer(
   event
 ) {
-
   if (
     telescopeActive
   ) {
@@ -3978,7 +3226,6 @@ function endUniversePointer(
     activePointers.size ===
     0
   ) {
-
     universeDragging =
       false;
 
@@ -3996,7 +3243,6 @@ function endUniversePointer(
     activePointers.size ===
     1
   ) {
-
     const remaining =
       Array.from(
         activePointers.values()
@@ -4025,6 +3271,7 @@ app.addEventListener(
   endUniversePointer
 );
 
+
 app.addEventListener(
   "pointercancel",
   endUniversePointer
@@ -4038,8 +3285,7 @@ app.addEventListener(
 app.addEventListener(
   "wheel",
   event => {
-
-        if (
+    if (
       telescopeActive ||
       enteringVirgo
     ) {
@@ -4055,13 +3301,11 @@ app.addEventListener(
     targetZoom =
       Math.max(
         MIN_ZOOM,
-
         Math.min(
           MAX_ZOOM,
           targetZoom
         )
       );
-
   },
   {
     passive: false
@@ -4078,7 +3322,6 @@ let navigationHintHidden =
 
 
 function hideNavigationHint() {
-
   if (
     navigationHintHidden
   ) {
@@ -4088,18 +3331,15 @@ function hideNavigationHint() {
   navigationHintHidden =
     true;
 
-  navigationHint
-    .classList
-    .add(
-      "hidden"
-    );
+  navigationHint.classList.add(
+    "hidden"
+  );
 }
 
 
 app.addEventListener(
   "pointerdown",
   event => {
-
     if (
       event.target.closest(
         "#telescopeButton"
@@ -4132,19 +3372,18 @@ app.addEventListener(
 window.addEventListener(
   "resize",
   () => {
-
     buildUniverseStars();
-     
-     resizeOrionStarCanvas();
-     renderRevealedOrionStars();
-     
-     resizeVirgoStarCanvas();
-     renderRevealedVirgoStars();
 
-if (
-  !telescopeActive
+    resizeOrionStarCanvas();
 
+    renderRevealedOrionStars();
 
+    resizeVirgoStarCanvas();
+
+    renderRevealedVirgoStars();
+
+    if (
+      !telescopeActive
     ) {
       return;
     }
@@ -4173,6 +3412,7 @@ if (
   }
 );
 
+
 /* =========================================================
    VIRGO GUIDANCE
 ========================================================= */
@@ -4180,22 +3420,12 @@ if (
 function updateVirgoGuidance(
   timestamp
 ) {
-
-  /*
-    Virgo only starts calling attention
-    to itself after Orion has been found.
-
-    Once Virgo itself is discovered,
-    the guidance disappears.
-  */
-
   if (
     !orionDiscovered ||
     virgoDiscovered ||
     enteringOrion ||
     enteringVirgo
   ) {
-
     app.style.setProperty(
       "--virgo-guidance",
       "0"
@@ -4204,18 +3434,13 @@ function updateVirgoGuidance(
     return;
   }
 
-
-  /*
-    Measure Virgo from the centre
-    of the screen rather than from
-    the telescope.
-  */
-
   const centreX =
-    window.innerWidth / 2;
+    window.innerWidth /
+    2;
 
   const centreY =
-    window.innerHeight / 2;
+    window.innerHeight /
+    2;
 
   const distance =
     Math.hypot(
@@ -4226,26 +3451,19 @@ function updateVirgoGuidance(
       centreY
     );
 
-
-  /*
-    Nothing noticeable when Virgo
-    is very far away.
-
-    The effect gradually strengthens
-    as Faris moves toward it.
-  */
-
   const farDistance =
     Math.min(
       window.innerWidth,
       window.innerHeight
-    ) * 1.35;
+    ) *
+    1.35;
 
   const nearDistance =
     Math.min(
       window.innerWidth,
       window.innerHeight
-    ) * .32;
+    ) *
+    .32;
 
   const proximity =
     Math.max(
@@ -4263,33 +3481,28 @@ function updateVirgoGuidance(
       )
     );
 
-
-  /*
-    Slow natural pulse.
-
-    It becomes easier to notice
-    only when Virgo is nearby.
-  */
-
   const pulse =
     .72 +
     Math.sin(
-      timestamp * .0022
-    ) * .28;
+      timestamp *
+      .0022
+    ) *
+    .28;
 
   const strength =
     proximity *
     (
       .55 +
-      pulse * .45
+      pulse *
+      .45
     );
-
 
   app.style.setProperty(
     "--virgo-guidance",
     strength.toFixed(3)
   );
 }
+
 
 /* =========================================================
    LOOP
@@ -4298,7 +3511,6 @@ function updateVirgoGuidance(
 function animate(
   timestamp
 ) {
-
   renderCamera();
 
   updateOrionPosition();
@@ -4308,25 +3520,26 @@ function animate(
     timestamp
   );
 
-     /*
-    Animate Virgo's actual ✦ stars continuously.
+  /*
+    Orion and Virgo now use the
+    same animated luminous renderer.
   */
+
+  if (
+    orionDiscovered
+  ) {
+    renderRevealedOrionStars(
+      timestamp
+    );
+  }
 
   if (
     virgoDiscovered
   ) {
-
     renderRevealedVirgoStars(
       timestamp
     );
-
   }
-
-  /*
-    Keep Virgo's invisible controls
-    attached to Virgo while its position
-    changes on screen.
-  */
 
   if (
     enteringVirgo &&
@@ -4335,11 +3548,8 @@ function animate(
       "show"
     )
   ) {
-
     positionVirgoExperience();
-
   }
-
 
   renderTelescope();
 
@@ -4362,18 +3572,19 @@ function animate(
 ========================================================= */
 
 function initialise() {
-
   buildUniverseStars();
 
   buildTelescopeStars();
 
   resizeOrionStarCanvas();
+
   renderRevealedOrionStars();
 
-   resizeVirgoStarCanvas();
-   renderRevealedVirgoStars();
+  resizeVirgoStarCanvas();
 
-setTelescope(
+  renderRevealedVirgoStars();
+
+  setTelescope(
     false
   );
 
@@ -4441,12 +3652,10 @@ const orionReturn =
     "orionReturn"
   );
 
-
 const orionExit =
   document.getElementById(
     "orionExit"
   );
-
 
 let enteringOrion = false;
 
@@ -4455,15 +3664,11 @@ let orionMemoryIndex = -1;
 let orionTransitioning = false;
 
 
-/*
-  Five moments.
-
-  starIndex tells the chapter which
-  real Orion star to travel toward.
-*/
+/* =========================================================
+   ORION MEMORIES
+========================================================= */
 
 const orionMemories = [
-
   {
     date:
       "04.05.2024",
@@ -4477,7 +3682,6 @@ const orionMemories = [
     starIndex:
       0
   },
-
 
   {
     date:
@@ -4493,7 +3697,6 @@ const orionMemories = [
       2
   },
 
-
   {
     date:
       "13.07.2024",
@@ -4507,7 +3710,6 @@ const orionMemories = [
     starIndex:
       3
   },
-
 
   {
     date:
@@ -4523,7 +3725,6 @@ const orionMemories = [
       4
   },
 
-
   {
     date:
       "02.12.2024",
@@ -4534,66 +3735,54 @@ const orionMemories = [
     text:
       "Okay technically we were already us by then HAHAHA. We just decided our actual anniversary was way too close to my birthday, so 02.12 became ours instead. And now I get to celebrate another year of us with you sayang.",
 
-     starIndex:
-        8
+    starIndex:
+      8
   }
 ];
-       
-       
-/* ========================================================= */
+
+
+/* =========================================================
+   ORION FOCUS
+========================================================= */
 
 function focusOrionStar(
   starIndex,
   zoomLevel = 1.82
 ) {
-
   const position =
     getOrionStarScreenPosition(
       starIndex
     );
 
-
-  /*
-    Keep the star slightly ABOVE centre,
-    leaving breathing room for the copy.
-  */
-
   const desiredX =
     window.innerWidth /
     2;
-
 
   const desiredY =
     window.innerHeight *
     .36;
 
-
   const deltaX =
     desiredX -
     position.x;
-
 
   const deltaY =
     desiredY -
     position.y;
 
-
   targetX +=
     deltaX /
     zoom;
 
-
   targetY +=
     deltaY /
     zoom;
-
 
   targetZoom =
     Math.min(
       MAX_ZOOM,
       zoomLevel
     );
-
 
   clampCamera();
 }
@@ -4606,24 +3795,20 @@ function focusOrionStar(
 function setActiveMemoryStar(
   starIndex
 ) {
-
   const star =
     orionStars[
       starIndex
     ];
-
 
   orion.style.setProperty(
     "--memory-star-x",
     `${star.revealX * 100}%`
   );
 
-
   orion.style.setProperty(
     "--memory-star-y",
     `${star.revealY * 100}%`
   );
-
 
   orion.classList.add(
     "memory-star-active"
@@ -4638,28 +3823,22 @@ function setActiveMemoryStar(
 function showOrionMemory(
   index
 ) {
-
   const memory =
     orionMemories[
       index
     ];
 
-
   orionMemoryIndex =
     index;
-
 
   orionMemoryDate.textContent =
     memory.date;
 
-
   orionMemoryTitle.textContent =
     memory.title;
 
-
   orionMemoryText.textContent =
     memory.text;
-
 
   const dots =
     orionProgress
@@ -4667,32 +3846,26 @@ function showOrionMemory(
         ".orion-progress-dot"
       );
 
-
   dots.forEach(
     (
       dot,
       dotIndex
     ) => {
-
       dot.classList.toggle(
         "active",
         dotIndex === index
       );
 
-
       dot.classList.toggle(
         "past",
         dotIndex < index
       );
-
     }
   );
-
 
   setActiveMemoryStar(
     memory.starIndex
   );
-
 
   orionMemoryStage
     .classList
@@ -4700,23 +3873,18 @@ function showOrionMemory(
       "show"
     );
 
-
   requestAnimationFrame(
     () => {
-
       orionMemoryCard
         .classList
         .add(
           "show"
         );
-
     }
   );
 
-
   setTimeout(
     () => {
-
       orionMemoryStage
         .classList
         .add(
@@ -4725,11 +3893,11 @@ function showOrionMemory(
 
       orionTransitioning =
         false;
-
     },
     900
   );
 }
+
 
 /* =========================================================
    TRAVEL BETWEEN MEMORIES
@@ -4738,14 +3906,12 @@ function showOrionMemory(
 function getOrionStarLocalPosition(
   starIndex
 ) {
-
   const star =
     orionStars[
       starIndex
     ];
 
   return {
-
     x:
       star.revealX *
       orion.offsetWidth,
@@ -4753,7 +3919,6 @@ function getOrionStarLocalPosition(
     y:
       star.revealY *
       orion.offsetHeight
-
   };
 }
 
@@ -4761,16 +3926,13 @@ function getOrionStarLocalPosition(
 function placeTravellingLight(
   starIndex
 ) {
-
   const position =
     getOrionStarLocalPosition(
       starIndex
     );
 
-
   orionTravellingLight.style.left =
     `${position.x}px`;
-
 
   orionTravellingLight.style.top =
     `${position.y}px`;
@@ -4778,59 +3940,30 @@ function placeTravellingLight(
 
 
 /*
-  Some memories are separated by more
-  than one real Orion segment.
-
-  Instead of cutting diagonally through
-  empty space, the light follows the
-  actual constellation.
+  Each memory follows the real
+  Orion constellation segments.
 */
 
 const orionMemoryRoutes = [
-
-  /*
-    04.05
-    Betelgeuse → Alnitak
-  */
-
   [
     0,
     2
   ],
-
-
-  /*
-    08.05
-    Alnitak → Alnilam
-  */
 
   [
     2,
     3
   ],
 
-
-  /*
-    13.07
-    Alnilam → Mintaka
-  */
-
   [
     3,
     4
   ],
 
-
-  /*
-    19.11
-    Mintaka → Rigel
-  */
-
   [
     4,
     8
   ]
-
 ];
 
 
@@ -4839,34 +3972,28 @@ function animateLightRoute(
   routeIndex,
   onComplete
 ) {
-
   if (
     routeIndex >=
     route.length - 1
   ) {
-
     onComplete();
 
     return;
   }
-
 
   const fromStar =
     route[
       routeIndex
     ];
 
-
   const toStar =
     route[
       routeIndex + 1
     ];
 
-
   placeTravellingLight(
     fromStar
   );
-
 
   orionTravellingLight
     .classList
@@ -4874,14 +4001,12 @@ function animateLightRoute(
       "travel"
     );
 
-
   /*
-    Force Safari to commit the start
-    point before enabling transition.
+    Force Safari to commit the
+    starting position first.
   */
 
   void orionTravellingLight.offsetWidth;
-
 
   orionTravellingLight
     .classList
@@ -4889,42 +4014,28 @@ function animateLightRoute(
       "travel"
     );
 
-
-  /*
-    Because both coordinates now belong
-    to #orion, this remains on the line
-    even while the universe moves.
-  */
-
   requestAnimationFrame(
     () => {
-
       const destination =
         getOrionStarLocalPosition(
           toStar
         );
 
-
       orionTravellingLight.style.left =
         `${destination.x}px`;
 
-
       orionTravellingLight.style.top =
         `${destination.y}px`;
-
     }
   );
 
-
   setTimeout(
     () => {
-
       animateLightRoute(
         route,
         routeIndex + 1,
         onComplete
       );
-
     },
     1375
   );
@@ -4932,28 +4043,23 @@ function animateLightRoute(
 
 
 function travelToNextOrionMemory() {
-
   if (
     orionTransitioning
   ) {
     return;
   }
 
-
   if (
     orionMemoryIndex >=
     orionMemories.length - 1
   ) {
-
     finishOrionChapter();
 
     return;
   }
 
-
   orionTransitioning =
     true;
-
 
   orionMemoryStage
     .classList
@@ -4961,79 +4067,58 @@ function travelToNextOrionMemory() {
       "ready"
     );
 
-
   orionMemoryCard
     .classList
     .remove(
       "show"
     );
 
-
   const nextIndex =
-    orionMemoryIndex + 1;
-
+    orionMemoryIndex +
+    1;
 
   const nextMemory =
     orionMemories[
       nextIndex
     ];
 
-
   const route =
     orionMemoryRoutes[
       orionMemoryIndex
     ];
 
-
-  /*
-    Move the camera toward the next
-    memory at the same time as the
-    constellation-bound light travels.
-  */
-
   focusOrionStar(
     nextMemory.starIndex
   );
-
 
   animateLightRoute(
     route,
     0,
     () => {
-
       orionTravellingLight
         .classList
         .remove(
           "travel"
         );
 
-
-      /*
-        Leave a tiny pause after the
-        light reaches the star.
-      */
-
       setTimeout(
         () => {
-
           showOrionMemory(
             nextIndex
           );
-
         },
         180
       );
-
     }
   );
 }
+
 
 /* =========================================================
    ENTER ORION
 ========================================================= */
 
 function enterOrionChapter() {
-
   if (
     !orionDiscovered ||
     enteringOrion ||
@@ -5042,24 +4127,26 @@ function enterOrionChapter() {
     return;
   }
 
+  enteringOrion =
+    true;
 
-  enteringOrion = true;
+  navigationHint
+    .classList
+    .add(
+      "hidden"
+    );
 
-   navigationHint
-  .classList
-  .add(
-    "hidden"
-  );
+  navigationHintHidden =
+    true;
 
-navigationHintHidden =
-  true;
+  orionMemoryIndex =
+    -1;
 
-  orionMemoryIndex = -1;
+  orionTransitioning =
+    true;
 
-  orionTransitioning = true;
-
-
-  universeDragging = false;
+  universeDragging =
+    false;
 
   activePointers.clear();
 
@@ -5067,20 +4154,17 @@ navigationHintHidden =
     "dragging"
   );
 
-
   orionChapter
     .classList
     .add(
       "active"
     );
 
-
   orionChapter
     .setAttribute(
       "aria-hidden",
       "false"
     );
-
 
   /*
     Centre Orion first.
@@ -5089,16 +4173,13 @@ navigationHintHidden =
   const rect =
     orion.getBoundingClientRect();
 
-
   const centreX =
     rect.left +
     rect.width / 2;
 
-
   const centreY =
     rect.top +
     rect.height / 2;
-
 
   targetX +=
     (
@@ -5108,7 +4189,6 @@ navigationHintHidden =
     ) /
     zoom;
 
-
   targetY +=
     (
       window.innerHeight /
@@ -5117,21 +4197,17 @@ navigationHintHidden =
     ) /
     zoom;
 
-
   targetZoom =
     Math.min(
       MAX_ZOOM,
       1.55
     );
 
-
   clampCamera();
-
 
   app.classList.add(
     "entering-orion"
   );
-
 
   /*
     Opening title.
@@ -5139,46 +4215,38 @@ navigationHintHidden =
 
   setTimeout(
     () => {
-
       orionChapterIntro
         .classList
         .add(
           "show"
         );
-
     },
     1100
   );
 
-
   /*
-    Fade title away.
+    Fade title and begin travelling.
   */
 
   setTimeout(
     () => {
-
       orionChapterIntro
         .classList
         .remove(
           "show"
         );
 
-
       app.classList.add(
         "orion-memory-mode"
       );
-
 
       focusOrionStar(
         orionMemories[0]
           .starIndex
       );
-
     },
     3300
   );
-
 
   /*
     First memory.
@@ -5186,11 +4254,9 @@ navigationHintHidden =
 
   setTimeout(
     () => {
-
       showOrionMemory(
         0
       );
-
     },
     4550
   );
@@ -5202,17 +4268,14 @@ navigationHintHidden =
 ========================================================= */
 
 function finishOrionChapter() {
-
   if (
     orionTransitioning
   ) {
     return;
   }
 
-
   orionTransitioning =
     true;
-
 
   orionMemoryStage
     .classList
@@ -5220,41 +4283,34 @@ function finishOrionChapter() {
       "ready"
     );
 
-
   orionMemoryCard
     .classList
     .remove(
       "show"
     );
 
-
   orion.classList.remove(
     "memory-star-active"
   );
-
-
-  /*
-    Pull back and reveal Orion again.
-  */
 
   app.classList.remove(
     "orion-memory-mode"
   );
 
+  /*
+    Pull back and reveal Orion again.
+  */
 
   const rect =
     orion.getBoundingClientRect();
-
 
   const centreX =
     rect.left +
     rect.width / 2;
 
-
   const centreY =
     rect.top +
     rect.height / 2;
-
 
   targetX +=
     (
@@ -5264,7 +4320,6 @@ function finishOrionChapter() {
     ) /
     zoom;
 
-
   targetY +=
     (
       window.innerHeight /
@@ -5273,29 +4328,24 @@ function finishOrionChapter() {
     ) /
     zoom;
 
-
-  targetZoom = 1.22;
-
+  targetZoom =
+    1.22;
 
   clampCamera();
 
-
   setTimeout(
     () => {
-
       orionMemoryStage
         .classList
         .remove(
           "show"
         );
 
-
       orionEnding
         .classList
         .add(
           "show"
         );
-
     },
     1400
   );
@@ -5307,20 +4357,17 @@ function finishOrionChapter() {
 ========================================================= */
 
 function leaveOrionChapter() {
-
   orionEnding
     .classList
     .remove(
       "show"
     );
 
-
   orionChapterIntro
     .classList
     .remove(
       "show"
     );
-
 
   orionMemoryStage
     .classList
@@ -5329,45 +4376,38 @@ function leaveOrionChapter() {
       "ready"
     );
 
-
   orionMemoryCard
     .classList
     .remove(
       "show"
     );
 
-
   orion.classList.remove(
     "memory-star-active"
   );
 
-
   app.classList.remove(
-    "orion-memory-mode",
+    "orion-memory-mode"
   );
-
 
   /*
     Return to a comfortable universe
     view centred around Orion.
   */
 
-  targetZoom = 1;
-
+  targetZoom =
+    1;
 
   const rect =
     orion.getBoundingClientRect();
-
 
   const centreX =
     rect.left +
     rect.width / 2;
 
-
   const centreY =
     rect.top +
     rect.height / 2;
-
 
   targetX +=
     (
@@ -5377,7 +4417,6 @@ function leaveOrionChapter() {
     ) /
     zoom;
 
-
   targetY +=
     (
       window.innerHeight /
@@ -5386,19 +4425,22 @@ function leaveOrionChapter() {
     ) /
     zoom;
 
-
   clampCamera();
 
+  /*
+    Keep entering-orion active until
+    the chapter has actually closed.
+    This prevents the title/universe
+    UI from overlapping during exit.
+  */
 
   setTimeout(
     () => {
-
       orionChapter
         .classList
         .remove(
           "active"
         );
-
 
       orionChapter
         .setAttribute(
@@ -5406,17 +4448,18 @@ function leaveOrionChapter() {
           "true"
         );
 
-       app.classList.remove(
-          "entering-orion"
-       );
+      app.classList.remove(
+        "entering-orion"
+      );
 
+      enteringOrion =
+        false;
 
-      enteringOrion = false;
+      orionTransitioning =
+        false;
 
-      orionTransitioning = false;
-
-      orionMemoryIndex = -1;
-
+      orionMemoryIndex =
+        -1;
     },
     900
   );
@@ -5430,70 +4473,67 @@ function leaveOrionChapter() {
 orionContinue.addEventListener(
   "click",
   event => {
-
     event.preventDefault();
 
     event.stopPropagation();
 
-
     travelToNextOrionMemory();
-
   }
 );
+
 
 orionReturn.addEventListener(
   "click",
   event => {
-
     event.preventDefault();
 
     event.stopPropagation();
 
-
     /*
-      The final return button only exists
-      after Faris has completed the entire
-      Orion chapter.
-
-      This permanently unlocks Orion's
-      map label.
+      Only completing the chapter
+      permanently reveals Orion's label.
     */
 
     orion.classList.add(
       "completed"
     );
 
-
     leaveOrionChapter();
-
   }
 );
+
 
 orionExit.addEventListener(
   "click",
   event => {
-
     event.preventDefault();
 
     event.stopPropagation();
 
+    /*
+      Emergency exit does NOT mark
+      Orion as completed.
+    */
 
     leaveOrionChapter();
-
   }
 );
+
+
 /* =========================================================
    TAP DISCOVERED ORION
 ========================================================= */
 
-let appTapStartX = 0;
-let appTapStartY = 0;
+let appTapStartX =
+  0;
+
+let appTapStartY =
+  0;
 
 
 app.addEventListener(
   "pointerdown",
   event => {
-
     if (
       !orionDiscovered ||
       enteringOrion ||
@@ -5515,7 +4555,6 @@ app.addEventListener(
 app.addEventListener(
   "pointerup",
   event => {
-
     if (
       !orionDiscovered ||
       enteringOrion ||
@@ -5539,39 +4578,40 @@ app.addEventListener(
       return;
     }
 
-
     const rect =
       orion.getBoundingClientRect();
 
     const paddingX =
-      rect.width * .12;
+      rect.width *
+      .12;
 
     const paddingY =
-      rect.height * .08;
-
+      rect.height *
+      .08;
 
     const insideOrion =
       event.clientX >=
-        rect.left + paddingX &&
+        rect.left +
+        paddingX &&
 
       event.clientX <=
-        rect.right - paddingX &&
+        rect.right -
+        paddingX &&
 
       event.clientY >=
-        rect.top + paddingY &&
+        rect.top +
+        paddingY &&
 
       event.clientY <=
-        rect.bottom - paddingY;
-
+        rect.bottom -
+        paddingY;
 
     if (
       insideOrion
     ) {
-
       event.preventDefault();
 
       enterOrionChapter();
-
     }
   },
   true
@@ -5596,7 +4636,8 @@ const virgoExit =
     "virgoExit"
   );
 
-let enteringVirgo = false;
+let enteringVirgo =
+  false;
 
 
 /* =========================================================
@@ -5614,9 +4655,11 @@ function enterVirgoChapter() {
   }
 
 
-  enteringVirgo = true;
+  enteringVirgo =
+    true;
 
-     /*
+
+  /*
     Virgo is a reading experience.
     Freeze normal universe navigation
     until Faris returns to the map.
@@ -5634,6 +4677,7 @@ function enterVirgoChapter() {
     "dragging"
   );
 
+
   navigationHint
     .classList
     .add(
@@ -5642,14 +4686,6 @@ function enterVirgoChapter() {
 
   navigationHintHidden =
     true;
-
-  universeDragging = false;
-
-  activePointers.clear();
-
-  app.classList.remove(
-    "dragging"
-  );
 
 
   virgoChapter
@@ -5672,8 +4708,7 @@ function enterVirgoChapter() {
   /*
     Move the REAL Virgo toward the centre.
 
-    Important:
-    don't zoom further in.
+    Don't zoom further in.
   */
 
   const rect =
@@ -5694,54 +4729,65 @@ function enterVirgoChapter() {
   */
 
   const desiredX =
-    window.innerWidth / 2;
+    window.innerWidth /
+    2;
 
   const desiredY =
-    window.innerHeight * .40;
-
-   const moveX =
-  (
-    desiredX -
-    centreX
-  ) /
-  zoom;
-
-const moveY =
-  (
-    desiredY -
-    centreY
-  ) /
-  zoom;
+    window.innerHeight *
+    .40;
 
 
-/*
-  Move Virgo immediately to its
-  chapter position instead of leaving
-  the universe camera easing behind it.
-*/
+  const moveX =
+    (
+      desiredX -
+      centreX
+    ) /
+    zoom;
 
-cameraX += moveX;
-cameraY += moveY;
+  const moveY =
+    (
+      desiredY -
+      centreY
+    ) /
+    zoom;
 
-targetX = cameraX;
-targetY = cameraY;
+
+  /*
+    Move Virgo immediately to its
+    chapter position instead of leaving
+    the universe camera easing behind it.
+  */
+
+  cameraX +=
+    moveX;
+
+  cameraY +=
+    moveY;
+
+  targetX =
+    cameraX;
+
+  targetY =
+    cameraY;
 
 
-/*
-  Keep the current zoom.
-  The Virgo chapter should never
-  zoom further in when opened.
-*/
+  /*
+    Keep the current zoom.
+  */
 
-targetZoom = zoom;
+  targetZoom =
+    zoom;
 
-clampCamera();
+  clampCamera();
+
 
   resetVirgoExperience();
+
 
   virgo.classList.remove(
     "virgo-focused"
   );
+
 
   virgoExperience
     .classList
@@ -5757,7 +4803,7 @@ clampCamera();
 
 
   /*
-    Intro.
+    Show intro.
   */
 
   setTimeout(
@@ -5794,8 +4840,8 @@ clampCamera();
 
   /*
     Camera has settled by now.
-    Position the invisible buttons over
-    the REAL Virgo and begin interaction.
+    Position the invisible buttons
+    over the REAL Virgo.
   */
 
   setTimeout(
@@ -5803,11 +4849,13 @@ clampCamera();
 
       positionVirgoExperience();
 
+
       virgoExperience
         .classList
         .add(
           "show"
         );
+
 
       virgoExperience
         .setAttribute(
@@ -5819,6 +4867,7 @@ clampCamera();
     3100
   );
 }
+
 
 /* =========================================================
    LEAVE VIRGO
@@ -5832,17 +4881,20 @@ function leaveVirgoChapter() {
       "show"
     );
 
+
   virgoExperience
     .setAttribute(
       "aria-hidden",
       "true"
     );
 
+
   virgoChapterIntro
     .classList
     .remove(
       "show"
     );
+
 
   setTimeout(
     () => {
@@ -5853,17 +4905,21 @@ function leaveVirgoChapter() {
           "active"
         );
 
+
       virgoChapter
         .setAttribute(
           "aria-hidden",
           "true"
         );
 
+
       app.classList.remove(
         "entering-virgo"
       );
 
-      enteringVirgo = false;
+
+      enteringVirgo =
+        false;
 
     },
     650
@@ -5905,6 +4961,10 @@ const virgoHitLayer =
   );
 
 
+/* =========================================================
+   POSITION VIRGO EXPERIENCE
+========================================================= */
+
 function positionVirgoExperience() {
 
   const rect =
@@ -5912,8 +4972,9 @@ function positionVirgoExperience() {
 
 
   /*
-    Make the invisible buttons sit directly
-    over the REAL Virgo constellation.
+    Make the invisible buttons sit
+    directly over the REAL Virgo
+    constellation.
   */
 
   virgoHitLayer.style.setProperty(
@@ -5936,6 +4997,7 @@ function positionVirgoExperience() {
     `${rect.height}px`
   );
 
+
   /*
     Keep the writing underneath Virgo,
     but reserve enough room for long
@@ -5943,11 +5005,13 @@ function positionVirgoExperience() {
   */
 
   const preferredTop =
-    rect.bottom + 18;
+    rect.bottom +
+    18;
 
 
   const latestSafeTop =
-    window.innerHeight * .67;
+    window.innerHeight *
+    .67;
 
 
   const memoryTop =
@@ -5967,10 +5031,16 @@ function positionVirgoExperience() {
     "--virgo-memory-bottom",
     `${Math.max(
       28,
-      window.innerHeight * .035
+      window.innerHeight *
+      .035
     )}px`
   );
 }
+
+
+/* =========================================================
+   VIRGO MEMORY STARS
+========================================================= */
 
 const virgoMemoryStars =
   Array.from(
@@ -5979,54 +5049,98 @@ const virgoMemoryStars =
     )
   );
 
+
+/* =========================================================
+   VIRGO MEMORIES
+========================================================= */
+
 const virgoChapterMemories = {
 
   Vindemiatrix: {
-    number: "01 · the faces you make",
+
+    number:
+      "01 · the faces you make",
+
     text:
       "i swear i know so many of your faces by now. the face you make when you're judging me, when you're trying not to laugh, when you're annoyed with me... even that stupid pleased-with-yourself look after you purposely annoy me. sometimes i already know what you're thinking before you even say anything."
+
   },
+
 
   Auva: {
-    number: "02 · your voice",
+
+    number:
+      "02 · your voice",
+
     text:
       "you know how you always say you can't sing? i genuinely like listening to you sing bb. especially when you're just randomly singing while doing something and you're not even thinking about it. sometimes i don't say anything cos i don't want you to stop HAHAHA."
+
   },
+
 
   Porrima: {
-    number: "03 · when something excites you",
+
+    number:
+      "03 · when something excites you",
+
     text:
       "i like watching you talk about something you're actually excited about. you start explaining everything to me and suddenly you have so much to say. even when i don't know half of what you're talking about, i like listening cos i like seeing you like that."
+
   },
+
 
   Zaniah: {
-    number: "04 · the little ways you care for me",
+
+    number:
+      "04 · the little ways you care for me",
+
     text:
       "i don't think you realise how many little things you do that make me feel cared for. they're probably nothing to you because you just... do them. but i notice them bb."
+
   },
+
 
   Zavijava: {
-    number: "05 · the you i get to see",
+
+    number:
+      "05 · the you i get to see",
+
     text:
       "and then there's this version of you. the random noises, stupid jokes, you purposely annoying me and then looking so happy with yourself when it works. i don't think this is the version of you everyone gets to see... but he's one of my favourites."
+
   },
+
 
   Heze: {
-    number: "06 · give yourself some credit",
+
+    number:
+      "06 · give yourself some credit",
+
     text:
       "i've heard you call yourself useless, say you've failed, or feel like you're behind everyone else. and i know me telling you otherwise doesn't magically make you believe it. but from where i'm standing, i see someone who keeps trying even when he's tired and doesn't believe in himself anymore. i wish you'd give that version of you a little more credit."
+
   },
+
 
   Syrma: {
-    number: "07 · the person i see",
+
+    number:
+      "07 · the person i see",
+
     text:
       "and yes... i look at you. a lot actually HAHAHA. your face when you're concentrating, your eyes, your smile, your hair when it's doing whatever tf it wants, the way you look when you've just woken up... there are so many versions of you that have somehow become my favourite face."
+
   },
 
+
   Spica: {
-    number: "SPICA",
+
+    number:
+      "SPICA",
+
     text:
       "I know you don't always see yourself the way I see you. Sometimes you're so much harsher on yourself than I could ever be. And I wish, just for a little while, I could lend you my eyes so you could see the person I'm looking at when I look at you. Not some perfect version of you. Just you. All the little things you've just seen — the things you probably don't even think twice about — they're part of the person I've gotten to know and love. I wish you could see yourself through my eyes sometimes, sayang."
+
   }
 
 };
@@ -6034,7 +5148,6 @@ const virgoChapterMemories = {
 
 const virgoVisited =
   new Set();
-
 
 /* =========================================================
    RESET VIRGO
@@ -6206,8 +5319,11 @@ function openVirgoMemory(
   /*
     SPICA BEFORE THE OTHER SEVEN
 
-    Spica still reacts when Faris taps it.
-    It just won't reveal the final message yet.
+    Spica still reacts when Faris
+    taps it.
+
+    It just won't reveal the final
+    message yet.
   */
 
   if (
@@ -6264,9 +5380,12 @@ function openVirgoMemory(
   );
 
 
-  /* =======================================================
-     NORMAL SEVEN STARS
-  ======================================================= */
+  /*
+    NORMAL SEVEN STARS
+
+    These can be explored in
+    any order.
+  */
 
   if (
     starName !== "Spica"
@@ -6297,9 +5416,9 @@ function openVirgoMemory(
   );
 
 
-  /* =======================================================
-     ALL SEVEN FOUND — WAKE SPICA
-  ======================================================= */
+  /*
+    ALL SEVEN FOUND — WAKE SPICA
+  */
 
   if (
     virgoVisited.size >= 7 &&
@@ -6327,8 +5446,9 @@ function openVirgoMemory(
 
 
     /*
-      Let the current memory stay visible
-      briefly before inviting him to Spica.
+      Let the current memory stay
+      visible briefly before inviting
+      him to Spica.
     */
 
     setTimeout(
@@ -6366,9 +5486,9 @@ function openVirgoMemory(
   }
 
 
-  /* =======================================================
-     SPICA — FINAL REVEAL
-  ======================================================= */
+  /*
+    SPICA — FINAL REVEAL
+  */
 
   if (
     starName === "Spica"
@@ -6397,7 +5517,6 @@ function openVirgoMemory(
   }
 }
 
-
 /* =========================================================
    VIRGO STAR CONTROLS
 ========================================================= */
@@ -6424,6 +5543,7 @@ virgoMemoryStars.forEach(
   }
 );
 
+
 virgoExit.addEventListener(
   "click",
   event => {
@@ -6431,6 +5551,7 @@ virgoExit.addEventListener(
     event.preventDefault();
 
     event.stopPropagation();
+
 
     leaveVirgoChapter();
 
@@ -6442,8 +5563,11 @@ virgoExit.addEventListener(
    TAP DISCOVERED VIRGO
 ========================================================= */
 
-let virgoTapStartX = 0;
-let virgoTapStartY = 0;
+let virgoTapStartX =
+  0;
+
+let virgoTapStartY =
+  0;
 
 
 app.addEventListener(
@@ -6459,8 +5583,10 @@ app.addEventListener(
       return;
     }
 
+
     virgoTapStartX =
       event.clientX;
+
 
     virgoTapStartY =
       event.clientY;
@@ -6483,6 +5609,7 @@ app.addEventListener(
       return;
     }
 
+
     const moved =
       Math.hypot(
         event.clientX -
@@ -6492,33 +5619,45 @@ app.addEventListener(
         virgoTapStartY
       );
 
+
     if (
       moved >= 18
     ) {
       return;
     }
 
+
     const rect =
       virgo.getBoundingClientRect();
 
+
     const paddingX =
-      rect.width * .10;
+      rect.width *
+      .10;
+
 
     const paddingY =
-      rect.height * .08;
+      rect.height *
+      .08;
+
 
     const insideVirgo =
       event.clientX >=
-        rect.left + paddingX &&
+        rect.left +
+        paddingX &&
 
       event.clientX <=
-        rect.right - paddingX &&
+        rect.right -
+        paddingX &&
 
       event.clientY >=
-        rect.top + paddingY &&
+        rect.top +
+        paddingY &&
 
       event.clientY <=
-        rect.bottom - paddingY;
+        rect.bottom -
+        paddingY;
+
 
     if (
       insideVirgo
@@ -6526,12 +5665,15 @@ app.addEventListener(
 
       event.preventDefault();
 
+
       enterVirgoChapter();
 
     }
+
   },
   true
 );
+
 
 /* =========================================================
    INITIALISE

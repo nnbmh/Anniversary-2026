@@ -889,80 +889,80 @@ const orionStars = [
 const virgoStars = [
   {
     name: "Vindemiatrix",
-    revealX: 395 / 620,
-    revealY: 112 / 520,
-    telescopeX: 42,
-    telescopeY: -82,
+    revealX: 375 / 620,
+    revealY: 183 / 520,
+    telescopeX: 33,
+    telescopeY: -39,
     size: 2.25,
     tone: "warm"
   },
 
   {
     name: "Auva",
-    revealX: 370 / 620,
-    revealY: 185 / 520,
-    telescopeX: 30,
-    telescopeY: -47,
+    revealX: 383 / 620,
+    revealY: 276 / 520,
+    telescopeX: 37,
+    telescopeY: 8,
     size: 1.65,
     tone: "neutral"
   },
 
   {
     name: "Porrima",
-    revealX: 300 / 620,
-    revealY: 265 / 520,
-    telescopeX: -4,
-    telescopeY: -8,
+    revealX: 310 / 620,
+    revealY: 302 / 520,
+    telescopeX: 0,
+    telescopeY: 21,
     size: 2.15,
     tone: "neutral"
   },
 
   {
     name: "Spica",
-    revealX: 225 / 620,
-    revealY: 405 / 520,
-    telescopeX: -41,
-    telescopeY: 60,
+    revealX: 295 / 620,
+    revealY: 485 / 520,
+    telescopeX: -8,
+    telescopeY: 113,
     size: 3.05,
     tone: "cool"
   },
 
   {
     name: "Zaniah",
-    revealX: 250 / 620,
-    revealY: 190 / 520,
-    telescopeX: -28,
-    telescopeY: -45,
+    revealX: 310 / 620,
+    revealY: 197 / 520,
+    telescopeX: 0,
+    telescopeY: -32,
     size: 1.75,
     tone: "neutral"
   },
 
   {
     name: "Zavijava",
-    revealX: 135 / 620,
-    revealY: 165 / 520,
-    telescopeX: -84,
-    telescopeY: -57,
+    revealX: 225 / 620,
+    revealY: 168 / 520,
+    telescopeX: -43,
+    telescopeY: -46,
     size: 1.95,
     tone: "neutral"
   },
 
   {
     name: "Heze",
-    revealX: 365 / 620,
-    revealY: 315 / 520,
-    telescopeX: 28,
-    telescopeY: 16,
+    revealX: 419 / 620,
+    revealY: 339 / 520,
+    telescopeX: 55,
+    telescopeY: 40,
     size: 1.5,
     tone: "neutral"
   },
 
   {
     name: "Syrma",
-    revealX: 420 / 620,
-    revealY: 385 / 520,
-    telescopeX: 55,
-    telescopeY: 50,
+    revealX: 361 / 620,
+    revealY: 435 / 520,
+    telescopeX: 26,
+    telescopeY: 88,
     size: 1.8,
     tone: "neutral"
   }
@@ -976,60 +976,50 @@ const virgoStars = [
 
 const virgoVisualStars = [
   {
-    revealX: 395 / 620,
+    revealX: 393 / 620,
     revealY: 35 / 520,
     telescopeX: 42,
-    telescopeY: -120,
+    telescopeY: -113,
     size: 1.7,
     tone: "neutral"
   },
 
   {
-    revealX: 395 / 620,
-    revealY: 75 / 520,
+    revealX: 393 / 620,
+    revealY: 119 / 520,
     telescopeX: 42,
-    telescopeY: -100,
+    telescopeY: -71,
     size: 1.3,
     tone: "neutral"
   },
 
   {
-    revealX: 195 / 620,
-    revealY: 305 / 520,
-    telescopeX: -56,
-    telescopeY: 12,
+    revealX: 255 / 620,
+    revealY: 347 / 520,
+    telescopeX: -28,
+    telescopeY: 44,
     size: 1.55,
     tone: "warm"
   },
 
   {
-    revealX: 145 / 620,
-    revealY: 390 / 520,
-    telescopeX: -80,
-    telescopeY: 53,
+    revealX: 201 / 620,
+    revealY: 444 / 520,
+    telescopeX: -55,
+    telescopeY: 92,
     size: 1.25,
     tone: "neutral"
   },
 
   {
-    revealX: 345 / 620,
-    revealY: 420 / 520,
-    telescopeX: 18,
-    telescopeY: 67,
+    revealX: 329 / 620,
+    revealY: 424 / 520,
+    telescopeX: 10,
+    telescopeY: 82,
     size: 1.6,
     tone: "cool"
-  },
-
-  {
-    revealX: 305 / 620,
-    revealY: 475 / 520,
-    telescopeX: -2,
-    telescopeY: 94,
-    size: 1.35,
-    tone: "neutral"
   }
 ];
-
 /* =========================================================
    SHARED CONSTELLATION STAR APPEARANCE
 ========================================================= */
@@ -2124,26 +2114,33 @@ function drawTelescopeVirgo(
   */
 
   const connections = [
-    [8, 9],
-    [9, 0],
-    [0, 1],
+  // upper stem
+  [8, 9],
+  [9, 0],
 
-    [5, 4],
-    [4, 1],
+  // upper-left arm
+  [5, 4],
+  [4, 0],
 
-    [4, 2],
-    [1, 6],
-    [2, 6],
+  // centre-left
+  [4, 2],
 
-    [2, 10],
-    [10, 11],
+  // centre-right
+  [0, 1],
+  [1, 6],
 
-    [6, 7],
-    [7, 12],
-    [12, 13],
+  // centre bridge
+  [2, 6],
 
-    [7, 3]
-  ];
+  // lower-left bent branch
+  [2, 10],
+  [10, 11],
+
+  // lower-right bent branch
+  [6, 7],
+  [7, 12],
+  [12, 3]
+];
 
   const time =
     performance.now() / 1000;

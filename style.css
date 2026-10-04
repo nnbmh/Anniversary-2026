@@ -3074,6 +3074,118 @@ button {
 
 }
 
+/* =========================================================
+   VIRGO CLICKABLE STAR GUIDE
+========================================================= */
+
+/*
+  Small breathing halo around stars that can be touched.
+  The actual invisible touch target stays much larger.
+*/
+
+.virgo-memory-star::before {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  transform:
+    translate(-50%, -50%)
+    scale(.7);
+
+  border:
+    1px solid
+    rgba(218, 232, 250, .28);
+
+  box-shadow:
+    0 0 8px
+    rgba(205, 225, 255, .16);
+
+  opacity: .25;
+
+  animation:
+    virgoMemoryBeacon
+    2.8s
+    ease-in-out
+    infinite;
+
+  pointer-events: none;
+}
+
+
+/*
+  Slow breathing effect.
+*/
+
+@keyframes virgoMemoryBeacon {
+
+  0%,
+  100% {
+    transform:
+      translate(-50%, -50%)
+      scale(.7);
+
+    opacity: .18;
+  }
+
+  50% {
+    transform:
+      translate(-50%, -50%)
+      scale(1.4);
+
+    opacity: .72;
+  }
+
+}
+
+
+/*
+  Once Faris has opened a star,
+  its guiding halo disappears.
+*/
+
+.virgo-memory-star.visited::before {
+  animation: none;
+  opacity: 0;
+}
+
+
+/*
+  Spica is visible from the beginning,
+  but its pulse is quieter while locked.
+*/
+
+.virgo-memory-star.spica.locked::before {
+  animation-duration: 4.2s;
+  opacity: .14;
+}
+
+
+/*
+  Once the other seven are found,
+  Spica becomes the obvious final star.
+*/
+
+.virgo-memory-star.spica.unlocked::before {
+  width: 24px;
+  height: 24px;
+
+  border-color:
+    rgba(190, 220, 255, .5);
+
+  box-shadow:
+    0 0 12px
+    rgba(170, 215, 255, .32);
+
+  animation-duration: 2s;
+}
 
 /* =========================================================
    SPICA

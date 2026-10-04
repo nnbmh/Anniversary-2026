@@ -3231,44 +3231,6 @@ button {
 }
 
 
-/*
-  Once a star has been visited,
-  its cue settles down.
-*/
-
-#app.entering-virgo
-.virgo-memory-star.visited::after {
-
-  opacity: .28;
-
-  animation: none;
-}
-
-
-@keyframes virgoAvailablePulse {
-
-  0%,
-  100% {
-
-    opacity: .36;
-
-    transform:
-      translate(-50%,-50%)
-      scale(.86);
-  }
-
-  50% {
-
-    opacity: .76;
-
-    transform:
-      translate(-50%,-50%)
-      scale(1.12);
-  }
-
-}
-
-
 /* =========================================================
    VIRGO FOCUS PROGRESSION
 ========================================================= */

@@ -550,64 +550,64 @@ function buildUniverseStars() {
     "mid"
   );
 
-  /*
-    VIRGO REGION
+/*
+  VIRGO REGION
 
-    Keep the middle around Virgo quieter while
-    making the surrounding sky richer.
-  */
+  Dense surrounding field similar to Orion,
+  while keeping Virgo itself readable.
+*/
 
-  buildAnnulusCluster(
-    starsDeep,
-    930,
-    690,
-    300,
-    235,
-    760,
-    520,
-    155,
-    22000,
-    "deep"
-  );
+buildAnnulusCluster(
+  starsDeep,
+  930,
+  690,
+  115,
+  90,
+  690,
+  470,
+  330,
+  22000,
+  "deep"
+);
 
-  buildAnnulusCluster(
-    starsFar,
-    930,
-    690,
-    290,
-    225,
-    650,
-    455,
-    52,
-    24000,
-    "far"
-  );
+buildAnnulusCluster(
+  starsFar,
+  930,
+  690,
+  105,
+  80,
+  590,
+  410,
+  100,
+  24000,
+  "far"
+);
 
-  buildAnnulusCluster(
-    starsMid,
-    930,
-    690,
-    285,
-    215,
-    560,
-    390,
-    15,
-    26000,
-    "mid"
-  );
+buildAnnulusCluster(
+  starsMid,
+  930,
+  690,
+  120,
+  90,
+  500,
+  350,
+  28,
+  26000,
+  "mid"
+);
 
-  buildAnnulusCluster(
-    starsNear,
-    930,
-    690,
-    320,
-    245,
-    520,
-    360,
-    4,
-    28000,
-    "near"
-  );
+buildAnnulusCluster(
+  starsNear,
+  930,
+  690,
+  145,
+  110,
+  470,
+  330,
+  7,
+  28000,
+  "near"
+);
 }
 
 

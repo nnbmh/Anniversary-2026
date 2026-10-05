@@ -5045,34 +5045,6 @@ function positionVirgoExperience() {
   const rect =
     virgo.getBoundingClientRect();
 
-
-  /*
-    Make the invisible buttons sit
-    directly over the REAL Virgo
-    constellation.
-  */
-
-  virgoHitLayer.style.setProperty(
-    "--virgo-left",
-    `${rect.left}px`
-  );
-
-  virgoHitLayer.style.setProperty(
-    "--virgo-top",
-    `${rect.top}px`
-  );
-
-  virgoHitLayer.style.setProperty(
-    "--virgo-width",
-    `${rect.width}px`
-  );
-
-  virgoHitLayer.style.setProperty(
-    "--virgo-height",
-    `${rect.height}px`
-  );
-
-
   /*
     Keep the writing underneath Virgo,
     but reserve enough room for long

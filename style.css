@@ -3120,7 +3120,7 @@ button {
 }
 
 /* Only show/pulse them once we actually enter Virgo */
-#app.entering-virgo #virgo .virgo-memory-star::before {
+.virgo-experience.show #virgoHitLayer .virgo-memory-star::before {
   opacity: .25;
   animation: virgoMemoryBeacon 2.8s ease-in-out infinite;
 }

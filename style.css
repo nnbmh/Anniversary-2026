@@ -3206,6 +3206,17 @@ button {
   opacity: .25;
 }
 
+/* Keep Virgo tap targets large, but never draw visible circles */
+#virgo .virgo-memory-star::before,
+#virgo.memory-active .virgo-memory-star::before,
+#virgo.memory-active .virgo-memory-star.spica.locked::before,
+#virgo.memory-active .virgo-memory-star.spica.unlocked::before {
+  opacity: 0 !important;
+  animation: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
 /* =========================================================
    SPICA
 ========================================================= */

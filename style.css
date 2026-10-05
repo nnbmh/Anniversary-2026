@@ -3120,7 +3120,7 @@ button {
 }
 
 /* Only show/pulse them once we actually enter Virgo */
-.virgo-experience.show #virgoHitLayer .virgo-memory-star::before {
+#virgo.memory-active .virgo-memory-star::before {
   opacity: .25;
   animation: virgoMemoryBeacon 2.8s ease-in-out infinite;
 }
@@ -3177,11 +3177,10 @@ button {
   opacity: 0;
 }
 
-#app.entering-virgo #virgo .virgo-memory-star.spica.locked::before {
+#virgo.memory-active .virgo-memory-star.spica.locked::before {
   animation: virgoMemoryBeacon 4.2s ease-in-out infinite;
   opacity: .14;
 }
-
 /*
   Once the other seven are found,
   Spica becomes the obvious final star.
@@ -3202,7 +3201,7 @@ button {
   opacity: 0;
 }
 
-#app.entering-virgo #virgo .virgo-memory-star.spica.unlocked::before {
+#virgo.memory-active .virgo-memory-star.spica.unlocked::before {
   animation: virgoMemoryBeacon 2s ease-in-out infinite;
   opacity: .25;
 }

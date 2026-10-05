@@ -3217,34 +3217,59 @@ button {
   box-shadow: none !important;
 }
 
-/* Make unvisited tappable Virgo stars easier to spot */
+/* Bright glow directly on tappable Virgo stars */
 #virgo.memory-active .virgo-memory-star:not(.visited)::after {
   content: "";
   position: absolute;
+
   left: 50%;
   top: 50%;
 
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
+
   border-radius: 50%;
 
-  transform: translate(-50%, -50%);
+  transform:
+    translate(-50%, -50%);
 
-  background: rgba(245, 249, 255, .95);
+  background:
+    rgba(255, 255, 255, 1);
 
   box-shadow:
-    0 0 4px rgba(235, 245, 255, .95),
-    0 0 9px rgba(205, 225, 255, .75),
-    0 0 16px rgba(175, 210, 255, .40);
+    0 0 3px 1px rgba(255, 255, 255, .95),
+    0 0 8px 3px rgba(220, 235, 255, .75),
+    0 0 16px 5px rgba(175, 210, 255, .42);
 
   pointer-events: none;
+
+  animation:
+    virgoClickableStarGlow
+    2.2s
+    ease-in-out
+    infinite;
 }
 
-/* Once tapped, remove the extra glow */
+@keyframes virgoClickableStarGlow {
+  0%, 100% {
+    opacity: .72;
+    transform:
+      translate(-50%, -50%)
+      scale(.78);
+  }
+
+  50% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      scale(1.12);
+  }
+}
+
+/* Remove extra glow after that memory has been opened */
 #virgo.memory-active .virgo-memory-star.visited::after {
   content: none;
 }
-
 /* =========================================================
    SPICA
 ========================================================= */

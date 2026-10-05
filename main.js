@@ -4925,6 +4925,10 @@ function enterVirgoChapter() {
         );
 
 
+      virgo.classList.add(
+         "memory-active"
+      );
+
       virgoExperience
         .setAttribute(
           "aria-hidden",
@@ -4949,6 +4953,9 @@ function leaveVirgoChapter() {
       "show"
     );
 
+   virgo.classList.remove(
+      "memory-active"
+   );
 
   virgoExperience
     .setAttribute(

@@ -5618,24 +5618,31 @@ virgoMemoryStars.forEach(
   star => {
 
     star.addEventListener(
-      "pointerup",
+      "pointerdown",
       event => {
 
+        if (
+          !enteringVirgo ||
+          !virgo.classList.contains(
+            "memory-active"
+          )
+        ) {
+          return;
+        }
+
         event.preventDefault();
-
         event.stopPropagation();
-
 
         openVirgoMemory(
           star
         );
 
-      }
+      },
+      true
     );
 
   }
 );
-
 
 virgoExit.addEventListener(
   "click",

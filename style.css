@@ -2748,6 +2748,18 @@ button {
     filter 1.2s ease;
 }
 
+/* Allow the Virgo star buttons to receive taps during the chapter */
+#app.entering-virgo #virgo.memory-active {
+  pointer-events: auto;
+}
+
+#app.entering-virgo #virgo.memory-active .virgo-hit-layer {
+  pointer-events: none;
+}
+
+#app.entering-virgo #virgo.memory-active .virgo-memory-star {
+  pointer-events: auto;
+}
 
 #app.entering-virgo
 #virgo.virgo-focused {

@@ -5585,35 +5585,56 @@ showVirgoCopy(
 /* =========================================================
    VIRGO STAR CONTROLS
 ========================================================= */
+/*
+  VIRGO STAR CONTROLS
 
-virgoMemoryStars.forEach(
-  star => {
+  Use coordinate hit-testing instead of relying on
+  Safari to target the button itself.
+*/
 
-    star.addEventListener(
-      "pointerdown",
-      event => {
+document.addEventListener(
+  "pointerdown",
+  event => {
 
-        if (
-          !enteringVirgo ||
-          !virgo.classList.contains(
-            "memory-active"
-          )
-        ) {
-          return;
+    if (
+      !enteringVirgo ||
+      !virgo.classList.contains(
+        "memory-active"
+      )
+    ) {
+      return;
+    }
+
+    const tappedStar =
+      virgoMemoryStars.find(
+        star => {
+
+          const rect =
+            star.getBoundingClientRect();
+
+          return (
+            event.clientX >= rect.left &&
+            event.clientX <= rect.right &&
+            event.clientY >= rect.top &&
+            event.clientY <= rect.bottom
+          );
+
         }
+      );
 
-        event.preventDefault();
-        event.stopPropagation();
+    if (!tappedStar) {
+      return;
+    }
 
-        openVirgoMemory(
-          star
-        );
+    event.preventDefault();
+    event.stopPropagation();
 
-      },
-      true
+    openVirgoMemory(
+      tappedStar
     );
 
-  }
+  },
+  true
 );
 
 virgoExit.addEventListener(

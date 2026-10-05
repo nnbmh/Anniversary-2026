@@ -3173,10 +3173,14 @@ button {
 */
 
 .virgo-memory-star.spica.locked::before {
-  animation-duration: 4.2s;
-  opacity: .14;
+  animation: none;
+  opacity: 0;
 }
 
+#app.entering-virgo #virgo .virgo-memory-star.spica.locked::before {
+  animation: virgoMemoryBeacon 4.2s ease-in-out infinite;
+  opacity: .14;
+}
 
 /*
   Once the other seven are found,
@@ -3194,7 +3198,13 @@ button {
     0 0 12px
     rgba(170, 215, 255, .32);
 
-  animation-duration: 2s;
+  animation: none;
+  opacity: 0;
+}
+
+#app.entering-virgo #virgo .virgo-memory-star.spica.unlocked::before {
+  animation: virgoMemoryBeacon 2s ease-in-out infinite;
+  opacity: .25;
 }
 
 /* =========================================================

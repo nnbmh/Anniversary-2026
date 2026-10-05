@@ -2750,33 +2750,23 @@ button {
 
 /* Allow the Virgo star buttons to receive taps during the chapter */
 #app.entering-virgo #virgo.memory-active {
-  pointer-events: auto;
-}
-
-#app.entering-virgo #virgo.memory-active .virgo-hit-layer {
-  pointer-events: none;
-}
-
-#app.entering-virgo #virgo.memory-active .virgo-memory-star {
-  pointer-events: auto;
-}
-
-/* Virgo must sit above every chapter overlay while its stars are interactive */
-#app.entering-virgo #virgo.memory-active {
   z-index: 200 !important;
   pointer-events: auto !important;
 }
 
 #app.entering-virgo #virgo.memory-active .virgo-hit-layer {
-  z-index: 50 !important;
-  pointer-events: auto !important;
+  z-index: 50;
+  pointer-events: auto;
 }
 
 #app.entering-virgo #virgo.memory-active .virgo-memory-star {
   position: absolute;
   z-index: 51;
-  pointer-events: auto !important;
+
+  pointer-events: auto;
+
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #app.entering-virgo

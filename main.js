@@ -5585,12 +5585,6 @@ showVirgoCopy(
 /* =========================================================
    VIRGO STAR CONTROLS
 ========================================================= */
-/*
-  VIRGO STAR CONTROLS
-
-  Use coordinate hit-testing instead of relying on
-  Safari to target the button itself.
-*/
 
 document.addEventListener(
   "pointerdown",
@@ -5605,32 +5599,93 @@ document.addEventListener(
       return;
     }
 
-    const tappedStar =
-      virgoMemoryStars.find(
-        star => {
+    const virgoRect =
+      virgo.getBoundingClientRect();
 
-          const rect =
-            star.getBoundingClientRect();
+    /*
+      Convert the tap into Virgo's own
+      620 × 520 coordinate system.
+    */
 
-          return (
-            event.clientX >= rect.left &&
-            event.clientX <= rect.right &&
-            event.clientY >= rect.top &&
-            event.clientY <= rect.bottom
-          );
+    const tapX =
+      (
+        (
+          event.clientX -
+          virgoRect.left
+        ) /
+        virgoRect.width
+      ) * 620;
 
-        }
+    const tapY =
+      (
+        (
+          event.clientY -
+          virgoRect.top
+        ) /
+        virgoRect.height
+      ) * 520;
+
+
+    /*
+      Exact coordinates of the eight
+      interactive Virgo stars.
+    */
+
+    const hitStars = [
+      ["Vindemiatrix", 375, 183],
+      ["Auva",         383, 276],
+      ["Porrima",      310, 302],
+      ["Spica",        295, 485],
+      ["Zaniah",       310, 197],
+      ["Zavijava",     225, 168],
+      ["Heze",         419, 339],
+      ["Syrma",        361, 435]
+    ];
+
+
+    /*
+      Generous touch radius in Virgo's
+      own coordinate system.
+    */
+
+    const hitRadius =
+      38;
+
+
+    const hit =
+      hitStars.find(
+        ([name, x, y]) =>
+          Math.hypot(
+            tapX - x,
+            tapY - y
+          ) <= hitRadius
       );
 
-    if (!tappedStar) {
+
+    if (!hit) {
       return;
     }
+
+
+    const star =
+      virgoMemoryStars.find(
+        item =>
+          item.dataset.star ===
+          hit[0]
+      );
+
+
+    if (!star) {
+      return;
+    }
+
 
     event.preventDefault();
     event.stopPropagation();
 
+
     openVirgoMemory(
-      tappedStar
+      star
     );
 
   },

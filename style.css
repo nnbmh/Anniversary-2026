@@ -3113,7 +3113,23 @@ button {
   pointer-events: none;
 }
 
+/* Hide Virgo memory halos outside the Virgo chapter */
+#virgo .virgo-memory-star::before {
+  opacity: 0;
+  animation: none;
+}
 
+/* Only show/pulse them once we actually enter Virgo */
+#app.entering-virgo #virgo .virgo-memory-star::before {
+  opacity: .25;
+  animation: virgoMemoryBeacon 2.8s ease-in-out infinite;
+}
+
+/* Visited stars stay off */
+#app.entering-virgo #virgo .virgo-memory-star.visited::before {
+  opacity: 0;
+  animation: none;
+}
 /*
   Slow breathing effect.
 */

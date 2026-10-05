@@ -3018,7 +3018,7 @@ function discoverVirgo() {
       VIRGO_LINE_PAUSE;
 
     const requiredTime =
-      13 *
+      10 *
       segmentTime +
       900;
 

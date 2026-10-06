@@ -35,7 +35,6 @@ const orionChapterIntro = document.getElementById("orionChapterIntro");
 
 const ctx = telescopeCanvas.getContext("2d");
 
-
 /* =========================================================
    CAMERA
 ========================================================= */

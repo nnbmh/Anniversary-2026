@@ -1603,6 +1603,16 @@ button {
     opacity .4s ease;
 }
 
+#orionChapter.ending-active
+#orionExit,
+#virgoChapter.ending-active
+#virgoExit {
+  opacity: 0;
+
+  visibility: hidden;
+
+  pointer-events: none;
+}
 
 .chapter-exit:hover {
   color:
@@ -3010,6 +3020,79 @@ button {
 
   color:
     rgba(233,240,250,.86);
+}
+
+/* =========================================================
+   VIRGO FINAL — SPICA
+========================================================= */
+
+.virgo-memory.spica-final {
+  bottom: auto;
+
+  overflow: visible;
+
+  pointer-events: auto;
+}
+
+
+#virgoReturn {
+  margin:
+    30px
+    auto
+    0;
+
+  padding:
+    11px
+    16px;
+
+  border:
+    1px solid
+    rgba(220,232,248,.12);
+
+  border-radius: 100px;
+
+  background:
+    rgba(5,10,18,.36);
+
+  color:
+    rgba(231,239,249,.58);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 11px;
+
+  font-style: italic;
+
+  cursor: pointer;
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  transform:
+    translateY(8px);
+
+  transition:
+    opacity .8s ease,
+    transform .8s ease,
+    visibility .8s ease;
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+
+.virgo-memory.spica-final
+#virgoReturn {
+  opacity: 1;
+
+  visibility: visible;
+
+  transform:
+    translateY(0);
 }
 
 /* =========================================================

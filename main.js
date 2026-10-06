@@ -4587,115 +4587,6 @@ orionExit.addEventListener(
   }
 );
 
-/* =========================================================
-   VIRGO STAR CONTROLS
-========================================================= */
-
-document.addEventListener(
-  "pointerdown",
-  event => {
-
-    if (
-      !enteringVirgo ||
-      !virgo.classList.contains(
-        "memory-active"
-      )
-    ) {
-      return;
-    }
-
-    const virgoRect =
-      virgo.getBoundingClientRect();
-
-    /*
-      Convert the tap into Virgo's own
-      620 × 520 coordinate system.
-    */
-
-    const tapX =
-      (
-        (
-          event.clientX -
-          virgoRect.left
-        ) /
-        virgoRect.width
-      ) * 620;
-
-    const tapY =
-      (
-        (
-          event.clientY -
-          virgoRect.top
-        ) /
-        virgoRect.height
-      ) * 520;
-
-
-    /*
-      Exact coordinates of the eight
-      interactive Virgo stars.
-    */
-
-    const hitStars = [
-      ["Vindemiatrix", 375, 183],
-      ["Auva",         383, 276],
-      ["Porrima",      310, 302],
-      ["Spica",        295, 485],
-      ["Zaniah",       310, 197],
-      ["Zavijava",     225, 168],
-      ["Heze",         419, 339],
-      ["Syrma",        361, 435]
-    ];
-
-
-    /*
-      Generous touch radius in Virgo's
-      own coordinate system.
-    */
-
-    const hitRadius =
-      38;
-
-
-    const hit =
-      hitStars.find(
-        ([name, x, y]) =>
-          Math.hypot(
-            tapX - x,
-            tapY - y
-          ) <= hitRadius
-      );
-
-
-    if (!hit) {
-      return;
-    }
-
-
-    const star =
-      virgoMemoryStars.find(
-        item =>
-          item.dataset.star ===
-          hit[0]
-      );
-
-
-    if (!star) {
-      return;
-    }
-
-
-    event.preventDefault();
-    event.stopPropagation();
-
-
-    openVirgoMemory(
-      star
-    );
-
-  },
-  true
-);
 
 /* =========================================================
    VIRGO CHAPTER
@@ -5588,10 +5479,6 @@ document.addEventListener(
   true
 );
 
-showVirgoCopy(
-  memoryHeading,
-  memory.text
-);
 
   virgoExploreHint.classList.add(
     "hidden"

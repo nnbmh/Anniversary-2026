@@ -4413,22 +4413,27 @@ function finishOrionChapter() {
   clampCamera();
 
   setTimeout(
-    () => {
-      orionMemoryStage
-        .classList
-        .remove(
-          "show"
-        );
+  () => {
+    orionMemoryStage
+      .classList
+      .remove(
+        "show"
+      );
 
-      orionEnding
-        .classList
-        .add(
-          "show"
-        );
-    },
-    1400
-  );
-}
+    orionChapter
+      .classList
+      .add(
+        "ending-active"
+      );
+
+    orionEnding
+      .classList
+      .add(
+        "show"
+      );
+  },
+  1400
+);
 
 
 /* =========================================================
@@ -4436,7 +4441,12 @@ function finishOrionChapter() {
 ========================================================= */
 
 function leaveOrionChapter() {
-  orionEnding
+   
+   orionChapter.classList.remove(
+      "ending-active"
+  );
+   
+   orionEnding
     .classList
     .remove(
       "show"
@@ -4724,6 +4734,11 @@ const virgoExit =
     "virgoExit"
   );
 
+const virgoReturn =
+  document.getElementById(
+    "virgoReturn"
+  );
+
 let enteringVirgo =
   false;
 
@@ -4941,7 +4956,16 @@ function enterVirgoChapter() {
 ========================================================= */
 
 function leaveVirgoChapter() {
-  virgoExperience
+   
+   virgoChapter.classList.remove(
+    "ending-active"
+  );
+
+  virgoMemory.classList.remove(
+    "spica-final"
+  );
+   
+   virgoExperience
     .classList
     .remove(
       "show"
@@ -5460,21 +5484,42 @@ function openVirgoMemory(
     astronomy name/heading.
   */
 
-  const memoryHeading =
-    starName === "Spica"
-      ? ""
-      : `${star.dataset.discoveryNumber} · ${memory.title}`;
+ const memoryHeading =
+  starName === "Spica"
+    ? ""
+    : `${star.dataset.discoveryNumber} · ${memory.title}`;
 
 
-  showVirgoCopy(
-    memoryHeading,
-    memory.text
+if (
+  starName === "Spica"
+) {
+
+  virgoMemory.classList.add(
+    "spica-final"
   );
 
-
-  virgoExploreHint.classList.add(
-    "hidden"
+  virgoChapter.classList.add(
+    "ending-active"
   );
+
+} else {
+
+  virgoMemory.classList.remove(
+    "spica-final"
+  );
+
+}
+
+
+showVirgoCopy(
+  memoryHeading,
+  memory.text
+);
+
+
+virgoExploreHint.classList.add(
+  "hidden"
+);
 
 
   /*
@@ -5711,6 +5756,22 @@ virgoExit.addEventListener(
   }
 );
 
+virgoReturn.addEventListener(
+  "click",
+  event => {
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+    virgo.classList.add(
+      "completed"
+    );
+
+    leaveVirgoChapter();
+
+  }
+);
 
 /* =========================================================
    TAP DISCOVERED VIRGO

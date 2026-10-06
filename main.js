@@ -348,6 +348,7 @@ function buildCluster(
   Extra Virgo stars live around the constellation
   rather than piling directly behind it.
 */
+
 function buildAnnulusCluster(
   layer,
   centreX,
@@ -550,64 +551,64 @@ function buildUniverseStars() {
     "mid"
   );
 
-/*
-  VIRGO REGION
+  /*
+    VIRGO REGION
 
-  Dense surrounding field similar to Orion,
-  while keeping Virgo itself readable.
-*/
+    Dense surrounding field similar to Orion,
+    while keeping Virgo itself readable.
+  */
 
-buildAnnulusCluster(
-  starsDeep,
-  930,
-  690,
-  115,
-  90,
-  690,
-  470,
-  330,
-  22000,
-  "deep"
-);
+  buildAnnulusCluster(
+    starsDeep,
+    930,
+    690,
+    115,
+    90,
+    690,
+    470,
+    330,
+    22000,
+    "deep"
+  );
 
-buildAnnulusCluster(
-  starsFar,
-  930,
-  690,
-  105,
-  80,
-  590,
-  410,
-  100,
-  24000,
-  "far"
-);
+  buildAnnulusCluster(
+    starsFar,
+    930,
+    690,
+    105,
+    80,
+    590,
+    410,
+    100,
+    24000,
+    "far"
+  );
 
-buildAnnulusCluster(
-  starsMid,
-  930,
-  690,
-  120,
-  90,
-  500,
-  350,
-  28,
-  26000,
-  "mid"
-);
+  buildAnnulusCluster(
+    starsMid,
+    930,
+    690,
+    120,
+    90,
+    500,
+    350,
+    28,
+    26000,
+    "mid"
+  );
 
-buildAnnulusCluster(
-  starsNear,
-  930,
-  690,
-  145,
-  110,
-  470,
-  330,
-  7,
-  28000,
-  "near"
-);
+  buildAnnulusCluster(
+    starsNear,
+    930,
+    690,
+    145,
+    110,
+    470,
+    330,
+    7,
+    28000,
+    "near"
+  );
 }
 
 
@@ -848,7 +849,7 @@ const orionStars = [
   {
     name: "Sword 1",
     revealX: .496,
-    revealY: .565,
+         revealY: .565,
     telescopeX: -1,
     telescopeY: 42,
     size: .85,
@@ -1020,6 +1021,8 @@ const virgoVisualStars = [
     tone: "cool"
   }
 ];
+
+
 /* =========================================================
    SHARED CONSTELLATION STAR APPEARANCE
 ========================================================= */
@@ -1297,7 +1300,7 @@ function drawConstellationStar(
   verticalGradient.addColorStop(.51, `rgba(${core},${.5 * brightness})`);
   verticalGradient.addColorStop(.62, `rgba(${glow},${.08 * brightness})`);
   verticalGradient.addColorStop(1, `rgba(${glow},0)`);
-  
+
   context.beginPath();
   context.moveTo(
     x,
@@ -1434,14 +1437,18 @@ function drawConstellationStar(
   );
 
   context.closePath();
-  context.shadowColor = `rgba(${glow},${.9 * brightness})`;
+
+  context.shadowColor =
+    `rgba(${glow},${.9 * brightness})`;
 
   context.shadowBlur =
     majorStar
       ? 8 + wave * 5
       : 4 + wave * 3;
 
-  context.fillStyle = `rgba(${core},${(.82 + wave * .18) * alpha})`;
+  context.fillStyle =
+    `rgba(${core},${(.82 + wave * .18) * alpha})`;
+
   context.fill();
 
   /* white-hot centre */
@@ -1463,10 +1470,13 @@ function drawConstellationStar(
     Math.PI * 2
   );
 
-  context.fillStyle = `rgba(255,255,255,${.98 * alpha})`;
+  context.fillStyle =
+    `rgba(255,255,255,${.98 * alpha})`;
+
   context.fill();
   context.restore();
 }
+
 
 /* =========================================================
    REVEALED ORION CANVAS
@@ -1509,6 +1519,7 @@ function resizeOrionStarCanvas() {
     0
   );
 }
+
 
 function renderRevealedOrionStars(
   timestamp = performance.now()
@@ -1563,6 +1574,7 @@ function renderRevealedOrionStars(
   });
 }
 
+
 /* =========================================================
    REVEALED VIRGO CANVAS
 ========================================================= */
@@ -1605,6 +1617,7 @@ function resizeVirgoStarCanvas() {
   );
 }
 
+
 function renderRevealedVirgoStars(
   timestamp = performance.now()
 ) {
@@ -1625,7 +1638,8 @@ function renderRevealedVirgoStars(
     height
   );
 
-  const time = timestamp / 1000;
+  const time =
+    timestamp / 1000;
 
   virgoStars.forEach(star => {
     const displaySize =
@@ -1648,19 +1662,22 @@ function renderRevealedVirgoStars(
     );
   });
 
-     virgoVisualStars.forEach((star, index) => {
-    drawConstellationStar(
-      virgoStarCtx,
-      width * star.revealX,
-      height * star.revealY,
-      star.size,
-      star.tone,
-      `VirgoVisual${index}`,
-      time,
-      .82
-    );
-  });
+  virgoVisualStars.forEach(
+    (star, index) => {
+      drawConstellationStar(
+        virgoStarCtx,
+        width * star.revealX,
+        height * star.revealY,
+        star.size,
+        star.tone,
+        `VirgoVisual${index}`,
+        time,
+        .82
+      );
+    }
+  );
 }
+
 
 /* =========================================================
    ORION POSITION
@@ -1679,12 +1696,14 @@ function updateOrionPosition() {
     rect.height / 2;
 }
 
+
 function getOrionDistance() {
   return Math.hypot(
     lensX - orionScreenX,
     lensY - orionScreenY
   );
 }
+
 
 /* =========================================================
    VIRGO POSITION
@@ -1697,11 +1716,11 @@ function updateVirgoPosition() {
   virgoScreenX =
     rect.left +
     rect.width / 2;
-
-  virgoScreenY =
+     virgoScreenY =
     rect.top +
     rect.height / 2;
 }
+
 
 function getVirgoDistance() {
   return Math.hypot(
@@ -1709,6 +1728,7 @@ function getVirgoDistance() {
     lensY - virgoScreenY
   );
 }
+
 
 /* =========================================================
    DRAW TELESCOPE ORION
@@ -2110,37 +2130,30 @@ function drawTelescopeVirgo(
     6 Heze
     7 Syrma
 
-    8-13 visual-only stars
+    8-12 visual-only stars
   */
 
   const connections = [
-  // upper stem
-  [8, 9],
-  [9, 0],
+    [8, 9],
+    [9, 0],
 
-  // upper-left arm
-  [5, 4],
-  [4, 0],
+    [5, 4],
+    [4, 0],
 
-  // centre-left
-  [4, 2],
+    [4, 2],
 
-  // centre-right
-  [0, 1],
-  [1, 6],
+    [0, 1],
+    [1, 6],
 
-  // centre bridge
-  [2, 6],
+    [2, 6],
 
-  // lower-left bent branch
-  [2, 10],
-  [10, 11],
+    [2, 10],
+    [10, 11],
 
-  // lower-right bent branch
-  [6, 7],
-  [7, 12],
-  [12, 3]
-];
+    [6, 7],
+    [7, 12],
+    [12, 3]
+  ];
 
   const time =
     performance.now() / 1000;
@@ -2340,6 +2353,7 @@ function drawTelescopeVirgo(
     }
   );
 }
+
 
 /* =========================================================
    TELESCOPE BACKGROUND
@@ -2548,7 +2562,7 @@ function renderTelescope() {
     height
   );
 
-  drawTelescopeOrion(
+     drawTelescopeOrion(
     width,
     height
   );
@@ -2558,6 +2572,7 @@ function renderTelescope() {
     height
   );
 }
+
 
 /* =========================================================
    LENS MOVEMENT
@@ -3018,7 +3033,7 @@ function discoverVirgo() {
       VIRGO_LINE_PAUSE;
 
     const requiredTime =
-      9 *
+      13 *
       segmentTime +
       900;
 
@@ -3660,6 +3675,7 @@ function initialise() {
     animate
   );
 }
+
 
 /* =========================================================
    ORION CHAPTER
@@ -4498,8 +4514,6 @@ function leaveOrionChapter() {
   /*
     Keep entering-orion active until
     the chapter has actually closed.
-    This prevents the title/universe
-    UI from overlapping during exit.
   */
 
   setTimeout(
@@ -4542,7 +4556,6 @@ orionContinue.addEventListener(
   "click",
   event => {
     event.preventDefault();
-
     event.stopPropagation();
 
     travelToNextOrionMemory();
@@ -4554,7 +4567,6 @@ orionReturn.addEventListener(
   "click",
   event => {
     event.preventDefault();
-
     event.stopPropagation();
 
     /*
@@ -4575,7 +4587,6 @@ orionExit.addEventListener(
   "click",
   event => {
     event.preventDefault();
-
     event.stopPropagation();
 
     /*
@@ -4587,115 +4598,99 @@ orionExit.addEventListener(
   }
 );
 
+
 /* =========================================================
-   VIRGO STAR CONTROLS
+   TAP DISCOVERED ORION
 ========================================================= */
 
-document.addEventListener(
+let appTapStartX =
+  0;
+
+let appTapStartY =
+  0;
+
+
+app.addEventListener(
   "pointerdown",
   event => {
-
     if (
-      !enteringVirgo ||
-      !virgo.classList.contains(
-        "memory-active"
-      )
+      !orionDiscovered ||
+      enteringOrion ||
+      enteringVirgo ||
+      telescopeActive
     ) {
       return;
     }
 
-    const virgoRect =
-      virgo.getBoundingClientRect();
+    appTapStartX =
+      event.clientX;
 
-    /*
-      Convert the tap into Virgo's own
-      620 × 520 coordinate system.
-    */
-
-    const tapX =
-      (
-        (
-          event.clientX -
-          virgoRect.left
-        ) /
-        virgoRect.width
-      ) * 620;
-
-    const tapY =
-      (
-        (
-          event.clientY -
-          virgoRect.top
-        ) /
-        virgoRect.height
-      ) * 520;
+    appTapStartY =
+      event.clientY;
+  },
+  true
+);
 
 
-    /*
-      Exact coordinates of the eight
-      interactive Virgo stars.
-    */
-
-    const hitStars = [
-      ["Vindemiatrix", 375, 183],
-      ["Auva",         383, 276],
-      ["Porrima",      310, 302],
-      ["Spica",        295, 485],
-      ["Zaniah",       310, 197],
-      ["Zavijava",     225, 168],
-      ["Heze",         419, 339],
-      ["Syrma",        361, 435]
-    ];
-
-
-    /*
-      Generous touch radius in Virgo's
-      own coordinate system.
-    */
-
-    const hitRadius =
-      38;
-
-
-    const hit =
-      hitStars.find(
-        ([name, x, y]) =>
-          Math.hypot(
-            tapX - x,
-            tapY - y
-          ) <= hitRadius
-      );
-
-
-    if (!hit) {
+app.addEventListener(
+  "pointerup",
+  event => {
+    if (
+      !orionDiscovered ||
+      enteringOrion ||
+      enteringVirgo ||
+      telescopeActive
+    ) {
       return;
     }
 
-
-    const star =
-      virgoMemoryStars.find(
-        item =>
-          item.dataset.star ===
-          hit[0]
+    const moved =
+      Math.hypot(
+        event.clientX -
+          appTapStartX,
+        event.clientY -
+          appTapStartY
       );
 
+    /*
+      Allow a little movement because
+      iPad taps can register a few pixels
+      of pointer movement.
+    */
 
-    if (!star) {
+    if (
+      moved > 18
+    ) {
       return;
     }
 
+    const rect =
+      orion.getBoundingClientRect();
+
+    const insideOrion =
+      event.clientX >=
+        rect.left &&
+      event.clientX <=
+        rect.right &&
+      event.clientY >=
+        rect.top &&
+      event.clientY <=
+        rect.bottom;
+
+    if (
+      !insideOrion
+    ) {
+      return;
+    }
 
     event.preventDefault();
     event.stopPropagation();
 
-
-    openVirgoMemory(
-      star
-    );
-
+    enterOrionChapter();
   },
   true
 );
+
 
 /* =========================================================
    VIRGO CHAPTER
@@ -4725,7 +4720,6 @@ let enteringVirgo =
 ========================================================= */
 
 function enterVirgoChapter() {
-
   if (
     !virgoDiscovered ||
     enteringVirgo ||
@@ -4734,10 +4728,8 @@ function enterVirgoChapter() {
     return;
   }
 
-
   enteringVirgo =
     true;
-
 
   /*
     Virgo is a reading experience.
@@ -4757,7 +4749,6 @@ function enterVirgoChapter() {
     "dragging"
   );
 
-
   navigationHint
     .classList
     .add(
@@ -4766,7 +4757,6 @@ function enterVirgoChapter() {
 
   navigationHintHidden =
     true;
-
 
   virgoChapter
     .classList
@@ -4784,10 +4774,8 @@ function enterVirgoChapter() {
     "entering-virgo"
   );
 
-
   /*
     Move the REAL Virgo toward the centre.
-
     Don't zoom further in.
   */
 
@@ -4802,7 +4790,6 @@ function enterVirgoChapter() {
     rect.top +
     rect.height / 2;
 
-
   /*
     Place Virgo slightly above centre,
     leaving room underneath for copy.
@@ -4815,7 +4802,6 @@ function enterVirgoChapter() {
   const desiredY =
     window.innerHeight *
     .40;
-
 
   const moveX =
     (
@@ -4830,7 +4816,6 @@ function enterVirgoChapter() {
       centreY
     ) /
     zoom;
-
 
   /*
     Move Virgo immediately to its
@@ -4850,7 +4835,6 @@ function enterVirgoChapter() {
   targetY =
     cameraY;
 
-
   /*
     Keep the current zoom.
   */
@@ -4860,14 +4844,11 @@ function enterVirgoChapter() {
 
   clampCamera();
 
-
   resetVirgoExperience();
-
 
   virgo.classList.remove(
     "virgo-focused"
   );
-
 
   virgoExperience
     .classList
@@ -4881,24 +4862,20 @@ function enterVirgoChapter() {
       "true"
     );
 
-
   /*
     Show intro.
   */
 
   setTimeout(
     () => {
-
       virgoChapterIntro
         .classList
         .add(
           "show"
         );
-
     },
     650
   );
-
 
   /*
     Fade intro.
@@ -4906,17 +4883,14 @@ function enterVirgoChapter() {
 
   setTimeout(
     () => {
-
       virgoChapterIntro
         .classList
         .remove(
           "show"
         );
-
     },
     2400
   );
-
 
   /*
     Camera has settled by now.
@@ -4926,9 +4900,7 @@ function enterVirgoChapter() {
 
   setTimeout(
     () => {
-
       positionVirgoExperience();
-
 
       virgoExperience
         .classList
@@ -4936,9 +4908,8 @@ function enterVirgoChapter() {
           "show"
         );
 
-
       virgo.classList.add(
-         "memory-active"
+        "memory-active"
       );
 
       virgoExperience
@@ -4946,7 +4917,6 @@ function enterVirgoChapter() {
           "aria-hidden",
           "false"
         );
-
     },
     3100
   );
@@ -4958,16 +4928,15 @@ function enterVirgoChapter() {
 ========================================================= */
 
 function leaveVirgoChapter() {
-
   virgoExperience
     .classList
     .remove(
       "show"
     );
 
-   virgo.classList.remove(
-      "memory-active"
-   );
+  virgo.classList.remove(
+    "memory-active"
+  );
 
   virgoExperience
     .setAttribute(
@@ -4975,23 +4944,19 @@ function leaveVirgoChapter() {
       "true"
     );
 
-
   virgoChapterIntro
     .classList
     .remove(
       "show"
     );
 
-
   setTimeout(
     () => {
-
       virgoChapter
         .classList
         .remove(
           "active"
         );
-
 
       virgoChapter
         .setAttribute(
@@ -4999,19 +4964,17 @@ function leaveVirgoChapter() {
           "true"
         );
 
-
       app.classList.remove(
         "entering-virgo"
       );
 
-
       enteringVirgo =
         false;
-
     },
     650
   );
 }
+
 
 /* =========================================================
    VIRGO — THROUGH MY EYES
@@ -5053,7 +5016,6 @@ const virgoHitLayer =
 ========================================================= */
 
 function positionVirgoExperience() {
-
   const rect =
     virgo.getBoundingClientRect();
 
@@ -5067,11 +5029,9 @@ function positionVirgoExperience() {
     rect.bottom +
     18;
 
-
   const latestSafeTop =
     window.innerHeight *
     .67;
-
 
   const memoryTop =
     Math.min(
@@ -5079,12 +5039,10 @@ function positionVirgoExperience() {
       latestSafeTop
     );
 
-
   virgoExperience.style.setProperty(
     "--virgo-memory-top",
     `${memoryTop}px`
   );
-
 
   virgoExperience.style.setProperty(
     "--virgo-memory-bottom",
@@ -5208,6 +5166,7 @@ const virgoChapterMemories = {
 const virgoVisited =
   new Set();
 
+
 /* =========================================================
    RESET VIRGO
 ========================================================= */
@@ -5239,8 +5198,10 @@ function resetVirgoExperience() {
         "unlocked"
       );
 
-  delete star.dataset.discoveryNumber;
-       
+
+      delete star.dataset.discoveryNumber;
+
+
       if (
         star.dataset.star ===
         "Spica"
@@ -5378,12 +5339,6 @@ function openVirgoMemory(
 
   /*
     SPICA BEFORE THE OTHER SEVEN
-
-    Spica still reacts when Faris
-    taps it.
-
-    It just won't reveal the final
-    message yet.
   */
 
   if (
@@ -5443,8 +5398,7 @@ function openVirgoMemory(
   /*
     NORMAL SEVEN STARS
 
-    These can be explored in
-    any order.
+    These can be explored in any order.
   */
 
   if (
@@ -5452,142 +5406,59 @@ function openVirgoMemory(
   ) {
 
     const alreadyVisited =
-      virgoVisited.has(starName);
+      virgoVisited.has(
+        starName
+      );
+
 
     const discoveryNumber =
       alreadyVisited
         ? star.dataset.discoveryNumber
         : String(
             virgoVisited.size + 1
-          ).padStart(2, "0");
+          ).padStart(
+            2,
+            "0"
+          );
+
 
     if (!alreadyVisited) {
+
       star.dataset.discoveryNumber =
         discoveryNumber;
+
     }
+
 
     virgoVisited.add(
       starName
     );
 
+
     updateVirgoFocus();
+
   }
-     
+
 
   /*
     Reveal this star's message.
+
+    Spica deliberately has no visible
+    astronomy name/heading.
   */
 
-/* =========================================================
-   VIRGO STAR CONTROLS
-========================================================= */
-
-document.addEventListener(
-  "pointerdown",
-  event => {
-
-    if (
-      !enteringVirgo ||
-      !virgo.classList.contains(
-        "memory-active"
-      )
-    ) {
-      return;
-    }
-
-    const virgoRect =
-      virgo.getBoundingClientRect();
-
-    /*
-      Convert the tap into Virgo's own
-      620 × 520 coordinate system.
-    */
-
-    const tapX =
-      (
-        (
-          event.clientX -
-          virgoRect.left
-        ) /
-        virgoRect.width
-      ) * 620;
-
-    const tapY =
-      (
-        (
-          event.clientY -
-          virgoRect.top
-        ) /
-        virgoRect.height
-      ) * 520;
+  const memoryHeading =
+    starName === "Spica"
+      ? ""
+      : `${star.dataset.discoveryNumber} · ${memory.title}`;
 
 
-    /*
-      Exact coordinates of the eight
-      interactive Virgo stars.
-    */
-
-    const hitStars = [
-      ["Vindemiatrix", 375, 183],
-      ["Auva",         383, 276],
-      ["Porrima",      310, 302],
-      ["Spica",        295, 485],
-      ["Zaniah",       310, 197],
-      ["Zavijava",     225, 168],
-      ["Heze",         419, 339],
-      ["Syrma",        361, 435]
-    ];
+  showVirgoCopy(
+    memoryHeading,
+    memory.text
+  );
 
 
-    /*
-      Generous touch radius in Virgo's
-      own coordinate system.
-    */
-
-    const hitRadius =
-      38;
-
-
-    const hit =
-      hitStars.find(
-        ([name, x, y]) =>
-          Math.hypot(
-            tapX - x,
-            tapY - y
-          ) <= hitRadius
-      );
-
-
-    if (!hit) {
-      return;
-    }
-
-
-    const star =
-      virgoMemoryStars.find(
-        item =>
-          item.dataset.star ===
-          hit[0]
-      );
-
-
-    if (!star) {
-      return;
-    }
-
-
-    event.preventDefault();
-    event.stopPropagation();
-
-
-    openVirgoMemory(
-      star
-    );
-
-  },
-  true
-);
-   
   virgoExploreHint.classList.add(
     "hidden"
   );
@@ -5694,6 +5565,7 @@ document.addEventListener(
   }
 }
 
+
 /* =========================================================
    VIRGO STAR CONTROLS
 ========================================================= */
@@ -5711,8 +5583,10 @@ document.addEventListener(
       return;
     }
 
+
     const virgoRect =
       virgo.getBoundingClientRect();
+
 
     /*
       Convert the tap into Virgo's own
@@ -5727,6 +5601,7 @@ document.addEventListener(
         ) /
         virgoRect.width
       ) * 620;
+
 
     const tapY =
       (
@@ -5756,8 +5631,7 @@ document.addEventListener(
 
 
     /*
-      Generous touch radius in Virgo's
-      own coordinate system.
+      Generous touch radius.
     */
 
     const hitRadius =
@@ -5793,6 +5667,7 @@ document.addEventListener(
 
 
     event.preventDefault();
+
     event.stopPropagation();
 
 
@@ -5803,6 +5678,11 @@ document.addEventListener(
   },
   true
 );
+
+
+/* =========================================================
+   VIRGO EXIT
+========================================================= */
 
 virgoExit.addEventListener(
   "click",
@@ -5924,6 +5804,8 @@ app.addEventListener(
     ) {
 
       event.preventDefault();
+
+      event.stopPropagation();
 
 
       enterVirgoChapter();

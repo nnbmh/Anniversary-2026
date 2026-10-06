@@ -4412,28 +4412,34 @@ function finishOrionChapter() {
 
   clampCamera();
 
-  setTimeout(
-  () => {
-    orionMemoryStage
-      .classList
-      .remove(
-        "show"
-      );
+    setTimeout(
+    () => {
+      orionMemoryStage
+        .classList
+        .remove(
+          "show"
+        );
 
-    orionChapter
-      .classList
-      .add(
-        "ending-active"
-      );
+      orionChapter
+        .classList
+        .add(
+          "ending-active"
+        );
 
-    orionEnding
-      .classList
-      .add(
-        "show"
-      );
-  },
-  1400
-);
+      orionEnding
+        .classList
+        .add(
+          "show"
+        );
+    },
+    1400
+  );
+}
+
+
+/* =========================================================
+   RETURN TO UNIVERSE
+========================================================= */
 
 
 /* =========================================================

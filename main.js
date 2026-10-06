@@ -3120,11 +3120,18 @@ function discoverVirgo() {
 app.addEventListener(
   "pointerdown",
   event => {
-    if (
+        if (
       telescopeActive ||
+      enteringOrion ||
       enteringVirgo ||
       event.target.closest(
         "#telescopeButton"
+      ) ||
+      event.target.closest(
+        "#orionChapter"
+      ) ||
+      event.target.closest(
+        "#virgoChapter"
       )
     ) {
       return;
@@ -3369,12 +3376,12 @@ app.addEventListener(
   "wheel",
   event => {
     if (
-      telescopeActive ||
-      enteringVirgo
-    ) {
-      return;
-    }
-
+  telescopeActive ||
+  enteringOrion ||
+  enteringVirgo
+) {
+  return;
+}
     event.preventDefault();
 
     targetZoom +=

@@ -4557,10 +4557,11 @@ orionContinue.addEventListener(
     event.preventDefault();
     event.stopPropagation();
 
+    orionTransitioning = false;
+
     travelToNextOrionMemory();
   }
 );
-
 
 orionReturn.addEventListener(
   "click",

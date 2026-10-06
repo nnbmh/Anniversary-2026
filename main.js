@@ -4170,10 +4170,6 @@ function travelToNextOrionMemory() {
       orionMemoryIndex
     ];
 
-  focusOrionStar(
-    nextMemory.starIndex
-  );
-
   animateLightRoute(
     route,
     0,

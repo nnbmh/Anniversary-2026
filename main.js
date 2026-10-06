@@ -4587,100 +4587,112 @@ orionExit.addEventListener(
   }
 );
 
-
 /* =========================================================
-   TAP DISCOVERED ORION
+   VIRGO STAR CONTROLS
 ========================================================= */
 
-let appTapStartX =
-  0;
-
-let appTapStartY =
-  0;
-
-
-app.addEventListener(
+document.addEventListener(
   "pointerdown",
   event => {
+
     if (
-      !orionDiscovered ||
-      enteringOrion ||
-      telescopeActive
+      !enteringVirgo ||
+      !virgo.classList.contains(
+        "memory-active"
+      )
     ) {
       return;
     }
 
-    appTapStartX =
-      event.clientX;
+    const virgoRect =
+      virgo.getBoundingClientRect();
 
-    appTapStartY =
-      event.clientY;
-  },
-  true
-);
+    /*
+      Convert the tap into Virgo's own
+      620 × 520 coordinate system.
+    */
+
+    const tapX =
+      (
+        (
+          event.clientX -
+          virgoRect.left
+        ) /
+        virgoRect.width
+      ) * 620;
+
+    const tapY =
+      (
+        (
+          event.clientY -
+          virgoRect.top
+        ) /
+        virgoRect.height
+      ) * 520;
 
 
-app.addEventListener(
-  "pointerup",
-  event => {
-    if (
-      !orionDiscovered ||
-      enteringOrion ||
-      telescopeActive
-    ) {
-      return;
-    }
+    /*
+      Exact coordinates of the eight
+      interactive Virgo stars.
+    */
 
-    const moved =
-      Math.hypot(
-        event.clientX -
-        appTapStartX,
+    const hitStars = [
+      ["Vindemiatrix", 375, 183],
+      ["Auva",         383, 276],
+      ["Porrima",      310, 302],
+      ["Spica",        295, 485],
+      ["Zaniah",       310, 197],
+      ["Zavijava",     225, 168],
+      ["Heze",         419, 339],
+      ["Syrma",        361, 435]
+    ];
 
-        event.clientY -
-        appTapStartY
+
+    /*
+      Generous touch radius in Virgo's
+      own coordinate system.
+    */
+
+    const hitRadius =
+      38;
+
+
+    const hit =
+      hitStars.find(
+        ([name, x, y]) =>
+          Math.hypot(
+            tapX - x,
+            tapY - y
+          ) <= hitRadius
       );
 
-    if (
-      moved >= 18
-    ) {
+
+    if (!hit) {
       return;
     }
 
-    const rect =
-      orion.getBoundingClientRect();
 
-    const paddingX =
-      rect.width *
-      .12;
+    const star =
+      virgoMemoryStars.find(
+        item =>
+          item.dataset.star ===
+          hit[0]
+      );
 
-    const paddingY =
-      rect.height *
-      .08;
 
-    const insideOrion =
-      event.clientX >=
-        rect.left +
-        paddingX &&
-
-      event.clientX <=
-        rect.right -
-        paddingX &&
-
-      event.clientY >=
-        rect.top +
-        paddingY &&
-
-      event.clientY <=
-        rect.bottom -
-        paddingY;
-
-    if (
-      insideOrion
-    ) {
-      event.preventDefault();
-
-      enterOrionChapter();
+    if (!star) {
+      return;
     }
+
+
+    event.preventDefault();
+    event.stopPropagation();
+
+
+    openVirgoMemory(
+      star
+    );
+
   },
   true
 );

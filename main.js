@@ -3120,21 +3120,14 @@ app.addEventListener(
   "pointerdown",
   event => {
         if (
-      telescopeActive ||
-      enteringOrion ||
-      enteringVirgo ||
-      event.target.closest(
-        "#telescopeButton"
-      ) ||
-      event.target.closest(
-        "#orionChapter"
-      ) ||
-      event.target.closest(
-        "#virgoChapter"
-      )
-    ) {
-      return;
-    }
+           telescopeActive ||
+           enteringVirgo ||
+           event.target.closest(
+              "#telescopeButton"
+           )
+        ) {
+           return;
+        }
 
     activePointers.set(
       event.pointerId,
@@ -3834,30 +3827,6 @@ const orionMemories = [
 /* =========================================================
    ORION FOCUS
 ========================================================= */
-
-function getOrionStarScreenPosition(
-  starIndex
-) {
-  const star =
-    orionStars[
-      starIndex
-    ];
-
-  const rect =
-    orion.getBoundingClientRect();
-
-  return {
-    x:
-      rect.left +
-      star.revealX *
-      rect.width,
-
-    y:
-      rect.top +
-      star.revealY *
-      rect.height
-  };
-}
 
 function focusOrionStar(
   starIndex,
@@ -4632,92 +4601,95 @@ orionExit.addEventListener(
    TAP DISCOVERED ORION
 ========================================================= */
 
-let orionTapStartX = 0;
-let orionTapStartY = 0;
+let appTapStartX =
+  0;
+
+let appTapStartY =
+  0;
 
 
-document.addEventListener(
+app.addEventListener(
   "pointerdown",
   event => {
-
     if (
       !orionDiscovered ||
       enteringOrion ||
-      enteringVirgo ||
       telescopeActive
     ) {
       return;
     }
 
-    orionTapStartX =
+    appTapStartX =
       event.clientX;
 
-    orionTapStartY =
+    appTapStartY =
       event.clientY;
-
   },
   true
 );
 
 
-document.addEventListener(
+app.addEventListener(
   "pointerup",
   event => {
-
     if (
       !orionDiscovered ||
       enteringOrion ||
-      enteringVirgo ||
       telescopeActive
     ) {
       return;
     }
 
-
     const moved =
       Math.hypot(
-        event.clientX - orionTapStartX,
-        event.clientY - orionTapStartY
+        event.clientX -
+        appTapStartX,
+
+        event.clientY -
+        appTapStartY
       );
 
-
-    /*
-      Don't open Orion if this was
-      actually a universe drag.
-    */
-
-    if (moved > 24) {
+    if (
+      moved >= 18
+    ) {
       return;
     }
-
 
     const rect =
       orion.getBoundingClientRect();
 
+    const paddingX =
+      rect.width *
+      .12;
 
-    /*
-      Use Orion's full visible area as
-      the tappable target.
-    */
+    const paddingY =
+      rect.height *
+      .08;
 
     const insideOrion =
-      event.clientX >= rect.left &&
-      event.clientX <= rect.right &&
-      event.clientY >= rect.top &&
-      event.clientY <= rect.bottom;
+      event.clientX >=
+        rect.left +
+        paddingX &&
 
+      event.clientX <=
+        rect.right -
+        paddingX &&
 
-    if (!insideOrion) {
-      return;
+      event.clientY >=
+        rect.top +
+        paddingY &&
+
+      event.clientY <=
+        rect.bottom -
+        paddingY;
+
+    if (
+      insideOrion
+    ) {
+      event.preventDefault();
+
+      enterOrionChapter();
     }
-
-
-    event.preventDefault();
-    event.stopPropagation();
-
-
-    enterOrionChapter();
-
   },
   true
 );

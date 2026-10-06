@@ -4598,21 +4598,18 @@ orionExit.addEventListener(
   }
 );
 
-
 /* =========================================================
    TAP DISCOVERED ORION
 ========================================================= */
 
-let appTapStartX =
-  0;
-
-let appTapStartY =
-  0;
+let orionTapStartX = 0;
+let orionTapStartY = 0;
 
 
-app.addEventListener(
+document.addEventListener(
   "pointerdown",
   event => {
+
     if (
       !orionDiscovered ||
       enteringOrion ||
@@ -4622,19 +4619,21 @@ app.addEventListener(
       return;
     }
 
-    appTapStartX =
+    orionTapStartX =
       event.clientX;
 
-    appTapStartY =
+    orionTapStartY =
       event.clientY;
+
   },
   true
 );
 
 
-app.addEventListener(
+document.addEventListener(
   "pointerup",
   event => {
+
     if (
       !orionDiscovered ||
       enteringOrion ||
@@ -4644,53 +4643,54 @@ app.addEventListener(
       return;
     }
 
+
     const moved =
       Math.hypot(
-        event.clientX -
-          appTapStartX,
-        event.clientY -
-          appTapStartY
+        event.clientX - orionTapStartX,
+        event.clientY - orionTapStartY
       );
 
+
     /*
-      Allow a little movement because
-      iPad taps can register a few pixels
-      of pointer movement.
+      Don't open Orion if this was
+      actually a universe drag.
     */
 
-    if (
-      moved > 18
-    ) {
+    if (moved > 24) {
       return;
     }
+
 
     const rect =
       orion.getBoundingClientRect();
 
-    const insideOrion =
-      event.clientX >=
-        rect.left &&
-      event.clientX <=
-        rect.right &&
-      event.clientY >=
-        rect.top &&
-      event.clientY <=
-        rect.bottom;
 
-    if (
-      !insideOrion
-    ) {
+    /*
+      Use Orion's full visible area as
+      the tappable target.
+    */
+
+    const insideOrion =
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom;
+
+
+    if (!insideOrion) {
       return;
     }
+
 
     event.preventDefault();
     event.stopPropagation();
 
+
     enterOrionChapter();
+
   },
   true
 );
-
 
 /* =========================================================
    VIRGO CHAPTER

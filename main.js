@@ -4553,9 +4553,23 @@ orionContinue.addEventListener(
     event.preventDefault();
     event.stopPropagation();
 
+    const nextIndex =
+      orionMemoryIndex + 1;
+
+    if (
+      nextIndex >=
+      orionMemories.length
+    ) {
+      orionTransitioning = false;
+      finishOrionChapter();
+      return;
+    }
+
     orionTransitioning = false;
 
-    travelToNextOrionMemory();
+    showOrionMemory(
+      nextIndex
+    );
   }
 );
 

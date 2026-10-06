@@ -3835,6 +3835,30 @@ const orionMemories = [
    ORION FOCUS
 ========================================================= */
 
+function getOrionStarScreenPosition(
+  starIndex
+) {
+  const star =
+    orionStars[
+      starIndex
+    ];
+
+  const rect =
+    orion.getBoundingClientRect();
+
+  return {
+    x:
+      rect.left +
+      star.revealX *
+      rect.width,
+
+    y:
+      rect.top +
+      star.revealY *
+      rect.height
+  };
+}
+
 function focusOrionStar(
   starIndex,
   zoomLevel = 1.82

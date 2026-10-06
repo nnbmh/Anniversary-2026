@@ -5183,7 +5183,7 @@ const virgoChapterMemories = {
   Spica: {
 
     title:
-      "SPICA",
+      "",
 
     text:
       "I know you don't always see yourself the way I see you. Sometimes you're so much harsher on yourself than I could ever be. And I wish, just for a little while, I could lend you my eyes so you could see the person I'm looking at when I look at you. Not some perfect version of you. Just you. All the little things you've just seen — the things you probably don't even think twice about — they're part of the person I've gotten to know and love. I wish you could see yourself through my eyes sometimes, sayang."
@@ -5466,10 +5466,115 @@ function openVirgoMemory(
     Reveal this star's message.
   */
 
-const memoryHeading =
-  starName === "Spica"
-    ? "SPICA"
-    : `${star.dataset.discoveryNumber} · ${memory.title}`;
+/* =========================================================
+   VIRGO STAR CONTROLS
+========================================================= */
+
+document.addEventListener(
+  "pointerdown",
+  event => {
+
+    if (
+      !enteringVirgo ||
+      !virgo.classList.contains(
+        "memory-active"
+      )
+    ) {
+      return;
+    }
+
+    const virgoRect =
+      virgo.getBoundingClientRect();
+
+    /*
+      Convert the tap into Virgo's own
+      620 × 520 coordinate system.
+    */
+
+    const tapX =
+      (
+        (
+          event.clientX -
+          virgoRect.left
+        ) /
+        virgoRect.width
+      ) * 620;
+
+    const tapY =
+      (
+        (
+          event.clientY -
+          virgoRect.top
+        ) /
+        virgoRect.height
+      ) * 520;
+
+
+    /*
+      Exact coordinates of the eight
+      interactive Virgo stars.
+    */
+
+    const hitStars = [
+      ["Vindemiatrix", 375, 183],
+      ["Auva",         383, 276],
+      ["Porrima",      310, 302],
+      ["Spica",        295, 485],
+      ["Zaniah",       310, 197],
+      ["Zavijava",     225, 168],
+      ["Heze",         419, 339],
+      ["Syrma",        361, 435]
+    ];
+
+
+    /*
+      Generous touch radius in Virgo's
+      own coordinate system.
+    */
+
+    const hitRadius =
+      38;
+
+
+    const hit =
+      hitStars.find(
+        ([name, x, y]) =>
+          Math.hypot(
+            tapX - x,
+            tapY - y
+          ) <= hitRadius
+      );
+
+
+    if (!hit) {
+      return;
+    }
+
+
+    const star =
+      virgoMemoryStars.find(
+        item =>
+          item.dataset.star ===
+          hit[0]
+      );
+
+
+    if (!star) {
+      return;
+    }
+
+
+    event.preventDefault();
+    event.stopPropagation();
+
+
+    openVirgoMemory(
+      star
+    );
+
+  },
+  true
+);
 
 showVirgoCopy(
   memoryHeading,

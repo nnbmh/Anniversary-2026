@@ -3818,6 +3818,8 @@ function animate(
 
 function initialise() {
   buildUniverseStars();
+   
+  scheduleShootingStar();
 
   buildTelescopeStars();
 

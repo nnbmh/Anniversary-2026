@@ -3650,3 +3650,108 @@ button {
   animation: none !important;
   box-shadow: none !important;
 }
+
+/* =========================================================
+   VIRGO CANVAS — ALLOW SPICA GLOW TO EXTEND
+========================================================= */
+
+#virgo #virgoStarCanvas {
+  height: calc(100% + 80px);
+  overflow: visible;
+}
+
+/* =========================================================
+   SHOOTING STARS
+========================================================= */
+
+.shooting-star {
+  position: absolute;
+
+  width: 2px;
+  height: 2px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(245, 249, 255, .95);
+
+  box-shadow:
+    0 0 5px rgba(230, 240, 255, .7),
+    0 0 10px rgba(185, 215, 255, .3);
+
+  pointer-events: none;
+
+  z-index: 4;
+
+  opacity: 0;
+
+  transform:
+    rotate(var(--shoot-angle));
+
+  transform-origin:
+    center;
+
+  animation:
+    shootingStarPass
+    var(--shoot-duration)
+    ease-out
+    forwards;
+}
+
+
+.shooting-star::after {
+  content: "";
+
+  position: absolute;
+
+  right: 1px;
+  top: 50%;
+
+  width:
+    var(--shoot-tail);
+
+  height: 1px;
+
+  transform:
+    translateY(-50%);
+
+  transform-origin:
+    right center;
+
+  background:
+    linear-gradient(
+      to left,
+      rgba(240, 246, 255, .72),
+      rgba(195, 218, 250, .25),
+      transparent
+    );
+}
+
+
+@keyframes shootingStarPass {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      rotate(var(--shoot-angle))
+      translateX(0);
+  }
+
+  12% {
+    opacity: .9;
+  }
+
+  70% {
+    opacity: .65;
+  }
+
+  100% {
+    opacity: 0;
+
+    transform:
+      rotate(var(--shoot-angle))
+      translateX(var(--shoot-distance));
+  }
+
+}

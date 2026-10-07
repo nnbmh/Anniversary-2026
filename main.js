@@ -1578,7 +1578,7 @@ function renderRevealedOrionStars(
    REVEALED VIRGO CANVAS
 ========================================================= */
 
-function resizeVirgoStarCanvas() {
+ function resizeVirgoStarCanvas() {
   const cssWidth = virgo.offsetWidth;
   const cssHeight = virgo.offsetHeight;
 
@@ -1589,6 +1589,17 @@ function resizeVirgoStarCanvas() {
     return;
   }
 
+  /*
+    Give Spica's glow room to extend
+    below Virgo without being clipped
+    by the canvas edge.
+  */
+  const glowPadding = 80;
+
+  const canvasHeight =
+    cssHeight +
+    glowPadding;
+
   const dpr = Math.min(
     window.devicePixelRatio || 1,
     2
@@ -1598,13 +1609,15 @@ function resizeVirgoStarCanvas() {
     Math.round(cssWidth * dpr);
 
   virgoStarCanvas.height =
-    Math.round(cssHeight * dpr);
+    Math.round(
+      canvasHeight * dpr
+    );
 
   virgoStarCanvas.style.width =
     `${cssWidth}px`;
 
   virgoStarCanvas.style.height =
-    `${cssHeight}px`;
+    `${canvasHeight}px`;
 
   virgoStarCtx.setTransform(
     dpr,
@@ -1615,7 +1628,6 @@ function resizeVirgoStarCanvas() {
     0
   );
 }
-
 
 function renderRevealedVirgoStars(
   timestamp = performance.now()
@@ -5070,7 +5082,7 @@ function positionVirgoExperience() {
 
   const preferredTop =
     rect.bottom +
-    18;
+    46;
 
   const latestSafeTop =
     window.innerHeight *

@@ -1794,11 +1794,11 @@ function renderRevealedVirgoStars(
   }
 
   virgoStarCtx.clearRect(
-    0,
-    0,
-    width,
-    height
-  );
+  0,
+  0,
+  width,
+  virgoStarCanvas.offsetHeight
+);
 
   const time =
     timestamp / 1000;

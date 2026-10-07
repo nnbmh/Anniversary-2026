@@ -610,7 +610,158 @@ function buildUniverseStars() {
   );
 }
 
+/* =========================================================
+   SHOOTING STARS
+========================================================= */
 
+let shootingStarTimer = null;
+
+
+function createShootingStar() {
+
+  /*
+    Keep them out of chapter screens.
+    They belong to the universe itself.
+  */
+
+  if (
+    app.classList.contains(
+      "entering-orion"
+    ) ||
+    app.classList.contains(
+      "entering-virgo"
+    )
+  ) {
+
+    scheduleShootingStar();
+
+    return;
+  }
+
+
+  const star =
+    document.createElement(
+      "span"
+    );
+
+  star.className =
+    "shooting-star";
+
+
+  /*
+    Random position across the universe.
+    Mostly favour the upper/middle sky.
+  */
+
+  const x =
+    universe.offsetWidth *
+    (
+      .12 +
+      Math.random() * .76
+    );
+
+  const y =
+    universe.offsetHeight *
+    (
+      .12 +
+      Math.random() * .55
+    );
+
+
+  /*
+    Slightly different angle,
+    distance and tail every time.
+  */
+
+  const angle =
+    18 +
+    Math.random() * 20;
+
+  const distance =
+    110 +
+    Math.random() * 110;
+
+  const tail =
+    55 +
+    Math.random() * 55;
+
+  const duration =
+    .9 +
+    Math.random() * .55;
+
+
+  star.style.left =
+    `${x}px`;
+
+  star.style.top =
+    `${y}px`;
+
+  star.style.setProperty(
+    "--shoot-angle",
+    `${angle}deg`
+  );
+
+  star.style.setProperty(
+    "--shoot-distance",
+    `${distance}px`
+  );
+
+  star.style.setProperty(
+    "--shoot-tail",
+    `${tail}px`
+  );
+
+  star.style.setProperty(
+    "--shoot-duration",
+    `${duration}s`
+  );
+
+
+  starsFar.appendChild(
+    star
+  );
+
+
+  star.addEventListener(
+    "animationend",
+    () => {
+      star.remove();
+    },
+    {
+      once: true
+    }
+  );
+
+
+  scheduleShootingStar();
+}
+
+
+function scheduleShootingStar() {
+
+  clearTimeout(
+    shootingStarTimer
+  );
+
+
+  /*
+    Rare enough that it feels like
+    something you happened to notice.
+
+    Roughly one every 14–32 seconds.
+  */
+
+  const delay =
+    14000 +
+    Math.random() * 18000;
+
+
+  shootingStarTimer =
+    setTimeout(
+      createShootingStar,
+      delay
+    );
+}
 /* =========================================================
    CAMERA
 ========================================================= */

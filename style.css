@@ -3621,3 +3621,17 @@ button {
   animation: none;
   opacity: 1;
 }
+
+/* =========================================================
+   SPICA — REMOVE CLIPPED MEMORY BEACON
+========================================================= */
+
+#virgo .virgo-memory-star.spica::before,
+#virgo.memory-active .virgo-memory-star.spica::before,
+#virgo.memory-active .virgo-memory-star.spica.locked::before,
+#virgo.memory-active .virgo-memory-star.spica.visited::before {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  animation: none !important;
+}

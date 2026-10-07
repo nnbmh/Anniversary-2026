@@ -4448,21 +4448,11 @@ function finishOrionChapter() {
   );
 }
 
-
-/* =========================================================
-   RETURN TO UNIVERSE
-========================================================= */
-
-
 /* =========================================================
    RETURN TO UNIVERSE
 ========================================================= */
 
 function leaveOrionChapter() {
-   
-   orionChapter.classList.remove(
-      "ending-active"
-  );
    
    orionEnding
     .classList
@@ -4541,6 +4531,11 @@ function leaveOrionChapter() {
 
   setTimeout(
     () => {
+
+       orionChapter.classList.remove(
+      "ending-active"
+       );
+       
       orionChapter
         .classList
         .remove(
@@ -4974,10 +4969,6 @@ function enterVirgoChapter() {
 ========================================================= */
 
 function leaveVirgoChapter() {
-   
-   virgoChapter.classList.remove(
-    "ending-active"
-  );
 
   virgoMemory.classList.remove(
     "spica-final"
@@ -5005,13 +4996,18 @@ function leaveVirgoChapter() {
       "show"
     );
 
-  setTimeout(
-    () => {
-      virgoChapter
-        .classList
-        .remove(
-          "active"
-        );
+   setTimeout(
+  () => {
+
+    virgoChapter.classList.remove(
+      "ending-active"
+    );
+
+    virgoChapter
+      .classList
+      .remove(
+        "active"
+      );
 
       virgoChapter
         .setAttribute(
@@ -5082,11 +5078,11 @@ function positionVirgoExperience() {
 
   const preferredTop =
     rect.bottom +
-    46;
+    72;
 
   const latestSafeTop =
     window.innerHeight *
-    .67;
+    .78;
 
   const memoryTop =
     Math.min(

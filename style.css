@@ -3039,12 +3039,21 @@ button {
 
 .virgo-memory.spica-final {
   top: auto;
-  bottom: 55px;
 
-  width: min(78vw, 680px);
+  bottom: clamp(24px, 5vh, 55px);
 
-  overflow: visible;
+  width: min(82vw, 680px);
+
+  max-height: 42dvh;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
   pointer-events: auto;
+
+  padding-top: 20px;
+
+  box-sizing: border-box;
 }
 
 

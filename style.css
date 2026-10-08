@@ -3806,3 +3806,10 @@ button {
   }
 
 }
+
+/* Spica final message — smaller text */
+
+.virgo-memory.spica-final .virgo-memory-text {
+  font-size: clamp(12px, 1.5vw, 15px);
+  line-height: 1.7;
+}

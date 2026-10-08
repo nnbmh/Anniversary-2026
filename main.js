@@ -2843,7 +2843,17 @@ function setTelescope(active) {
 telescopeButton.addEventListener(
   "click",
   event => {
+    event.preventDefault();
     event.stopPropagation();
+
+    if (
+      enteringOrion ||
+      enteringVirgo ||
+      orionChapter.classList.contains("active") ||
+      virgoChapter.classList.contains("active")
+    ) {
+      return;
+    }
 
     setTelescope(
       !telescopeActive
@@ -4606,6 +4616,10 @@ function finishOrionChapter() {
 ========================================================= */
 
 function leaveOrionChapter() {
+
+     if (telescopeActive) {
+    setTelescope(false);
+  }
    
    orionEnding
     .classList

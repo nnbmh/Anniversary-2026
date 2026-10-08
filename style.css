@@ -3813,3 +3813,14 @@ button {
   font-size: clamp(12px, 1.5vw, 15px);
   line-height: 1.7;
 }
+
+/* =========================================================
+   ORION & VIRGO — STANDARDISED MEMORY TEXT
+========================================================= */
+
+.orion-memory-text,
+.virgo-memory-text,
+.virgo-memory.spica-final .virgo-memory-text {
+  font-size: 15px;
+  line-height: 1.7;
+}

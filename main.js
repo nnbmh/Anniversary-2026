@@ -4372,6 +4372,10 @@ function travelToNextOrionMemory() {
    ENTER ORION
 ========================================================= */
 
+let orionIntroTimer = null;
+let orionFocusTimer = null;
+let orionMemoryTimer = null;
+
 function enterOrionChapter() {
   if (
     !orionDiscovered ||
@@ -4467,7 +4471,7 @@ function enterOrionChapter() {
     Opening title.
   */
 
-  setTimeout(
+  orionIntroTimer = setTimeout(
     () => {
       orionChapterIntro
         .classList
@@ -4482,7 +4486,7 @@ function enterOrionChapter() {
     Fade title and begin travelling.
   */
 
-  setTimeout(
+  orionFocusTimer = setTimeout(
     () => {
       orionChapterIntro
         .classList
@@ -4506,7 +4510,7 @@ function enterOrionChapter() {
     First memory.
   */
 
-  setTimeout(
+  orionMemoryTimer = setTimeout(
     () => {
       showOrionMemory(
         0
@@ -4616,6 +4620,10 @@ function finishOrionChapter() {
 ========================================================= */
 
 function leaveOrionChapter() {
+   
+   clearTimeout(orionIntroTimer);
+   clearTimeout(orionFocusTimer);
+   clearTimeout(orionMemoryTimer);
 
      if (telescopeActive) {
     setTelescope(false);

@@ -5144,7 +5144,17 @@ function enterVirgoChapter() {
 ========================================================= */
 
 function leaveVirgoChapter() {
+  // Hide the final message immediately
+  // when returning to the universe.
 
+  virgoMemory.style.transition = "none";
+
+  virgoMemory.classList.remove("show");
+
+  virgoMemory.style.opacity = "0";
+
+  virgoMemory.style.visibility = "hidden";
+   
   virgoMemory.classList.remove(
     "spica-final"
   );
@@ -5371,7 +5381,7 @@ const virgoChapterMemories = {
       "the person i see",
 
     text:
-      "and yes... i look at you. a lot actually HAHAHA. your face when you're concentrating, your eyes, your smile, your hair when it's doing whatever tf it wants, the way you look when you've just woken up... there are so many versions of you that have somehow become my favourite face."
+      "and yes... i look at you. alot actually HAHAHA. your face when you're concentrating, your eyes, your smile, your hair when it's doing whatever tf it wants, the way you look when you've just woken up... there are so many versions of you that have somehow become my favourite face."
 
   },
 
@@ -5398,6 +5408,14 @@ const virgoVisited =
 ========================================================= */
 
 function resetVirgoExperience() {
+
+     // Restore the memory display for the next visit.
+
+  virgoMemory.style.removeProperty("transition");
+
+  virgoMemory.style.removeProperty("opacity");
+
+  virgoMemory.style.removeProperty("visibility");
 
   virgoVisited.clear();
 

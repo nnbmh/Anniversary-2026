@@ -3056,6 +3056,35 @@ button {
   box-sizing: border-box;
 }
 
+/* Spica ending — responsive screen sizes */
+
+@media (max-width: 1100px) {
+  .virgo-memory.spica-final {
+    width: min(82vw, 680px);
+    bottom: 35px;
+    max-height: 42dvh;
+  }
+}
+
+@media (max-width: 600px) {
+  .virgo-memory.spica-final {
+    width: 88vw;
+    bottom: 20px;
+    max-height: 48dvh;
+    padding-top: 16px;
+  }
+
+  .virgo-memory.spica-final
+  .virgo-memory-text {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .virgo-memory.spica-final
+  #virgoReturn {
+    margin-top: 20px;
+  }
+}
 
 #virgoReturn {
   margin:

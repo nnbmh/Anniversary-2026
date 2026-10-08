@@ -1529,6 +1529,17 @@ button {
   visibility: visible;
 }
 
+/* Hide Orion's memory interface outside its chapter */
+
+#orionChapter:not(.active) .orion-memory-stage,
+#orionChapter:not(.active) .orion-memory-card,
+#orionChapter:not(.active) .orion-progress,
+#orionChapter:not(.active) .orion-continue {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 /* =========================================================
    CHAPTER EXIT
 ========================================================= */

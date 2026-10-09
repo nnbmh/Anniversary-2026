@@ -1,72 +1,101 @@
 /* ==========================================
-   SCORPIUS — THE MANY SIDES OF ME
+   SCORPIUS
+   THE MANY SIDES OF ME
 ========================================== */
+
+
+/* ==========================================
+   UNIVERSE CONSTELLATION
+========================================== */
+
 #scorpius {
+
   position: absolute;
 
   left: 2250px;
   top: 1050px;
 
-  width: 480px;
-  height: 580px;
+  width: 560px;
+  height: 620px;
 
   z-index: 20;
 
   pointer-events: none;
+
 }
 
-#scorpius.discovered {
-  pointer-events: auto;
-  cursor: pointer;
-}
+
+/* ==========================================
+   STAR CANVAS
+========================================== */
 
 .scorpius-universe-canvas {
+
   display: block;
 
   width: 100%;
   height: 100%;
 
+  background: transparent;
+
   pointer-events: none;
+
 }
 
+
+/* ==========================================
+   CONSTELLATION LABEL
+
+   Hidden until discovery.
+========================================== */
+
 .scorpius-universe-label {
+
   position: absolute;
 
-  bottom: -28px;
+  bottom: -25px;
   left: 50%;
 
   transform: translateX(-50%);
 
-  color: rgba(235, 232, 247, 0.85);
+  color: rgba(
+    235,
+    232,
+    247,
+    0.85
+  );
 
   font-size: 11px;
+
   font-weight: 400;
+
   letter-spacing: 0.22em;
 
   white-space: nowrap;
 
   opacity: 0;
-  transition: opacity 1.2s ease;
 
   pointer-events: none;
+
 }
 
-#scorpius.discovered
-.scorpius-universe-label {
-  opacity: 1;
-}
 
 /* ==========================================
-   CHAPTER
+   SCORPIUS CHAPTER
+
+   Preserved for later development.
 ========================================== */
 
 #scorpiusChapter {
+
   position: fixed;
+
   inset: 0;
 
   z-index: 1000;
 
   display: none;
+
   align-items: center;
   justify-content: center;
 
@@ -79,34 +108,49 @@
     );
 
   color: #f6f3ea;
+
   overflow: hidden;
+
 }
+
 
 #scorpiusChapter.active {
+
   display: flex;
+
 }
 
+
 .scorpius-container {
+
   position: relative;
 
   width: min(88vw, 620px);
+
   height: min(76dvh, 760px);
 
   display: flex;
+
   align-items: center;
   justify-content: center;
+
 }
 
+
 .scorpius-map {
+
   display: block;
 
   width: 100%;
   height: 100%;
 
   overflow: visible;
+
 }
 
+
 .scorpius-heading {
+
   position: absolute;
 
   top: 7%;
@@ -115,30 +159,55 @@
   transform: translateX(-50%);
 
   text-align: center;
+
   white-space: nowrap;
 
   pointer-events: none;
+
 }
 
+
 .scorpius-heading h2 {
+
   margin: 0;
 
-  font-size: clamp(17px, 3vw, 25px);
+  font-size: clamp(
+    17px,
+    3vw,
+    25px
+  );
+
   font-weight: 400;
 
   letter-spacing: 0.25em;
+
 }
 
+
 .scorpius-heading p {
+
   margin-top: 10px;
 
   font-size: 11px;
+
   letter-spacing: 0.22em;
 
-  color: rgba(220, 215, 235, 0.65);
+  color: rgba(
+    220,
+    215,
+    235,
+    0.65
+  );
+
 }
 
+
+/* ==========================================
+   EXIT BUTTON
+========================================== */
+
 #scorpiusExit {
+
   position: absolute;
 
   top: max(
@@ -157,23 +226,46 @@
 
   border-radius: 30px;
 
-  background: rgba(10,15,30,0.65);
+  background: rgba(
+    10,
+    15,
+    30,
+    0.65
+  );
+
   color: #f6f3ea;
 
   cursor: pointer;
+
 }
 
+
+/* ==========================================
+   MOBILE
+========================================== */
+
 @media (max-width: 600px) {
+
   .scorpius-container {
+
     width: 94vw;
+
     height: 72dvh;
+
   }
+
 
   .scorpius-heading {
+
     top: 11%;
+
   }
 
+
   #scorpiusExit {
+
     right: 16px;
+
   }
+
 }

@@ -2733,6 +2733,11 @@ function renderTelescope() {
     width,
     height
   );
+
+   drawTelescopeScorpius(
+      width,
+      height
+   );
 }
 
 
@@ -3815,6 +3820,10 @@ function animate(
   checkVirgoFocus(
     timestamp
   );
+   
+   checkScorpiusFocus(
+      timestamp
+   );
 
   requestAnimationFrame(
     animate

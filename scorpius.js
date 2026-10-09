@@ -75,7 +75,6 @@ const SCORPIUS_LINE_PAUSE = 90;
 /* ==========================================
    CREATE CONSTELLATION
 ========================================== */
-
 function initialiseScorpius() {
   const universeElement =
     document.getElementById("universe");

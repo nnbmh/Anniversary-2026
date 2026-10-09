@@ -1,7 +1,6 @@
 /* ==========================================
    SCORPIUS — THE MANY SIDES OF ME
 ========================================== */
-
 const scorpiusStars = [
   { id: "jabbah", x: 155, y: 80, size: 3.8 },
   { id: "acrab", x: 225, y: 105, size: 4.2 },

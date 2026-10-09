@@ -1,0 +1,218 @@
+/* ==========================================
+   SCORPIUS — THE MANY SIDES OF ME
+========================================== */
+
+#scorpiusChapter {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 45%,
+      #101324 0%,
+      #060914 48%,
+      #010309 100%
+    );
+
+  color: #f6f3ea;
+  overflow: hidden;
+}
+
+#scorpiusChapter.active {
+  display: flex;
+}
+
+.scorpius-container {
+  position: relative;
+
+  width: min(90vw, 650px);
+  height: min(75dvh, 780px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scorpius-map {
+  width: 100%;
+  height: 100%;
+
+  overflow: visible;
+}
+
+/* Constellation lines */
+
+.scorpius-line {
+  fill: none;
+
+  stroke: rgba(200, 215, 245, 0.42);
+  stroke-width: 1.1;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  filter: drop-shadow(
+    0 0 3px rgba(180, 200, 255, 0.3)
+  );
+}
+
+/* Stars */
+
+.scorpius-star {
+  cursor: pointer;
+
+  transform-box: fill-box;
+  transform-origin: center;
+
+  animation:
+    scorpiusTwinkle var(--twinkle-duration, 4s)
+    ease-in-out infinite alternate;
+
+  animation-delay: var(--twinkle-delay, 0s);
+}
+
+.scorpius-star-core {
+  fill: #fffdf7;
+}
+
+.scorpius-star-glow {
+  fill: rgba(190, 210, 255, 0.15);
+  filter: blur(4px);
+}
+
+/* Personality stars */
+
+.scorpius-star.personality
+.scorpius-star-core {
+  fill: #fff4df;
+}
+
+.scorpius-star.personality
+.scorpius-star-glow {
+  fill: rgba(218, 190, 245, 0.25);
+}
+
+/* Antares */
+
+.scorpius-star.antares
+.scorpius-star-core {
+  fill: #ffb080;
+}
+
+.scorpius-star.antares
+.scorpius-star-glow {
+  fill: rgba(255, 102, 65, 0.35);
+
+  filter: blur(7px);
+}
+
+.scorpius-star.antares {
+  animation:
+    antaresBreathe 5s ease-in-out infinite;
+}
+
+/* Twinkling */
+
+@keyframes scorpiusTwinkle {
+  0% {
+    opacity: 0.65;
+    transform: scale(0.92);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes antaresBreathe {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(0.96);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
+/* Heading */
+
+.scorpius-heading {
+  position: absolute;
+  top: 7%;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  text-align: center;
+  white-space: nowrap;
+
+  pointer-events: none;
+}
+
+.scorpius-heading h2 {
+  font-size: clamp(17px, 3vw, 25px);
+  font-weight: 400;
+
+  letter-spacing: 0.25em;
+}
+
+.scorpius-heading p {
+  margin-top: 10px;
+
+  font-size: 11px;
+  letter-spacing: 0.22em;
+
+  color: rgba(220, 215, 235, 0.6);
+}
+
+/* Exit */
+
+#scorpiusExit {
+  position: absolute;
+
+  top: max(24px, env(safe-area-inset-top));
+  right: 24px;
+
+  z-index: 10;
+
+  padding: 10px 14px;
+
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 30px;
+
+  background: rgba(10,15,30,0.6);
+  color: #f6f3ea;
+
+  cursor: pointer;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .scorpius-container {
+    width: 94vw;
+    height: 72dvh;
+  }
+
+  .scorpius-heading {
+    top: 12%;
+  }
+
+  .scorpius-line {
+    stroke-width: 1.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scorpius-star {
+    animation: none;
+  }
+}

@@ -2,9 +2,73 @@
    SCORPIUS — THE MANY SIDES OF ME
 ========================================== */
 
+/* Main universe constellation */
+
+#scorpius {
+  position: absolute;
+
+  left: 2250px;
+  top: 1050px;
+
+  width: 480px;
+  height: 580px;
+
+  z-index: 20;
+
+  pointer-events: none;
+}
+
+#scorpius.discovered {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.scorpius-universe-map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.scorpius-universe-map .scorpius-line {
+  opacity: 0;
+}
+
+#scorpius.discovered .scorpius-line {
+  opacity: 1;
+}
+
+.scorpius-universe-label {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: rgba(235, 232, 247, 0.85);
+
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+
+  white-space: nowrap;
+
+  opacity: 0;
+  transition: opacity 1.2s ease;
+
+  pointer-events: none;
+}
+
+#scorpius.discovered .scorpius-universe-label {
+  opacity: 1;
+}
+
+/* Chapter */
+
 #scorpiusChapter {
   position: fixed;
   inset: 0;
+
   z-index: 1000;
 
   display: none;
@@ -14,8 +78,8 @@
   background:
     radial-gradient(
       ellipse at 50% 45%,
-      #101324 0%,
-      #060914 48%,
+      #111528 0%,
+      #070a17 48%,
       #010309 100%
     );
 
@@ -30,8 +94,8 @@
 .scorpius-container {
   position: relative;
 
-  width: min(90vw, 650px);
-  height: min(75dvh, 780px);
+  width: min(88vw, 620px);
+  height: min(76dvh, 760px);
 
   display: flex;
   align-items: center;
@@ -39,76 +103,81 @@
 }
 
 .scorpius-map {
+  display: block;
+
   width: 100%;
   height: 100%;
 
   overflow: visible;
 }
 
-/* Constellation lines */
+/* Lines */
 
 .scorpius-line {
   fill: none;
 
-  stroke: rgba(200, 215, 245, 0.42);
-  stroke-width: 1.1;
+  stroke: rgba(205, 217, 245, 0.42);
+  stroke-width: 1.15;
 
   stroke-linecap: round;
   stroke-linejoin: round;
 
   filter: drop-shadow(
-    0 0 3px rgba(180, 200, 255, 0.3)
+    0 0 3px rgba(185, 205, 255, 0.25)
   );
 }
 
 /* Stars */
 
 .scorpius-star {
-  cursor: pointer;
-
   transform-box: fill-box;
   transform-origin: center;
 
   animation:
-    scorpiusTwinkle var(--twinkle-duration, 4s)
-    ease-in-out infinite alternate;
+    scorpiusTwinkle
+    var(--twinkle-duration, 4s)
+    ease-in-out
+    infinite alternate;
 
   animation-delay: var(--twinkle-delay, 0s);
 }
 
 .scorpius-star-core {
-  fill: #fffdf7;
+  fill: #fffdf8;
+
+  filter: drop-shadow(
+    0 0 3px rgba(225, 235, 255, 0.8)
+  );
 }
 
 .scorpius-star-glow {
-  fill: rgba(190, 210, 255, 0.15);
-  filter: blur(4px);
+  fill: rgba(170, 195, 255, 0.14);
+  filter: blur(5px);
 }
 
 /* Personality stars */
 
-.scorpius-star.personality
-.scorpius-star-core {
-  fill: #fff4df;
+.scorpius-star.personality .scorpius-star-core {
+  fill: #fff4e6;
 }
 
-.scorpius-star.personality
-.scorpius-star-glow {
-  fill: rgba(218, 190, 245, 0.25);
+.scorpius-star.personality .scorpius-star-glow {
+  fill: rgba(218, 185, 245, 0.23);
 }
 
 /* Antares */
 
-.scorpius-star.antares
-.scorpius-star-core {
-  fill: #ffb080;
+.scorpius-star.antares .scorpius-star-core {
+  fill: #ffad79;
+
+  filter: drop-shadow(
+    0 0 5px rgba(255, 125, 78, 0.95)
+  );
 }
 
-.scorpius-star.antares
-.scorpius-star-glow {
-  fill: rgba(255, 102, 65, 0.35);
-
-  filter: blur(7px);
+.scorpius-star.antares .scorpius-star-glow {
+  fill: rgba(255, 100, 65, 0.35);
+  filter: blur(8px);
 }
 
 .scorpius-star.antares {
@@ -116,36 +185,21 @@
     antaresBreathe 5s ease-in-out infinite;
 }
 
-/* Twinkling */
+/* Chapter interaction */
 
-@keyframes scorpiusTwinkle {
-  0% {
-    opacity: 0.65;
-    transform: scale(0.92);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1.08);
-  }
+#scorpiusChapter .scorpius-star.personality {
+  cursor: pointer;
 }
 
-@keyframes antaresBreathe {
-  0%, 100% {
-    opacity: 0.85;
-    transform: scale(0.96);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.12);
-  }
+#scorpiusChapter .scorpius-star.personality:hover {
+  filter: brightness(1.35);
 }
 
 /* Heading */
 
 .scorpius-heading {
   position: absolute;
+
   top: 7%;
   left: 50%;
 
@@ -158,6 +212,8 @@
 }
 
 .scorpius-heading h2 {
+  margin: 0;
+
   font-size: clamp(17px, 3vw, 25px);
   font-weight: 400;
 
@@ -170,10 +226,10 @@
   font-size: 11px;
   letter-spacing: 0.22em;
 
-  color: rgba(220, 215, 235, 0.6);
+  color: rgba(220, 215, 235, 0.65);
 }
 
-/* Exit */
+/* Exit button */
 
 #scorpiusExit {
   position: absolute;
@@ -188,10 +244,36 @@
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 30px;
 
-  background: rgba(10,15,30,0.6);
+  background: rgba(10,15,30,0.65);
   color: #f6f3ea;
 
   cursor: pointer;
+}
+
+/* Animations */
+
+@keyframes scorpiusTwinkle {
+  0% {
+    opacity: 0.68;
+    transform: scale(0.93);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+}
+
+@keyframes antaresBreathe {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(0.97);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 /* Mobile */
@@ -203,11 +285,15 @@
   }
 
   .scorpius-heading {
-    top: 12%;
+    top: 11%;
   }
 
   .scorpius-line {
-    stroke-width: 1.4;
+    stroke-width: 1.35;
+  }
+
+  #scorpiusExit {
+    right: 16px;
   }
 }
 

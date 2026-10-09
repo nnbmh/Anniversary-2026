@@ -5,7 +5,6 @@
 /* =========================================================
    ELEMENTS
 ========================================================= */
-
 const app = document.getElementById("app");
 const universe = document.getElementById("universe");
 const dustLayer = document.getElementById("dustLayer");

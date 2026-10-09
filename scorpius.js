@@ -1,173 +1,169 @@
 /* ==========================================
-   SCORPIUS
-   THE MANY SIDES OF ME
+   SCORPIUS STAR POSITIONS
 
-   PHASE 1:
-   UNIVERSE STARS ONLY
-
-   Uses the same star renderer
-   as Orion and Virgo.
-
-   Does not modify:
-   - Camera movement
-   - Telescope controls
-   - Orion
-   - Virgo
-========================================== */
-
-
-/* ==========================================
-   STAR POSITIONS
+   Shape based on your reference:
+   - Head at upper right
+   - Antares near upper centre
+   - Body curves downward to the left
+   - Tail hooks upward at lower left
 ========================================== */
 
 const scorpiusStars = [
 
-  // Head and claws
+  // Head and upper branches
 
   {
     id: "jabbah",
-    x: 155,
-    y: 80,
-    size: 3.8
+    x: 455,
+    y: 65,
+    size: 3.5
   },
 
   {
     id: "acrab",
-    x: 225,
-    y: 105,
-    size: 4.2
+    x: 470,
+    y: 120,
+    size: 4.0
   },
 
   {
     id: "dschubba",
-    x: 200,
+    x: 468,
     y: 165,
-    size: 4.5
+    size: 4.2
   },
 
   {
     id: "pi",
-    x: 280,
-    y: 190,
-    size: 2.7
+    x: 415,
+    y: 145,
+    size: 2.8
   },
 
 
-  // Heart
+  // Antares — warm reddish heart
 
   {
     id: "antares",
-    x: 245,
-    y: 265,
+    x: 355,
+    y: 190,
     size: 6.2
   },
 
 
-  // Body
+  // Body descending left
 
   {
     id: "tau",
-    x: 260,
-    y: 325,
-    size: 3.1
+    x: 330,
+    y: 225,
+    size: 3.0
   },
 
   {
     id: "epsilon",
-    x: 280,
-    y: 380,
-    size: 3.3
+    x: 285,
+    y: 315,
+    size: 3.5
   },
 
   {
     id: "mu",
-    x: 310,
-    y: 430,
-    size: 2.7
-  },
-
-
-  // Curved tail
-
-  {
-    id: "zeta",
-    x: 350,
-    y: 475,
+    x: 280,
+    y: 380,
     size: 2.8
   },
 
   {
+    id: "zeta",
+    x: 275,
+    y: 455,
+    size: 3.0
+  },
+
+
+  // Lower curve
+
+  {
     id: "eta",
-    x: 395,
-    y: 510,
+    x: 215,
+    y: 475,
     size: 3.2
   },
 
   {
     id: "sargas",
-    x: 435,
-    y: 520,
-    size: 4.4
+    x: 155,
+    y: 475,
+    size: 4.5
   },
+
+
+  // Tail hooking upward
 
   {
     id: "iota",
-    x: 465,
-    y: 490,
-    size: 2.7
+    x: 120,
+    y: 430,
+    size: 2.8
   },
 
   {
     id: "kappa",
-    x: 475,
-    y: 440,
-    size: 3.1
+    x: 135,
+    y: 405,
+    size: 3.0
   },
 
   {
     id: "shaula",
-    x: 450,
-    y: 385,
-    size: 5
+    x: 155,
+    y: 380,
+    size: 5.0
   },
 
   {
     id: "lesath",
-    x: 415,
-    y: 370,
+    x: 165,
+    y: 365,
     size: 3.8
   }
 
 ];
 
-
 /* ==========================================
-   CONNECTIONS
+   SCORPIUS CONNECTIONS
 
-   Saved for the discovery sequence.
-   Not drawn in this phase.
+   Follows the reference silhouette.
+   Lines are reserved for discovery.
 ========================================== */
 
 const scorpiusConnections = [
 
+  // Head and branches
+
   ["jabbah", "acrab"],
   ["acrab", "dschubba"],
 
-  ["dschubba", "pi"],
-  ["dschubba", "antares"],
+  ["acrab", "pi"],
   ["pi", "antares"],
+
+  // Body
 
   ["antares", "tau"],
   ["tau", "epsilon"],
   ["epsilon", "mu"],
   ["mu", "zeta"],
 
+  // Lower curve
+
   ["zeta", "eta"],
   ["eta", "sargas"],
 
+  // Hooked tail
+
   ["sargas", "iota"],
   ["iota", "kappa"],
-
   ["kappa", "shaula"],
   ["shaula", "lesath"]
 

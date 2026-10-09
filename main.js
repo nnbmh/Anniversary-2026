@@ -2734,12 +2734,11 @@ function renderTelescope() {
     height
   );
 
-   /*
+
    drawTelescopeScorpius(
       width,
       height
    );
-   */
 }
 
 
@@ -3777,10 +3776,10 @@ function animate(
 
   updateOrionPosition();
   updateVirgoPosition();
-
-  updateVirgoGuidance(
-    timestamp
-  );
+  updateVirgoGuidance(timestamp);
+   
+  renderScorpiusUniverse(timestamp);
+   
 
   /*
     Orion and Virgo now use the
@@ -3823,11 +3822,9 @@ function animate(
     timestamp
   );
 
-   /*
    checkScorpiusFocus(
       timestamp
    );
-   */
 
   requestAnimationFrame(
     animate

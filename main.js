@@ -3822,9 +3822,11 @@ function animate(
     timestamp
   );
 
+   /*
    checkScorpiusFocus(
       timestamp
    );
+   */
 
   requestAnimationFrame(
     animate

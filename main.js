@@ -2734,11 +2734,12 @@ function renderTelescope() {
     height
   );
 
-
+/*
    drawTelescopeScorpius(
       width,
       height
    );
+   */
 }
 
 
@@ -3777,8 +3778,8 @@ function animate(
   updateOrionPosition();
   updateVirgoPosition();
   updateVirgoGuidance(timestamp);
-   
-  renderScorpiusUniverse(timestamp);
+  
+  // renderScorpiusUniverse(timestamp);
    
 
   /*

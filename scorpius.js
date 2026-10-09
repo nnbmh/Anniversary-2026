@@ -340,12 +340,12 @@ function drawScorpiusStar(
 
   const intensity =
     isAntares
-      ? 0.9
-      : 0.58;
+      ? 1
+      : 0.78;
 
 
   const size =
-    star.size * 0.85;
+    star.size * 1.45;
 
 
   drawConstellationStar(

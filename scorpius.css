@@ -22,6 +22,8 @@
 
   pointer-events: none;
 
+   outline: 2px solid rgba(255, 100, 100, 0.8);
+background: rgba(255, 100, 100, 0.08);
 }
 
 

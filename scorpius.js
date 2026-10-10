@@ -246,11 +246,11 @@ const scorpiusStarDesigns = {
   },
 
   antares: {
-    flareV: 1.55,
-    flareH: 1.18,
-    glow: 1.35,
-    speed: 0.62,
-    phase: 0.5
+  flareV: 2.15,
+  flareH: 1.45,
+  glow: 1.65,
+  speed: 0.62,
+  phase: 0.5
   },
 
   tau: {
@@ -604,9 +604,9 @@ function drawScorpiusStar(star, timestamp) {
    constellationStarDesigns[star.id] =
       scorpiusStarDesigns[star.id];
 
-  const displaySize = isAntares
-    ? sizes[star.id] * 1.22
-    : Math.max(1.05, sizes[star.id] * 1.16);
+   const displaySize = isAntares
+      ? sizes[star.id] * 1.52
+      : Math.max(1.05, sizes[star.id] * 1.16);
 
   drawConstellationStar(
     scorpiusContext,

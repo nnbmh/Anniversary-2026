@@ -685,3 +685,27 @@ function animateScorpius(timestamp) {
 ========================================== */
 
 initialiseScorpius();
+
+const scorpiusCheck = document.createElement("div");
+
+scorpiusCheck.textContent =
+  document.getElementById("scorpius")
+    ? "SCORPIUS LOADED"
+    : "SCORPIUS NOT CREATED";
+
+scorpiusCheck.style.cssText = `
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  background: #321626;
+  color: white;
+  padding: 12px 18px;
+  border: 1px solid #ff8b9f;
+  border-radius: 8px;
+  font: 14px Arial;
+  pointer-events: none;
+`;
+
+document.body.appendChild(scorpiusCheck);

@@ -205,6 +205,261 @@ let scorpiusContext = null;
 
 let scorpiusReady = false;
 
+/* ==========================================
+   SCORPIUS STAR DESIGNS
+
+   Uses the same settings as
+   Orion and Virgo in main.js.
+========================================== */
+
+const scorpiusStarDesigns = {
+  jabbah: {
+    flareV: 0.82,
+    flareH: 0.66,
+    glow: 0.70,
+    speed: 0.54,
+    phase: 0.4
+  },
+
+  acrab: {
+    flareV: 1.02,
+    flareH: 0.78,
+    glow: 0.85,
+    speed: 0.59,
+    phase: 1.8
+  },
+
+  dschubba: {
+    flareV: 1.12,
+    flareH: 0.90,
+    glow: 0.95,
+    speed: 0.70,
+    phase: 3.1
+  },
+
+  pi: {
+    flareV: 0.55,
+    flareH: 0.44,
+    glow: 0.45,
+    speed: 0.60,
+    phase: 5.2
+  },
+
+  antares: {
+    flareV: 1.55,
+    flareH: 1.18,
+    glow: 1.35,
+    speed: 0.62,
+    phase: 0.5
+  },
+
+  tau: {
+    flareV: 0.68,
+    flareH: 0.52,
+    glow: 0.55,
+    speed: 0.74,
+    phase: 2.7
+  },
+
+  epsilon: {
+    flareV: 0.95,
+    flareH: 0.78,
+    glow: 0.82,
+    speed: 0.58,
+    phase: 1.6
+  },
+
+  mu: {
+    flareV: 0.55,
+    flareH: 0.44,
+    glow: 0.45,
+    speed: 0.60,
+    phase: 4.7
+  },
+
+  zeta: {
+    flareV: 0.68,
+    flareH: 0.52,
+    glow: 0.55,
+    speed: 0.74,
+    phase: 3.4
+  },
+
+  eta: {
+    flareV: 0.76,
+    flareH: 0.62,
+    glow: 0.70,
+    speed: 0.53,
+    phase: 2.1
+  },
+
+  sargas: {
+    flareV: 1.22,
+    flareH: 0.94,
+    glow: 1.00,
+    speed: 0.66,
+    phase: 2.8
+  },
+
+  iota: {
+    flareV: 0.55,
+    flareH: 0.44,
+    glow: 0.45,
+    speed: 0.60,
+    phase: 5.5
+  },
+
+  kappa: {
+    flareV: 0.68,
+    flareH: 0.52,
+    glow: 0.55,
+    speed: 0.74,
+    phase: 1.1
+  },
+
+  shaula: {
+    flareV: 1.35,
+    flareH: 1.05,
+    glow: 1.05,
+    speed: 0.72,
+    phase: 0.3
+  },
+
+  lesath: {
+    flareV: 0.90,
+    flareH: 0.70,
+    glow: 0.76,
+    speed: 0.60,
+    phase: 5.3
+  }
+};/* ==========================================
+   SCORPIUS STAR DESIGNS
+
+   Uses the same settings as
+   Orion and Virgo in main.js.
+========================================== */
+
+const scorpiusStarDesigns = {
+  jabbah: {
+    flareV: 0.82,
+    flareH: 0.66,
+    glow: 0.70,
+    speed: 0.54,
+    phase: 0.4
+  },
+
+  acrab: {
+    flareV: 1.02,
+    flareH: 0.78,
+    glow: 0.85,
+    speed: 0.59,
+    phase: 1.8
+  },
+
+  dschubba: {
+    flareV: 1.12,
+    flareH: 0.90,
+    glow: 0.95,
+    speed: 0.70,
+    phase: 3.1
+  },
+
+  pi: {
+    flareV: 0.55,
+    flareH: 0.44,
+    glow: 0.45,
+    speed: 0.60,
+    phase: 5.2
+  },
+
+  antares: {
+    flareV: 1.55,
+    flareH: 1.18,
+    glow: 1.35,
+    speed: 0.62,
+    phase: 0.5
+  },
+
+  tau: {
+    flareV: 0.68,
+    flareH: 0.52,
+    glow: 0.55,
+    speed: 0.74,
+    phase: 2.7
+  },
+
+  epsilon: {
+    flareV: 0.95,
+    flareH: 0.78,
+    glow: 0.82,
+    speed: 0.58,
+    phase: 1.6
+  },
+
+  mu: {
+    flareV: 0.55,
+    flareH: 0.44,
+    glow: 0.45,
+    speed: 0.60,
+    phase: 4.7
+  },
+
+  zeta: {
+    flareV: 0.68,
+    flareH: 0.52,
+    glow: 0.55,
+    speed: 0.74,
+    phase: 3.4
+  },
+
+  eta: {
+    flareV: 0.76,
+    flareH: 0.62,
+    glow: 0.70,
+    speed: 0.53,
+    phase: 2.1
+  },
+
+  sargas: {
+    flareV: 1.22,
+    flareH: 0.94,
+    glow: 1.00,
+    speed: 0.66,
+    phase: 2.8
+  },
+
+  iota: {
+    flareV: 0.55,
+    flareH: 0.44,
+    glow: 0.45,
+    speed: 0.60,
+    phase: 5.5
+  },
+
+  kappa: {
+    flareV: 0.68,
+    flareH: 0.52,
+    glow: 0.55,
+    speed: 0.74,
+    phase: 1.1
+  },
+
+  shaula: {
+    flareV: 1.35,
+    flareH: 1.05,
+    glow: 1.05,
+    speed: 0.72,
+    phase: 0.3
+  },
+
+  lesath: {
+    flareV: 0.90,
+    flareH: 0.70,
+    glow: 0.76,
+    speed: 0.60,
+    phase: 5.3
+  }
+};
 
 /* ==========================================
    CREATE CONSTELLATION
@@ -345,6 +600,9 @@ function drawScorpiusStar(star, timestamp) {
   };
 
   const isAntares = star.id === "antares";
+   
+   constellationStarDesigns[star.id] =
+      scorpiusStarDesigns[star.id];
 
   const displaySize = isAntares
     ? sizes[star.id] * 1.22

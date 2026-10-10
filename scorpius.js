@@ -326,9 +326,9 @@ function drawScorpiusStar(
 
 
   const tone =
-    isAntares
-      ? "warm"
-      : "cool";
+  isAntares
+    ? "warm"
+    : "neutral";
 
 
   /*
@@ -338,14 +338,28 @@ function drawScorpiusStar(
     Antares is warmer and brighter.
   */
 
-  const intensity =
-    isAntares
-      ? 1
-      : 0.78;
+  const intensity = 1;
 
+const orionStyleSizes = {
+  jabbah: 1.7,
+  acrab: 2.0,
+  dschubba: 2.3,
+  pi: 1.35,
+  antares: 2.8,
+  tau: 1.5,
+  epsilon: 1.85,
+  mu: 1.3,
+  zeta: 1.45,
+  eta: 1.6,
+  sargas: 2.2,
+  iota: 1.25,
+  kappa: 1.5,
+  shaula: 2.45,
+  lesath: 1.8
+};
 
-  const size =
-    star.size * 1.45;
+const size =
+  orionStyleSizes[star.id] * 1.16;
 
 
   drawConstellationStar(

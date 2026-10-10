@@ -288,6 +288,18 @@ function initialiseScorpius() {
   scorpiusContext =
     scorpiusCanvas.getContext("2d");
 
+   const dpr = Math.min(
+  window.devicePixelRatio || 1,
+  2
+);
+
+scorpiusCanvas.width = Math.round(560 * dpr);
+scorpiusCanvas.height = Math.round(620 * dpr);
+
+scorpiusContext.setTransform(
+  dpr, 0, 0, dpr, 0, 0
+);
+
 
   if (!scorpiusContext) {
     return;
@@ -311,79 +323,44 @@ function initialiseScorpius() {
    from main.js.
 ========================================== */
 
-function drawScorpiusStar(
-  star,
-  timestamp
-) {
+function drawScorpiusStar(star, timestamp) {
+  if (!scorpiusContext) return;
 
-  if (!scorpiusContext) {
-    return;
-  }
+  const sizes = {
+    jabbah: 1.7,
+    acrab: 2.0,
+    dschubba: 2.3,
+    pi: 1.35,
+    antares: 2.8,
+    tau: 1.5,
+    epsilon: 1.85,
+    mu: 1.3,
+    zeta: 1.45,
+    eta: 1.6,
+    sargas: 2.2,
+    iota: 1.25,
+    kappa: 1.5,
+    shaula: 2.45,
+    lesath: 1.8
+  };
 
+  const isAntares = star.id === "antares";
 
-  const isAntares =
-    star.id === "antares";
-
-
-  const tone =
-  isAntares
-    ? "warm"
-    : "neutral";
-
-
-  /*
-    Scorpius has a faint
-    silvery-white appearance.
-
-    Antares is warmer and brighter.
-  */
-
-  const intensity = 1;
-
-const orionStyleSizes = {
-  jabbah: 1.7,
-  acrab: 2.0,
-  dschubba: 2.3,
-  pi: 1.35,
-  antares: 2.8,
-  tau: 1.5,
-  epsilon: 1.85,
-  mu: 1.3,
-  zeta: 1.45,
-  eta: 1.6,
-  sargas: 2.2,
-  iota: 1.25,
-  kappa: 1.5,
-  shaula: 2.45,
-  lesath: 1.8
-};
-
-const size =
-  orionStyleSizes[star.id] * 1.16;
-
+  const displaySize = isAntares
+    ? sizes[star.id] * 1.22
+    : Math.max(1.05, sizes[star.id] * 1.16);
 
   drawConstellationStar(
-
     scorpiusContext,
-
     star.x + 30,
-
     star.y + 35,
-
-    size,
-
-    tone,
-
+    displaySize,
+    isAntares ? "warm" : "neutral",
     star.id,
-
     timestamp / 1000,
-
-    intensity
-
+    1
   );
-
 }
-
 
 /* ==========================================
    ANIMATION

@@ -622,8 +622,8 @@ function buildUniverseStars() {
 
   buildAnnulusCluster(
     starsDeep,
-    3130,
-    2160,
+    2730,
+    1760,
     140,
     160,
     580,
@@ -635,8 +635,8 @@ function buildUniverseStars() {
 
   buildAnnulusCluster(
     starsFar,
-    3130,
-    2160,
+    2730,
+    1760,
     130,
     145,
     510,
@@ -648,8 +648,8 @@ function buildUniverseStars() {
 
   buildAnnulusCluster(
     starsMid,
-    3130,
-    2160,
+    2730,
+    1760,
     145,
     160,
     440,
@@ -661,8 +661,8 @@ function buildUniverseStars() {
 
   buildAnnulusCluster(
     starsNear,
-    3130,
-    2160,
+    2730,
+    1760,
     170,
     185,
     410,

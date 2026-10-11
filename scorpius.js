@@ -387,16 +387,22 @@ function drawScorpiusStar(star, timestamp) {
     over the diffraction rays.
   */
 
-  drawConstellationStar(
-    scorpiusContext,
-    x,
-    y,
-    variation.size,
-    tone,
-    variation.type,
-    starTime,
-    1
-  );
+  scorpiusContext.save();
+
+scorpiusContext.globalAlpha = 0.65;
+
+drawConstellationStar(
+  scorpiusContext,
+  x,
+  y,
+  variation.size,
+  tone,
+  variation.type,
+  starTime,
+  1
+);
+
+scorpiusContext.restore();
 
 }
 

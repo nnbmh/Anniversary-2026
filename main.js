@@ -6182,7 +6182,7 @@ try {
 
 /* ==========================================
    ORION + VIRGO
-   SCORPIUS MATCHING STAR APPEARANCE
+   SCORPIUS-STYLE STARS
 ========================================== */
 
 const originalConstellationStarRenderer =
@@ -6199,7 +6199,7 @@ drawConstellationStar = function (
   intensity = 1
 ) {
 
-  // Leave Scorpius unchanged.
+  // Do not change Scorpius.
   if (
     typeof scorpiusContext !== "undefined" &&
     context === scorpiusContext
@@ -6210,7 +6210,7 @@ drawConstellationStar = function (
     );
   }
 
-  // Preserve the travelling points in reveal animations.
+  // Preserve travelling points during reveals.
   if (!starName) {
     return originalConstellationStarRenderer(
       context, x, y, size,
@@ -6229,8 +6229,70 @@ drawConstellationStar = function (
     0
   );
 
+  const slowTime = time * 0.35;
+
+  const coreColour =
+    tone === "warm"
+      ? "255,235,205"
+      : "255,250,236";
+
+  const haloColour =
+    tone === "warm"
+      ? "255,205,160"
+      : tone === "cool"
+        ? "170,210,255"
+        : "205,225,255";
+
   /*
-    Match Scorpius's tapered rays.
+    SOFT SURROUNDING HALO
+  */
+
+  context.save();
+
+  const haloRadius =
+    size * (large ? 12 : 10);
+
+  const halo =
+    context.createRadialGradient(
+      x, y, 0,
+      x, y, haloRadius
+    );
+
+  halo.addColorStop(
+    0,
+    `rgba(${coreColour},${0.38 * intensity})`
+  );
+
+  halo.addColorStop(
+    0.15,
+    `rgba(${haloColour},${0.24 * intensity})`
+  );
+
+  halo.addColorStop(
+    0.45,
+    `rgba(${haloColour},${0.08 * intensity})`
+  );
+
+  halo.addColorStop(
+    1,
+    `rgba(${haloColour},0)`
+  );
+
+  context.fillStyle = halo;
+
+  context.beginPath();
+
+  context.arc(
+    x, y, haloRadius,
+    0, Math.PI * 2
+  );
+
+  context.fill();
+
+  context.restore();
+
+  /*
+    TAPERED DIFFRACTION RAYS
   */
 
   if (
@@ -6254,13 +6316,12 @@ drawConstellationStar = function (
   }
 
   /*
-    Use the same star design and glow
-    settings as Scorpius.
+    ORIGINAL FOUR-POINTED STAR
   */
 
   context.save();
 
-  context.globalAlpha = 1;
+  context.globalAlpha = 0.65;
 
   originalConstellationStarRenderer(
     context,
@@ -6269,9 +6330,55 @@ drawConstellationStar = function (
     size,
     tone,
     starType,
-    time * 0.35,
+    slowTime,
     intensity
   );
+
+  context.restore();
+
+  /*
+    BRIGHT CENTRAL GLOW
+  */
+
+  context.save();
+
+  context.globalCompositeOperation =
+    "screen";
+
+  const centreRadius =
+    size * 2.2;
+
+  const centre =
+    context.createRadialGradient(
+      x, y, 0,
+      x, y, centreRadius
+    );
+
+  centre.addColorStop(
+    0,
+    `rgba(${coreColour},${0.65 * intensity})`
+  );
+
+  centre.addColorStop(
+    0.35,
+    `rgba(${coreColour},${0.28 * intensity})`
+  );
+
+  centre.addColorStop(
+    1,
+    `rgba(${coreColour},0)`
+  );
+
+  context.fillStyle = centre;
+
+  context.beginPath();
+
+  context.arc(
+    x, y, centreRadius,
+    0, Math.PI * 2
+  );
+
+  context.fill();
 
   context.restore();
 

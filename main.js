@@ -6174,7 +6174,7 @@ try {
 
 /* ==========================================
    ORION + VIRGO
-   SHARED SCORPIUS STAR APPEARANCE
+   VIBRANT SCORPIUS-STYLE STARS
 ========================================== */
 
 const originalConstellationStarRenderer =
@@ -6200,38 +6200,22 @@ drawConstellationStar = function (
     context === scorpiusContext
   ) {
     return originalConstellationStarRenderer(
-      context,
-      x,
-      y,
-      size,
-      tone,
-      starName,
-      time,
-      intensity
+      context, x, y, size,
+      tone, starName, time, intensity
     );
   }
 
   /*
-    Preserve travelling points.
+    Preserve travelling points
+    during constellation reveals.
   */
 
   if (!starName) {
     return originalConstellationStarRenderer(
-      context,
-      x,
-      y,
-      size,
-      tone,
-      starName,
-      time,
-      intensity
+      context, x, y, size,
+      tone, starName, time, intensity
     );
   }
-
-  /*
-    Use the same star designs
-    as Scorpius.
-  */
 
   const large = size >= 3;
 
@@ -6246,7 +6230,8 @@ drawConstellationStar = function (
     );
 
   /*
-    Match Scorpius's tapered rays.
+    Same tapered diffraction rays
+    as Scorpius.
   */
 
   if (
@@ -6264,13 +6249,32 @@ drawConstellationStar = function (
   }
 
   /*
-    Match Scorpius's original
-    star glow and core.
+    Stronger central luminosity
+    and surrounding bloom.
+
+    Draw the original star renderer
+    twice at controlled opacity.
+
+    This strengthens its natural glow
+    without introducing a separate
+    artificial halo.
   */
+
+  const starTime =
+    time + index * 0.37;
+
+  const pulse =
+    (Math.sin(
+      starTime * 0.65 * Math.PI * 2
+    ) + 1) / 2;
+
+  const glowStrength =
+    0.72 + pulse * 0.28;
 
   context.save();
 
-  context.globalAlpha = 0.65;
+  context.globalAlpha =
+    0.65 * glowStrength;
 
   originalConstellationStarRenderer(
     context,
@@ -6279,7 +6283,34 @@ drawConstellationStar = function (
     size,
     tone,
     starType,
-    time + index * 0.37,
+    starTime,
+    intensity
+  );
+
+  context.restore();
+
+  /*
+    Second pass:
+    reinforce the natural star glow
+    and central brightness.
+  */
+
+  context.save();
+
+  context.globalCompositeOperation =
+    "screen";
+
+  context.globalAlpha =
+    0.30 * glowStrength;
+
+  originalConstellationStarRenderer(
+    context,
+    x,
+    y,
+    size,
+    tone,
+    starType,
+    starTime,
     intensity
   );
 

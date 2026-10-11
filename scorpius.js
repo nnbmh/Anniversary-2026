@@ -418,82 +418,90 @@ function initialiseScorpius() {
 function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
-  const scales = {
-    jabbah: 0.30,
-    acrab: 0.43,
-    dschubba: 0.56,
-    pi: 0.22,
-    antares: 1,
-    tau: 0.35,
-    epsilon: 0.49,
-    mu: 0.24,
-    zeta: 0.29,
-    eta: 0.41,
-    sargas: 0.61,
-    iota: 0.21,
-    kappa: 0.33,
-    shaula: 0.65,
-    lesath: 0.38
+  /*
+    Use the existing Orion and Virgo
+    star designs and proportions.
+  */
+
+  const designs = {
+    jabbah: ["Zaniah", 1.75],
+    acrab: ["Bellatrix", 1.85],
+    dschubba: ["Vindemiatrix", 2.25],
+    pi: ["Heze", 1.5],
+
+    antares: ["Spica", 3.05],
+
+    tau: ["Alnitak", 1.65],
+    epsilon: ["Porrima", 2.15],
+    mu: ["Sword 2", 1.2],
+    zeta: ["Auva", 1.65],
+    eta: ["Zavijava", 1.95],
+    sargas: ["Betelgeuse", 2.35],
+    iota: ["Sword 1", 1.3],
+    kappa: ["Zaniah", 1.75],
+    shaula: ["Rigel", 2.45],
+    lesath: ["Syrma", 1.8]
   };
 
-  const scale = scales[star.id];
+  const design = designs[star.id];
 
-  if (scale === undefined) return;
+  if (!design) return;
+
+  const [starName, size] = design;
 
   const isAntares = star.id === "antares";
 
-  const x = star.x + 30;
-  const y = star.y + 35;
+  /*
+    Use the same size formulas
+    as Orion and Virgo.
+  */
 
-  const time = timestamp / 1000;
+  let displaySize;
 
-  // Preserve Antares exactly as it currently appears.
   if (isAntares) {
-    drawConstellationStar(
-      scorpiusContext,
-      x,
-      y,
-      3.05 * 1.52,
-      "warm",
-      "Spica",
-      time,
-      1
+    displaySize = size * 1.52;
+  } else if (
+    starName === "Rigel"
+  ) {
+    displaySize = size * 1.28;
+  } else if (
+    starName === "Betelgeuse"
+  ) {
+    displaySize = size * 1.22;
+  } else if (
+    starName === "Bellatrix" ||
+    starName === "Alnitak" ||
+    starName === "Sword 1" ||
+    starName === "Sword 2"
+  ) {
+    displaySize = Math.max(
+      1.05,
+      size * 1.16
     );
-    return;
+  } else {
+    displaySize = Math.max(
+      1.5,
+      size * 1.2
+    );
   }
 
   /*
-    Draw a proportionally smaller version
-    of Antares's four-pointed shape.
-
-    Scaling the canvas also scales the
-    ray thickness and central glow.
+    Use the existing constellation
+    animation and drawing function.
   */
 
-  const index = scorpiusStars.indexOf(star);
-
-  const gentlePulse =
-    0.94 +
-    0.025 *
-    Math.sin(time * 0.7 + index * 1.8);
-
-  scorpiusContext.save();
-
-  scorpiusContext.translate(x, y);
-  scorpiusContext.scale(scale, scale);
+  const time = timestamp / 1000;
 
   drawConstellationStar(
     scorpiusContext,
-    0,
-    0,
-    3.05 * 1.52,
-    "neutral",
-    "Spica",
-    0,
-    gentlePulse
+    star.x + 30,
+    star.y + 35,
+    displaySize,
+    isAntares ? "warm" : "neutral",
+    starName,
+    time,
+    1
   );
-
-  scorpiusContext.restore();
 }
 
 /* ==========================================

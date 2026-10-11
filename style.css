@@ -469,7 +469,7 @@ button {
 
 
 #virgo .orion-star-canvas {
-  opacity: .48;
+  opacity: 1;
 }
 
 
@@ -534,7 +534,7 @@ button {
 
   pointer-events: none;
 
-  opacity: .48;
+  opacity: 1;
 
   transition:
     opacity .8s ease;

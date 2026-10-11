@@ -419,11 +419,8 @@ function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
   /*
-    Map Scorpius stars to the actual
-    Orion stars already defined in main.js.
-
-    We reuse Orion's existing data,
-    sizes, tones and drawing calculations.
+    Scorpius uses Orion's existing
+    star designs and actual sizes.
   */
 
   const orionMapping = {
@@ -450,7 +447,10 @@ function drawScorpiusStar(star, timestamp) {
   const time = timestamp / 1000;
 
   /*
-    Preserve Antares exactly.
+    ANTARES
+
+    Keep its existing size, shape,
+    warm colour and full brightness.
   */
 
   if (star.id === "antares") {
@@ -469,20 +469,19 @@ function drawScorpiusStar(star, timestamp) {
   }
 
   /*
-    Retrieve the actual Orion star.
+    Find the matching Orion star.
   */
 
   const orionName = orionMapping[star.id];
 
   const orionStar = orionStars.find(
-    star => star.name === orionName
+    item => item.name === orionName
   );
 
   if (!orionStar) return;
 
   /*
-    Exact sizing calculations
-    from renderRevealedOrionStars().
+    Use Orion's exact sizing formula.
   */
 
   let displaySize = Math.max(
@@ -491,21 +490,24 @@ function drawScorpiusStar(star, timestamp) {
   );
 
   if (orionStar.name === "Rigel") {
-    displaySize =
-      orionStar.size * 1.28;
+    displaySize = orionStar.size * 1.28;
   }
 
   if (orionStar.name === "Betelgeuse") {
-    displaySize =
-      orionStar.size * 1.22;
+    displaySize = orionStar.size * 1.22;
   }
 
   /*
-    Same rendering function,
-    tone, size and animation as Orion.
+    Draw the star using Orion's
+    original renderer.
 
-    Only the position changes.
+    Match the softer appearance
+    of Orion before discovery.
   */
+
+  scorpiusContext.save();
+
+  scorpiusContext.globalAlpha *= 0.48;
 
   drawConstellationStar(
     scorpiusContext,
@@ -517,6 +519,8 @@ function drawScorpiusStar(star, timestamp) {
     time,
     1
   );
+
+  scorpiusContext.restore();
 }
 
 /* ==========================================

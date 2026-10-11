@@ -488,26 +488,25 @@ function createScorpiusStarTemplate() {
 
 const scorpiusStarVariations = {
 
-  jabbah:   { scale: 0.85, brightness: 0.85 },
-  acrab:    { scale: 1.05, brightness: 0.95 },
-  dschubba: { scale: 1.10, brightness: 1.00 },
-  pi:      { scale: 0.75, brightness: 0.75 },
+  jabbah:   { scale: 1.15, brightness: 0.90 },
+  acrab:    { scale: 1.65, brightness: 1.00 },
+  dschubba: { scale: 1.85, brightness: 1.00 },
+  pi:       { scale: 0.95, brightness: 0.80 },
 
-  tau:     { scale: 0.85, brightness: 0.85 },
-  epsilon: { scale: 1.00, brightness: 0.95 },
-  mu:      { scale: 0.70, brightness: 0.70 },
-  zeta:    { scale: 0.85, brightness: 0.85 },
+  tau:      { scale: 1.20, brightness: 0.90 },
+  epsilon:  { scale: 1.55, brightness: 1.00 },
+  mu:       { scale: 0.90, brightness: 0.80 },
+  zeta:     { scale: 1.25, brightness: 0.90 },
 
-  eta:     { scale: 0.95, brightness: 0.90 },
-  sargas:  { scale: 1.10, brightness: 1.00 },
+  eta:      { scale: 1.50, brightness: 0.95 },
+  sargas:   { scale: 1.90, brightness: 1.00 },
 
-  iota:    { scale: 0.75, brightness: 0.75 },
-  kappa:   { scale: 0.85, brightness: 0.85 },
-  shaula:  { scale: 1.10, brightness: 1.00 },
-  lesath:  { scale: 0.90, brightness: 0.90 }
+  iota:     { scale: 0.95, brightness: 0.85 },
+  kappa:    { scale: 1.25, brightness: 0.90 },
+  shaula:   { scale: 2.00, brightness: 1.00 },
+  lesath:   { scale: 1.35, brightness: 0.90 }
 
 };
-
 
 /* ==========================================
    DRAW SCORPIUS STARS
@@ -602,6 +601,69 @@ function drawScorpiusStar(star, timestamp) {
     imageSize,
     imageSize
   );
+
+   /*
+  Fine diffraction spikes.
+
+  The rays extend beyond the star's
+  central glow and remain delicate.
+*/
+
+const rayLength =
+  12 * variation.scale;
+
+const rayOpacity =
+  0.18 * brightness;
+
+scorpiusContext.save();
+
+scorpiusContext.globalAlpha = rayOpacity;
+
+scorpiusContext.strokeStyle =
+  "rgba(215,230,255,0.85)";
+
+scorpiusContext.lineWidth = 0.35;
+
+scorpiusContext.shadowColor =
+  "rgba(180,215,255,0.45)";
+
+scorpiusContext.shadowBlur = 3;
+
+
+/* Vertical ray */
+
+scorpiusContext.beginPath();
+
+scorpiusContext.moveTo(
+  x,
+  y - rayLength
+);
+
+scorpiusContext.lineTo(
+  x,
+  y + rayLength
+);
+
+scorpiusContext.stroke();
+
+
+/* Horizontal ray */
+
+scorpiusContext.beginPath();
+
+scorpiusContext.moveTo(
+  x - rayLength * 0.65,
+  y
+);
+
+scorpiusContext.lineTo(
+  x + rayLength * 0.65,
+  y
+);
+
+scorpiusContext.stroke();
+
+scorpiusContext.restore();
 
   scorpiusContext.restore();
 

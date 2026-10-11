@@ -6173,8 +6173,6 @@ app.addEventListener(
    INITIALISE
 ========================================================= */
 
-initialise();
-
 try {
   initialise();
 } catch (error) {

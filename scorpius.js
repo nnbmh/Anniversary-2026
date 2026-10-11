@@ -360,22 +360,42 @@ function initialiseScorpius() {
   scorpiusContext =
     scorpiusCanvas.getContext("2d");
 
-   const dpr = Math.min(
-  window.devicePixelRatio || 1,
-  2
-);
-
-scorpiusCanvas.width = Math.round(560 * dpr);
-scorpiusCanvas.height = Math.round(620 * dpr);
-
-scorpiusContext.setTransform(
-  dpr, 0, 0, dpr, 0, 0
-);
-
-
-  if (!scorpiusContext) {
+   if (!scorpiusContext) {
     return;
   }
+
+  const cssWidth = scorpiusElement.offsetWidth;
+  const cssHeight = scorpiusElement.offsetHeight;
+
+  if (cssWidth <= 0 || cssHeight <= 0) {
+    return;
+  }
+
+  const glowPadding = 80;
+
+  const canvasHeight =
+    cssHeight + glowPadding;
+
+  const dpr = Math.min(
+    window.devicePixelRatio || 1,
+    2
+  );
+
+  scorpiusCanvas.width =
+    Math.round(cssWidth * dpr);
+
+  scorpiusCanvas.height =
+    Math.round(canvasHeight * dpr);
+
+  scorpiusCanvas.style.width =
+    `${cssWidth}px`;
+
+  scorpiusCanvas.style.height =
+    `${canvasHeight}px`;
+
+  scorpiusContext.setTransform(
+    dpr, 0, 0, dpr, 0, 0
+  );
 
 
   scorpiusReady = true;
@@ -398,113 +418,39 @@ scorpiusContext.setTransform(
 function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
-  /*
-    Use Virgo's actual star designs,
-    sizes, glow and rendering.
-  */
-
   const virgoDesigns = {
-    jabbah: {
-      name: "Zaniah",
-      size: 1.75
-    },
-
-    acrab: {
-      name: "Auva",
-      size: 1.65
-    },
-
-    dschubba: {
-      name: "Vindemiatrix",
-      size: 2.25
-    },
-
-    pi: {
-      name: "Heze",
-      size: 1.5
-    },
-
-    antares: {
-      name: "Spica",
-      size: 3.05
-    },
-
-    tau: {
-      name: "Zaniah",
-      size: 1.75
-    },
-
-    epsilon: {
-      name: "Porrima",
-      size: 2.15
-    },
-
-    mu: {
-      name: "Heze",
-      size: 1.5
-    },
-
-    zeta: {
-      name: "Auva",
-      size: 1.65
-    },
-
-    eta: {
-      name: "Zavijava",
-      size: 1.95
-    },
-
-    sargas: {
-      name: "Porrima",
-      size: 2.15
-    },
-
-    iota: {
-      name: "Heze",
-      size: 1.5
-    },
-
-    kappa: {
-      name: "Zaniah",
-      size: 1.75
-    },
-
-    shaula: {
-      name: "Vindemiatrix",
-      size: 2.25
-    },
-
-    lesath: {
-      name: "Syrma",
-      size: 1.8
-    }
+    jabbah: ["Zaniah", 1.75],
+    acrab: ["Auva", 1.65],
+    dschubba: ["Vindemiatrix", 2.25],
+    pi: ["Heze", 1.5],
+    antares: ["Spica", 3.05],
+    tau: ["Zaniah", 1.75],
+    epsilon: ["Porrima", 2.15],
+    mu: ["Heze", 1.5],
+    zeta: ["Auva", 1.65],
+    eta: ["Zavijava", 1.95],
+    sargas: ["Porrima", 2.15],
+    iota: ["Heze", 1.5],
+    kappa: ["Zaniah", 1.75],
+    shaula: ["Vindemiatrix", 2.25],
+    lesath: ["Syrma", 1.8]
   };
 
   const design = virgoDesigns[star.id];
 
   if (!design) return;
 
-  /*
-    EXACT sizing formula used by Virgo.
-  */
+  const [starName, size] = design;
 
   const displaySize =
-    design.name === "Spica"
-      ? design.size * 1.52
+    starName === "Spica"
+      ? size * 1.52
       : Math.max(
           1.5,
-          design.size * 1.2
+          size * 1.2
         );
 
-  /*
-    EXACT animation timing used by Virgo.
-  */
-
   const time = timestamp / 1000;
-
-  /*
-    EXACT drawing function used by Virgo.
-  */
 
   drawConstellationStar(
     scorpiusContext,
@@ -514,7 +460,7 @@ function drawScorpiusStar(star, timestamp) {
     star.id === "antares"
       ? "warm"
       : "neutral",
-    design.name,
+    starName,
     time,
     1
   );
@@ -530,54 +476,41 @@ function drawScorpiusStar(star, timestamp) {
 ========================================== */
 
 function animateScorpius(timestamp) {
-
-  if (
-    !scorpiusReady ||
-    !scorpiusContext
-  ) {
+  if (!scorpiusReady || !scorpiusContext) {
     return;
   }
 
-
   try {
+    const width = scorpiusElement.offsetWidth;
+    const height = scorpiusElement.offsetHeight;
+
+    if (width <= 0 || height <= 0) {
+      requestAnimationFrame(animateScorpius);
+      return;
+    }
 
     scorpiusContext.clearRect(
       0,
       0,
-      560,
-      620
+      width,
+      scorpiusCanvas.offsetHeight
     );
 
-
     scorpiusStars.forEach(star => {
-
-      drawScorpiusStar(
-        star,
-        timestamp
-      );
-
+      drawScorpiusStar(star, timestamp);
     });
 
   } catch (error) {
-
     console.error(
       "Scorpius rendering error:",
       error
     );
-
     scorpiusReady = false;
-
     return;
-
   }
 
-
-  requestAnimationFrame(
-    animateScorpius
-  );
-
+  requestAnimationFrame(animateScorpius);
 }
-
 
 /* ==========================================
    INITIALISE

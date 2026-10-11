@@ -418,63 +418,47 @@ function initialiseScorpius() {
 function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
-  /*
-    Use the same smaller-star designs
-    as Virgo and Orion.
-    Keep Antares as Spica.
-  */
+  const sizes = {
+    jabbah: 1.35,
+    acrab: 1.65,
+    dschubba: 2.35,
+    pi: 1.1,
+    antares: 3.05,
+    tau: 1.45,
+    epsilon: 2.15,
+    mu: 1.05,
+    zeta: 1.3,
+    eta: 1.8,
+    sargas: 2.5,
+    iota: 1.1,
+    kappa: 1.4,
+    shaula: 2.65,
+    lesath: 1.75
+  };
 
-  const designs = {
-  jabbah: ["Zaniah", 1.35],
-  acrab: ["Auva", 1.65],
-  dschubba: ["Vindemiatrix", 2.35],
-  pi: ["Heze", 1.1],
-  antares: ["Spica", 3.05],
-  tau: ["Zaniah", 1.45],
-  epsilon: ["Porrima", 2.15],
-  mu: ["Heze", 1.05],
-  zeta: ["Auva", 1.3],
-  eta: ["Zavijava", 1.8],
-  sargas: ["Porrima", 2.5],
-  iota: ["Heze", 1.1],
-  kappa: ["Zaniah", 1.4],
-  shaula: ["Vindemiatrix", 2.65],
-  lesath: ["Syrma", 1.75]
-};
-   
-  const design = designs[star.id];
+  const size = sizes[star.id];
 
-  if (!design) return;
+  if (!size) return;
 
-  const [starName, size] = design;
+  const isAntares = star.id === "antares";
 
-  /*
-    EXACT sizing formula from Virgo.
-  */
+  const displaySize = size * 1.52;
 
- const displaySize =
-  star.id === "antares"
-    ? size * 1.52
-    : size * 1.2;
-
-  /*
-    Match Virgo's animation timing.
-  */
-
-  const time = timestamp / 2800;
+  // Slower, gentler animation for smaller stars.
+  const time = isAntares
+    ? timestamp / 1000
+    : timestamp / 4500;
 
   drawConstellationStar(
-  scorpiusContext,
-  star.x + 30,
-  star.y + 35,
-  displaySize,
-  star.id === "antares"
-    ? "warm"
-    : "neutral",
-  starName,
-  time,
-  star.id === "antares" ? 1 : 0.82
-);
+    scorpiusContext,
+    star.x + 30,
+    star.y + 35,
+    displaySize,
+    isAntares ? "warm" : "neutral",
+    "Spica",
+    time,
+    isAntares ? 1 : 0.9
+  );
 }
 
 /* ==========================================

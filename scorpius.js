@@ -418,36 +418,75 @@ function initialiseScorpius() {
 function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
-  const sizes = {
-    jabbah: 1.35,
-    acrab: 1.65,
-    dschubba: 2.35,
-    pi: 1.1,
-    antares: 3.05,
-    tau: 1.45,
-    epsilon: 2.15,
-    mu: 1.05,
-    zeta: 1.3,
-    eta: 1.8,
-    sargas: 2.5,
-    iota: 1.1,
-    kappa: 1.4,
-    shaula: 2.65,
-    lesath: 1.75
+  /*
+    Star designs taken directly from
+    Orion and Virgo.
+
+    Different sizes, flare lengths
+    and glow strengths.
+  */
+
+  const designs = {
+    jabbah: ["Zaniah", 1.55],
+    acrab: ["Bellatrix", 1.85],
+    dschubba: ["Vindemiatrix", 2.25],
+    pi: ["Sword 2", 1.2],
+
+    antares: ["Spica", 3.05],
+
+    tau: ["Alnitak", 1.65],
+    epsilon: ["Porrima", 2.15],
+    mu: ["Heze", 1.3],
+    zeta: ["Sword 1", 1.45],
+    eta: ["Zavijava", 1.85],
+    sargas: ["Betelgeuse", 2.35],
+    iota: ["Heze", 1.2],
+    kappa: ["Zaniah", 1.5],
+    shaula: ["Rigel", 2.45],
+    lesath: ["Syrma", 1.6]
   };
 
-  const size = sizes[star.id];
+  const design = designs[star.id];
 
-  if (!size) return;
+  if (!design) return;
+
+  const [starName, size] = design;
 
   const isAntares = star.id === "antares";
 
-  const displaySize = size * 1.52;
+  /*
+    Match the original constellation
+    sizing without making every
+    star oversized.
+  */
 
-  // Slower, gentler animation for smaller stars.
-  const time = isAntares
-    ? timestamp / 1000
-    : timestamp / 4500;
+  const displaySize = isAntares
+    ? size * 1.52
+    : size * 1.2;
+
+  /*
+    Antares keeps its original animation.
+
+    Smaller stars use a fixed rendering
+    phase so their built-in brightness
+    fluctuations don't cause flashing.
+
+    A separate, gentle pulse controls
+    their twinkling instead.
+  */
+
+  const time = timestamp / 1000;
+
+  const starIndex =
+    scorpiusStars.indexOf(star);
+
+  const gentlePulse =
+    0.91 +
+    0.045 *
+    Math.sin(
+      time * 0.85 +
+      starIndex * 1.7
+    );
 
   drawConstellationStar(
     scorpiusContext,
@@ -455,9 +494,9 @@ function drawScorpiusStar(star, timestamp) {
     star.y + 35,
     displaySize,
     isAntares ? "warm" : "neutral",
-    "Spica",
-    time,
-    isAntares ? 1 : 0.9
+    starName,
+    isAntares ? time : 0,
+    isAntares ? 1 : gentlePulse
   );
 }
 

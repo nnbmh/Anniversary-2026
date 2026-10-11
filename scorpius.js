@@ -217,7 +217,7 @@ const scorpiusStarDesigns = {
     flareV: 0.82,
     flareH: 0.66,
     glow: 0.70,
-    speed: 0.54,
+    speed: 0.18,
     phase: 0.4
   },
 
@@ -225,7 +225,7 @@ const scorpiusStarDesigns = {
     flareV: 1.02,
     flareH: 0.78,
     glow: 0.85,
-    speed: 0.59,
+    speed: 0.22,
     phase: 1.8
   },
 
@@ -233,7 +233,7 @@ const scorpiusStarDesigns = {
     flareV: 1.12,
     flareH: 0.90,
     glow: 0.95,
-    speed: 0.70,
+    speed: 0.16,
     phase: 3.1
   },
 
@@ -241,7 +241,7 @@ const scorpiusStarDesigns = {
     flareV: 0.55,
     flareH: 0.44,
     glow: 0.45,
-    speed: 0.60,
+    speed: 0.20,
     phase: 5.2
   },
 
@@ -249,7 +249,7 @@ const scorpiusStarDesigns = {
   flareV: 2.75,
   flareH: 1.65,
   glow: 1.95,
-  speed: 0.18,
+  speed: 0.12,
   phase: 0.8
 },
 
@@ -257,7 +257,7 @@ const scorpiusStarDesigns = {
     flareV: 0.68,
     flareH: 0.52,
     glow: 0.55,
-    speed: 0.74,
+    speed: 0.19,
     phase: 2.7
   },
 
@@ -265,7 +265,7 @@ const scorpiusStarDesigns = {
     flareV: 0.95,
     flareH: 0.78,
     glow: 0.82,
-    speed: 0.58,
+    speed: 0.15,
     phase: 1.6
   },
 
@@ -273,7 +273,7 @@ const scorpiusStarDesigns = {
     flareV: 0.55,
     flareH: 0.44,
     glow: 0.45,
-    speed: 0.60,
+    speed: 0.21,
     phase: 4.7
   },
 
@@ -281,7 +281,7 @@ const scorpiusStarDesigns = {
     flareV: 0.68,
     flareH: 0.52,
     glow: 0.55,
-    speed: 0.74,
+    speed: 0.17,
     phase: 3.4
   },
 
@@ -289,7 +289,7 @@ const scorpiusStarDesigns = {
     flareV: 0.76,
     flareH: 0.62,
     glow: 0.70,
-    speed: 0.53,
+    speed: 0.14,
     phase: 2.1
   },
 
@@ -297,7 +297,7 @@ const scorpiusStarDesigns = {
     flareV: 1.22,
     flareH: 0.94,
     glow: 1.00,
-    speed: 0.66,
+    speed: 0.18,
     phase: 2.8
   },
 
@@ -305,7 +305,7 @@ const scorpiusStarDesigns = {
     flareV: 0.55,
     flareH: 0.44,
     glow: 0.45,
-    speed: 0.60,
+    speed: 0.20,
     phase: 5.5
   },
 
@@ -313,7 +313,7 @@ const scorpiusStarDesigns = {
     flareV: 0.68,
     flareH: 0.52,
     glow: 0.55,
-    speed: 0.74,
+    speed: 0.16,
     phase: 1.1
   },
 
@@ -321,7 +321,7 @@ const scorpiusStarDesigns = {
     flareV: 1.35,
     flareH: 1.05,
     glow: 1.05,
-    speed: 0.72,
+    speed: 0.13,
     phase: 0.3
   },
 
@@ -329,7 +329,7 @@ const scorpiusStarDesigns = {
     flareV: 0.90,
     flareH: 0.70,
     glow: 0.76,
-    speed: 0.60,
+    speed: 0.19,
     phase: 5.3
   }
 };
@@ -459,7 +459,7 @@ function drawScorpiusStar(star, timestamp) {
     acrab: 2.0,
     dschubba: 2.3,
     pi: 1.35,
-    antares: 2.8,
+    antares: 3.05,
     tau: 1.5,
     epsilon: 1.85,
     mu: 1.3,
@@ -473,48 +473,30 @@ function drawScorpiusStar(star, timestamp) {
   };
 
   const isAntares = star.id === "antares";
-   
-   constellationStarDesigns[star.id] =
-      scorpiusStarDesigns[star.id];
 
-   const displaySize = isAntares
-  ? sizes[star.id] * 1.52
-  : Math.max(1.5, sizes[star.id] * 1.2);
+  // Use the same star designs as Orion and Virgo.
+  constellationStarDesigns[star.id] =
+    scorpiusStarDesigns[star.id];
 
-/*
-  Gentle, slow shimmer.
+  // Match Virgo's star-sizing formula.
+  const displaySize = isAntares
+    ? sizes[star.id] * 1.52
+    : Math.max(1.5, sizes[star.id] * 1.2);
 
-  Keeps the stars softly illuminated
-  without dramatic brightness changes.
-*/
+  // Use the same animation timing as Orion and Virgo.
+  const time = timestamp / 1000;
 
-const time = timestamp / 1000;
-
-const shimmer =
-  Math.sin(
-    time * 0.35 +
-    scorpiusStarDesigns[star.id].phase
+  drawConstellationStar(
+    scorpiusContext,
+    star.x + 30,
+    star.y + 35,
+    displaySize,
+    isAntares ? "warm" : "neutral",
+    star.id,
+    time,
+    1
   );
-
-const gentleTime =
-  Math.asin(shimmer * 0.18) /
-  (
-    scorpiusStarDesigns[star.id].speed *
-    Math.PI
-  );
-
-drawConstellationStar(
-  scorpiusContext,
-  star.x + 30,
-  star.y + 35,
-  displaySize,
-  isAntares ? "warm" : "neutral",
-  star.id,
-  gentleTime,
-  1
-);
 }
-
 /* ==========================================
    ANIMATION
 

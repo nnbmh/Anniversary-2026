@@ -1749,10 +1749,7 @@ function renderRevealedOrionStars(
   const width = orion.offsetWidth;
   const height = orion.offsetHeight;
 
-  if (
-    width <= 0 ||
-    height <= 0
-  ) {
+  if (width <= 0 || height <= 0) {
     return;
   }
 
@@ -1763,25 +1760,36 @@ function renderRevealedOrionStars(
     height
   );
 
-  const time =
-    timestamp / 1000;
+  const time = timestamp / 1000;
+
+  /*
+    Star sizes based on Scorpius.
+
+    Large: 3.42
+    Medium: 2.65 - 2.75
+    Small: 2.10 - 2.50
+  */
+
+  const orionStarSizes = {
+    Betelgeuse: 3.42,
+    Rigel: 3.42,
+
+    Bellatrix: 2.75,
+    Saiph: 2.65,
+
+    Alnitak: 2.50,
+    Alnilam: 2.40,
+    Mintaka: 2.25
+  };
 
   orionStars.forEach(star => {
-    let displaySize =
+
+    const displaySize =
+      orionStarSizes[star.name] ??
       Math.max(
-        1.05,
-        star.size * 1.16
+        2.10,
+        Math.min(2.75, star.size * 1.2)
       );
-
-    if (star.name === "Rigel") {
-      displaySize =
-        star.size * 1.28;
-    }
-
-    if (star.name === "Betelgeuse") {
-      displaySize =
-        star.size * 1.22;
-    }
 
     drawConstellationStar(
       orionStarCtx,
@@ -1793,9 +1801,9 @@ function renderRevealedOrionStars(
       time,
       1
     );
+
   });
 }
-
 
 /* =========================================================
    REVEALED VIRGO CANVAS
@@ -1858,30 +1866,52 @@ function renderRevealedVirgoStars(
   const width = virgo.offsetWidth;
   const height = virgo.offsetHeight;
 
-  if (
-    width <= 0 ||
-    height <= 0
-  ) {
+  if (width <= 0 || height <= 0) {
     return;
   }
 
   virgoStarCtx.clearRect(
-  0,
-  0,
-  width,
-  virgoStarCanvas.offsetHeight
-);
+    0,
+    0,
+    width,
+    virgoStarCanvas.offsetHeight
+  );
 
-  const time =
-    timestamp / 1000;
+  const time = timestamp / 1000;
+
+  /*
+    Virgo star sizes based on Scorpius.
+
+    Spica retains its special size.
+
+    Large: 3.42
+    Medium: 2.40 - 2.75
+    Small: 2.05 - 2.30
+  */
+
+  const virgoStarSizes = {
+    Porrima: 3.42,
+    Vindemiatrix: 3.42,
+
+    Zaniah: 2.75,
+    Zavijava: 2.65,
+    Minelauva: 2.50,
+
+    Heze: 2.40,
+    Syrma: 2.30
+  };
 
   virgoStars.forEach(star => {
+
     const displaySize =
       star.name === "Spica"
         ? star.size * 1.52
-        : Math.max(
-            1.5,
-            star.size * 1.2
+        : (
+            virgoStarSizes[star.name] ??
+            Math.max(
+              2.10,
+              Math.min(2.75, star.size * 1.2)
+            )
           );
 
     drawConstellationStar(
@@ -1894,24 +1924,42 @@ function renderRevealedVirgoStars(
       time,
       1
     );
+
   });
+
+  /*
+    Smaller visual-only stars.
+
+    Keep their variation, but use
+    Scorpius's smaller star-size range.
+  */
 
   virgoVisualStars.forEach(
     (star, index) => {
+
+      const displaySize =
+        Math.max(
+          2.05,
+          Math.min(
+            2.30,
+            star.size * 1.2
+          )
+        );
+
       drawConstellationStar(
         virgoStarCtx,
         width * star.revealX,
         height * star.revealY,
-        star.size,
+        displaySize,
         star.tone,
         `VirgoVisual${index}`,
         time,
         .82
       );
+
     }
   );
 }
-
 
 /* =========================================================
    ORION POSITION

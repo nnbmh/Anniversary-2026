@@ -155,17 +155,23 @@ function drawScorpiusStar(star, timestamp) {
 
   if (star.id === "antares") {
 
-    drawConstellationStar(
-      scorpiusContext,
-      x,
-      y,
-      3.05 * 1.52,
-      "warm",
-      "Spica",
-      time,
-      1
-    );
+    scorpiusContext.save();
 
+scorpiusContext.globalAlpha = 0.75;
+
+drawConstellationStar(
+  scorpiusContext,
+  x,
+  y,
+  variation.size,
+  tone,
+  variation.type,
+  time,
+  1
+);
+
+scorpiusContext.restore();
+     
     return;
   }
 

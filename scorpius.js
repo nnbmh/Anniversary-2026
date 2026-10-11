@@ -1,13 +1,10 @@
 /* ==========================================
    SCORPIUS · 17.11
 
-   FINAL ORION-MATCHING STAR DESIGN
+   Four-pointed stars with soft,
+   tapered diffraction rays.
 
-   Larger stars: Betelgeuse
-   Smaller stars: Bellatrix
-
-   Uses Orion's original star renderer.
-
+   Sizes, colours and positions preserved.
    Antares remains unchanged.
 ========================================== */
 
@@ -98,10 +95,7 @@ let scorpiusReady = false;
 /* ==========================================
    STAR APPEARANCES
 
-   Sizes preserved from the previous version.
-
-   The original Orion renderer determines
-   the star shape, glow and diffraction rays.
+   Same sizes and colours as before.
 ========================================== */
 
 const scorpiusStarVariations = {
@@ -128,29 +122,213 @@ const scorpiusStarVariations = {
 
 
 /* ==========================================
-   DRAW SCORPIUS STARS
+   TAPERED DIFFRACTION RAYS
 
-   Directly uses Orion's renderer.
+   Each ray:
+   - Starts at the star's centre
+   - Gradually narrows towards its tip
+   - Fades naturally into the darkness
 
-   No additional rays.
-   No stretched images.
-   No separate star-shape algorithm.
+   Larger stars have longer rays.
+========================================== */
+
+function drawScorpiusTaperedRays(
+  context,
+  x,
+  y,
+  size,
+  type,
+  time,
+  index
+) {
+
+  const large =
+    type === "Betelgeuse";
+
+  const phase =
+    index * 1.37;
+
+  const shimmer =
+    (Math.sin(time * 0.75 + phase) + 1) / 2;
+
+  const brightness =
+    0.58 + shimmer * 0.30;
+
+  const verticalLength =
+    size * (large ? 13.5 : 11.5);
+
+  const horizontalLength =
+    size * (large ? 10.5 : 8.5);
+
+  const verticalWidth =
+    large ? 1.25 : 0.95;
+
+  const horizontalWidth =
+    large ? 1.05 : 0.80;
+
+  const colour =
+    large
+      ? "255,225,190"
+      : "210,230,255";
+
+  context.save();
+
+  context.globalCompositeOperation =
+    "screen";
+
+  /*
+    Draw one tapered ray.
+
+    The gradient fades along its length,
+    while the shape narrows to a point.
+  */
+
+  function drawRay(
+    dx,
+    dy,
+    length,
+    width
+  ) {
+
+    const endX =
+      x + dx * length;
+
+    const endY =
+      y + dy * length;
+
+    const perpendicularX =
+      -dy;
+
+    const perpendicularY =
+      dx;
+
+    const gradient =
+      context.createLinearGradient(
+        x,
+        y,
+        endX,
+        endY
+      );
+
+    gradient.addColorStop(
+      0,
+      `rgba(${colour},${0.65 * brightness})`
+    );
+
+    gradient.addColorStop(
+      0.15,
+      `rgba(${colour},${0.36 * brightness})`
+    );
+
+    gradient.addColorStop(
+      0.40,
+      `rgba(${colour},${0.17 * brightness})`
+    );
+
+    gradient.addColorStop(
+      0.70,
+      `rgba(${colour},${0.06 * brightness})`
+    );
+
+    gradient.addColorStop(
+      1,
+      `rgba(${colour},0)`
+    );
+
+    context.beginPath();
+
+    context.moveTo(
+      x + perpendicularX * width,
+      y + perpendicularY * width
+    );
+
+    context.quadraticCurveTo(
+      x + dx * length * 0.45 +
+        perpendicularX * width * 0.35,
+
+      y + dy * length * 0.45 +
+        perpendicularY * width * 0.35,
+
+      endX,
+      endY
+    );
+
+    context.quadraticCurveTo(
+      x + dx * length * 0.45 -
+        perpendicularX * width * 0.35,
+
+      y + dy * length * 0.45 -
+        perpendicularY * width * 0.35,
+
+      x - perpendicularX * width,
+      y - perpendicularY * width
+    );
+
+    context.closePath();
+
+    context.fillStyle =
+      gradient;
+
+    context.fill();
+
+  }
+
+
+  /*
+    Four diffraction rays.
+  */
+
+  drawRay(
+    0, -1,
+    verticalLength,
+    verticalWidth
+  );
+
+  drawRay(
+    0, 1,
+    verticalLength,
+    verticalWidth
+  );
+
+  drawRay(
+    -1, 0,
+    horizontalLength,
+    horizontalWidth
+  );
+
+  drawRay(
+    1, 0,
+    horizontalLength,
+    horizontalWidth
+  );
+
+  context.restore();
+
+}
+
+
+/* ==========================================
+   DRAW INDIVIDUAL STARS
 ========================================== */
 
 function drawScorpiusStar(star, timestamp) {
 
   if (!scorpiusContext) return;
 
-  const x = star.x + 30;
-  const y = star.y + 35;
+  const x =
+    star.x + 30;
 
-  const time = timestamp / 1000;
+  const y =
+    star.y + 35;
+
+  const time =
+    timestamp / 1000;
 
 
   /*
     ANTARES
 
-    Original rendering unchanged.
+    Original appearance unchanged.
   */
 
   if (star.id === "antares") {
@@ -167,6 +345,7 @@ function drawScorpiusStar(star, timestamp) {
     );
 
     return;
+
   }
 
 
@@ -175,20 +354,11 @@ function drawScorpiusStar(star, timestamp) {
 
   if (!variation) return;
 
+  const index =
+    scorpiusStars.indexOf(star);
 
-  /*
-    Match Orion's star designs.
-
-    Betelgeuse:
-    - Larger four-pointed core
-    - Longer diffraction rays
-    - Warm glow
-
-    Bellatrix:
-    - Smaller four-pointed core
-    - Shorter diffraction rays
-    - Neutral glow
-  */
+  const starTime =
+    time + index * 0.37;
 
   const tone =
     variation.type === "Betelgeuse"
@@ -197,14 +367,24 @@ function drawScorpiusStar(star, timestamp) {
 
 
   /*
-    Use Orion's original drawing function.
+    Draw the tapered diffraction rays
+    behind the star.
+  */
 
-    The function already includes:
-    - Radial glow
-    - Vertical diffraction ray
-    - Horizontal diffraction ray
-    - Four-pointed star core
-    - Animated twinkling
+  drawScorpiusTaperedRays(
+    scorpiusContext,
+    x,
+    y,
+    variation.size,
+    variation.type,
+    time,
+    index
+  );
+
+
+  /*
+    Draw the original Orion-style star
+    over the diffraction rays.
   */
 
   drawConstellationStar(
@@ -214,7 +394,7 @@ function drawScorpiusStar(star, timestamp) {
     variation.size,
     tone,
     variation.type,
-    time,
+    starTime,
     1
   );
 
@@ -238,7 +418,6 @@ function initialiseScorpius() {
     return;
   }
 
-
   scorpiusElement =
     document.createElement("section");
 
@@ -247,7 +426,6 @@ function initialiseScorpius() {
 
   scorpiusElement.className =
     "constellation";
-
 
   scorpiusElement.innerHTML = `
 
@@ -264,22 +442,12 @@ function initialiseScorpius() {
 
   `;
 
-
-  /*
-    Allow universe dragging.
-  */
-
   scorpiusElement.style.pointerEvents =
     "none";
 
   universeElement.appendChild(
     scorpiusElement
   );
-
-
-  /*
-    Get canvas.
-  */
 
   scorpiusCanvas =
     scorpiusElement.querySelector(
@@ -292,11 +460,6 @@ function initialiseScorpius() {
     scorpiusCanvas.getContext("2d");
 
   if (!scorpiusContext) return;
-
-
-  /*
-    Match Orion's canvas resolution.
-  */
 
   const cssWidth =
     scorpiusElement.offsetWidth;
@@ -311,7 +474,6 @@ function initialiseScorpius() {
     return;
   }
 
-
   const glowPadding = 80;
 
   const canvasHeight =
@@ -322,20 +484,17 @@ function initialiseScorpius() {
     2
   );
 
-
   scorpiusCanvas.width =
     Math.round(cssWidth * dpr);
 
   scorpiusCanvas.height =
     Math.round(canvasHeight * dpr);
 
-
   scorpiusCanvas.style.width =
     `${cssWidth}px`;
 
   scorpiusCanvas.style.height =
     `${canvasHeight}px`;
-
 
   scorpiusContext.setTransform(
     dpr,
@@ -345,7 +504,6 @@ function initialiseScorpius() {
     0,
     0
   );
-
 
   scorpiusReady = true;
 
@@ -389,14 +547,12 @@ function animateScorpius(timestamp) {
       return;
     }
 
-
     scorpiusContext.clearRect(
       0,
       0,
       width,
       scorpiusCanvas.offsetHeight
     );
-
 
     scorpiusStars.forEach(star => {
 
@@ -418,7 +574,6 @@ function animateScorpius(timestamp) {
 
     return;
   }
-
 
   requestAnimationFrame(
     animateScorpius

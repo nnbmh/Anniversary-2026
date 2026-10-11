@@ -1416,13 +1416,19 @@ function drawConstellationStar(
       Math.min(1, intensity)
     );
 
-  const brightness =
-    (.58 + wave * .42) *
-    alpha;
+  const isScorpiusStar =
+  Object.prototype.hasOwnProperty.call(
+    scorpiusStarDesigns,
+    starName
+  );
 
-  const flarePulse =
-    .88 +
-    wave * .22;
+const brightness = isScorpiusStar
+  ? (.82 + wave * .18) * alpha
+  : (.58 + wave * .42) * alpha;
+
+const flarePulse = isScorpiusStar
+  ? .96 + wave * .08
+  : .88 + wave * .22;
 
   let core = "255,250,236";
   let glow = "205,225,255";

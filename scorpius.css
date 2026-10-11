@@ -22,10 +22,6 @@
 
   pointer-events: none;
 
-   outline: 2px solid rgba(255, 100, 100, 0.8);
-background: rgba(255, 100, 100, 0.08);
-}
-
 
 /* ==========================================
    STAR CANVAS
@@ -278,7 +274,7 @@ background: rgba(255, 100, 100, 0.08);
 
 @media (max-width: 1200px) {
   #scorpius {
-    left: 1570px;
-    top: 450px;
+    left: 1750px;
+    top: 250px;
   }
 }

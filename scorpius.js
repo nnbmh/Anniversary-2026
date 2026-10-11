@@ -246,12 +246,12 @@ const scorpiusStarDesigns = {
   },
 
   antares: {
-  flareV: 2.15,
-  flareH: 1.45,
-  glow: 1.65,
-  speed: 0.62,
-  phase: 0.5
-  },
+  flareV: 2.75,
+  flareH: 1.65,
+  glow: 1.95,
+  speed: 0.18,
+  phase: 0.8
+},
 
   tau: {
     flareV: 0.68,
@@ -478,19 +478,41 @@ function drawScorpiusStar(star, timestamp) {
       scorpiusStarDesigns[star.id];
 
    const displaySize = isAntares
-      ? sizes[star.id] * 1.52
-      : Math.max(1.05, sizes[star.id] * 1.16);
+  ? sizes[star.id] * 1.52
+  : Math.max(1.5, sizes[star.id] * 1.2);
 
-  drawConstellationStar(
-    scorpiusContext,
-    star.x + 30,
-    star.y + 35,
-    displaySize,
-    isAntares ? "warm" : "neutral",
-    star.id,
-    timestamp / 1000,
-    1
+/*
+  Gentle, slow shimmer.
+
+  Keeps the stars softly illuminated
+  without dramatic brightness changes.
+*/
+
+const time = timestamp / 1000;
+
+const shimmer =
+  Math.sin(
+    time * 0.35 +
+    scorpiusStarDesigns[star.id].phase
   );
+
+const gentleTime =
+  Math.asin(shimmer * 0.18) /
+  (
+    scorpiusStarDesigns[star.id].speed *
+    Math.PI
+  );
+
+drawConstellationStar(
+  scorpiusContext,
+  star.x + 30,
+  star.y + 35,
+  displaySize,
+  isAntares ? "warm" : "neutral",
+  star.id,
+  gentleTime,
+  1
+);
 }
 
 /* ==========================================

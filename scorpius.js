@@ -398,45 +398,123 @@ scorpiusContext.setTransform(
 function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
-  const sizes = {
-  jabbah: 2.0,
-  acrab: 2.3,
-  dschubba: 2.5,
-  pi: 1.7,
-  antares: 3.05,
-  tau: 1.8,
-  epsilon: 2.1,
-  mu: 1.7,
-  zeta: 1.8,
-  eta: 1.9,
-  sargas: 2.5,
-  iota: 1.7,
-  kappa: 1.8,
-  shaula: 2.7,
-  lesath: 2.0
-};
+  /*
+    Use Virgo's actual star designs,
+    sizes, glow and rendering.
+  */
 
-  const isAntares = star.id === "antares";
+  const virgoDesigns = {
+    jabbah: {
+      name: "Zaniah",
+      size: 1.75
+    },
 
-  // Use the same star designs as Orion and Virgo.
-  constellationStarDesigns[star.id] =
-    scorpiusStarDesigns[star.id];
+    acrab: {
+      name: "Auva",
+      size: 1.65
+    },
 
-  // Match Virgo's star-sizing formula.
-  const displaySize = isAntares
-    ? sizes[star.id] * 1.52
-    : Math.max(1.5, sizes[star.id] * 1.2);
+    dschubba: {
+      name: "Vindemiatrix",
+      size: 2.25
+    },
 
-  // Use the same animation timing as Orion and Virgo.
-  const time = timestamp / 2200;
+    pi: {
+      name: "Heze",
+      size: 1.5
+    },
+
+    antares: {
+      name: "Spica",
+      size: 3.05
+    },
+
+    tau: {
+      name: "Zaniah",
+      size: 1.75
+    },
+
+    epsilon: {
+      name: "Porrima",
+      size: 2.15
+    },
+
+    mu: {
+      name: "Heze",
+      size: 1.5
+    },
+
+    zeta: {
+      name: "Auva",
+      size: 1.65
+    },
+
+    eta: {
+      name: "Zavijava",
+      size: 1.95
+    },
+
+    sargas: {
+      name: "Porrima",
+      size: 2.15
+    },
+
+    iota: {
+      name: "Heze",
+      size: 1.5
+    },
+
+    kappa: {
+      name: "Zaniah",
+      size: 1.75
+    },
+
+    shaula: {
+      name: "Vindemiatrix",
+      size: 2.25
+    },
+
+    lesath: {
+      name: "Syrma",
+      size: 1.8
+    }
+  };
+
+  const design = virgoDesigns[star.id];
+
+  if (!design) return;
+
+  /*
+    EXACT sizing formula used by Virgo.
+  */
+
+  const displaySize =
+    design.name === "Spica"
+      ? design.size * 1.52
+      : Math.max(
+          1.5,
+          design.size * 1.2
+        );
+
+  /*
+    EXACT animation timing used by Virgo.
+  */
+
+  const time = timestamp / 1000;
+
+  /*
+    EXACT drawing function used by Virgo.
+  */
 
   drawConstellationStar(
     scorpiusContext,
     star.x + 30,
     star.y + 35,
     displaySize,
-    isAntares ? "warm" : "neutral",
-    star.id,
+    star.id === "antares"
+      ? "warm"
+      : "neutral",
+    design.name,
     time,
     1
   );

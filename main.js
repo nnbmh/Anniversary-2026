@@ -6174,7 +6174,7 @@ try {
 
 /* ==========================================
    ORION + VIRGO
-   MATCH SCORPIUS STAR APPEARANCE
+   SHARED SCORPIUS STAR APPEARANCE
 ========================================== */
 
 const originalConstellationStarRenderer =
@@ -6192,7 +6192,7 @@ drawConstellationStar = function (
 ) {
 
   /*
-    Leave Scorpius completely unchanged.
+    Leave Scorpius unchanged.
   */
 
   if (
@@ -6212,8 +6212,7 @@ drawConstellationStar = function (
   }
 
   /*
-    Preserve travelling points
-    during constellation reveals.
+    Preserve travelling points.
   */
 
   if (!starName) {
@@ -6230,11 +6229,11 @@ drawConstellationStar = function (
   }
 
   /*
-    Match Scorpius's star types.
+    Use the same star designs
+    as Scorpius.
   */
 
-  const large =
-    size >= 3;
+  const large = size >= 3;
 
   const starType =
     large ? "Betelgeuse" : "Bellatrix";
@@ -6247,16 +6246,12 @@ drawConstellationStar = function (
     );
 
   /*
-    Draw Scorpius's tapered rays.
+    Match Scorpius's tapered rays.
   */
 
   if (
     typeof drawScorpiusTaperedRays === "function"
   ) {
-    context.save();
-
-    context.globalAlpha = intensity;
-
     drawScorpiusTaperedRays(
       context,
       x,
@@ -6266,15 +6261,11 @@ drawConstellationStar = function (
       time,
       index
     );
-
-    context.restore();
   }
 
   /*
-    Draw the original star core
-    and natural glow.
-
-    No additional glow layers.
+    Match Scorpius's original
+    star glow and core.
   */
 
   context.save();
@@ -6288,7 +6279,7 @@ drawConstellationStar = function (
     size,
     tone,
     starType,
-    time,
+    time + index * 0.37,
     intensity
   );
 

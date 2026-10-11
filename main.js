@@ -1442,11 +1442,20 @@ const flarePulse =
 
   /* soft bloom */
 
-  const bloomRadius =
-    size *
-    7.4 *
-    design.glow *
-    (.9 + wave * .14);
+  const bloomScale =
+  (
+    starName === "Bellatrix" &&
+    size < 3
+  )
+    ? 0.65
+    : 1;
+
+const bloomRadius =
+  size *
+  7.4 *
+  design.glow *
+  (.9 + wave * .14) *
+  bloomScale;
 
   const bloom =
     context.createRadialGradient(

@@ -3755,7 +3755,7 @@ button {
 
   position: absolute;
 
-  right: 1px;
+  left: 1px;
   top: 50%;
 
   width:
@@ -3802,7 +3802,7 @@ button {
 
     transform:
       rotate(var(--shoot-angle))
-      translateX(var(--shoot-distance));
+      translateX(calc(-1 * var(--shoot-distance)));
   }
 
 }

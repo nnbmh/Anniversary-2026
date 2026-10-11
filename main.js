@@ -6260,7 +6260,7 @@ drawConstellationStar = function (
 
   context.save();
 
-  context.globalAlpha = 0.65;
+  context.globalAlpha = 1;
 
   originalConstellationStarRenderer(
     context,

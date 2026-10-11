@@ -1534,7 +1534,7 @@ const flarePulse = isScorpiusStar
   context.strokeStyle = verticalGradient;
 
   context.lineWidth =
-    starName === "Spica"
+    starName === "Spica" || starName === "antares"
       ? .78
       : starName === "Rigel"
         ? .7
@@ -1591,9 +1591,10 @@ const flarePulse = isScorpiusStar
   /* ✦ core */
 
   const majorStar =
-    starName === "Spica" ||
-    starName === "Rigel" ||
-    starName === "Betelgeuse";
+  starName === "Spica" ||
+  starName === "antares" ||
+  starName === "Rigel" ||
+  starName === "Betelgeuse";
 
   const coreVertical =
     size *

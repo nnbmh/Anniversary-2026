@@ -399,22 +399,22 @@ function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
   const sizes = {
-    jabbah: 1.7,
-    acrab: 2.0,
-    dschubba: 2.3,
-    pi: 1.35,
-    antares: 3.05,
-    tau: 1.5,
-    epsilon: 1.85,
-    mu: 1.3,
-    zeta: 1.45,
-    eta: 1.6,
-    sargas: 2.2,
-    iota: 1.25,
-    kappa: 1.5,
-    shaula: 2.45,
-    lesath: 1.8
-  };
+  jabbah: 2.0,
+  acrab: 2.3,
+  dschubba: 2.5,
+  pi: 1.7,
+  antares: 3.05,
+  tau: 1.8,
+  epsilon: 2.1,
+  mu: 1.7,
+  zeta: 1.8,
+  eta: 1.9,
+  sargas: 2.5,
+  iota: 1.7,
+  kappa: 1.8,
+  shaula: 2.7,
+  lesath: 2.0
+};
 
   const isAntares = star.id === "antares";
 
@@ -428,7 +428,7 @@ function drawScorpiusStar(star, timestamp) {
     : Math.max(1.5, sizes[star.id] * 1.2);
 
   // Use the same animation timing as Orion and Virgo.
-  const time = timestamp / 1000;
+  const time = timestamp / 2200;
 
   drawConstellationStar(
     scorpiusContext,

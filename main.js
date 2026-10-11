@@ -6178,19 +6178,11 @@ try {
 } catch (error) {
   alert("Universe error: " + error.message);
   console.error(error);
-}
+};
 
 /* ==========================================
    ORION + VIRGO
-   MATCH SCORPIUS STAR APPEARANCE
-
-   Uses Scorpius's current:
-   - Tapered diffraction rays
-   - Ray brightness
-   - Glow opacity
-   - Slower twinkling
-
-   Does not change Scorpius.
+   SCORPIUS MATCHING STAR APPEARANCE
 ========================================== */
 
 const originalConstellationStarRenderer =
@@ -6207,64 +6199,38 @@ drawConstellationStar = function (
   intensity = 1
 ) {
 
-  /*
-    Leave Scorpius completely unchanged.
-  */
-
+  // Leave Scorpius unchanged.
   if (
     typeof scorpiusContext !== "undefined" &&
     context === scorpiusContext
   ) {
     return originalConstellationStarRenderer(
-      context,
-      x,
-      y,
-      size,
-      tone,
-      starName,
-      time,
-      intensity
+      context, x, y, size,
+      tone, starName, time, intensity
     );
   }
 
-  /*
-    Preserve the small travelling point
-    used during constellation reveals.
-  */
-
+  // Preserve the travelling points in reveal animations.
   if (!starName) {
     return originalConstellationStarRenderer(
-      context,
-      x,
-      y,
-      size,
-      tone,
-      starName,
-      time,
-      intensity
+      context, x, y, size,
+      tone, starName, time, intensity
     );
   }
-
-  /*
-    Match Scorpius's larger/smaller
-    star treatment.
-  */
 
   const large = size >= 3;
 
-  const rayType =
+  const starType =
     large ? "Betelgeuse" : "Bellatrix";
 
-  const starIndex =
-    Array.from(starName).reduce(
-      (total, character) =>
-        total + character.charCodeAt(0),
-      0
-    );
+  const index = Array.from(starName).reduce(
+    (total, character) =>
+      total + character.charCodeAt(0),
+    0
+  );
 
   /*
-    Same tapered rays and brightness
-    as the current Scorpius.
+    Match Scorpius's tapered rays.
   */
 
   if (
@@ -6279,17 +6245,17 @@ drawConstellationStar = function (
       x,
       y,
       size,
-      rayType,
+      starType,
       time,
-      starIndex
+      index
     );
 
     context.restore();
   }
 
   /*
-    Same glow opacity as Scorpius,
-    with slower twinkling.
+    Use the same star design and glow
+    settings as Scorpius.
   */
 
   context.save();
@@ -6302,7 +6268,7 @@ drawConstellationStar = function (
     y,
     size,
     tone,
-    starName,
+    starType,
     time * 0.35,
     intensity
   );

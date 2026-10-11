@@ -608,27 +608,22 @@ function buildUniverseStars() {
     "near"
   );
 
-     /* =====================================================
+      /* =====================================================
      SCORPIUS REGION
 
-     A richer surrounding star field,
-     matching the treatment used
-     around Orion and Virgo.
-
-     Centre of Scorpius:
-     X = 3130
-     Y = 2160
+     Denser surrounding star field.
+     Keeps the constellation itself clear.
   ===================================================== */
 
   buildAnnulusCluster(
     starsDeep,
     2330,
     860,
-    140,
-    160,
+    110,
+    125,
+    650,
     580,
     520,
-    330,
     30000,
     "deep"
   );
@@ -637,11 +632,11 @@ function buildUniverseStars() {
     starsFar,
     2330,
     860,
+    115,
     130,
-    145,
+    570,
     510,
-    460,
-    100,
+    180,
     32000,
     "far"
   );
@@ -650,11 +645,11 @@ function buildUniverseStars() {
     starsMid,
     2330,
     860,
+    135,
     145,
-    160,
+    490,
     440,
-    400,
-    28,
+    45,
     34000,
     "mid"
   );
@@ -663,16 +658,14 @@ function buildUniverseStars() {
     starsNear,
     2330,
     860,
-    170,
-    185,
-    410,
-    370,
-    7,
+    160,
+    175,
+    440,
+    400,
+    9,
     36000,
     "near"
   );
-}
-
 /* =========================================================
    SHOOTING STARS
 ========================================================= */

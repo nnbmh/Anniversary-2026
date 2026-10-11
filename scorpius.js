@@ -213,127 +213,71 @@ let scorpiusReady = false;
 ========================================== */
 
 const scorpiusStarDesigns = {
+
+  // Same visual settings as Orion and Virgo
+
   jabbah: {
-    flareV: 0.82,
-    flareH: 0.66,
-    glow: 0.70,
-    speed: 0.18,
-    phase: 0.4
+    ...constellationStarDesigns.Mintaka
   },
 
   acrab: {
-    flareV: 1.02,
-    flareH: 0.78,
-    glow: 0.85,
-    speed: 0.22,
-    phase: 1.8
+    ...constellationStarDesigns.Saiph
   },
 
   dschubba: {
-    flareV: 1.12,
-    flareH: 0.90,
-    glow: 0.95,
-    speed: 0.16,
-    phase: 3.1
+    ...constellationStarDesigns.Bellatrix
   },
 
   pi: {
-    flareV: 0.55,
-    flareH: 0.44,
-    glow: 0.45,
-    speed: 0.20,
-    phase: 5.2
+    ...constellationStarDesigns["Sword 2"]
   },
 
+  // Antares uses Spica's visual settings
   antares: {
-  flareV: 2.75,
-  flareH: 1.65,
-  glow: 1.95,
-  speed: 0.12,
-  phase: 0.8
-},
+    ...constellationStarDesigns.Spica
+  },
 
   tau: {
-    flareV: 0.68,
-    flareH: 0.52,
-    glow: 0.55,
-    speed: 0.19,
-    phase: 2.7
+    ...constellationStarDesigns["Sword 1"]
   },
 
   epsilon: {
-    flareV: 0.95,
-    flareH: 0.78,
-    glow: 0.82,
-    speed: 0.15,
-    phase: 1.6
+    ...constellationStarDesigns.Auva
   },
 
   mu: {
-    flareV: 0.55,
-    flareH: 0.44,
-    glow: 0.45,
-    speed: 0.21,
-    phase: 4.7
+    ...constellationStarDesigns["Sword 2"]
   },
 
   zeta: {
-    flareV: 0.68,
-    flareH: 0.52,
-    glow: 0.55,
-    speed: 0.17,
-    phase: 3.4
+    ...constellationStarDesigns["Sword 1"]
   },
 
   eta: {
-    flareV: 0.76,
-    flareH: 0.62,
-    glow: 0.70,
-    speed: 0.14,
-    phase: 2.1
+    ...constellationStarDesigns.Zaniah
   },
 
   sargas: {
-    flareV: 1.22,
-    flareH: 0.94,
-    glow: 1.00,
-    speed: 0.18,
-    phase: 2.8
+    ...constellationStarDesigns.Porrima
   },
 
   iota: {
-    flareV: 0.55,
-    flareH: 0.44,
-    glow: 0.45,
-    speed: 0.20,
-    phase: 5.5
+    ...constellationStarDesigns["Sword 2"]
   },
 
   kappa: {
-    flareV: 0.68,
-    flareH: 0.52,
-    glow: 0.55,
-    speed: 0.16,
-    phase: 1.1
+    ...constellationStarDesigns.Heze
   },
 
   shaula: {
-    flareV: 1.35,
-    flareH: 1.05,
-    glow: 1.05,
-    speed: 0.13,
-    phase: 0.3
+    ...constellationStarDesigns.Vindemiatrix
   },
 
   lesath: {
-    flareV: 0.90,
-    flareH: 0.70,
-    glow: 0.76,
-    speed: 0.19,
-    phase: 5.3
+    ...constellationStarDesigns.Syrma
   }
-};
 
+};
 /* ==========================================
    CREATE CONSTELLATION
 ========================================== */

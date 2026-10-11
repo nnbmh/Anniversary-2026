@@ -409,51 +409,160 @@ function initialiseScorpius() {
 
 
 /* ==========================================
-   STAR RENDERING
+   SCORPIUS STAR RENDERING
 
-   Reuses drawConstellationStar()
-   from main.js.
+   Reuses pre-rendered Orion stars.
+   Antares retains its original renderer.
+========================================== */
+
+
+/*
+  Use only Orion's smaller stars.
+
+  These are the actual star definitions
+  from main.js, not invented sizes.
+*/
+
+const scorpiusOrionMapping = {
+  jabbah: "Mintaka",
+  acrab: "Alnilam",
+  dschubba: "Alnitak",
+  pi: "Sword 1",
+
+  tau: "Mintaka",
+  epsilon: "Alnilam",
+  mu: "Sword 2",
+  zeta: "Alnitak",
+  eta: "Mintaka",
+  sargas: "Alnilam",
+  iota: "Sword 1",
+  kappa: "Mintaka",
+  shaula: "Alnitak",
+  lesath: "Sword 2"
+};
+
+
+/*
+  A separate transparent image is
+  created for each Orion star type.
+
+  The images are generated directly
+  using Orion's existing renderer.
+*/
+
+const scorpiusStarImages = {};
+
+const scorpiusStarImageSize = 160;
+
+
+/* ==========================================
+   CREATE ORION STAR IMAGES
+========================================== */
+
+function createScorpiusStarImages() {
+
+  const names = [
+    "Alnitak",
+    "Alnilam",
+    "Mintaka",
+    "Sword 1",
+    "Sword 2"
+  ];
+
+  const imageSize =
+    scorpiusStarImageSize;
+
+  const dpr = 2;
+
+  names.forEach(name => {
+
+    const orionStar = orionStars.find(
+      star => star.name === name
+    );
+
+    if (!orionStar) return;
+
+    const canvas =
+      document.createElement("canvas");
+
+    canvas.width =
+      imageSize * dpr;
+
+    canvas.height =
+      imageSize * dpr;
+
+    const context =
+      canvas.getContext("2d");
+
+    if (!context) return;
+
+    context.setTransform(
+      dpr,
+      0,
+      0,
+      dpr,
+      0,
+      0
+    );
+
+    /*
+      Same size formula as Orion.
+    */
+
+    const displaySize = Math.max(
+      1.05,
+      orionStar.size * 1.16
+    );
+
+    /*
+      Render the original Orion star
+      onto a transparent canvas.
+
+      Fixed animation time gives us
+      a consistent source image.
+    */
+
+    drawConstellationStar(
+      context,
+      imageSize / 2,
+      imageSize / 2,
+      displaySize,
+      orionStar.tone,
+      orionStar.name,
+      1,
+      1
+    );
+
+    scorpiusStarImages[name] =
+      canvas;
+
+  });
+
+}
+
+
+/* ==========================================
+   DRAW SCORPIUS STARS
 ========================================== */
 
 function drawScorpiusStar(star, timestamp) {
+
   if (!scorpiusContext) return;
-
-  /*
-    Scorpius uses Orion's existing
-    star designs and actual sizes.
-  */
-
-  const orionMapping = {
-    jabbah: "Mintaka",
-    acrab: "Bellatrix",
-    dschubba: "Alnilam",
-    pi: "Sword 1",
-
-    tau: "Alnitak",
-    epsilon: "Saiph",
-    mu: "Sword 2",
-    zeta: "Mintaka",
-    eta: "Alnilam",
-    sargas: "Betelgeuse",
-    iota: "Sword 1",
-    kappa: "Alnitak",
-    shaula: "Rigel",
-    lesath: "Saiph"
-  };
 
   const x = star.x + 30;
   const y = star.y + 35;
 
   const time = timestamp / 1000;
 
+
   /*
     ANTARES
 
-    Keep its existing size, shape,
-    warm colour and full brightness.
+    Completely unchanged.
   */
 
   if (star.id === "antares") {
+
     drawConstellationStar(
       scorpiusContext,
       x,
@@ -468,59 +577,72 @@ function drawScorpiusStar(star, timestamp) {
     return;
   }
 
-  /*
-    Find the matching Orion star.
-  */
-
-  const orionName = orionMapping[star.id];
-
-  const orionStar = orionStars.find(
-    item => item.name === orionName
-  );
-
-  if (!orionStar) return;
 
   /*
-    Use Orion's exact sizing formula.
+    Find the pre-rendered
+    Orion star image.
   */
 
-  let displaySize = Math.max(
-    1.05,
-    orionStar.size * 1.16
-  );
+  const name =
+    scorpiusOrionMapping[star.id];
 
-  if (orionStar.name === "Rigel") {
-    displaySize = orionStar.size * 1.28;
-  }
+  const image =
+    scorpiusStarImages[name];
 
-  if (orionStar.name === "Betelgeuse") {
-    displaySize = orionStar.size * 1.22;
-  }
+  if (!image) return;
+
 
   /*
-    Draw the star using Orion's
-    original renderer.
+    Gentle independent twinkling.
 
-    Match the softer appearance
-    of Orion before discovery.
+    No harsh flashing or exaggerated
+    changes in star size.
   */
+
+  const index =
+    scorpiusStars.indexOf(star);
+
+  const phase =
+    index * 1.37;
+
+  const speed =
+    0.65 + (index % 4) * 0.12;
+
+  const twinkle =
+    Math.sin(
+      time * speed + phase
+    );
+
+  const brightness =
+    0.72 + twinkle * 0.12;
+
+
+  /*
+    Draw the actual rendered
+    Orion star image.
+
+    The image stays the same size.
+    Only its brightness changes.
+  */
+
+  const imageSize =
+    scorpiusStarImageSize;
 
   scorpiusContext.save();
 
-  scorpiusContext.globalAlpha *= 0.48;
+  scorpiusContext.globalAlpha =
+    brightness;
 
-  drawConstellationStar(
-    scorpiusContext,
-    x,
-    y,
-    displaySize,
-    orionStar.tone,
-    orionStar.name,
-    time,
-    1
+  scorpiusContext.drawImage(
+    image,
+    x - imageSize / 2,
+    y - imageSize / 2,
+    imageSize,
+    imageSize
   );
 
   scorpiusContext.restore();
+
 }
 
 /* ==========================================
@@ -532,6 +654,8 @@ function drawScorpiusStar(star, timestamp) {
    its animation stops without
    stopping the universe's loop.
 ========================================== */
+
+createScorpiusStarImages();
 
 function animateScorpius(timestamp) {
   if (!scorpiusReady || !scorpiusContext) {

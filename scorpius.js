@@ -414,33 +414,35 @@ function initialiseScorpius() {
    Reuses drawConstellationStar()
    from main.js.
 ========================================== */
-
 function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
   /*
-    Use the existing Orion and Virgo
-    star designs and proportions.
+    Exact star designs and sizes
+    from Orion.
+
+    Only their positions are different
+    to form Scorpius.
   */
 
   const designs = {
-    jabbah: ["Zaniah", 1.75],
-    acrab: ["Bellatrix", 1.85],
-    dschubba: ["Vindemiatrix", 2.25],
-    pi: ["Heze", 1.5],
+    jabbah: ["Mintaka", 1.35],
+    acrab: ["Bellatrix", 2.1],
+    dschubba: ["Alnilam", 2],
+    pi: ["Sword 1", 0.85],
 
     antares: ["Spica", 3.05],
 
-    tau: ["Alnitak", 1.65],
-    epsilon: ["Porrima", 2.15],
-    mu: ["Sword 2", 1.2],
-    zeta: ["Auva", 1.65],
-    eta: ["Zavijava", 1.95],
-    sargas: ["Betelgeuse", 2.35],
-    iota: ["Sword 1", 1.3],
-    kappa: ["Zaniah", 1.75],
-    shaula: ["Rigel", 2.45],
-    lesath: ["Syrma", 1.8]
+    tau: ["Alnitak", 1.55],
+    epsilon: ["Saiph", 1.7],
+    mu: ["Sword 2", 0.55],
+    zeta: ["Mintaka", 1.35],
+    eta: ["Alnilam", 2],
+    sargas: ["Betelgeuse", 2.8],
+    iota: ["Sword 1", 0.85],
+    kappa: ["Alnitak", 1.55],
+    shaula: ["Rigel", 3.2],
+    lesath: ["Saiph", 1.7]
   };
 
   const design = designs[star.id];
@@ -452,43 +454,30 @@ function drawScorpiusStar(star, timestamp) {
   const isAntares = star.id === "antares";
 
   /*
-    Use the same size formulas
-    as Orion and Virgo.
+    EXACT Orion sizing formula.
   */
 
-  let displaySize;
+  let displaySize = Math.max(
+    1.05,
+    size * 1.16
+  );
 
-  if (isAntares) {
-    displaySize = size * 1.52;
-  } else if (
-    starName === "Rigel"
-  ) {
+  if (starName === "Rigel") {
     displaySize = size * 1.28;
-  } else if (
-    starName === "Betelgeuse"
-  ) {
+  }
+
+  if (starName === "Betelgeuse") {
     displaySize = size * 1.22;
-  } else if (
-    starName === "Bellatrix" ||
-    starName === "Alnitak" ||
-    starName === "Sword 1" ||
-    starName === "Sword 2"
-  ) {
-    displaySize = Math.max(
-      1.05,
-      size * 1.16
-    );
-  } else {
-    displaySize = Math.max(
-      1.5,
-      size * 1.2
-    );
   }
 
   /*
-    Use the existing constellation
-    animation and drawing function.
+    Antares keeps its existing
+    appearance unchanged.
   */
+
+  if (isAntares) {
+    displaySize = size * 1.52;
+  }
 
   const time = timestamp / 1000;
 

@@ -3749,35 +3749,28 @@ button {
     forwards;
 }
 
-
 .shooting-star::after {
   content: "";
 
   position: absolute;
 
-  left: 1px;
+  right: 1px;
   top: 50%;
 
-  width:
-    var(--shoot-tail);
-
+  width: var(--shoot-tail);
   height: 1px;
 
-  transform:
-    translateY(-50%);
+  transform: translateY(-50%);
 
-  transform-origin:
-    right center;
+  transform-origin: right center;
 
-  background:
-    linear-gradient(
-      to left,
-      rgba(240, 246, 255, .72),
-      rgba(195, 218, 250, .25),
-      transparent
-    );
+  background: linear-gradient(
+    to right,
+    rgba(240, 246, 255, .72),
+    rgba(195, 218, 250, .25),
+    transparent
+  );
 }
-
 
 @keyframes shootingStarPass {
 

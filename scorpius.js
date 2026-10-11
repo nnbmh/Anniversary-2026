@@ -425,23 +425,23 @@ function drawScorpiusStar(star, timestamp) {
   */
 
   const designs = {
-    jabbah: ["Zaniah", 1.75],
-    acrab: ["Auva", 1.65],
-    dschubba: ["Vindemiatrix", 2.25],
-    pi: ["Heze", 1.5],
-    antares: ["Spica", 3.05],
-    tau: ["Zaniah", 1.75],
-    epsilon: ["Porrima", 2.15],
-    mu: ["Heze", 1.5],
-    zeta: ["Auva", 1.65],
-    eta: ["Zavijava", 1.95],
-    sargas: ["Porrima", 2.15],
-    iota: ["Heze", 1.5],
-    kappa: ["Zaniah", 1.75],
-    shaula: ["Vindemiatrix", 2.25],
-    lesath: ["Syrma", 1.8]
-  };
-
+  jabbah: ["Zaniah", 1.35],
+  acrab: ["Auva", 1.65],
+  dschubba: ["Vindemiatrix", 2.35],
+  pi: ["Heze", 1.1],
+  antares: ["Spica", 3.05],
+  tau: ["Zaniah", 1.45],
+  epsilon: ["Porrima", 2.15],
+  mu: ["Heze", 1.05],
+  zeta: ["Auva", 1.3],
+  eta: ["Zavijava", 1.8],
+  sargas: ["Porrima", 2.5],
+  iota: ["Heze", 1.1],
+  kappa: ["Zaniah", 1.4],
+  shaula: ["Vindemiatrix", 2.65],
+  lesath: ["Syrma", 1.75]
+};
+   
   const design = designs[star.id];
 
   if (!design) return;
@@ -452,13 +452,10 @@ function drawScorpiusStar(star, timestamp) {
     EXACT sizing formula from Virgo.
   */
 
-  const displaySize =
-    starName === "Spica"
-      ? size * 1.52
-      : Math.max(
-          1.5,
-          size * 1.2
-        );
+ const displaySize =
+  star.id === "antares"
+    ? size * 1.52
+    : size * 1.2;
 
   /*
     Match Virgo's animation timing.

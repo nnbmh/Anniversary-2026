@@ -3754,15 +3754,13 @@ button {
 
   position: absolute;
 
-  right: 1px;
+  left: 1px;
   top: 50%;
 
   width: var(--shoot-tail);
   height: 1px;
 
   transform: translateY(-50%);
-
-  transform-origin: right center;
 
   background: linear-gradient(
     to right,
@@ -3778,8 +3776,8 @@ button {
     opacity: 0;
 
     transform:
-      rotate(var(--shoot-angle))
-      translateX(0);
+      translate(0, 0)
+      rotate(-30deg);
   }
 
   12% {
@@ -3794,8 +3792,11 @@ button {
     opacity: 0;
 
     transform:
-      rotate(var(--shoot-angle))
-      translateX(calc(-1 * var(--shoot-distance)));
+      translate(
+        calc(-1 * var(--shoot-distance)),
+        calc(var(--shoot-distance) * .55)
+      )
+      rotate(-30deg);
   }
 
 }

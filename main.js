@@ -6182,7 +6182,7 @@ try {
 
 /* ==========================================
    ORION + VIRGO
-   SCORPIUS-STYLE STARS
+   MATCH SCORPIUS STAR APPEARANCE
 ========================================== */
 
 const originalConstellationStarRenderer =
@@ -6199,100 +6199,63 @@ drawConstellationStar = function (
   intensity = 1
 ) {
 
-  // Do not change Scorpius.
+  /*
+    Leave Scorpius completely unchanged.
+  */
+
   if (
     typeof scorpiusContext !== "undefined" &&
     context === scorpiusContext
   ) {
     return originalConstellationStarRenderer(
-      context, x, y, size,
-      tone, starName, time, intensity
+      context,
+      x,
+      y,
+      size,
+      tone,
+      starName,
+      time,
+      intensity
     );
   }
 
-  // Preserve travelling points during reveals.
+  /*
+    Preserve travelling points
+    during constellation reveals.
+  */
+
   if (!starName) {
     return originalConstellationStarRenderer(
-      context, x, y, size,
-      tone, starName, time, intensity
+      context,
+      x,
+      y,
+      size,
+      tone,
+      starName,
+      time,
+      intensity
     );
   }
 
-  const large = size >= 3;
+  /*
+    Match Scorpius's star types.
+  */
+
+  const large =
+    size >= 3;
 
   const starType =
     large ? "Betelgeuse" : "Bellatrix";
 
-  const index = Array.from(starName).reduce(
-    (total, character) =>
-      total + character.charCodeAt(0),
-    0
-  );
-
-  const slowTime = time * 0.35;
-
-  const coreColour =
-    tone === "warm"
-      ? "255,235,205"
-      : "255,250,236";
-
-  const haloColour =
-    tone === "warm"
-      ? "255,205,160"
-      : tone === "cool"
-        ? "170,210,255"
-        : "205,225,255";
-
-  /*
-    SOFT SURROUNDING HALO
-  */
-
-  context.save();
-
-  const haloRadius =
-    size * (large ? 12 : 10);
-
-  const halo =
-    context.createRadialGradient(
-      x, y, 0,
-      x, y, haloRadius
+  const index =
+    Array.from(starName).reduce(
+      (total, character) =>
+        total + character.charCodeAt(0),
+      0
     );
 
-  halo.addColorStop(
-    0,
-    `rgba(${coreColour},${0.38 * intensity})`
-  );
-
-  halo.addColorStop(
-    0.15,
-    `rgba(${haloColour},${0.24 * intensity})`
-  );
-
-  halo.addColorStop(
-    0.45,
-    `rgba(${haloColour},${0.08 * intensity})`
-  );
-
-  halo.addColorStop(
-    1,
-    `rgba(${haloColour},0)`
-  );
-
-  context.fillStyle = halo;
-
-  context.beginPath();
-
-  context.arc(
-    x, y, haloRadius,
-    0, Math.PI * 2
-  );
-
-  context.fill();
-
-  context.restore();
-
   /*
-    TAPERED DIFFRACTION RAYS
+    Draw Scorpius's tapered rays.
   */
 
   if (
@@ -6316,7 +6279,10 @@ drawConstellationStar = function (
   }
 
   /*
-    ORIGINAL FOUR-POINTED STAR
+    Draw the original star core
+    and natural glow.
+
+    No additional glow layers.
   */
 
   context.save();
@@ -6330,55 +6296,9 @@ drawConstellationStar = function (
     size,
     tone,
     starType,
-    slowTime,
+    time,
     intensity
   );
-
-  context.restore();
-
-  /*
-    BRIGHT CENTRAL GLOW
-  */
-
-  context.save();
-
-  context.globalCompositeOperation =
-    "screen";
-
-  const centreRadius =
-    size * 2.2;
-
-  const centre =
-    context.createRadialGradient(
-      x, y, 0,
-      x, y, centreRadius
-    );
-
-  centre.addColorStop(
-    0,
-    `rgba(${coreColour},${0.65 * intensity})`
-  );
-
-  centre.addColorStop(
-    0.35,
-    `rgba(${coreColour},${0.28 * intensity})`
-  );
-
-  centre.addColorStop(
-    1,
-    `rgba(${coreColour},0)`
-  );
-
-  context.fillStyle = centre;
-
-  context.beginPath();
-
-  context.arc(
-    x, y, centreRadius,
-    0, Math.PI * 2
-  );
-
-  context.fill();
 
   context.restore();
 

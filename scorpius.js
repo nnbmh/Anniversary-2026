@@ -1,13 +1,10 @@
 /* ==========================================
    SCORPIUS · 17.11
 
-   Uses Orion's original star renderer.
+   Four-pointed stars with soft,
+   tapered diffraction rays.
 
-   Larger stars: Betelgeuse
-   Smaller stars: Bellatrix
-
-   Includes animated diffraction rays.
-
+   Sizes, colours and positions preserved.
    Antares remains unchanged.
 ========================================== */
 
@@ -98,10 +95,7 @@ let scorpiusReady = false;
 /* ==========================================
    STAR APPEARANCES
 
-   These sizes match our previous version.
-
-   Betelgeuse = prominent stars
-   Bellatrix = smaller stars
+   Same sizes and colours as before.
 ========================================== */
 
 const scorpiusStarVariations = {
@@ -128,173 +122,185 @@ const scorpiusStarVariations = {
 
 
 /* ==========================================
-   SOFT DIFFRACTION RAYS
+   TAPERED DIFFRACTION RAYS
 
-   Uses fading gradients rather than
-   straight, uniformly coloured lines.
+   Each ray:
+   - Starts at the star's centre
+   - Gradually narrows towards its tip
+   - Fades naturally into the darkness
 
-   The rays taper naturally into darkness.
+   Larger stars have longer rays.
 ========================================== */
 
-function drawScorpiusDiffractionRays(
+function drawScorpiusTaperedRays(
   context,
   x,
   y,
   size,
+  type,
   time,
   index
 ) {
 
-  const phase = index * 1.37;
+  const large =
+    type === "Betelgeuse";
+
+  const phase =
+    index * 1.37;
 
   const shimmer =
     (Math.sin(time * 0.75 + phase) + 1) / 2;
 
-  const opacity =
-    0.48 + shimmer * 0.32;
+  const brightness =
+    0.58 + shimmer * 0.30;
 
   const verticalLength =
-    size * 13;
+    size * (large ? 13.5 : 11.5);
 
   const horizontalLength =
-    size * 10;
+    size * (large ? 10.5 : 8.5);
+
+  const verticalWidth =
+    large ? 1.25 : 0.95;
+
+  const horizontalWidth =
+    large ? 1.05 : 0.80;
+
+  const colour =
+    large
+      ? "255,225,190"
+      : "210,230,255";
 
   context.save();
 
-  context.globalAlpha = opacity;
+  context.globalCompositeOperation =
+    "screen";
 
   /*
-    Vertical tapered ray
+    Draw one tapered ray.
+
+    The gradient fades along its length,
+    while the shape narrows to a point.
   */
 
-  const verticalGradient =
-    context.createLinearGradient(
-      x,
-      y - verticalLength,
-      x,
-      y + verticalLength
+  function drawRay(
+    dx,
+    dy,
+    length,
+    width
+  ) {
+
+    const endX =
+      x + dx * length;
+
+    const endY =
+      y + dy * length;
+
+    const perpendicularX =
+      -dy;
+
+    const perpendicularY =
+      dx;
+
+    const gradient =
+      context.createLinearGradient(
+        x,
+        y,
+        endX,
+        endY
+      );
+
+    gradient.addColorStop(
+      0,
+      `rgba(${colour},${0.65 * brightness})`
     );
 
-  verticalGradient.addColorStop(
-    0,
-    "rgba(195,220,255,0)"
-  );
+    gradient.addColorStop(
+      0.15,
+      `rgba(${colour},${0.36 * brightness})`
+    );
 
-  verticalGradient.addColorStop(
-    0.30,
-    "rgba(195,220,255,0.05)"
-  );
+    gradient.addColorStop(
+      0.40,
+      `rgba(${colour},${0.17 * brightness})`
+    );
 
-  verticalGradient.addColorStop(
-    0.47,
-    "rgba(235,245,255,0.38)"
-  );
+    gradient.addColorStop(
+      0.70,
+      `rgba(${colour},${0.06 * brightness})`
+    );
 
-  verticalGradient.addColorStop(
-    0.5,
-    "rgba(255,255,255,0.85)"
-  );
+    gradient.addColorStop(
+      1,
+      `rgba(${colour},0)`
+    );
 
-  verticalGradient.addColorStop(
-    0.53,
-    "rgba(235,245,255,0.38)"
-  );
+    context.beginPath();
 
-  verticalGradient.addColorStop(
-    0.70,
-    "rgba(195,220,255,0.05)"
-  );
+    context.moveTo(
+      x + perpendicularX * width,
+      y + perpendicularY * width
+    );
 
-  verticalGradient.addColorStop(
-    1,
-    "rgba(195,220,255,0)"
-  );
+    context.quadraticCurveTo(
+      x + dx * length * 0.45 +
+        perpendicularX * width * 0.35,
 
-  context.beginPath();
+      y + dy * length * 0.45 +
+        perpendicularY * width * 0.35,
 
-  context.moveTo(
-    x,
-    y - verticalLength
-  );
+      endX,
+      endY
+    );
 
-  context.lineTo(
-    x,
-    y + verticalLength
-  );
+    context.quadraticCurveTo(
+      x + dx * length * 0.45 -
+        perpendicularX * width * 0.35,
 
-  context.strokeStyle =
-    verticalGradient;
+      y + dy * length * 0.45 -
+        perpendicularY * width * 0.35,
 
-  context.lineWidth = 0.55;
+      x - perpendicularX * width,
+      y - perpendicularY * width
+    );
 
-  context.stroke();
+    context.closePath();
+
+    context.fillStyle =
+      gradient;
+
+    context.fill();
+
+  }
 
 
   /*
-    Horizontal tapered ray
+    Four diffraction rays.
   */
 
-  const horizontalGradient =
-    context.createLinearGradient(
-      x - horizontalLength,
-      y,
-      x + horizontalLength,
-      y
-    );
-
-  horizontalGradient.addColorStop(
-    0,
-    "rgba(195,220,255,0)"
+  drawRay(
+    0, -1,
+    verticalLength,
+    verticalWidth
   );
 
-  horizontalGradient.addColorStop(
-    0.30,
-    "rgba(195,220,255,0.05)"
+  drawRay(
+    0, 1,
+    verticalLength,
+    verticalWidth
   );
 
-  horizontalGradient.addColorStop(
-    0.47,
-    "rgba(235,245,255,0.32)"
+  drawRay(
+    -1, 0,
+    horizontalLength,
+    horizontalWidth
   );
 
-  horizontalGradient.addColorStop(
-    0.5,
-    "rgba(255,255,255,0.75)"
+  drawRay(
+    1, 0,
+    horizontalLength,
+    horizontalWidth
   );
-
-  horizontalGradient.addColorStop(
-    0.53,
-    "rgba(235,245,255,0.32)"
-  );
-
-  horizontalGradient.addColorStop(
-    0.70,
-    "rgba(195,220,255,0.05)"
-  );
-
-  horizontalGradient.addColorStop(
-    1,
-    "rgba(195,220,255,0)"
-  );
-
-  context.beginPath();
-
-  context.moveTo(
-    x - horizontalLength,
-    y
-  );
-
-  context.lineTo(
-    x + horizontalLength,
-    y
-  );
-
-  context.strokeStyle =
-    horizontalGradient;
-
-  context.lineWidth = 0.45;
-
-  context.stroke();
 
   context.restore();
 
@@ -309,16 +315,20 @@ function drawScorpiusStar(star, timestamp) {
 
   if (!scorpiusContext) return;
 
-  const x = star.x + 30;
-  const y = star.y + 35;
+  const x =
+    star.x + 30;
 
-  const time = timestamp / 1000;
+  const y =
+    star.y + 35;
+
+  const time =
+    timestamp / 1000;
 
 
   /*
     ANTARES
 
-    Original rendering unchanged.
+    Original appearance unchanged.
   */
 
   if (star.id === "antares") {
@@ -347,11 +357,6 @@ function drawScorpiusStar(star, timestamp) {
   const index =
     scorpiusStars.indexOf(star);
 
-  /*
-    Give each star a slightly different
-    twinkling phase.
-  */
-
   const starTime =
     time + index * 0.37;
 
@@ -362,29 +367,24 @@ function drawScorpiusStar(star, timestamp) {
 
 
   /*
-    First draw the delicate diffraction
-    rays behind the star.
+    Draw the tapered diffraction rays
+    behind the star.
   */
 
-  drawScorpiusDiffractionRays(
+  drawScorpiusTaperedRays(
     scorpiusContext,
     x,
     y,
     variation.size,
+    variation.type,
     time,
     index
   );
 
 
   /*
-    Then draw the original Orion star.
-
-    This includes Orion's own:
-    - Soft glow
-    - Four-pointed core
-    - Vertical diffraction ray
-    - Horizontal diffraction ray
-    - Animated shimmer
+    Draw the original Orion-style star
+    over the diffraction rays.
   */
 
   drawConstellationStar(
@@ -421,7 +421,8 @@ function initialiseScorpius() {
   scorpiusElement =
     document.createElement("section");
 
-  scorpiusElement.id = "scorpius";
+  scorpiusElement.id =
+    "scorpius";
 
   scorpiusElement.className =
     "constellation";

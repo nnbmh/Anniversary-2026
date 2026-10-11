@@ -152,7 +152,7 @@ function drawScorpiusTaperedRays(
     (Math.sin(time * 0.75 + phase) + 1) / 2;
 
   const brightness =
-    0.58 + shimmer * 0.30;
+    0.25 + shimmer * 0.15;
 
   const verticalLength =
     size * (large ? 13.5 : 11.5);

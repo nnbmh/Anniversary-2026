@@ -3845,21 +3845,13 @@ function animate(
     same animated luminous renderer.
   */
 
-  if (
-    orionDiscovered
-  ) {
-    renderRevealedOrionStars(
-      timestamp
-    );
-  }
+  /*
+  Keep Orion and Virgo stars animated
+  even before discovery.
+*/
 
-  if (
-    virgoDiscovered
-  ) {
-    renderRevealedVirgoStars(
-      timestamp
-    );
-  }
+renderRevealedOrionStars(timestamp);
+renderRevealedVirgoStars(timestamp);
 
   if (
     enteringVirgo &&

@@ -1381,7 +1381,8 @@ function drawConstellationStar(
   tone = "neutral",
   starName = "",
   time = 0,
-  intensity = 1
+  intensity = 1,
+  luminosity = 1
 ) {
   const design =
     constellationStarDesigns[starName] || {
@@ -1413,6 +1414,12 @@ function drawConstellationStar(
 const brightness =
   (.58 + wave * .42) *
   alpha;
+
+const lightBrightness =
+  Math.min(
+    1,
+    brightness * luminosity
+  );
 
 const flarePulse =
   .88 +
@@ -1452,20 +1459,20 @@ const flarePulse =
     );
 
   bloom.addColorStop(
-    0,
-    `rgba(${core},${.32 * brightness})`
-  );
+  0,
+  `rgba(${core},${.32 * lightBrightness})`
+);
 
-  bloom.addColorStop(
-    .12,
-    `rgba(${glow},${.18 * brightness})`
-  );
+bloom.addColorStop(
+  .12,
+  `rgba(${glow},${.18 * lightBrightness})`
+);
 
-  bloom.addColorStop(
-    .36,
-    `rgba(${glow},${.065 * brightness})`
-  );
-
+bloom.addColorStop(
+  .36,
+  `rgba(${glow},${.065 * lightBrightness})`
+);
+   
   bloom.addColorStop(
     1,
     `rgba(${glow},0)`
@@ -1647,7 +1654,7 @@ const flarePulse =
   context.closePath();
 
   context.shadowColor =
-    `rgba(${glow},${.9 * brightness})`;
+    `rgba(${glow},${.9 * lightBrightness})`;
 
   context.shadowBlur =
     majorStar
@@ -1655,7 +1662,14 @@ const flarePulse =
       : 4 + wave * 3;
 
   context.fillStyle =
-    `rgba(${core},${(.82 + wave * .18) * alpha})`;
+  `rgba(${core},${
+    Math.min(
+      1,
+      (.82 + wave * .18) *
+      alpha *
+      luminosity
+    )
+  })`;
 
   context.fill();
 
@@ -6174,7 +6188,14 @@ try {
 
 /* ==========================================
    ORION + VIRGO
-   VIBRANT SCORPIUS-STYLE STARS
+   FINAL LUMINOUS STAR RENDERER
+
+   Brighter natural bloom
+   Brighter four-pointed centres
+   Gentle independent twinkling
+   Original tapered diffraction rays
+
+   Scorpius remains unchanged.
 ========================================== */
 
 const originalConstellationStarRenderer =
@@ -6192,17 +6213,25 @@ drawConstellationStar = function (
 ) {
 
   /*
-    Leave Scorpius unchanged.
+    Preserve Scorpius exactly.
   */
 
   if (
     typeof scorpiusContext !== "undefined" &&
     context === scorpiusContext
   ) {
+
     return originalConstellationStarRenderer(
-      context, x, y, size,
-      tone, starName, time, intensity
+      context,
+      x,
+      y,
+      size,
+      tone,
+      starName,
+      time,
+      intensity
     );
+
   }
 
   /*
@@ -6211,16 +6240,37 @@ drawConstellationStar = function (
   */
 
   if (!starName) {
+
     return originalConstellationStarRenderer(
-      context, x, y, size,
-      tone, starName, time, intensity
+      context,
+      x,
+      y,
+      size,
+      tone,
+      starName,
+      time,
+      intensity
     );
+
   }
 
-  const large = size >= 3;
+  /*
+    Use Scorpius's existing
+    large and small star designs.
+  */
+
+  const large =
+    size >= 3;
 
   const starType =
-    large ? "Betelgeuse" : "Bellatrix";
+    large
+      ? "Betelgeuse"
+      : "Bellatrix";
+
+  /*
+    Give each star a different
+    animation phase.
+  */
 
   const index =
     Array.from(starName).reduce(
@@ -6229,14 +6279,25 @@ drawConstellationStar = function (
       0
     );
 
+  const phase =
+    (index % 17) * 0.37;
+
   /*
-    Same tapered diffraction rays
-    as Scorpius.
+    Slow, gentle twinkling.
+  */
+
+  const starTime =
+    time * 0.65 + phase;
+
+  /*
+    ORIGINAL SCORPIUS
+    TAPERED DIFFRACTION RAYS
   */
 
   if (
     typeof drawScorpiusTaperedRays === "function"
   ) {
+
     drawScorpiusTaperedRays(
       context,
       x,
@@ -6246,35 +6307,22 @@ drawConstellationStar = function (
       time,
       index
     );
+
   }
 
   /*
-    Stronger central luminosity
-    and surrounding bloom.
+    STAR CORE + NATURAL BLOOM
 
-    Draw the original star renderer
-    twice at controlled opacity.
+    Increase luminosity directly
+    inside the original renderer.
 
-    This strengthens its natural glow
-    without introducing a separate
-    artificial halo.
+    No additional halo.
+    No double rendering.
+    No change to star dimensions.
   */
 
-  const starTime =
-    time + index * 0.37;
-
-  const pulse =
-    (Math.sin(
-      starTime * 0.65 * Math.PI * 2
-    ) + 1) / 2;
-
-  const glowStrength =
-    0.72 + pulse * 0.28;
-
-  context.save();
-
-  context.globalAlpha =
-    0.65 * glowStrength;
+  const luminosity =
+    1.8;
 
   originalConstellationStarRenderer(
     context,
@@ -6284,36 +6332,8 @@ drawConstellationStar = function (
     tone,
     starType,
     starTime,
-    intensity
+    intensity,
+    luminosity
   );
-
-  context.restore();
-
-  /*
-    Second pass:
-    reinforce the natural star glow
-    and central brightness.
-  */
-
-  context.save();
-
-  context.globalCompositeOperation =
-    "screen";
-
-  context.globalAlpha =
-    0.30 * glowStrength;
-
-  originalConstellationStarRenderer(
-    context,
-    x,
-    y,
-    size,
-    tone,
-    starType,
-    starTime,
-    intensity
-  );
-
-  context.restore();
 
 };

@@ -6174,3 +6174,10 @@ app.addEventListener(
 ========================================================= */
 
 initialise();
+
+try {
+  initialise();
+} catch (error) {
+  alert("Universe error: " + error.message);
+  console.error(error);
+}

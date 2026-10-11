@@ -6179,3 +6179,134 @@ try {
   alert("Universe error: " + error.message);
   console.error(error);
 }
+
+/* ==========================================
+   ORION + VIRGO
+   MATCH SCORPIUS STAR APPEARANCE
+
+   Uses Scorpius's current:
+   - Tapered diffraction rays
+   - Ray brightness
+   - Glow opacity
+   - Slower twinkling
+
+   Does not change Scorpius.
+========================================== */
+
+const originalConstellationStarRenderer =
+  drawConstellationStar;
+
+drawConstellationStar = function (
+  context,
+  x,
+  y,
+  size,
+  tone = "neutral",
+  starName = "",
+  time = 0,
+  intensity = 1
+) {
+
+  /*
+    Leave Scorpius completely unchanged.
+  */
+
+  if (
+    typeof scorpiusContext !== "undefined" &&
+    context === scorpiusContext
+  ) {
+    return originalConstellationStarRenderer(
+      context,
+      x,
+      y,
+      size,
+      tone,
+      starName,
+      time,
+      intensity
+    );
+  }
+
+  /*
+    Preserve the small travelling point
+    used during constellation reveals.
+  */
+
+  if (!starName) {
+    return originalConstellationStarRenderer(
+      context,
+      x,
+      y,
+      size,
+      tone,
+      starName,
+      time,
+      intensity
+    );
+  }
+
+  /*
+    Match Scorpius's larger/smaller
+    star treatment.
+  */
+
+  const large = size >= 3;
+
+  const rayType =
+    large ? "Betelgeuse" : "Bellatrix";
+
+  const starIndex =
+    Array.from(starName).reduce(
+      (total, character) =>
+        total + character.charCodeAt(0),
+      0
+    );
+
+  /*
+    Same tapered rays and brightness
+    as the current Scorpius.
+  */
+
+  if (
+    typeof drawScorpiusTaperedRays === "function"
+  ) {
+    context.save();
+
+    context.globalAlpha = intensity;
+
+    drawScorpiusTaperedRays(
+      context,
+      x,
+      y,
+      size,
+      rayType,
+      time,
+      starIndex
+    );
+
+    context.restore();
+  }
+
+  /*
+    Same glow opacity as Scorpius,
+    with slower twinkling.
+  */
+
+  context.save();
+
+  context.globalAlpha = 0.65;
+
+  originalConstellationStarRenderer(
+    context,
+    x,
+    y,
+    size,
+    tone,
+    starName,
+    time * 0.35,
+    intensity
+  );
+
+  context.restore();
+
+};

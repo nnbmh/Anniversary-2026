@@ -1,512 +1,215 @@
 /* ==========================================
-   SCORPIUS STAR POSITIONS
-
-   Shape based on your reference:
-   - Head at upper right
-   - Antares near upper centre
-   - Body curves downward to the left
-   - Tail hooks upward at lower left
+   SCORPIUS · 17.11
+   Uses Orion's original star renderer.
+   Antares retains its existing appearance.
 ========================================== */
 
 const scorpiusStars = [
-
-  // Head and upper branches
-
-  {
-    id: "jabbah",
-    x: 455,
-    y: 65,
-    size: 3.5
-  },
-
-  {
-    id: "acrab",
-    x: 470,
-    y: 120,
-    size: 4.0
-  },
-
-  {
-    id: "dschubba",
-    x: 468,
-    y: 165,
-    size: 4.2
-  },
-
-  {
-    id: "pi",
-    x: 415,
-    y: 145,
-    size: 2.8
-  },
-
-
-  // Antares — warm reddish heart
-
-  {
-    id: "antares",
-    x: 355,
-    y: 190,
-    size: 6.2
-  },
-
-
-  // Body descending left
-
-  {
-    id: "tau",
-    x: 330,
-    y: 225,
-    size: 3.0
-  },
-
-  {
-    id: "epsilon",
-    x: 285,
-    y: 315,
-    size: 3.5
-  },
-
-  {
-    id: "mu",
-    x: 280,
-    y: 380,
-    size: 2.8
-  },
-
-  {
-    id: "zeta",
-    x: 275,
-    y: 455,
-    size: 3.0
-  },
-
-
-  // Lower curve
-
-  {
-    id: "eta",
-    x: 215,
-    y: 475,
-    size: 3.2
-  },
-
-  {
-    id: "sargas",
-    x: 155,
-    y: 475,
-    size: 4.5
-  },
-
-
-  // Tail hooking upward
-
-  {
-    id: "iota",
-    x: 120,
-    y: 430,
-    size: 2.8
-  },
-
-  {
-    id: "kappa",
-    x: 135,
-    y: 405,
-    size: 3.0
-  },
-
-  {
-    id: "shaula",
-    x: 155,
-    y: 380,
-    size: 5.0
-  },
-
-  {
-    id: "lesath",
-    x: 165,
-    y: 365,
-    size: 3.8
-  }
-
+  { id: "jabbah",   x: 455, y: 65,  size: 3.5 },
+  { id: "acrab",    x: 470, y: 120, size: 4.0 },
+  { id: "dschubba", x: 468, y: 165, size: 4.2 },
+  { id: "pi",       x: 415, y: 145, size: 2.8 },
+  { id: "antares",  x: 355, y: 190, size: 6.2 },
+  { id: "tau",      x: 330, y: 225, size: 3.0 },
+  { id: "epsilon",  x: 285, y: 315, size: 3.5 },
+  { id: "mu",       x: 280, y: 380, size: 2.8 },
+  { id: "zeta",     x: 275, y: 455, size: 3.0 },
+  { id: "eta",      x: 215, y: 475, size: 3.2 },
+  { id: "sargas",   x: 155, y: 475, size: 4.5 },
+  { id: "iota",     x: 120, y: 430, size: 2.8 },
+  { id: "kappa",    x: 135, y: 405, size: 3.0 },
+  { id: "shaula",   x: 155, y: 380, size: 5.0 },
+  { id: "lesath",   x: 165, y: 365, size: 3.8 }
 ];
 
-/* ==========================================
-   SCORPIUS CONNECTIONS
-
-   Follows the reference silhouette.
-   Lines are reserved for discovery.
-========================================== */
-
 const scorpiusConnections = [
-
-  // Head and branches
-
   ["jabbah", "acrab"],
   ["acrab", "dschubba"],
-
   ["acrab", "pi"],
   ["pi", "antares"],
-
-  // Body
-
   ["antares", "tau"],
   ["tau", "epsilon"],
   ["epsilon", "mu"],
   ["mu", "zeta"],
-
-  // Lower curve
-
   ["zeta", "eta"],
   ["eta", "sargas"],
-
-  // Hooked tail
-
   ["sargas", "iota"],
   ["iota", "kappa"],
   ["kappa", "shaula"],
   ["shaula", "lesath"]
-
 ];
 
-
-/* ==========================================
-   PERSONALITY STARS
-
-   Reserved for the chapter.
-========================================== */
-
 const scorpiusPersonalities = {
-
   dschubba: "The Little Menace",
-
   acrab: "Make Up Your Mind",
-
   sargas: "The Social Battery",
-
   shaula: "The Soft Side",
-
   jabbah: "The Shield",
-
   lesath: "Behind the Silence"
-
 };
 
-
-/* ==========================================
-   STATE
-========================================== */
-
 let scorpiusElement = null;
-
 let scorpiusCanvas = null;
-
 let scorpiusContext = null;
-
 let scorpiusReady = false;
 
 /* ==========================================
-   SCORPIUS STAR DESIGNS
+   STAR SIZE VARIATIONS
 
-   Uses the same settings as
-   Orion and Virgo in main.js.
+   Betelgeuse = Larger stars
+   Bellatrix = Smaller stars
+
+   Antares is handled separately.
 ========================================== */
 
-const scorpiusStarDesigns = {
-
-  // Same visual settings as Orion and Virgo
+const scorpiusStarVariations = {
 
   jabbah: {
-    ...constellationStarDesigns.Mintaka
+    size: 2.25,
+    type: "Bellatrix"
   },
 
   acrab: {
-    ...constellationStarDesigns.Saiph
+    size: 2.65,
+    type: "Bellatrix"
   },
 
   dschubba: {
-    ...constellationStarDesigns.Bellatrix
+    size: 3.42,
+    type: "Betelgeuse"
   },
 
   pi: {
-    ...constellationStarDesigns["Sword 2"]
-  },
-
-  // Antares uses Spica's visual settings
-  antares: {
-    ...constellationStarDesigns.Spica
+    size: 2.10,
+    type: "Bellatrix"
   },
 
   tau: {
-    ...constellationStarDesigns["Sword 1"]
+    size: 2.30,
+    type: "Bellatrix"
   },
 
   epsilon: {
-    ...constellationStarDesigns.Auva
+    size: 2.75,
+    type: "Bellatrix"
   },
 
   mu: {
-    ...constellationStarDesigns["Sword 2"]
+    size: 2.05,
+    type: "Bellatrix"
   },
 
   zeta: {
-    ...constellationStarDesigns["Sword 1"]
+    size: 2.40,
+    type: "Bellatrix"
   },
 
   eta: {
-    ...constellationStarDesigns.Zaniah
+    size: 2.65,
+    type: "Bellatrix"
   },
 
   sargas: {
-    ...constellationStarDesigns.Porrima
+    size: 3.42,
+    type: "Betelgeuse"
   },
 
   iota: {
-    ...constellationStarDesigns["Sword 2"]
+    size: 2.10,
+    type: "Bellatrix"
   },
 
   kappa: {
-    ...constellationStarDesigns.Heze
+    size: 2.40,
+    type: "Bellatrix"
   },
 
   shaula: {
-    ...constellationStarDesigns.Vindemiatrix
+    size: 3.42,
+    type: "Betelgeuse"
   },
 
   lesath: {
-    ...constellationStarDesigns.Syrma
+    size: 2.50,
+    type: "Bellatrix"
   }
 
 };
+
 /* ==========================================
-   CREATE CONSTELLATION
+   CREATE REUSABLE STAR IMAGES
+
+   Each star is rendered at its final
+   size using Orion's original renderer.
+
+   No stretching of star images.
 ========================================== */
 
-function initialiseScorpius() {
+const scorpiusStarImages =
+  Object.create(null);
 
-  const universeElement =
-    document.getElementById("universe");
+const scorpiusImageSize = 180;
 
-  if (!universeElement) {
-    return;
-  }
-
-
-  // Avoid duplicate constellations
+function createScorpiusStarImages() {
 
   if (
-    document.getElementById("scorpius")
+    typeof drawConstellationStar !== "function"
   ) {
     return;
   }
-
-
-  scorpiusElement =
-    document.createElement("section");
-
-
-  scorpiusElement.id = "scorpius";
-
-  scorpiusElement.className =
-    "constellation";
-
-
-  scorpiusElement.innerHTML = `
-
-    <canvas
-      class="scorpius-universe-canvas"
-      width="560"
-      height="620"
-      aria-hidden="true"
-    ></canvas>
-
-    <div class="scorpius-universe-label">
-      SCORPIUS · 17.11
-    </div>
-
-  `;
-
-
-  /*
-    Important:
-
-    This constellation must not
-    intercept touch or pointer
-    events while exploring.
-
-    The universe must remain draggable.
-  */
-
-  scorpiusElement.style.pointerEvents =
-    "none";
-
-
-  universeElement.appendChild(
-    scorpiusElement
-  );
-
-
-  scorpiusCanvas =
-    scorpiusElement.querySelector(
-      "canvas"
-    );
-
-
-  if (!scorpiusCanvas) {
-    return;
-  }
-
-
-  scorpiusContext =
-    scorpiusCanvas.getContext("2d");
-
-   if (!scorpiusContext) {
-    return;
-  }
-
-  const cssWidth = scorpiusElement.offsetWidth;
-  const cssHeight = scorpiusElement.offsetHeight;
-
-  if (cssWidth <= 0 || cssHeight <= 0) {
-    return;
-  }
-
-  const glowPadding = 80;
-
-  const canvasHeight =
-    cssHeight + glowPadding;
 
   const dpr = Math.min(
     window.devicePixelRatio || 1,
     2
   );
 
-  scorpiusCanvas.width =
-    Math.round(cssWidth * dpr);
+  Object.entries(
+    scorpiusStarVariations
+  ).forEach(([id, settings]) => {
 
-  scorpiusCanvas.height =
-    Math.round(canvasHeight * dpr);
+    const image =
+      document.createElement("canvas");
 
-  scorpiusCanvas.style.width =
-    `${cssWidth}px`;
+    image.width = Math.round(
+      scorpiusImageSize * dpr
+    );
 
-  scorpiusCanvas.style.height =
-    `${canvasHeight}px`;
+    image.height = Math.round(
+      scorpiusImageSize * dpr
+    );
 
-  scorpiusContext.setTransform(
-    dpr, 0, 0, dpr, 0, 0
-  );
+    const context =
+      image.getContext("2d");
 
+    if (!context) return;
 
-  scorpiusReady = true;
+    context.setTransform(
+      dpr,
+      0,
+      0,
+      dpr,
+      0,
+      0
+    );
 
+    drawConstellationStar(
+      context,
+      scorpiusImageSize / 2,
+      scorpiusImageSize / 2,
+      settings.size,
+      settings.type === "Betelgeuse"
+        ? "warm"
+        : "neutral",
+      settings.type,
+      1,
+      1
+    );
 
-  requestAnimationFrame(
-    animateScorpius
-  );
+    scorpiusStarImages[id] = image;
+
+  });
 
 }
-
-/* ==========================================
-   SCORPIUS STAR RENDERING
-
-   One consistent Orion star design:
-   ALNITAK
-
-   All smaller Scorpius stars share
-   the same shape and glow.
-========================================== */
-
-
-/* ==========================================
-   STAR TEMPLATE
-========================================== */
-
-let scorpiusStarTemplate = null;
-
-const scorpiusTemplateSize = 160;
-
-
-/* ==========================================
-   CREATE ALNITAK TEMPLATE
-========================================== */
-
-function createScorpiusStarTemplate() {
-
-  const alnitak = orionStars.find(
-    star => star.name === "Alnitak"
-  );
-
-  if (!alnitak) return;
-
-  const size = scorpiusTemplateSize;
-  const dpr = 2;
-
-  const canvas =
-    document.createElement("canvas");
-
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
-
-  const context =
-    canvas.getContext("2d");
-
-  if (!context) return;
-
-  context.setTransform(
-    dpr, 0, 0, dpr, 0, 0
-  );
-
-  const displaySize = Math.max(
-    1.05,
-    alnitak.size * 1.16
-  );
-
-  /*
-    Render Alnitak once using
-    Orion's original drawing function.
-  */
-
-  drawConstellationStar(
-    context,
-    size / 2,
-    size / 2,
-    displaySize,
-    alnitak.tone,
-    alnitak.name,
-    1,
-    1
-  );
-
-  scorpiusStarTemplate = canvas;
-}
-
-
-/* ==========================================
-   INDIVIDUAL STAR VARIATIONS
-========================================== */
-
-const scorpiusStarVariations = {
-
-  jabbah:   { scale: 1.15, brightness: 0.90 },
-  acrab:    { scale: 1.65, brightness: 1.00 },
-  dschubba: { scale: 1.85, brightness: 1.00 },
-  pi:       { scale: 0.95, brightness: 0.80 },
-
-  tau:      { scale: 1.20, brightness: 0.90 },
-  epsilon:  { scale: 1.55, brightness: 1.00 },
-  mu:       { scale: 0.90, brightness: 0.80 },
-  zeta:     { scale: 1.25, brightness: 0.90 },
-
-  eta:      { scale: 1.50, brightness: 0.95 },
-  sargas:   { scale: 1.90, brightness: 1.00 },
-
-  iota:     { scale: 0.95, brightness: 0.85 },
-  kappa:    { scale: 1.25, brightness: 0.90 },
-  shaula:   { scale: 2.00, brightness: 1.00 },
-  lesath:   { scale: 1.35, brightness: 0.90 }
-
-};
 
 /* ==========================================
    DRAW SCORPIUS STARS
@@ -521,12 +224,11 @@ function drawScorpiusStar(star, timestamp) {
 
   const time = timestamp / 1000;
 
-
   /*
     ANTARES
 
-    Keep the original appearance
-    and animation unchanged.
+    Preserve its original appearance,
+    size, colour and live animation.
   */
 
   if (star.id === "antares") {
@@ -545,19 +247,14 @@ function drawScorpiusStar(star, timestamp) {
     return;
   }
 
-
   /*
-    All remaining stars use
-    the same Alnitak template.
+    Retrieve the pre-rendered star.
   */
 
-  if (!scorpiusStarTemplate) return;
+  const image =
+    scorpiusStarImages[star.id];
 
-  const variation =
-    scorpiusStarVariations[star.id];
-
-  if (!variation) return;
-
+  if (!image) return;
 
   /*
     Gentle independent twinkling.
@@ -566,104 +263,33 @@ function drawScorpiusStar(star, timestamp) {
   const index =
     scorpiusStars.indexOf(star);
 
-  const phase = index * 1.37;
-
   const twinkle = Math.sin(
-    time * 0.7 + phase
+    time * 0.7 + index * 1.37
   );
 
   const brightness =
-    variation.brightness *
-    (0.88 + twinkle * 0.12);
-
+    0.88 + twinkle * 0.12;
 
   /*
-    Scale the complete star image.
+    Draw the image at its original
+    rendered size.
 
-    This preserves the same
-    four-pointed shape and
-    glow proportions.
+    No stretching.
+    No additional artificial rays.
   */
-
-  const imageSize =
-    scorpiusTemplateSize *
-    variation.scale;
 
   scorpiusContext.save();
 
   scorpiusContext.globalAlpha =
-    Math.min(1, brightness);
+    brightness;
 
   scorpiusContext.drawImage(
-    scorpiusStarTemplate,
-    x - imageSize / 2,
-    y - imageSize / 2,
-    imageSize,
-    imageSize
+    image,
+    x - scorpiusImageSize / 2,
+    y - scorpiusImageSize / 2,
+    scorpiusImageSize,
+    scorpiusImageSize
   );
-
-   /*
-  Fine diffraction spikes.
-
-  The rays extend beyond the star's
-  central glow and remain delicate.
-*/
-
-const rayLength =
-  12 * variation.scale;
-
-const rayOpacity =
-  0.18 * brightness;
-
-scorpiusContext.save();
-
-scorpiusContext.globalAlpha = rayOpacity;
-
-scorpiusContext.strokeStyle =
-  "rgba(215,230,255,0.85)";
-
-scorpiusContext.lineWidth = 0.35;
-
-scorpiusContext.shadowColor =
-  "rgba(180,215,255,0.45)";
-
-scorpiusContext.shadowBlur = 3;
-
-
-/* Vertical ray */
-
-scorpiusContext.beginPath();
-
-scorpiusContext.moveTo(
-  x,
-  y - rayLength
-);
-
-scorpiusContext.lineTo(
-  x,
-  y + rayLength
-);
-
-scorpiusContext.stroke();
-
-
-/* Horizontal ray */
-
-scorpiusContext.beginPath();
-
-scorpiusContext.moveTo(
-  x - rayLength * 0.65,
-  y
-);
-
-scorpiusContext.lineTo(
-  x + rayLength * 0.65,
-  y
-);
-
-scorpiusContext.stroke();
-
-scorpiusContext.restore();
 
   scorpiusContext.restore();
 
@@ -673,25 +299,34 @@ scorpiusContext.restore();
    ANIMATION
 
    Separate from main.js.
-
-   If Scorpius encounters an error,
-   its animation stops without
-   stopping the universe's loop.
 ========================================== */
 
-createScorpiusStarTemplate();
-
 function animateScorpius(timestamp) {
-  if (!scorpiusReady || !scorpiusContext) {
+
+  if (
+    !scorpiusReady ||
+    !scorpiusContext
+  ) {
     return;
   }
 
   try {
-    const width = scorpiusElement.offsetWidth;
-    const height = scorpiusElement.offsetHeight;
 
-    if (width <= 0 || height <= 0) {
-      requestAnimationFrame(animateScorpius);
+    const width =
+      scorpiusElement.offsetWidth;
+
+    const height =
+      scorpiusElement.offsetHeight;
+
+    if (
+      width <= 0 ||
+      height <= 0
+    ) {
+
+      requestAnimationFrame(
+        animateScorpius
+      );
+
       return;
     }
 
@@ -703,23 +338,168 @@ function animateScorpius(timestamp) {
     );
 
     scorpiusStars.forEach(star => {
-      drawScorpiusStar(star, timestamp);
+
+      drawScorpiusStar(
+        star,
+        timestamp
+      );
+
     });
 
   } catch (error) {
+
     console.error(
       "Scorpius rendering error:",
       error
     );
+
     scorpiusReady = false;
+
     return;
   }
 
-  requestAnimationFrame(animateScorpius);
+  requestAnimationFrame(
+    animateScorpius
+  );
+
 }
 
 /* ==========================================
-   INITIALISE
+   INITIALISE SCORPIUS
+========================================== */
+
+function initialiseScorpius() {
+
+  const universeElement =
+    document.getElementById("universe");
+
+  if (
+    !universeElement ||
+    document.getElementById("scorpius")
+  ) {
+    return;
+  }
+
+  /*
+    Create constellation container.
+  */
+
+  scorpiusElement =
+    document.createElement("section");
+
+  scorpiusElement.id = "scorpius";
+
+  scorpiusElement.className =
+    "constellation";
+
+  scorpiusElement.innerHTML = `
+
+    <canvas
+      class="scorpius-universe-canvas"
+      width="560"
+      height="620"
+      aria-hidden="true"
+    ></canvas>
+
+    <div class="scorpius-universe-label">
+      SCORPIUS · 17.11
+    </div>
+
+  `;
+
+  /*
+    Keep universe dragging enabled.
+  */
+
+  scorpiusElement.style.pointerEvents =
+    "none";
+
+  universeElement.appendChild(
+    scorpiusElement
+  );
+
+  /*
+    Get star canvas.
+  */
+
+  scorpiusCanvas =
+    scorpiusElement.querySelector(
+      "canvas"
+    );
+
+  if (!scorpiusCanvas) return;
+
+  scorpiusContext =
+    scorpiusCanvas.getContext("2d");
+
+  if (!scorpiusContext) return;
+
+  /*
+    Match Orion's canvas resolution.
+  */
+
+  const cssWidth =
+    scorpiusElement.offsetWidth;
+
+  const cssHeight =
+    scorpiusElement.offsetHeight;
+
+  if (
+    cssWidth <= 0 ||
+    cssHeight <= 0
+  ) {
+    return;
+  }
+
+  const dpr = Math.min(
+    window.devicePixelRatio || 1,
+    2
+  );
+
+  const canvasHeight =
+    cssHeight + 80;
+
+  scorpiusCanvas.width =
+    Math.round(cssWidth * dpr);
+
+  scorpiusCanvas.height =
+    Math.round(canvasHeight * dpr);
+
+  scorpiusCanvas.style.width =
+    `${cssWidth}px`;
+
+  scorpiusCanvas.style.height =
+    `${canvasHeight}px`;
+
+  scorpiusContext.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
+  );
+
+  /*
+    Create the star images once.
+  */
+
+  createScorpiusStarImages();
+
+  /*
+    Start animation.
+  */
+
+  scorpiusReady = true;
+
+  requestAnimationFrame(
+    animateScorpius
+  );
+
+}
+
+/* ==========================================
+   START
 ========================================== */
 
 initialiseScorpius();

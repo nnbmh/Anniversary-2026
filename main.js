@@ -731,7 +731,7 @@ function createShootingStar() {
   */
 
   const angle =
-    18 +
+    -18 -
     Math.random() * 20;
 
   const distance =

@@ -1416,11 +1416,13 @@ function drawConstellationStar(
       Math.min(1, intensity)
     );
 
-  const isScorpiusStar =
+const isScorpiusStar =
+  typeof scorpiusStarDesigns !== "undefined" &&
   Object.prototype.hasOwnProperty.call(
     scorpiusStarDesigns,
     starName
-  );
+  );   
+  
 
 const brightness = isScorpiusStar
   ? (.82 + wave * .18) * alpha

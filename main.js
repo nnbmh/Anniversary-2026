@@ -6365,22 +6365,21 @@ drawConstellationStar = function (
     so telescope discovery still works.
   */
 
-  context.save();
+ context.save();
 
-  context.globalAlpha *= 0.65;
+context.globalCompositeOperation = "screen";
 
-  originalConstellationStarRenderer(
-    context,
-    x,
-    y,
-    size,
-    tone,
-    starType,
-    starTime,
-    intensity,
-    1
-  );
+originalConstellationStarRenderer(
+  context,
+  x,
+  y,
+  size,
+  tone,
+  starType,
+  starTime,
+  intensity,
+  2.5
+);
 
-  context.restore();
-
+context.restore();
 };

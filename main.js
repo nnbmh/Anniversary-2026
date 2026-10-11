@@ -6188,14 +6188,22 @@ try {
 
 /* ==========================================
    ORION + VIRGO
-   FINAL LUMINOUS STAR RENDERER
+   SCORPIUS MATCHED STAR RENDERER
 
-   Brighter natural bloom
-   Brighter four-pointed centres
-   Gentle independent twinkling
-   Original tapered diffraction rays
+   Uses Scorpius's:
+   - Original star renderer
+   - Original bloom calculations
+   - Original luminous core
+   - Original diffraction rays
+   - Original twinkling timing
 
-   Scorpius remains unchanged.
+   Preserves:
+   - Existing star sizes
+   - Existing star positions
+   - Existing star colours
+   - Telescope discovery intensity
+
+   Scorpius remains untouched.
 ========================================== */
 
 const originalConstellationStarRenderer =
@@ -6213,7 +6221,10 @@ drawConstellationStar = function (
 ) {
 
   /*
-    Preserve Scorpius exactly.
+    SCORPIUS
+
+    Keep its original rendering
+    completely unchanged.
   */
 
   if (
@@ -6229,7 +6240,8 @@ drawConstellationStar = function (
       tone,
       starName,
       time,
-      intensity
+      intensity,
+      1
     );
 
   }
@@ -6249,27 +6261,49 @@ drawConstellationStar = function (
       tone,
       starName,
       time,
-      intensity
+      intensity,
+      1
     );
 
   }
 
   /*
-    Use Scorpius's existing
-    large and small star designs.
+    STAR DESIGN
+
+    Use the same two designs
+    used by Scorpius.
+
+    Preserve Spica's special
+    appearance in Virgo.
   */
 
-  const large =
-    size >= 3;
+  let starType;
 
-  const starType =
-    large
-      ? "Betelgeuse"
-      : "Bellatrix";
+  if (starName === "Spica") {
+
+    starType = "Spica";
+
+  } else if (
+    starName === "Betelgeuse" ||
+    starName === "Rigel"
+  ) {
+
+    starType = "Betelgeuse";
+
+  } else {
+
+    starType =
+      size >= 3
+        ? "Betelgeuse"
+        : "Bellatrix";
+
+  }
 
   /*
-    Give each star a different
-    animation phase.
+    STAR INDEX
+
+    Give each star a consistent
+    animation offset.
   */
 
   const index =
@@ -6277,25 +6311,31 @@ drawConstellationStar = function (
       (total, character) =>
         total + character.charCodeAt(0),
       0
-    );
-
-  const phase =
-    (index % 17) * 0.37;
+    ) % 20;
 
   /*
-    Slow, gentle twinkling.
+    MATCH SCORPIUS ANIMATION
+
+    Scorpius uses:
+    time + index * 0.37
+
+    No additional speed multiplier.
   */
 
   const starTime =
-    time * 0.65 + phase;
+    time + index * 0.37;
 
   /*
-    ORIGINAL SCORPIUS
-    TAPERED DIFFRACTION RAYS
+    MATCH SCORPIUS
+    DIFFRACTION RAYS
+
+    Draw the same tapered rays
+    behind each star.
   */
 
   if (
-    typeof drawScorpiusTaperedRays === "function"
+    typeof drawScorpiusTaperedRays === "function" &&
+    starName !== "Spica"
   ) {
 
     drawScorpiusTaperedRays(
@@ -6311,18 +6351,23 @@ drawConstellationStar = function (
   }
 
   /*
-    STAR CORE + NATURAL BLOOM
+    MATCH SCORPIUS
+    STAR RENDERING
 
-    Increase luminosity directly
-    inside the original renderer.
+    Scorpius uses:
+    globalAlpha = 0.65
 
-    No additional halo.
+    No extra luminosity multiplier.
+    No additional glow.
     No double rendering.
-    No change to star dimensions.
+
+    Preserve the existing intensity
+    so telescope discovery still works.
   */
 
-  const luminosity =
-    1.8;
+  context.save();
+
+  context.globalAlpha *= 0.65;
 
   originalConstellationStarRenderer(
     context,
@@ -6333,7 +6378,9 @@ drawConstellationStar = function (
     starType,
     starTime,
     intensity,
-    luminosity
+    1
   );
+
+  context.restore();
 
 };

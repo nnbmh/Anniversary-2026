@@ -407,138 +407,106 @@ function initialiseScorpius() {
 
 }
 
-
 /* ==========================================
    SCORPIUS STAR RENDERING
 
-   Reuses pre-rendered Orion stars.
-   Antares retains its original renderer.
+   One consistent Orion star design:
+   ALNITAK
+
+   All smaller Scorpius stars share
+   the same shape and glow.
 ========================================== */
-
-
-/*
-  Use only Orion's smaller stars.
-
-  These are the actual star definitions
-  from main.js, not invented sizes.
-*/
-
-const scorpiusOrionMapping = {
-  jabbah: "Mintaka",
-  acrab: "Alnilam",
-  dschubba: "Alnitak",
-  pi: "Sword 1",
-
-  tau: "Mintaka",
-  epsilon: "Alnilam",
-  mu: "Sword 2",
-  zeta: "Alnitak",
-  eta: "Mintaka",
-  sargas: "Alnilam",
-  iota: "Sword 1",
-  kappa: "Mintaka",
-  shaula: "Alnitak",
-  lesath: "Sword 2"
-};
-
-
-/*
-  A separate transparent image is
-  created for each Orion star type.
-
-  The images are generated directly
-  using Orion's existing renderer.
-*/
-
-const scorpiusStarImages = {};
-
-const scorpiusStarImageSize = 160;
 
 
 /* ==========================================
-   CREATE ORION STAR IMAGES
+   STAR TEMPLATE
 ========================================== */
 
-function createScorpiusStarImages() {
+let scorpiusStarTemplate = null;
 
-  const names = [
-    "Alnitak",
-    "Alnilam",
-    "Mintaka",
-    "Sword 1",
-    "Sword 2"
-  ];
+const scorpiusTemplateSize = 160;
 
-  const imageSize =
-    scorpiusStarImageSize;
 
+/* ==========================================
+   CREATE ALNITAK TEMPLATE
+========================================== */
+
+function createScorpiusStarTemplate() {
+
+  const alnitak = orionStars.find(
+    star => star.name === "Alnitak"
+  );
+
+  if (!alnitak) return;
+
+  const size = scorpiusTemplateSize;
   const dpr = 2;
 
-  names.forEach(name => {
+  const canvas =
+    document.createElement("canvas");
 
-    const orionStar = orionStars.find(
-      star => star.name === name
-    );
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
 
-    if (!orionStar) return;
+  const context =
+    canvas.getContext("2d");
 
-    const canvas =
-      document.createElement("canvas");
+  if (!context) return;
 
-    canvas.width =
-      imageSize * dpr;
+  context.setTransform(
+    dpr, 0, 0, dpr, 0, 0
+  );
 
-    canvas.height =
-      imageSize * dpr;
+  const displaySize = Math.max(
+    1.05,
+    alnitak.size * 1.16
+  );
 
-    const context =
-      canvas.getContext("2d");
+  /*
+    Render Alnitak once using
+    Orion's original drawing function.
+  */
 
-    if (!context) return;
+  drawConstellationStar(
+    context,
+    size / 2,
+    size / 2,
+    displaySize,
+    alnitak.tone,
+    alnitak.name,
+    1,
+    1
+  );
 
-    context.setTransform(
-      dpr,
-      0,
-      0,
-      dpr,
-      0,
-      0
-    );
-
-    /*
-      Same size formula as Orion.
-    */
-
-    const displaySize = Math.max(
-      1.05,
-      orionStar.size * 1.16
-    );
-
-    /*
-      Render the original Orion star
-      onto a transparent canvas.
-
-      Fixed animation time gives us
-      a consistent source image.
-    */
-
-    drawConstellationStar(
-      context,
-      imageSize / 2,
-      imageSize / 2,
-      displaySize,
-      orionStar.tone,
-      orionStar.name,
-      1,
-      1
-    );
-
-    scorpiusStarImages[name] =
-      canvas;
-
-  });
-
+  scorpiusStarTemplate = canvas;
 }
+
+
+/* ==========================================
+   INDIVIDUAL STAR VARIATIONS
+========================================== */
+
+const scorpiusStarVariations = {
+
+  jabbah:   { scale: 0.85, brightness: 0.85 },
+  acrab:    { scale: 1.05, brightness: 0.95 },
+  dschubba: { scale: 1.10, brightness: 1.00 },
+  pi:      { scale: 0.75, brightness: 0.75 },
+
+  tau:     { scale: 0.85, brightness: 0.85 },
+  epsilon: { scale: 1.00, brightness: 0.95 },
+  mu:      { scale: 0.70, brightness: 0.70 },
+  zeta:    { scale: 0.85, brightness: 0.85 },
+
+  eta:     { scale: 0.95, brightness: 0.90 },
+  sargas:  { scale: 1.10, brightness: 1.00 },
+
+  iota:    { scale: 0.75, brightness: 0.75 },
+  kappa:   { scale: 0.85, brightness: 0.85 },
+  shaula:  { scale: 1.10, brightness: 1.00 },
+  lesath:  { scale: 0.90, brightness: 0.90 }
+
+};
 
 
 /* ==========================================
@@ -558,7 +526,8 @@ function drawScorpiusStar(star, timestamp) {
   /*
     ANTARES
 
-    Completely unchanged.
+    Keep the original appearance
+    and animation unchanged.
   */
 
   if (star.id === "antares") {
@@ -579,62 +548,55 @@ function drawScorpiusStar(star, timestamp) {
 
 
   /*
-    Find the pre-rendered
-    Orion star image.
+    All remaining stars use
+    the same Alnitak template.
   */
 
-  const name =
-    scorpiusOrionMapping[star.id];
+  if (!scorpiusStarTemplate) return;
 
-  const image =
-    scorpiusStarImages[name];
+  const variation =
+    scorpiusStarVariations[star.id];
 
-  if (!image) return;
+  if (!variation) return;
 
 
   /*
     Gentle independent twinkling.
-
-    No harsh flashing or exaggerated
-    changes in star size.
   */
 
   const index =
     scorpiusStars.indexOf(star);
 
-  const phase =
-    index * 1.37;
+  const phase = index * 1.37;
 
-  const speed =
-    0.65 + (index % 4) * 0.12;
-
-  const twinkle =
-    Math.sin(
-      time * speed + phase
-    );
+  const twinkle = Math.sin(
+    time * 0.7 + phase
+  );
 
   const brightness =
-    0.72 + twinkle * 0.12;
+    variation.brightness *
+    (0.88 + twinkle * 0.12);
 
 
   /*
-    Draw the actual rendered
-    Orion star image.
+    Scale the complete star image.
 
-    The image stays the same size.
-    Only its brightness changes.
+    This preserves the same
+    four-pointed shape and
+    glow proportions.
   */
 
   const imageSize =
-    scorpiusStarImageSize;
+    scorpiusTemplateSize *
+    variation.scale;
 
   scorpiusContext.save();
 
   scorpiusContext.globalAlpha =
-    brightness;
+    Math.min(1, brightness);
 
   scorpiusContext.drawImage(
-    image,
+    scorpiusStarTemplate,
     x - imageSize / 2,
     y - imageSize / 2,
     imageSize,
@@ -655,7 +617,7 @@ function drawScorpiusStar(star, timestamp) {
    stopping the universe's loop.
 ========================================== */
 
-createScorpiusStarImages();
+createScorpiusStarTemplate();
 
 function animateScorpius(timestamp) {
   if (!scorpiusReady || !scorpiusContext) {

@@ -414,80 +414,106 @@ function initialiseScorpius() {
    Reuses drawConstellationStar()
    from main.js.
 ========================================== */
+
 function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
   /*
-    Exact star designs and sizes
-    from Orion.
+    Map Scorpius stars to the actual
+    Orion stars already defined in main.js.
 
-    Only their positions are different
-    to form Scorpius.
+    We reuse Orion's existing data,
+    sizes, tones and drawing calculations.
   */
 
-  const designs = {
-    jabbah: ["Mintaka", 1.35],
-    acrab: ["Bellatrix", 2.1],
-    dschubba: ["Alnilam", 2],
-    pi: ["Sword 1", 0.85],
+  const orionMapping = {
+    jabbah: "Mintaka",
+    acrab: "Bellatrix",
+    dschubba: "Alnilam",
+    pi: "Sword 1",
 
-    antares: ["Spica", 3.05],
-
-    tau: ["Alnitak", 1.55],
-    epsilon: ["Saiph", 1.7],
-    mu: ["Sword 2", 0.55],
-    zeta: ["Mintaka", 1.35],
-    eta: ["Alnilam", 2],
-    sargas: ["Betelgeuse", 2.8],
-    iota: ["Sword 1", 0.85],
-    kappa: ["Alnitak", 1.55],
-    shaula: ["Rigel", 3.2],
-    lesath: ["Saiph", 1.7]
+    tau: "Alnitak",
+    epsilon: "Saiph",
+    mu: "Sword 2",
+    zeta: "Mintaka",
+    eta: "Alnilam",
+    sargas: "Betelgeuse",
+    iota: "Sword 1",
+    kappa: "Alnitak",
+    shaula: "Rigel",
+    lesath: "Saiph"
   };
 
-  const design = designs[star.id];
+  const x = star.x + 30;
+  const y = star.y + 35;
 
-  if (!design) return;
-
-  const [starName, size] = design;
-
-  const isAntares = star.id === "antares";
+  const time = timestamp / 1000;
 
   /*
-    EXACT Orion sizing formula.
+    Preserve Antares exactly.
+  */
+
+  if (star.id === "antares") {
+    drawConstellationStar(
+      scorpiusContext,
+      x,
+      y,
+      3.05 * 1.52,
+      "warm",
+      "Spica",
+      time,
+      1
+    );
+
+    return;
+  }
+
+  /*
+    Retrieve the actual Orion star.
+  */
+
+  const orionName = orionMapping[star.id];
+
+  const orionStar = orionStars.find(
+    star => star.name === orionName
+  );
+
+  if (!orionStar) return;
+
+  /*
+    Exact sizing calculations
+    from renderRevealedOrionStars().
   */
 
   let displaySize = Math.max(
     1.05,
-    size * 1.16
+    orionStar.size * 1.16
   );
 
-  if (starName === "Rigel") {
-    displaySize = size * 1.28;
+  if (orionStar.name === "Rigel") {
+    displaySize =
+      orionStar.size * 1.28;
   }
 
-  if (starName === "Betelgeuse") {
-    displaySize = size * 1.22;
+  if (orionStar.name === "Betelgeuse") {
+    displaySize =
+      orionStar.size * 1.22;
   }
 
   /*
-    Antares keeps its existing
-    appearance unchanged.
+    Same rendering function,
+    tone, size and animation as Orion.
+
+    Only the position changes.
   */
-
-  if (isAntares) {
-    displaySize = size * 1.52;
-  }
-
-  const time = timestamp / 1000;
 
   drawConstellationStar(
     scorpiusContext,
-    star.x + 30,
-    star.y + 35,
+    x,
+    y,
     displaySize,
-    isAntares ? "warm" : "neutral",
-    starName,
+    orionStar.tone,
+    orionStar.name,
     time,
     1
   );

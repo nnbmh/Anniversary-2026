@@ -464,20 +464,20 @@ function drawScorpiusStar(star, timestamp) {
     Match Virgo's animation timing.
   */
 
-  const time = timestamp / 1000;
+  const time = timestamp / 2800;
 
   drawConstellationStar(
-    scorpiusContext,
-    star.x + 30,
-    star.y + 35,
-    displaySize,
-    star.id === "antares"
-      ? "warm"
-      : "neutral",
-    starName,
-    time,
-    1
-  );
+  scorpiusContext,
+  star.x + 30,
+  star.y + 35,
+  displaySize,
+  star.id === "antares"
+    ? "warm"
+    : "neutral",
+  starName,
+  time,
+  star.id === "antares" ? 1 : 0.82
+);
 }
 
 /* ==========================================

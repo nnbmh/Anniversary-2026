@@ -418,32 +418,51 @@ function initialiseScorpius() {
 function drawScorpiusStar(star, timestamp) {
   if (!scorpiusContext) return;
 
-  // Keep each star's size different.
-  const sizes = {
-    jabbah: 1.75,
-    acrab: 1.65,
-    dschubba: 2.25,
-    pi: 1.5,
-    antares: 3.05,
-    tau: 1.75,
-    epsilon: 2.15,
-    mu: 1.5,
-    zeta: 1.65,
-    eta: 1.95,
-    sargas: 2.15,
-    iota: 1.5,
-    kappa: 1.75,
-    shaula: 2.25,
-    lesath: 1.8
+  /*
+    Use the same smaller-star designs
+    as Virgo and Orion.
+    Keep Antares as Spica.
+  */
+
+  const designs = {
+    jabbah: ["Zaniah", 1.75],
+    acrab: ["Auva", 1.65],
+    dschubba: ["Vindemiatrix", 2.25],
+    pi: ["Heze", 1.5],
+    antares: ["Spica", 3.05],
+    tau: ["Zaniah", 1.75],
+    epsilon: ["Porrima", 2.15],
+    mu: ["Heze", 1.5],
+    zeta: ["Auva", 1.65],
+    eta: ["Zavijava", 1.95],
+    sargas: ["Porrima", 2.15],
+    iota: ["Heze", 1.5],
+    kappa: ["Zaniah", 1.75],
+    shaula: ["Vindemiatrix", 2.25],
+    lesath: ["Syrma", 1.8]
   };
 
-  const size = sizes[star.id];
+  const design = designs[star.id];
 
-  if (!size) return;
+  if (!design) return;
 
-  // Every star uses Spica/Antares's
-  // exact flare proportions and shape.
-  const displaySize = size * 1.52;
+  const [starName, size] = design;
+
+  /*
+    EXACT sizing formula from Virgo.
+  */
+
+  const displaySize =
+    starName === "Spica"
+      ? size * 1.52
+      : Math.max(
+          1.5,
+          size * 1.2
+        );
+
+  /*
+    Match Virgo's animation timing.
+  */
 
   const time = timestamp / 1000;
 
@@ -455,11 +474,12 @@ function drawScorpiusStar(star, timestamp) {
     star.id === "antares"
       ? "warm"
       : "neutral",
-    "Spica",
+    starName,
     time,
     1
   );
 }
+
 /* ==========================================
    ANIMATION
 

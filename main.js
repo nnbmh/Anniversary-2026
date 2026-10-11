@@ -6371,17 +6371,30 @@ drawConstellationStar = function (
     ) % 20;
 
   /*
-    MATCH SCORPIUS ANIMATION
+  INDIVIDUAL STAR TWINKLING
 
-    Scorpius uses:
-    time + index * 0.37
+  Each star gets its own speed
+  and animation phase.
 
-    No additional speed multiplier.
-  */
+  The values are determined by
+  its name, so they stay consistent.
+*/
 
-  const starTime =
-    time + index * 0.37;
+const starSeed = Array.from(starName).reduce(
+  (total, character, position) =>
+    total + character.charCodeAt(0) * (position + 1),
+  0
+);
 
+const speedVariation =
+  0.55 + (starSeed % 13) * 0.065;
+
+const phaseVariation =
+  (starSeed % 17) * 0.43;
+
+const starTime =
+  time * speedVariation +
+  phaseVariation;
   /*
     MATCH SCORPIUS
     DIFFRACTION RAYS

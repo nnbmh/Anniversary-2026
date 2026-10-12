@@ -1781,7 +1781,7 @@ function renderRevealedOrionStars(
 
   const orionStarSizes = {
     Betelgeuse: 3.42,
-    Rigel: 3.42,
+    Rigel: 4.636,
 
     Bellatrix: 2.75,
     Saiph: 2.65,

@@ -515,14 +515,14 @@
   opacity: .55;
 }
 
-
 /* ==========================================
    SCORPIUS — INTERACTIVE STAR PULSE
 ========================================== */
 
-.scorpius-map-star {
-  cursor: 
-     
+.scorpius-map-star.interactive {
+  cursor: pointer;
+}
+
 /* ==========================================
    MOBILE
 ========================================== */

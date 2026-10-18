@@ -2168,15 +2168,11 @@ const scale = Math.min(
   /* Same star renderer as Orion and Virgo */
 
   scorpiusStars.forEach(star => {
-    const x =
-  centreX + (star.x - 295) * scale;
+  const x =
+    centreX + (star.x - 295) * scale;
 
-const y =
-  centreY + (star.y - 270) * scale;const x =
-  centreX + (star.x - 295) * scale;
-
-const y =
-  centreY + (star.y - 270) * scale;
+  const y =
+    centreY + (star.y - 270) * scale;
 
     points.set(star.id, { x, y });
 

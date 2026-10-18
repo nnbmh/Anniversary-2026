@@ -64,11 +64,11 @@
 
     character.classList.add(movement);
 
-    if (movement !== "kiss") {
-      setTimeout(() => {
-        character.classList.remove(movement);
-      }, 850);
-    }
+    const duration = movement === "kiss" ? 1200 : 850;
+
+   setTimeout(() => {
+     character.classList.remove(movement);
+   }, duration);
   }
 
   function say(who, text) {

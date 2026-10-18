@@ -222,24 +222,6 @@
               if (guidance) {
                 guidance.classList.add("all-explored");
               }
-            }
-          }
-
-            if (completed.size === 5) {
-              const antaresGroup =
-                map.querySelector(".antares-final");
-
-              if (antaresGroup) {
-                antaresGroup.classList.add("unlocked");
-              }
-
-              const guidance =
-                chapter.querySelector(".scorpius-guidance");
-
-              if (guidance) {
-                guidance.classList.add("all-explored");
-              }
-            }
           }
         };
 

@@ -224,11 +224,15 @@
     });
   }
 
-  function initialise() {
+    function initialise() {
     chapter = document.getElementById("scorpiusChapter");
     map = document.getElementById("scorpiusMap");
 
     if (!chapter || !map) return;
+
+    // Keep Scorpius outside the draggable universe.
+    // This allows its stars to receive clicks and taps.
+    document.body.appendChild(chapter);
 
     map.innerHTML = "";
 

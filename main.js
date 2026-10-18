@@ -1819,7 +1819,7 @@ function renderRevealedOrionStars(
     Mintaka: 2.25
   };
 
-  orionStars.forEach(star => {
+    orionStars.forEach(star => {
 
     const displaySize =
       orionStarSizes[star.name] ??
@@ -1827,6 +1827,28 @@ function renderRevealedOrionStars(
         2.10,
         Math.min(2.75, star.size * 1.2)
       );
+
+    // Individual brightness before discovery.
+    // The canvas itself is currently at 24% opacity.
+    const starBrightness = {
+      Betelgeuse: 1,
+      Rigel: 1,
+
+      Bellatrix: .75,
+      Saiph: .75,
+
+      Alnitak: .583,
+      Alnilam: .583,
+      Mintaka: .583
+    };
+
+    const isRevealed =
+      orionDiscovered ||
+      orionRevealStarted;
+
+    const brightness = isRevealed
+      ? 1
+      : (starBrightness[star.name] ?? 1);
 
     drawConstellationStar(
       orionStarCtx,
@@ -1836,7 +1858,7 @@ function renderRevealedOrionStars(
       star.tone,
       star.name,
       time,
-      1
+      brightness
     );
 
   });

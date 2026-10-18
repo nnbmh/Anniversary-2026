@@ -2085,9 +2085,7 @@ function drawTelescopeScorpius(width, height) {
   const distance = getScorpiusDistance();
 
   if (
-    distance > 320 &&
-    !scorpiusRevealStarted
-  ) {
+    distance > 320 ) {
     return;
   }
 
@@ -2227,45 +2225,36 @@ const elapsed = scorpiusDiscovered
         start.y +
         (end.y - start.y) * progress;
 
-      /* Orion's soft glow underneath */
+      // Soft glow beneath the connecting line
+ctx.save();
 
-      ctx.save();
+ctx.beginPath();
+ctx.moveTo(start.x, start.y);
+ctx.lineTo(currentX, currentY);
 
-      ctx.beginPath();
-      ctx.moveTo(start.x, start.y);
-      ctx.lineTo(currentX, currentY);
+ctx.strokeStyle = "rgba(177,210,247,.10)";
+ctx.lineWidth = .6;
+ctx.lineCap = "round";
+ctx.shadowColor = "rgba(185,218,255,.14)";
+ctx.shadowBlur = 1;
 
-      ctx.strokeStyle =
-        "rgba(177,210,247,.10)";
+ctx.stroke();
+ctx.restore();
 
-      ctx.lineWidth = .6;
-      ctx.lineCap = "round";
+// Thin connecting line
+ctx.save();
 
-      ctx.shadowColor =
-        "rgba(185,218,255,.14)";
+ctx.beginPath();
+ctx.moveTo(start.x, start.y);
+ctx.lineTo(currentX, currentY);
 
-      ctx.shadowBlur = 1;
+ctx.strokeStyle = "rgba(226,238,252,.68)";
+ctx.lineWidth = .7;
+ctx.lineCap = "round";
 
-      ctx.stroke();
-      ctx.restore();
-
-      /* Orion's main connecting line */
-
-      ctx.save();
-
-      ctx.beginPath();
-      ctx.moveTo(start.x, start.y);
-      ctx.lineTo(currentX, currentY);
-
-      ctx.strokeStyle =
-        "rgba(226,238,252,.68)";
-
-      ctx.lineWidth = .7;
-      ctx.lineCap = "round";
-
-      ctx.stroke();
-      ctx.restore();
-
+ctx.stroke();
+ctx.restore();
+       
       /* Orion's travelling light */
 
       if (progress < 1) {
@@ -2443,11 +2432,9 @@ function enterScorpiusChapter() {
     return;
   }
 
-  // Same navigation reset used by Virgo.
+  // Stop universe navigation.
   universeDragging = false;
-
   activePointers.clear();
-
   pinchStartDistance = 0;
 
   app.classList.remove("dragging");
@@ -2455,55 +2442,30 @@ function enterScorpiusChapter() {
   navigationHint.classList.add("hidden");
   navigationHintHidden = true;
 
+  // Open the chapter.
   chapter.classList.add("active");
 
   chapter.setAttribute(
     "aria-hidden",
     "false"
   );
+
+  // Start its introduction.
+  chapter.classList.remove("intro-complete");
+
+  window.clearTimeout(
+    window.scorpiusIntroTimer
+  );
+
+  window.scorpiusIntroTimer = window.setTimeout(
+    () => {
+      if (chapter.classList.contains("active")) {
+        chapter.classList.add("intro-complete");
+      }
+    },
+    2600
+  );
 }
-
-
-/* ==========================================
-   TAP DISCOVERED SCORPIUS
-========================================== */
-
-document.addEventListener(
-  "click",
-  event => {
-    if (
-      !scorpiusDiscovered ||
-      telescopeActive
-    ) {
-      return;
-    }
-
-    const scorpius =
-      document.getElementById("scorpius");
-
-    if (!scorpius) return;
-
-    const rect =
-      scorpius.getBoundingClientRect();
-
-    const paddingX = rect.width * .12;
-    const paddingY = rect.height * .12;
-
-    const insideScorpius =
-      event.clientX >= rect.left + paddingX &&
-      event.clientX <= rect.right - paddingX &&
-      event.clientY >= rect.top + paddingY &&
-      event.clientY <= rect.bottom - paddingY;
-
-    if (!insideScorpius) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    enterScorpiusChapter();
-  },
-  true
-);
 
 /* =========================================================
    DRAW TELESCOPE ORION

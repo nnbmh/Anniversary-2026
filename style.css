@@ -237,22 +237,20 @@ button {
 /* =========================================================
    MILKY WAY BACKGROUND
 ========================================================= */
-
 #dustLayer {
-  background-image: url("milky-way-background.PNG");
+  position: absolute;
+  inset: 0;
 
+  z-index: 0;
+
+  background-image: url("milky-way-background.PNG");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 
-  opacity: .75;
+  opacity: 1;
 
   pointer-events: none;
-}
-
-/* Remove the previous clouds */
-#dustLayer .dust {
-  display: none;
 }
 
 /* =========================================================

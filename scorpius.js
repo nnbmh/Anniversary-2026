@@ -433,7 +433,7 @@ function initialiseScorpius() {
   scorpiusElement.className =
     "constellation";
 
-  scorpiusElement.innerHTML = `
+    scorpiusElement.innerHTML = `
 
     <canvas
       class="scorpius-universe-canvas"
@@ -442,12 +442,42 @@ function initialiseScorpius() {
       aria-hidden="true"
     ></canvas>
 
+    <svg
+      class="constellation-lines"
+      viewBox="0 0 560 620"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      ${scorpiusConnections.map(([from, to]) => {
+
+        const start = scorpiusStars.find(
+          star => star.id === from
+        );
+
+        const end = scorpiusStars.find(
+          star => star.id === to
+        );
+
+        if (!start || !end) return "";
+
+        return `
+          <line
+            x1="${start.x}"
+            y1="${start.y}"
+            x2="${end.x}"
+            y2="${end.y}"
+          ></line>
+        `;
+
+      }).join("")}
+    </svg>
+
     <div class="scorpius-universe-label">
       SCORPIUS · 17.11
     </div>
 
   `;
-
+   
   scorpiusElement.style.pointerEvents =
     "none";
 

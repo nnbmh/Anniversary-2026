@@ -1708,7 +1708,7 @@ bloom.addColorStop(
   context.restore();
 }
 
-
+window.drawConstellationStar = drawConstellationStar;
 /* =========================================================
    REVEALED ORION CANVAS
 ========================================================= */
@@ -2059,43 +2059,36 @@ function getScorpiusDistance() {
 ========================================================= */
 
 function drawTelescopeScorpius(width, height) {
-  if (
-    scorpiusDiscovered ||
-    typeof scorpiusStars === "undefined"
-  ) {
-    return;
-  }
+  if (scorpiusDiscovered) return;
 
   const position = getScorpiusPosition();
-
   if (!position) return;
 
   const distance = getScorpiusDistance();
 
   if (distance > 320) return;
 
-  const intensity = Math.max(
-    0.18,
-    1 - distance / 320
-  );
+  let intensity = .12;
+
+  if (distance < 260) intensity = .20;
+  if (distance < 200) intensity = .32;
+  if (distance < 145) intensity = .48;
+  if (distance < 95) intensity = .72;
+  if (distance < 55) intensity = 1;
 
   const centreX =
-    width / 2 +
-    (position.x - lensX) * 0.55;
+    width / 2 + (position.x - lensX) * .55;
 
   const centreY =
-    height / 2 +
-    (position.y - lensY) * 0.55;
+    height / 2 + (position.y - lensY) * .55;
 
-  const scale = 0.62;
-
+  const scale = .62;
+  const time = performance.now() / 1000;
   const points = new Map();
 
-  const time = performance.now() / 1000;
+  // EXACT SAME STAR RENDERER AS ORION AND VIRGO
 
-  /* Draw constellation stars */
-
-  scorpiusStars.forEach((star, index) => {
+  scorpiusStars.forEach(star => {
     const x =
       centreX + (star.x - 355) * scale;
 
@@ -2106,48 +2099,30 @@ function drawTelescopeScorpius(width, height) {
 
     const isAntares = star.id === "antares";
 
-    const shimmer =
-      0.85 + Math.sin(time * 1.5 + index) * 0.15;
+    const variation =
+      scorpiusStarVariations[star.id];
 
-    const size =
-      Math.max(1.6, star.size * 0.55);
+    const size = isAntares
+      ? 4.5
+      : variation
+        ? variation.size
+        : star.size;
 
-    ctx.save();
-
-    ctx.globalAlpha = intensity * shimmer;
-
-    ctx.fillStyle = isAntares
-      ? "#ffd1a0"
-      : "#edf2ff";
-
-    ctx.shadowColor = isAntares
-      ? "#ff986b"
-      : "#b5ceff";
-
-    ctx.shadowBlur = isAntares ? 18 : 9;
-
-    // Four-pointed star shape
-    const outer = size * (isAntares ? 2.3 : 2);
-    const inner = size * 0.38;
-
-    ctx.beginPath();
-
-    ctx.moveTo(x, y - outer);
-    ctx.lineTo(x + inner, y - inner);
-    ctx.lineTo(x + outer, y);
-    ctx.lineTo(x + inner, y + inner);
-    ctx.lineTo(x, y + outer);
-    ctx.lineTo(x - inner, y + inner);
-    ctx.lineTo(x - outer, y);
-    ctx.lineTo(x - inner, y - inner);
-
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.restore();
+    drawConstellationStar(
+      ctx,
+      x,
+      y,
+      size,
+      isAntares ? "warm" : "cool",
+      isAntares
+        ? "antares"
+        : variation
+          ? variation.type
+          : "Bellatrix",
+      time,
+      .2 + intensity * .8
+    );
   });
-
-  /* Don't draw lines until focus begins */
 
   if (scorpiusFocusStarted === null) return;
 
@@ -2161,14 +2136,12 @@ function drawTelescopeScorpius(width, height) {
 
   const total = scorpiusConnections.length;
 
-  /* Draw lines sequentially */
-
   ctx.save();
 
-  ctx.strokeStyle = "rgba(210,225,255,0.9)";
-  ctx.lineWidth = 2.3;
-  ctx.shadowColor = "#a9c9ff";
-  ctx.shadowBlur = 7;
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "rgba(195,220,255,.85)";
+  ctx.shadowColor = "rgba(150,195,255,.65)";
+  ctx.shadowBlur = 5;
 
   scorpiusConnections.forEach(
     ([from, to], index) => {
@@ -2177,7 +2150,7 @@ function drawTelescopeScorpius(width, height) {
         Math.min(1, progress * total - index)
       );
 
-      if (amount <= 0) return;
+      if (!amount) return;
 
       const a = points.get(from);
       const b = points.get(to);
@@ -2185,7 +2158,6 @@ function drawTelescopeScorpius(width, height) {
       if (!a || !b) return;
 
       ctx.beginPath();
-
       ctx.moveTo(a.x, a.y);
 
       ctx.lineTo(

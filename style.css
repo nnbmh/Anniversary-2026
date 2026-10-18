@@ -240,8 +240,8 @@ button {
 #dustLayer {
   position: absolute;
   inset: 0;
-
-  z-index: 0;
+   
+  z-index: 10;
 
   background-image: url("milky-way-background.PNG");
   background-position: center;
@@ -249,7 +249,6 @@ button {
   background-size: cover;
 
   opacity: 1;
-
   pointer-events: none;
 }
 

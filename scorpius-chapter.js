@@ -330,10 +330,10 @@ context.restore();
             : null;
 
         const size = antares
-          ? 4.5
+          ? 4.636
           : variation
-            ? variation.size
-            : 2.2;
+            ? variation.size * 1.25
+            : 2.75;
 
         window.drawConstellationStar(
           context,

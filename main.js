@@ -2020,6 +2020,238 @@ function getVirgoDistance() {
   );
 }
 
+/* =========================================================
+   SCORPIUS — TELESCOPE DISCOVERY
+========================================================= */
+
+let scorpiusFocusStarted = null;
+let scorpiusDiscovered = false;
+
+const SCORPIUS_FOCUS_RADIUS = 95;
+const SCORPIUS_DRAW_DURATION = 4500;
+
+function getScorpiusPosition() {
+  const element = document.getElementById("scorpius");
+
+  if (!element) return null;
+
+  const rect = element.getBoundingClientRect();
+
+  return {
+    x: rect.left + rect.width * (355 / 560),
+    y: rect.top + rect.height * (270 / 620)
+  };
+}
+
+function getScorpiusDistance() {
+  const position = getScorpiusPosition();
+
+  if (!position) return Infinity;
+
+  return Math.hypot(
+    lensX - position.x,
+    lensY - position.y
+  );
+}
+
+/* =========================================================
+   DRAW SCORPIUS INSIDE TELESCOPE
+========================================================= */
+
+function drawTelescopeScorpius(width, height) {
+  if (
+    scorpiusDiscovered ||
+    typeof scorpiusStars === "undefined"
+  ) {
+    return;
+  }
+
+  const position = getScorpiusPosition();
+
+  if (!position) return;
+
+  const distance = getScorpiusDistance();
+
+  if (distance > 320) return;
+
+  const intensity = Math.max(
+    0.18,
+    1 - distance / 320
+  );
+
+  const centreX =
+    width / 2 +
+    (position.x - lensX) * 0.55;
+
+  const centreY =
+    height / 2 +
+    (position.y - lensY) * 0.55;
+
+  const scale = 0.62;
+
+  const points = new Map();
+
+  const time = performance.now() / 1000;
+
+  /* Draw constellation stars */
+
+  scorpiusStars.forEach((star, index) => {
+    const x =
+      centreX + (star.x - 355) * scale;
+
+    const y =
+      centreY + (star.y - 270) * scale;
+
+    points.set(star.id, { x, y });
+
+    const isAntares = star.id === "antares";
+
+    const shimmer =
+      0.85 + Math.sin(time * 1.5 + index) * 0.15;
+
+    const size =
+      Math.max(1.6, star.size * 0.55);
+
+    ctx.save();
+
+    ctx.globalAlpha = intensity * shimmer;
+
+    ctx.fillStyle = isAntares
+      ? "#ffd1a0"
+      : "#edf2ff";
+
+    ctx.shadowColor = isAntares
+      ? "#ff986b"
+      : "#b5ceff";
+
+    ctx.shadowBlur = isAntares ? 18 : 9;
+
+    // Four-pointed star shape
+    const outer = size * (isAntares ? 2.3 : 2);
+    const inner = size * 0.38;
+
+    ctx.beginPath();
+
+    ctx.moveTo(x, y - outer);
+    ctx.lineTo(x + inner, y - inner);
+    ctx.lineTo(x + outer, y);
+    ctx.lineTo(x + inner, y + inner);
+    ctx.lineTo(x, y + outer);
+    ctx.lineTo(x - inner, y + inner);
+    ctx.lineTo(x - outer, y);
+    ctx.lineTo(x - inner, y - inner);
+
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  });
+
+  /* Don't draw lines until focus begins */
+
+  if (scorpiusFocusStarted === null) return;
+
+  const elapsed =
+    performance.now() - scorpiusFocusStarted;
+
+  const progress = Math.min(
+    1,
+    elapsed / SCORPIUS_DRAW_DURATION
+  );
+
+  const total = scorpiusConnections.length;
+
+  /* Draw lines sequentially */
+
+  ctx.save();
+
+  ctx.strokeStyle = "rgba(210,225,255,0.9)";
+  ctx.lineWidth = 2.3;
+  ctx.shadowColor = "#a9c9ff";
+  ctx.shadowBlur = 7;
+
+  scorpiusConnections.forEach(
+    ([from, to], index) => {
+      const amount = Math.max(
+        0,
+        Math.min(1, progress * total - index)
+      );
+
+      if (amount <= 0) return;
+
+      const a = points.get(from);
+      const b = points.get(to);
+
+      if (!a || !b) return;
+
+      ctx.beginPath();
+
+      ctx.moveTo(a.x, a.y);
+
+      ctx.lineTo(
+        a.x + (b.x - a.x) * amount,
+        a.y + (b.y - a.y) * amount
+      );
+
+      ctx.stroke();
+    }
+  );
+
+  ctx.restore();
+}
+
+/* =========================================================
+   SCORPIUS FOCUS AND REVEAL
+========================================================= */
+
+function checkScorpiusFocus(timestamp) {
+  const chapter =
+    document.getElementById("scorpiusChapter");
+
+  if (
+    !chapter ||
+    scorpiusDiscovered ||
+    !telescopeActive
+  ) {
+    scorpiusFocusStarted = null;
+    return;
+  }
+
+  const distance = getScorpiusDistance();
+
+  if (
+    distance > SCORPIUS_FOCUS_RADIUS ||
+    telescopeDragging
+  ) {
+    scorpiusFocusStarted = null;
+    return;
+  }
+
+  if (scorpiusFocusStarted === null) {
+    scorpiusFocusStarted = timestamp;
+  }
+
+  const elapsed =
+    timestamp - scorpiusFocusStarted;
+
+  if (elapsed < SCORPIUS_DRAW_DURATION + 500) {
+    return;
+  }
+
+  /* Constellation completed */
+
+  scorpiusDiscovered = true;
+  scorpiusFocusStarted = null;
+
+  setTelescope(false);
+
+  chapter.classList.add("active");
+
+  chapter.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+}
 
 /* =========================================================
    DRAW TELESCOPE ORION
@@ -2863,12 +3095,10 @@ function renderTelescope() {
     height
   );
 
-/*
    drawTelescopeScorpius(
       width,
       height
    );
-   */
 }
 
 
@@ -3945,12 +4175,10 @@ renderRevealedVirgoStars(timestamp);
     timestamp
   );
 
-   /*
    checkScorpiusFocus(
       timestamp
    );
-   */
-
+   
   requestAnimationFrame(
     animate
   );

@@ -2157,8 +2157,8 @@ const centreY =
   height / 2 + (position.y - lensY) * .55;
 
 const scale = Math.min(
-  .38,
-  (Math.min(width, height) * .68) / 410
+  .48,
+  (Math.min(width, height) * .88) / 410
 );
    
   const time = performance.now() / 1000;

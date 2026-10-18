@@ -536,13 +536,17 @@ button {
     filter 1.8s ease;
 }
 
+/* VIRGO — blend into the universe before discovery */
 
 #virgo .orion-star-canvas {
-  opacity: 1;
+  opacity: .24;
+  transition: opacity 1.2s ease;
 }
 
+/* Restore brightness during and after discovery */
 
-#virgo.discovered .orion-star-canvas {
+#virgo.discovered .orion-star-canvas,
+#virgo.revealing .orion-star-canvas {
   opacity: 1;
 }
 

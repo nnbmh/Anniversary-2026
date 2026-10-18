@@ -2082,10 +2082,18 @@ function drawTelescopeScorpius(width, height) {
 
   if (!position) return;
 
-  const distance = getScorpiusDistance();
+    const distance = getScorpiusDistance();
 
-  if (
-    distance > 320 ) {
+  if (distance > 210) {
+    if (
+      scorpiusRevealStarted &&
+      !scorpiusDiscovered &&
+      scorpiusRevealPausedAt === null
+    ) {
+      scorpiusRevealPausedAt =
+        performance.now();
+    }
+
     return;
   }
 
@@ -2342,7 +2350,22 @@ function discoverScorpius() {
         segmentTime +
       900;
 
-    const now = performance.now();
+        const now = performance.now();
+
+    const stillInView =
+      telescopeActive &&
+      getScorpiusDistance() <= 210;
+
+    if (!stillInView) {
+      if (scorpiusRevealPausedAt === null) {
+        scorpiusRevealPausedAt = now;
+      }
+    } else if (scorpiusRevealPausedAt !== null) {
+      scorpiusRevealPausedDuration +=
+        now - scorpiusRevealPausedAt;
+
+      scorpiusRevealPausedAt = null;
+    }
 
     const effectiveNow =
       scorpiusRevealPausedAt === null
@@ -2353,7 +2376,7 @@ function discoverScorpius() {
       effectiveNow -
       scorpiusRevealStartTime -
       scorpiusRevealPausedDuration;
-
+     
     if (elapsed < requiredTime) {
       requestAnimationFrame(
         waitForScorpiusReveal

@@ -2077,7 +2077,6 @@ function getScorpiusDistance() {
 ========================================================= */
 
 function drawTelescopeScorpius(width, height) {
-  if (scorpiusDiscovered) return;
 
   const position = getScorpiusPosition();
 

@@ -3428,14 +3428,15 @@ function discoverVirgo() {
 app.addEventListener(
   "pointerdown",
   event => {
-        if (
-           telescopeActive ||
-           enteringVirgo ||
-           event.target.closest(
-              "#telescopeButton"
-           )
+                if (
+          telescopeActive ||
+          enteringVirgo ||
+          event.target.closest("#telescopeButton") ||
+          event.target.closest("#scorpiusChapter") ||
+          document.getElementById("scorpiusChapter")
+            ?.classList.contains("active")
         ) {
-           return;
+          return;
         }
 
     activePointers.set(

@@ -442,7 +442,7 @@ function initialiseScorpius() {
     <svg
       class="constellation-lines"
       viewBox="0 0 560 620"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
     >
       ${scorpiusConnections.map(([from, to]) => {
@@ -507,27 +507,19 @@ function initialiseScorpius() {
     return;
   }
 
-  const glowPadding = 80;
-
-  const canvasHeight =
-    cssHeight + glowPadding;
-
   const dpr = Math.min(
-    window.devicePixelRatio || 1,
-    2
-  );
+  window.devicePixelRatio || 1,
+  2
+);
 
-  scorpiusCanvas.width =
-    Math.round(cssWidth * dpr);
+scorpiusCanvas.width =
+  Math.round(cssWidth * dpr);
 
-  scorpiusCanvas.height =
-    Math.round(canvasHeight * dpr);
+scorpiusCanvas.height =
+  Math.round(cssHeight * dpr);
 
-  scorpiusCanvas.style.width =
-    `${cssWidth}px`;
-
-  scorpiusCanvas.style.height =
-    `${canvasHeight}px`;
+scorpiusCanvas.style.width = "100%";
+scorpiusCanvas.style.height = "100%";
 
   scorpiusContext.setTransform(
     dpr,

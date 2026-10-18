@@ -125,6 +125,30 @@
     showMessage("ANTARES", "The Tiny Argument");
   }
 
+     function updateScorpiusProgress() {
+    const progress = document.getElementById(
+      "scorpiusProgress"
+    );
+
+    if (!progress) return;
+
+    progress.innerHTML = "";
+
+    personalities.forEach(personality => {
+      const star = document.createElement("span");
+
+      star.className = completed.has(personality.id)
+        ? "progress-star completed"
+        : "progress-star";
+
+      star.textContent = completed.has(personality.id)
+        ? "✦"
+        : "✧";
+
+      progress.appendChild(star);
+    });
+  }
+   
     function buildHitAreas() {
     map.innerHTML = "";
 
@@ -178,18 +202,28 @@
 
           selectStar(personality);
 
-          if (!completed.has(id)) {
+            if (!completed.has(id)) {
             completed.add(id);
-
             group.classList.add("explored");
 
-            const progress =
-              document.getElementById("scorpiusProgress");
+            updateScorpiusProgress();
 
-            if (progress) {
-              progress.textContent =
-                `${completed.size} / 5 sides discovered`;
+            if (completed.size === 5) {
+              const antaresGroup =
+                map.querySelector(".antares-final");
+
+              if (antaresGroup) {
+                antaresGroup.classList.add("unlocked");
+              }
+
+              const guidance =
+                chapter.querySelector(".scorpius-guidance");
+
+              if (guidance) {
+                guidance.classList.add("all-explored");
+              }
             }
+          }
 
             if (completed.size === 5) {
               const antaresGroup =
@@ -510,13 +544,14 @@ context.restore();
     const guidance = document.createElement("div");
     guidance.className = "scorpius-guidance";
 
-    guidance.innerHTML = `
-      <p>Some stars have a little more to tell you...</p>
-      <span>Tap the stars that shine a little brighter.</span>
-      <small id="scorpiusProgress">0 / 5 sides discovered</small>
+        guidance.innerHTML = `
+      <span>TOUCH A GLOWING STAR TO BEGIN</span>
+      <div id="scorpiusProgress" class="scorpius-progress"></div>
     `;
 
     chapter.appendChild(guidance);
+
+    updateScorpiusProgress();
 
     const exit = document.getElementById(
       "scorpiusExit"

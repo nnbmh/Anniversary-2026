@@ -106,11 +106,18 @@
   }
 
   function selectStar(personality) {
-    showMessage(
-      personality.title,
-      `${personality.game} — coming next.`
-    );
+  if (personality.id === "epsilon") {
+    if (typeof window.openImpostorStar === "function") {
+      window.openImpostorStar();
+    }
+    return;
   }
+
+  showMessage(
+    personality.title,
+    `${personality.game} — coming next.`
+  );
+}
 
   function selectAntares() {
     if (completed.size < 5) {
@@ -201,8 +208,9 @@
           }
 
           selectStar(personality);
-
-            if (!completed.has(id)) {
+           
+           if (id === "epsilon") return;
+           if (!completed.has(id)) {
             completed.add(id);
             group.classList.add("explored");
 

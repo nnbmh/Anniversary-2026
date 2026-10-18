@@ -501,6 +501,11 @@ button {
     );
 }
 
+/* Hide Virgo's label until its chapter is completed */
+#app #virgo:not(.completed) .constellation-label {
+  opacity: 0;
+  visibility: hidden;
+}
 
 #virgo.discovered
 .constellation-label {

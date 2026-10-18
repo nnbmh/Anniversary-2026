@@ -1,4 +1,4 @@
-/* ==========================================
+/* =========================================
    SCORPIUS — INTERACTIVE CHAPTER
    Our Little Universe · Anniversary 2026
 

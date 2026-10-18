@@ -437,10 +437,38 @@ function buildAnnulusCluster(
   }
 }
 
+let universeStarsBuildTimer = null;
+let universeStarsBuiltWidth = 0;
+let universeStarsBuiltHeight = 0;
+
+function scheduleUniverseStarsBuild() {
+  clearTimeout(universeStarsBuildTimer);
+
+  universeStarsBuildTimer = setTimeout(() => {
+    const width = universe.offsetWidth;
+    const height = universe.offsetHeight;
+
+    if (width <= 0 || height <= 0) return;
+
+    if (
+      width === universeStarsBuiltWidth &&
+      height === universeStarsBuiltHeight
+    ) {
+      return;
+    }
+
+    buildUniverseStars();
+  }, 150);
+}
 
 function buildUniverseStars() {
   const width = universe.offsetWidth;
   const height = universe.offsetHeight;
+
+     if (width <= 0 || height <= 0) return;
+
+  universeStarsBuiltWidth = width;
+  universeStarsBuiltHeight = height;
 
   starsDeep.innerHTML = "";
   starsFar.innerHTML = "";
@@ -4274,7 +4302,7 @@ app.addEventListener(
 window.addEventListener(
   "resize",
   () => {
-    buildUniverseStars();
+    scheduleUniverseStarsBuild();
 
     resizeOrionStarCanvas();
 

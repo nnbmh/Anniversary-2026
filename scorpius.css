@@ -551,3 +551,15 @@
     opacity: .5;
   }
 }
+
+/* ==========================================
+   SCORPIUS — UNDISCOVERED STAR BRIGHTNESS
+========================================== */
+
+#scorpius:not(.discovered) .scorpius-universe-canvas {
+  opacity: .24;
+}
+
+#scorpius.discovered .scorpius-universe-canvas {
+  opacity: 1;
+}

@@ -514,13 +514,17 @@
   cursor: pointer;
 }
 
+/* ==========================================
+   SCORPIUS — CLEAR INTERACTIVE STAR MARKERS
+========================================== */
+
 .scorpius-star-pulse {
-  fill: rgba(210, 230, 255, .035);
+  fill: none;
 
-  stroke: rgba(210, 230, 255, .4);
-  stroke-width: .8;
+  stroke: rgba(195, 225, 255, .85);
+  stroke-width: 1.4;
 
-  opacity: .5;
+  opacity: .75;
 
   transform-box: fill-box;
   transform-origin: center;
@@ -529,44 +533,36 @@
 }
 
 .personality-star .scorpius-star-pulse {
-  animation:
-    scorpiusGentlePulse 3.8s ease-in-out infinite;
+  animation: scorpiusGentlePulse 3s ease-in-out infinite;
 }
 
-/* Slightly different timing for each star */
-
-.personality-star:nth-child(2)
-.scorpius-star-pulse {
-  animation-delay: -.8s;
+.personality-star:nth-child(2) .scorpius-star-pulse {
+  animation-delay: -.6s;
 }
 
-.personality-star:nth-child(3)
-.scorpius-star-pulse {
-  animation-delay: -1.6s;
+.personality-star:nth-child(3) .scorpius-star-pulse {
+  animation-delay: -1.2s;
 }
 
-.personality-star:nth-child(4)
-.scorpius-star-pulse {
+.personality-star:nth-child(4) .scorpius-star-pulse {
+  animation-delay: -1.8s;
+}
+
+.personality-star:nth-child(5) .scorpius-star-pulse {
   animation-delay: -2.4s;
-}
-
-.personality-star:nth-child(5)
-.scorpius-star-pulse {
-  animation-delay: -3.2s;
 }
 
 @keyframes scorpiusGentlePulse {
   0%, 100% {
-    opacity: .2;
-    transform: scale(.8);
+    opacity: .35;
+    transform: scale(.85);
   }
 
   50% {
-    opacity: .8;
-    transform: scale(1.65);
+    opacity: 1;
+    transform: scale(1.5);
   }
 }
-
 
 /* ==========================================
    EXPLORED STARS

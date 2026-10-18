@@ -417,7 +417,7 @@
 
 #scorpiusChapter .scorpius-heading {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translate(-50%, 12px);
 
   transition:
     opacity 1.4s ease,
@@ -429,7 +429,7 @@
 #scorpiusChapter.intro-complete
 .scorpius-heading {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate(-50%, 0);
 }
 
 /* Disable interactions during introduction */

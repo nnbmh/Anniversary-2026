@@ -2021,21 +2021,38 @@ function getVirgoDistance() {
 }
 
 /* =========================================================
-   SCORPIUS — TELESCOPE DISCOVERY
+   SCORPIUS — SAME DISCOVERY SYSTEM AS ORION
 ========================================================= */
 
 let scorpiusFocusStarted = null;
 let scorpiusDiscovered = false;
 
-const SCORPIUS_FOCUS_RADIUS = 95;
-const SCORPIUS_DRAW_DURATION = 4500;
+let scorpiusRevealStarted = false;
+let scorpiusRevealStartTime = 0;
+let scorpiusRevealPausedAt = null;
+let scorpiusRevealPausedDuration = 0;
+
+const SCORPIUS_FOCUS_RADIUS = 75;
+
+const SCORPIUS_LINE_DURATION =
+  ORION_LINE_DURATION;
+
+const SCORPIUS_LINE_PAUSE =
+  ORION_LINE_PAUSE;
+
+
+/* =========================================================
+   POSITION
+========================================================= */
 
 function getScorpiusPosition() {
-  const element = document.getElementById("scorpius");
+  const element =
+    document.getElementById("scorpius");
 
   if (!element) return null;
 
-  const rect = element.getBoundingClientRect();
+  const rect =
+    element.getBoundingClientRect();
 
   return {
     x: rect.left + rect.width * (355 / 560),
@@ -2054,19 +2071,26 @@ function getScorpiusDistance() {
   );
 }
 
+
 /* =========================================================
-   DRAW SCORPIUS INSIDE TELESCOPE
+   TELESCOPE — ORION STAR AND LINE RENDERER
 ========================================================= */
 
 function drawTelescopeScorpius(width, height) {
   if (scorpiusDiscovered) return;
 
   const position = getScorpiusPosition();
+
   if (!position) return;
 
   const distance = getScorpiusDistance();
 
-  if (distance > 320) return;
+  if (
+    distance > 320 &&
+    !scorpiusRevealStarted
+  ) {
+    return;
+  }
 
   let intensity = .12;
 
@@ -2084,9 +2108,10 @@ function drawTelescopeScorpius(width, height) {
 
   const scale = .62;
   const time = performance.now() / 1000;
+
   const points = new Map();
 
-  // EXACT SAME STAR RENDERER AS ORION AND VIRGO
+  /* Same star renderer as Orion and Virgo */
 
   scorpiusStars.forEach(star => {
     const x =
@@ -2097,7 +2122,8 @@ function drawTelescopeScorpius(width, height) {
 
     points.set(star.id, { x, y });
 
-    const isAntares = star.id === "antares";
+    const isAntares =
+      star.id === "antares";
 
     const variation =
       scorpiusStarVariations[star.id];
@@ -2107,6 +2133,15 @@ function drawTelescopeScorpius(width, height) {
       : variation
         ? variation.size
         : star.size;
+
+    let starIntensity = intensity;
+
+    if (scorpiusRevealStarted) {
+      starIntensity = Math.max(
+        starIntensity,
+        .82
+      );
+    }
 
     drawConstellationStar(
       ctx,
@@ -2120,67 +2155,143 @@ function drawTelescopeScorpius(width, height) {
           ? variation.type
           : "Bellatrix",
       time,
-      .2 + intensity * .8
+      .2 + starIntensity * .8
     );
   });
 
-  if (scorpiusFocusStarted === null) return;
+  if (!scorpiusRevealStarted) return;
+
+  /* Same pause/resume behaviour as Orion */
+
+  const now = performance.now();
+
+  const stillInView = distance <= 210;
+
+  if (!stillInView) {
+    if (scorpiusRevealPausedAt === null) {
+      scorpiusRevealPausedAt = now;
+    }
+  } else if (
+    scorpiusRevealPausedAt !== null
+  ) {
+    scorpiusRevealPausedDuration +=
+      now - scorpiusRevealPausedAt;
+
+    scorpiusRevealPausedAt = null;
+  }
+
+  const effectiveNow =
+    scorpiusRevealPausedAt === null
+      ? now
+      : scorpiusRevealPausedAt;
 
   const elapsed =
-    performance.now() - scorpiusFocusStarted;
+    effectiveNow -
+    scorpiusRevealStartTime -
+    scorpiusRevealPausedDuration;
 
-  const progress = Math.min(
-    1,
-    elapsed / SCORPIUS_DRAW_DURATION
-  );
+  const segmentTime =
+    SCORPIUS_LINE_DURATION +
+    SCORPIUS_LINE_PAUSE;
 
-  const total = scorpiusConnections.length;
-
-    ctx.save();
-
-  ctx.lineWidth = .7;
-  ctx.strokeStyle = "rgba(226,238,252,.68)";
-  ctx.lineCap = "round";
-  ctx.shadowColor = "rgba(185,218,255,.14)";
-  ctx.shadowBlur = 1;
+  /* Same sequential line animation as Orion */
 
   scorpiusConnections.forEach(
     ([from, to], index) => {
-      const amount = Math.max(
+      const startTime =
+        index * segmentTime;
+
+      const progress = Math.max(
         0,
-        Math.min(1, progress * total - index)
+        Math.min(
+          1,
+          (elapsed - startTime) /
+            SCORPIUS_LINE_DURATION
+        )
       );
 
-      if (!amount) return;
+      if (progress <= 0) return;
 
-      const a = points.get(from);
-      const b = points.get(to);
+      const start = points.get(from);
+      const end = points.get(to);
 
-      if (!a || !b) return;
+      if (!start || !end) return;
+
+      const currentX =
+        start.x +
+        (end.x - start.x) * progress;
+
+      const currentY =
+        start.y +
+        (end.y - start.y) * progress;
+
+      /* Orion's soft glow underneath */
+
+      ctx.save();
 
       ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
+      ctx.moveTo(start.x, start.y);
+      ctx.lineTo(currentX, currentY);
 
-      ctx.lineTo(
-        a.x + (b.x - a.x) * amount,
-        a.y + (b.y - a.y) * amount
-      );
+      ctx.strokeStyle =
+        "rgba(177,210,247,.10)";
+
+      ctx.lineWidth = .6;
+      ctx.lineCap = "round";
+
+      ctx.shadowColor =
+        "rgba(185,218,255,.14)";
+
+      ctx.shadowBlur = 1;
 
       ctx.stroke();
+      ctx.restore();
+
+      /* Orion's main connecting line */
+
+      ctx.save();
+
+      ctx.beginPath();
+      ctx.moveTo(start.x, start.y);
+      ctx.lineTo(currentX, currentY);
+
+      ctx.strokeStyle =
+        "rgba(226,238,252,.68)";
+
+      ctx.lineWidth = .7;
+      ctx.lineCap = "round";
+
+      ctx.stroke();
+      ctx.restore();
+
+      /* Orion's travelling light */
+
+      if (progress < 1) {
+        drawConstellationStar(
+          ctx,
+          currentX,
+          currentY,
+          1,
+          "neutral",
+          "",
+          time,
+          .8
+        );
+      }
     }
   );
-
-  ctx.restore();
 }
 
+
 /* =========================================================
-   SCORPIUS FOCUS AND REVEAL
+   FOCUS — SAME HOLD SYSTEM AS ORION
 ========================================================= */
 
 function checkScorpiusFocus(timestamp) {
   if (
+    !telescopeActive ||
     scorpiusDiscovered ||
-    !telescopeActive
+    scorpiusRevealStarted
   ) {
     scorpiusFocusStarted = null;
     return;
@@ -2200,45 +2311,115 @@ function checkScorpiusFocus(timestamp) {
     scorpiusFocusStarted = timestamp;
   }
 
-  const elapsed =
-    timestamp - scorpiusFocusStarted;
+  if (
+    timestamp - scorpiusFocusStarted >=
+    HOLD_TO_DISCOVER
+  ) {
+    discoverScorpius();
+  }
+}
 
-  if (elapsed < SCORPIUS_DRAW_DURATION + 500) {
+
+/* =========================================================
+   DISCOVERY — SAME SEQUENCE AS ORION
+========================================================= */
+
+function discoverScorpius() {
+  if (
+    scorpiusDiscovered ||
+    scorpiusRevealStarted
+  ) {
     return;
   }
 
-  scorpiusDiscovered = true;
+  scorpiusRevealStarted = true;
+
+  scorpiusRevealStartTime =
+    performance.now();
+
+  scorpiusRevealPausedAt = null;
+  scorpiusRevealPausedDuration = 0;
   scorpiusFocusStarted = null;
 
-  const scorpius =
-    document.getElementById("scorpius");
+  function waitForScorpiusReveal() {
+    const segmentTime =
+      SCORPIUS_LINE_DURATION +
+      SCORPIUS_LINE_PAUSE;
 
-  if (scorpius) {
-    scorpius.classList.add("discovered");
+    const requiredTime =
+      scorpiusConnections.length *
+        segmentTime +
+      900;
+
+    const now = performance.now();
+
+    const effectiveNow =
+      scorpiusRevealPausedAt === null
+        ? now
+        : scorpiusRevealPausedAt;
+
+    const elapsed =
+      effectiveNow -
+      scorpiusRevealStartTime -
+      scorpiusRevealPausedDuration;
+
+    if (elapsed < requiredTime) {
+      requestAnimationFrame(
+        waitForScorpiusReveal
+      );
+
+      return;
+    }
+
+    scorpiusDiscovered = true;
+
+    const scorpius =
+      document.getElementById("scorpius");
+
+    if (scorpius) {
+      scorpius.classList.add(
+        "discovered"
+      );
+    }
+
+    navigationHint.classList.add(
+      "hidden"
+    );
+
+    navigationHintHidden = true;
+
+    setTimeout(() => {
+      setTelescope(false);
+
+      const hintTitle =
+        navigationHint.querySelector("p");
+
+      const hintText =
+        navigationHint.querySelector("span");
+
+      hintTitle.textContent =
+        "You found something.";
+
+      hintText.textContent =
+        "Tap the constellation to step inside";
+
+      navigationHint.classList.remove(
+        "hidden"
+      );
+
+      navigationHintHidden = false;
+    }, 650);
   }
 
-  setTelescope(false);
-
-  const hintTitle =
-    navigationHint.querySelector("p");
-
-  const hintText =
-    navigationHint.querySelector("span");
-
-  hintTitle.textContent =
-    "You found something.";
-
-  hintText.textContent =
-    "Tap the constellation to step inside";
-
-  navigationHint.classList.remove("hidden");
-
-  navigationHintHidden = false;
+  requestAnimationFrame(
+    waitForScorpiusReveal
+  );
 }
 
-/* ==========================================
+
+/* =========================================================
    TAP DISCOVERED SCORPIUS
-========================================== */
+========================================================= */
 
 document.addEventListener(
   "click",
@@ -2251,14 +2432,20 @@ document.addEventListener(
     }
 
     const chapter =
-      document.getElementById("scorpiusChapter");
+      document.getElementById(
+        "scorpiusChapter"
+      );
 
     const scorpius =
-      document.getElementById("scorpius");
+      document.getElementById(
+        "scorpius"
+      );
 
     if (!chapter || !scorpius) return;
 
-    if (chapter.classList.contains("active")) {
+    if (
+      chapter.classList.contains("active")
+    ) {
       return;
     }
 
@@ -2279,7 +2466,10 @@ document.addEventListener(
     event.preventDefault();
     event.stopPropagation();
 
-    navigationHint.classList.add("hidden");
+    navigationHint.classList.add(
+      "hidden"
+    );
+
     navigationHintHidden = true;
 
     chapter.classList.add("active");
@@ -2291,6 +2481,7 @@ document.addEventListener(
   },
   true
 );
+
 /* =========================================================
    DRAW TELESCOPE ORION
 ========================================================= */

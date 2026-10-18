@@ -1,9 +1,7 @@
-/* =========================================
+/* ==========================================
    SCORPIUS — INTERACTIVE CHAPTER
-   Our Little Universe · Anniversary 2026
-
-   Five personality stars + Antares
-   Does not modify the universe renderer.
+   Uses the same star renderer as
+   Orion and Virgo.
 ========================================== */
 
 (() => {
@@ -38,6 +36,14 @@
       game: "Emergency Sunshine"
     }
   ];
+
+  const completed = new Set();
+
+  let chapter;
+  let map;
+  let canvas;
+  let context;
+  let message;
 
   const positions = {
     jabbah: [455, 65],
@@ -74,25 +80,19 @@
     ["shaula", "lesath"]
   ];
 
-  const completed = new Set();
-
-  let chapter;
-  let map;
-  let message;
-
   function svgElement(type, attributes = {}) {
     const element = document.createElementNS(NS, type);
 
-    Object.entries(attributes).forEach(([key, value]) => {
-      element.setAttribute(key, value);
-    });
+    Object.entries(attributes).forEach(
+      ([key, value]) => {
+        element.setAttribute(key, value);
+      }
+    );
 
     return element;
   }
 
   function showMessage(title, description) {
-    if (!message) return;
-
     message.innerHTML = "";
 
     const heading = document.createElement("h3");
@@ -110,13 +110,6 @@
       personality.title,
       `${personality.game} — coming next.`
     );
-
-    /*
-      The actual mini-game will replace
-      this placeholder in the next stage.
-
-      Stars are NOT marked complete yet.
-    */
   }
 
   function selectAntares() {
@@ -125,81 +118,46 @@
         "ANTARES",
         "There's something waiting at the heart of Scorpius... but not just yet."
       );
+
       return;
     }
 
-    showMessage(
-      "ANTARES",
-      "The Tiny Argument"
-    );
+    showMessage("ANTARES", "The Tiny Argument");
   }
 
-  function drawConnections() {
-    connections.forEach(([from, to]) => {
-      const a = positions[from];
-      const b = positions[to];
+  function buildHitAreas() {
+    map.innerHTML = "";
 
-      const line = svgElement("line", {
-        x1: a[0],
-        y1: a[1],
-        x2: b[0],
-        y2: b[1],
-        class: "scorpius-map-line"
-      });
+    Object.entries(positions).forEach(
+      ([id, position]) => {
+        const personality = personalities.find(
+          item => item.id === id
+        );
 
-      map.appendChild(line);
-    });
-  }
+        const isAntares = id === "antares";
 
-  function drawStars() {
-    Object.entries(positions).forEach(([id, position]) => {
-      const personality = personalities.find(
-        item => item.id === id
-      );
+        if (!personality && !isAntares) return;
 
-      const isAntares = id === "antares";
-      const interactive = personality || isAntares;
+        const group = svgElement("g", {
+          class: "scorpius-map-star interactive",
+          role: "button",
+          tabindex: "0"
+        });
 
-      const group = svgElement("g", {
-        class: interactive
-          ? "scorpius-map-star interactive"
-          : "scorpius-map-star"
-      });
-
-      const glow = svgElement("circle", {
-        cx: position[0],
-        cy: position[1],
-        r: isAntares ? 14 : 8,
-        class: isAntares
-          ? "scorpius-star-glow antares"
-          : "scorpius-star-glow"
-      });
-
-      const star = svgElement("circle", {
-        cx: position[0],
-        cy: position[1],
-        r: isAntares ? 5 : personality ? 3.8 : 2.2,
-        class: isAntares
-          ? "scorpius-star-core antares"
-          : "scorpius-star-core"
-      });
-
-      group.append(glow, star);
-
-      if (interactive) {
         const hitArea = svgElement("circle", {
           cx: position[0],
           cy: position[1],
           r: 24,
-          fill: "transparent"
+          fill: "transparent",
+          "pointer-events": "all"
         });
 
         group.appendChild(hitArea);
 
-        group.setAttribute("role", "button");
-        group.setAttribute("tabindex", "0");
+        const activate = event => {
+          event.preventDefault();
+          event.stopPropagation();
 
-        const activate = () => {
           if (isAntares) {
             selectAntares();
           } else {
@@ -214,40 +172,209 @@
             event.key === "Enter" ||
             event.key === " "
           ) {
-            event.preventDefault();
-            activate();
+            activate(event);
           }
         });
-      }
 
-      map.appendChild(group);
-    });
+        map.appendChild(group);
+      }
+    );
   }
 
-    function initialise() {
-    chapter = document.getElementById("scorpiusChapter");
-    map = document.getElementById("scorpiusMap");
+  function setupCanvas() {
+    const container = map.parentElement;
+
+    canvas = document.createElement("canvas");
+
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.pointerEvents = "none";
+
+    container.insertBefore(canvas, map);
+
+    map.style.position = "relative";
+    map.style.zIndex = "2";
+
+    context = canvas.getContext("2d");
+  }
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+
+    if (!rect.width || !rect.height) return false;
+
+    const dpr = Math.min(
+      window.devicePixelRatio || 1,
+      2
+    );
+
+    const width = Math.round(rect.width * dpr);
+    const height = Math.round(rect.height * dpr);
+
+    if (
+      canvas.width !== width ||
+      canvas.height !== height
+    ) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    return true;
+  }
+
+  function getCanvasPoint(x, y) {
+    const point = map.createSVGPoint();
+
+    point.x = x;
+    point.y = y;
+
+    const matrix = map.getScreenCTM();
+
+    if (!matrix) return null;
+
+    const screenPoint = point.matrixTransform(matrix);
+    const rect = canvas.getBoundingClientRect();
+
+    return {
+      x: screenPoint.x - rect.left,
+      y: screenPoint.y - rect.top
+    };
+  }
+
+  function drawChapter(timestamp) {
+    requestAnimationFrame(drawChapter);
+
+    if (!chapter.classList.contains("active")) {
+      return;
+    }
+
+    if (!resizeCanvas()) return;
+
+    const rect = canvas.getBoundingClientRect();
+
+    context.clearRect(
+      0,
+      0,
+      rect.width,
+      rect.height
+    );
+
+    const points = new Map();
+
+    Object.entries(positions).forEach(
+      ([id, position]) => {
+        const point = getCanvasPoint(
+          position[0],
+          position[1]
+        );
+
+        if (point) points.set(id, point);
+      }
+    );
+
+    // Constellation lines
+
+    context.save();
+
+    context.strokeStyle = "rgba(195,220,255,.7)";
+    context.lineWidth = 1.6;
+    context.shadowColor = "rgba(155,195,255,.45)";
+    context.shadowBlur = 5;
+
+    connections.forEach(([from, to]) => {
+      const a = points.get(from);
+      const b = points.get(to);
+
+      if (!a || !b) return;
+
+      context.beginPath();
+      context.moveTo(a.x, a.y);
+      context.lineTo(b.x, b.y);
+      context.stroke();
+    });
+
+    context.restore();
+
+    // EXACT SAME STAR RENDERER
+
+    if (
+      typeof window.drawConstellationStar !==
+      "function"
+    ) {
+      return;
+    }
+
+    Object.entries(positions).forEach(
+      ([id]) => {
+        const point = points.get(id);
+
+        if (!point) return;
+
+        const antares = id === "antares";
+
+        const variation =
+          typeof scorpiusStarVariations !==
+            "undefined"
+            ? scorpiusStarVariations[id]
+            : null;
+
+        const size = antares
+          ? 4.5
+          : variation
+            ? variation.size
+            : 2.2;
+
+        window.drawConstellationStar(
+          context,
+          point.x,
+          point.y,
+          size,
+          antares ? "warm" : "cool",
+          antares
+            ? "antares"
+            : variation
+              ? variation.type
+              : "Bellatrix",
+          timestamp / 1000,
+          1
+        );
+      }
+    );
+  }
+
+  function initialise() {
+    chapter = document.getElementById(
+      "scorpiusChapter"
+    );
+
+    map = document.getElementById(
+      "scorpiusMap"
+    );
 
     if (!chapter || !map) return;
 
-    // Keep Scorpius outside the draggable universe.
-    // This allows its stars to receive clicks and taps.
     document.body.appendChild(chapter);
 
-    map.innerHTML = "";
+    map.setAttribute(
+      "viewBox",
+      "70 20 450 510"
+    );
 
-    // Match the existing constellation coordinates.
-    map.setAttribute("viewBox", "70 20 450 510");
-
-    drawConnections();
-    drawStars();
+    buildHitAreas();
+    setupCanvas();
 
     message = document.createElement("div");
     message.className = "scorpius-selection";
 
     chapter.appendChild(message);
 
-    const exit = document.getElementById("scorpiusExit");
+    const exit = document.getElementById(
+      "scorpiusExit"
+    );
 
     if (exit) {
       exit.addEventListener("click", () => {
@@ -256,17 +383,11 @@
       });
     }
 
-    /*
-      Temporary preview:
-      Add #scorpius-preview to the website URL.
-
-      This allows testing without interfering
-      with Orion/Virgo telescope mechanics.
-    */
-
     if (location.hash === "#scorpius-preview") {
       chapter.classList.add("active");
     }
+
+    requestAnimationFrame(drawChapter);
   }
 
   if (document.readyState === "loading") {
@@ -277,5 +398,4 @@
   } else {
     initialise();
   }
-
 })();

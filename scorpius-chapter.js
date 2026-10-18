@@ -396,20 +396,19 @@ context.restore();
       let blink = 0;
 
       if (shouldBlink) {
-        // Fast, clearly visible blinking.
-        const speed = 2.2;
-        const wave =
-          Math.sin(timestamp / 1000 * Math.PI * 2 * speed);
+  // One soft shimmer every three seconds.
+  const cycle = 3000;
 
-        blink = Math.pow(
-          (wave + 1) / 2,
-          2
-        );
+  const phase =
+    (timestamp % cycle) / cycle;
 
-        size *= 1 + blink * 0.28;
-        brightness = 1 + blink * 0.65;
-      }
+  blink =
+    (1 - Math.cos(phase * Math.PI * 2)) / 2;
 
+  size *= 1 + blink * 0.12;
+  brightness = 1 + blink * 0.3;
+}
+       
       window.drawConstellationStar(
         context,
         point.x,
@@ -431,8 +430,8 @@ context.restore();
 
         context.globalCompositeOperation = "screen";
 
-        const rayLength = 11 + blink * 11;
-        const rayOpacity = blink * 0.75;
+        const rayLength = 9 + blink * 7;
+        const rayOpacity = blink * 0.45;
 
         const rayColour = antares
           ? "255, 203, 151"
@@ -467,7 +466,7 @@ context.restore();
           context.lineWidth = 1.2 + blink * 0.8;
           context.shadowColor =
             `rgba(${rayColour}, ${blink * 0.7})`;
-          context.shadowBlur = 5 + blink * 7;
+          context.shadowBlur = 4 + blink * 5;
 
           context.stroke();
         };

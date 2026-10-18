@@ -563,3 +563,88 @@
 #scorpius.discovered .scorpius-universe-canvas {
   opacity: 1;
 }
+
+/* ==========================================
+   SCORPIUS — CHAPTER LAYOUT REFINEMENTS
+========================================== */
+
+.scorpius-introduction {
+  margin-top: 24px;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(12px, 1.5vw, 15px);
+  font-style: italic;
+  font-weight: 400;
+
+  line-height: 1.8;
+  letter-spacing: .025em;
+
+  color: rgba(230, 225, 245, .75);
+}
+
+.scorpius-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.progress-star {
+  font-family: Georgia, serif;
+  font-size: 19px;
+
+  color: rgba(205, 215, 245, .35);
+
+  transition:
+    color .6s ease,
+    text-shadow .6s ease,
+    transform .6s ease;
+}
+
+.progress-star.completed {
+  color: #f1e7ff;
+
+  text-shadow:
+    0 0 8px rgba(210, 185, 255, .65),
+    0 0 18px rgba(180, 155, 255, .3);
+
+  transform: scale(1.12);
+}
+
+/* Antares stays subdued until unlocked */
+
+.scorpius-map-star.antares-final {
+  opacity: .65;
+  transition: opacity 1s ease;
+}
+
+.scorpius-map-star.antares-final.unlocked {
+  opacity: 1;
+}
+
+/* Extra warmth around Antares after unlocking */
+
+#scorpiusChapter:has(.antares-final.unlocked)
+.scorpius-guidance span {
+  color: #ffd5b0;
+}
+
+/* Mobile adjustments */
+
+@media (max-width: 600px) {
+  .scorpius-introduction {
+    margin-top: 16px;
+    font-size: 12px;
+  }
+
+  .scorpius-progress {
+    gap: 13px;
+    margin-top: 12px;
+  }
+
+  .progress-star {
+    font-size: 17px;
+  }
+}

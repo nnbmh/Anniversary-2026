@@ -279,11 +279,12 @@
     // Constellation lines
 
     context.save();
-
-    context.strokeStyle = "rgba(195,220,255,.7)";
-    context.lineWidth = 1.6;
-    context.shadowColor = "rgba(155,195,255,.45)";
-    context.shadowBlur = 5;
+     
+    context.strokeStyle = "rgba(226,238,252,.68)";
+    context.lineWidth = .7;
+    context.lineCap = "round";
+    context.shadowColor = "rgba(185,218,255,.14)";
+    context.shadowBlur = 1;
 
     connections.forEach(([from, to]) => {
       const a = points.get(from);

@@ -43,6 +43,58 @@
 
 }
 
+/* ==========================================
+   SCORPIUS — SHARED CONSTELLATION LINES
+========================================== */
+
+#scorpius .constellation-lines {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Before discovery */
+
+#scorpius .constellation-lines line {
+  stroke: rgba(198, 215, 235, .3);
+  stroke-width: .42;
+
+  vector-effect: non-scaling-stroke;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+
+  opacity: 0;
+}
+
+/* After discovery — same as Orion */
+
+#scorpius.discovered
+.constellation-lines line {
+  stroke: rgba(225, 237, 252, .88);
+  stroke-width: .9;
+
+  stroke-dashoffset: 0;
+  opacity: .82;
+
+  animation: none;
+
+  filter:
+    drop-shadow(
+      0 0 1px rgba(210, 230, 255, .28)
+    )
+    drop-shadow(
+      0 0 3px rgba(175, 210, 250, .10)
+    );
+}
 
 /* ==========================================
    CONSTELLATION LABEL

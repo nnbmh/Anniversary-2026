@@ -265,3 +265,165 @@
     animation-duration: .01ms !important;
   }
 }
+
+/* =========================================
+   CHIBI PROPORTION & MOVEMENT FIX
+========================================= */
+
+/* Keep the characters proportional */
+
+.impostor-couple {
+  height: clamp(170px, 28vh, 245px);
+  align-items: flex-end;
+  gap: clamp(6px, 3vw, 22px);
+  overflow: visible;
+}
+
+.impostor-character {
+  width: clamp(100px, 19vw, 145px);
+  height: auto;
+  aspect-ratio: 3 / 5;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  transform-origin: center bottom;
+  animation: chibiIdle 3.8s ease-in-out infinite;
+}
+
+.impostor-character.faris {
+  animation-delay: -1.9s;
+}
+
+/* Preserve original image proportions */
+
+.impostor-sprite {
+  position: absolute;
+  width: 500%;
+  height: auto;
+  max-width: none;
+  object-fit: unset;
+  pointer-events: none;
+}
+
+/* Very subtle idle movement */
+
+@keyframes chibiIdle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(0.8deg);
+  }
+}
+
+/* Playful reaction */
+
+@keyframes chibiPlayful {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-5deg);
+  }
+
+  55% {
+    transform: rotate(4deg);
+  }
+
+  80% {
+    transform: rotate(-2deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* Small laughing movement */
+
+@keyframes chibiLaugh {
+  0%, 100% {
+    transform: translateY(0) rotate(0);
+  }
+
+  25% {
+    transform: translateY(-3px) rotate(-3deg);
+  }
+
+  50% {
+    transform: translateY(0) rotate(2deg);
+  }
+
+  75% {
+    transform: translateY(-2px) rotate(-1deg);
+  }
+}
+
+/* Confused head/body tilt */
+
+@keyframes chibiConfused {
+  0%, 100% {
+    transform: rotate(0);
+  }
+
+  40%, 70% {
+    transform: rotate(7deg);
+  }
+}
+
+/* Lean toward the other character */
+
+@keyframes chibiLean {
+  0% {
+    transform: translateX(0) rotate(0);
+  }
+
+  100% {
+    transform: translateX(-9px) rotate(-4deg);
+  }
+}
+
+/* Nadhira moves toward Faris */
+
+@keyframes chibiKiss {
+  0%, 100% {
+    transform: translateX(0) rotate(0);
+  }
+
+  40%, 75% {
+    transform: translateX(25px) rotate(9deg);
+  }
+}
+
+/* Replace the original movement animations */
+
+.impostor-character.bounce {
+  animation: chibiLaugh 0.65s ease-in-out;
+}
+
+.impostor-character.tilt {
+  animation: chibiConfused 0.75s ease-in-out;
+}
+
+.impostor-character.lean {
+  animation: chibiLean 0.8s ease forwards;
+}
+
+.impostor-character.kiss {
+  animation: chibiKiss 1.2s ease-in-out;
+}
+
+/* Mobile adjustments */
+
+@media (max-width: 600px) {
+  .impostor-character {
+    width: clamp(105px, 30vw, 135px);
+  }
+
+  .impostor-couple {
+    height: 205px;
+    gap: 12px;
+  }
+}

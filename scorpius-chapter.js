@@ -277,29 +277,35 @@
     );
 
     // Constellation lines
+// Match the thin, soft Orion treatment.
 
-    context.save();
+context.save();
+
+context.strokeStyle =
+  "rgba(226,238,252,.68)";
+
+context.lineWidth = .7;
+context.lineCap = "round";
+
+context.shadowColor =
+  "rgba(185,218,255,.14)";
+
+context.shadowBlur = 1;
+
+connections.forEach(([from, to]) => {
+  const a = points.get(from);
+  const b = points.get(to);
+
+  if (!a || !b) return;
+
+  context.beginPath();
+  context.moveTo(a.x, a.y);
+  context.lineTo(b.x, b.y);
+  context.stroke();
+});
+
+context.restore();
      
-    context.strokeStyle = "rgba(226,238,252,.68)";
-    context.lineWidth = .7;
-    context.lineCap = "round";
-    context.shadowColor = "rgba(185,218,255,.14)";
-    context.shadowBlur = 1;
-
-    connections.forEach(([from, to]) => {
-      const a = points.get(from);
-      const b = points.get(to);
-
-      if (!a || !b) return;
-
-      context.beginPath();
-      context.moveTo(a.x, a.y);
-      context.lineTo(b.x, b.y);
-      context.stroke();
-    });
-
-    context.restore();
-
     // EXACT SAME STAR RENDERER
 
     if (
@@ -378,11 +384,19 @@
     );
 
     if (exit) {
-      exit.addEventListener("click", () => {
-        chapter.classList.remove("active");
-        message.classList.remove("visible");
-      });
-    }
+  exit.addEventListener("click", () => {
+    window.clearTimeout(window.scorpiusIntroTimer);
+
+    chapter.classList.remove(
+      "active",
+      "intro-complete"
+    );
+
+    chapter.setAttribute("aria-hidden", "true");
+
+    message.classList.remove("visible");
+  });
+}
 
     if (location.hash === "#scorpius-preview") {
       chapter.classList.add("active");

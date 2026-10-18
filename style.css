@@ -3899,3 +3899,15 @@ button {
   font-size: 15px;
   line-height: 1.7;
 }
+
+/* MILKY WAY — FINAL VISIBILITY TEST */
+
+#dustLayer {
+  background: url("milky-way-background.PNG") center / cover no-repeat !important;
+  opacity: 1 !important;
+  z-index: 10 !important;
+}
+
+#dustLayer .dust {
+  display: none !important;
+}

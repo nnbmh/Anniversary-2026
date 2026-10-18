@@ -2151,12 +2151,16 @@ function drawTelescopeScorpius(width, height) {
   if (distance < 55) intensity = 1;
 
   const centreX =
-    width / 2 + (position.x - lensX) * .55;
+  width / 2 + (position.x - lensX) * .55;
 
-  const centreY =
-    height / 2 + (position.y - lensY) * .55;
+const centreY =
+  height / 2 + (position.y - lensY) * .55;
 
-  const scale = .62;
+const scale = Math.min(
+  .38,
+  (Math.min(width, height) * .68) / 410
+);
+   
   const time = performance.now() / 1000;
 
   const points = new Map();
@@ -2165,10 +2169,14 @@ function drawTelescopeScorpius(width, height) {
 
   scorpiusStars.forEach(star => {
     const x =
-      centreX + (star.x - 355) * scale;
+  centreX + (star.x - 295) * scale;
 
-    const y =
-      centreY + (star.y - 270) * scale;
+const y =
+  centreY + (star.y - 270) * scale;const x =
+  centreX + (star.x - 295) * scale;
+
+const y =
+  centreY + (star.y - 270) * scale;
 
     points.set(star.id, { x, y });
 
@@ -2217,7 +2225,9 @@ if (!scorpiusRevealStarted) return;
 
   const now = performance.now();
 
-  const stillInView = distance <= 210;
+  const stillInView =
+  telescopeActive &&
+  distance <= SCORPIUS_FOCUS_RADIUS;
 
   if (!stillInView) {
     if (scorpiusRevealPausedAt === null) {
@@ -2398,8 +2408,8 @@ function discoverScorpius() {
         const now = performance.now();
 
     const stillInView =
-      telescopeActive &&
-      getScorpiusDistance() <= 210;
+  telescopeActive &&
+  getScorpiusDistance() <= SCORPIUS_FOCUS_RADIUS;
 
     if (!stillInView) {
       if (scorpiusRevealPausedAt === null) {

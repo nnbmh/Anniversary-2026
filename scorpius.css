@@ -27,6 +27,8 @@
    STAR CANVAS
 ========================================== */
 
+/* SCORPIUS — blend into the universe before discovery */
+
 .scorpius-universe-canvas {
   position: absolute;
   inset: 0;
@@ -37,6 +39,14 @@
 
   background: transparent;
   pointer-events: none;
+
+  opacity: .24;
+  transition: opacity 1.2s ease;
+}
+
+/* Restore brightness after discovery */
+
+#scorpius.discovered .scorpius-universe-canvas {
   opacity: 1;
 }
 

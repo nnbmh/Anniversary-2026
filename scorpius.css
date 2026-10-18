@@ -376,37 +376,3 @@
     padding: 14px 18px;
   }
 }
-
-/* ==========================================
-   SCORPIUS — FIX STAR INTERACTIONS
-========================================== */
-
-#scorpiusChapter.active {
-  pointer-events: auto;
-}
-
-#scorpiusMap {
-  pointer-events: auto;
-  touch-action: manipulation;
-}
-
-#scorpiusMap .scorpius-map-star.interactive {
-  pointer-events: all !important;
-  cursor: pointer;
-}
-
-#scorpiusMap .scorpius-map-star.interactive circle {
-  pointer-events: all !important;
-}
-
-#scorpiusMap .scorpius-map-star.interactive:active
-.scorpius-star-glow {
-  fill: rgba(255, 230, 190, 0.5);
-}
-
-.scorpius-selection.visible {
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto;
-  z-index: 100;
-}

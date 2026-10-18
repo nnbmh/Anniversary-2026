@@ -150,10 +150,10 @@
         });
 
         const pulse = svgElement("circle", {
-          cx: position[0],
-          cy: position[1],
-          r: 12,
-          class: "scorpius-star-pulse"
+           cx: position[0],
+           cy: position[1],
+           r: 12,
+           class: "scorpius-star-pulse"
         });
 
         const hitArea = svgElement("circle", {
@@ -165,7 +165,6 @@
           "pointer-events": "all"
         });
 
-        group.appendChild(pulse);
         group.appendChild(hitArea);
 
         const activate = event => {
@@ -360,42 +359,74 @@ context.restore();
       return;
     }
 
-    Object.entries(positions).forEach(
-      ([id]) => {
-        const point = points.get(id);
+       const interactiveOrder = [
+      "jabbah",
+      "pi",
+      "epsilon",
+      "sargas",
+      "shaula"
+    ];
 
-        if (!point) return;
+    Object.entries(positions).forEach(([id]) => {
+      const point = points.get(id);
+      if (!point) return;
 
-        const antares = id === "antares";
+      const antares = id === "antares";
 
-        const variation =
-          typeof scorpiusStarVariations !==
-            "undefined"
-            ? scorpiusStarVariations[id]
-            : null;
+      const variation =
+        typeof scorpiusStarVariations !== "undefined"
+          ? scorpiusStarVariations[id]
+          : null;
 
-        const size = antares
-          ? 4.636
-          : variation
-            ? variation.size * 1.25
-            : 2.75;
+      const baseSize = antares
+        ? 4.636
+        : variation
+          ? variation.size * 1.25
+          : 2.75;
 
-        window.drawConstellationStar(
-          context,
-          point.x,
-          point.y,
-          size,
-          antares ? "warm" : "cool",
-          antares
-            ? "antares"
-            : variation
-              ? variation.type
-              : "Bellatrix",
-          timestamp / 1000,
-          1
+      let size = baseSize;
+      let brightness = 1;
+
+      const index = interactiveOrder.indexOf(id);
+
+      const shouldPulse =
+        (index !== -1 && !completed.has(id)) ||
+        (antares && completed.size === 5);
+
+      if (shouldPulse) {
+        const cycle = 10000;
+        const spacing = 1800;
+
+        const offset = antares
+          ? 0
+          : index * spacing;
+
+        const phase =
+          ((timestamp - offset) % cycle + cycle) % cycle;
+
+        const pulse = Math.exp(
+          -Math.pow((phase - 900) / 420, 2)
         );
+
+        size *= 1 + pulse * 0.18;
+        brightness = 1 + pulse * 0.25;
       }
-    );
+
+      window.drawConstellationStar(
+        context,
+        point.x,
+        point.y,
+        size,
+        antares ? "warm" : "cool",
+        antares
+          ? "antares"
+          : variation
+            ? variation.type
+            : "Bellatrix",
+        timestamp / 1000,
+        brightness
+      );
+    });
   }
 
   function initialise() {

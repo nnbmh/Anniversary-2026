@@ -2136,12 +2136,13 @@ function drawTelescopeScorpius(width, height) {
 
   const total = scorpiusConnections.length;
 
-  ctx.save();
+    ctx.save();
 
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "rgba(195,220,255,.85)";
-  ctx.shadowColor = "rgba(150,195,255,.65)";
-  ctx.shadowBlur = 5;
+  ctx.lineWidth = .7;
+  ctx.strokeStyle = "rgba(226,238,252,.68)";
+  ctx.lineCap = "round";
+  ctx.shadowColor = "rgba(185,218,255,.14)";
+  ctx.shadowBlur = 1;
 
   scorpiusConnections.forEach(
     ([from, to], index) => {
@@ -2177,11 +2178,7 @@ function drawTelescopeScorpius(width, height) {
 ========================================================= */
 
 function checkScorpiusFocus(timestamp) {
-  const chapter =
-    document.getElementById("scorpiusChapter");
-
   if (
-    !chapter ||
     scorpiusDiscovered ||
     !telescopeActive
   ) {
@@ -2210,21 +2207,90 @@ function checkScorpiusFocus(timestamp) {
     return;
   }
 
-  /* Constellation completed */
-
   scorpiusDiscovered = true;
   scorpiusFocusStarted = null;
 
+  const scorpius =
+    document.getElementById("scorpius");
+
+  if (scorpius) {
+    scorpius.classList.add("discovered");
+  }
+
   setTelescope(false);
 
-  chapter.classList.add("active");
+  const hintTitle =
+    navigationHint.querySelector("p");
 
-  chapter.setAttribute(
-    "aria-hidden",
-    "false"
-  );
+  const hintText =
+    navigationHint.querySelector("span");
+
+  hintTitle.textContent =
+    "You found something.";
+
+  hintText.textContent =
+    "Tap the constellation to step inside";
+
+  navigationHint.classList.remove("hidden");
+
+  navigationHintHidden = false;
 }
 
+/* ==========================================
+   TAP DISCOVERED SCORPIUS
+========================================== */
+
+document.addEventListener(
+  "click",
+  event => {
+    if (
+      !scorpiusDiscovered ||
+      telescopeActive
+    ) {
+      return;
+    }
+
+    const chapter =
+      document.getElementById("scorpiusChapter");
+
+    const scorpius =
+      document.getElementById("scorpius");
+
+    if (!chapter || !scorpius) return;
+
+    if (chapter.classList.contains("active")) {
+      return;
+    }
+
+    const rect =
+      scorpius.getBoundingClientRect();
+
+    const paddingX = rect.width * .12;
+    const paddingY = rect.height * .12;
+
+    const insideScorpius =
+      event.clientX >= rect.left + paddingX &&
+      event.clientX <= rect.right - paddingX &&
+      event.clientY >= rect.top + paddingY &&
+      event.clientY <= rect.bottom - paddingY;
+
+    if (!insideScorpius) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    navigationHint.classList.add("hidden");
+    navigationHintHidden = true;
+
+    chapter.classList.add("active");
+
+    chapter.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+  },
+  true
+);
 /* =========================================================
    DRAW TELESCOPE ORION
 ========================================================= */

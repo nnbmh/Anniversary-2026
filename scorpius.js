@@ -315,11 +315,8 @@ function drawScorpiusStar(star, timestamp) {
 
   if (!scorpiusContext) return;
 
-  const x =
-    star.x + 30;
-
-  const y =
-    star.y + 35;
+  const x = star.x;
+  const y = star.y;
 
   const time =
     timestamp / 1000;

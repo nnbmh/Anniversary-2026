@@ -460,7 +460,7 @@ context.restore();
 
     guidance.innerHTML = `
       <p>Some stars have a little more to tell you...</p>
-      <span>Tap the glowing stars to explore.</span>
+      <span>Tap the stars that shine a little brighter.</span>
       <small id="scorpiusProgress">0 / 5 sides discovered</small>
     `;
 

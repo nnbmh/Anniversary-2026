@@ -9,14 +9,14 @@
 
   const NS = "http://www.w3.org/2000/svg";
 
-  const personalities = [
+    const personalities = [
     {
-      id: "dschubba",
+      id: "epsilon",
       title: "The Little Menace",
       game: "Impostor Star"
     },
     {
-      id: "acrab",
+      id: "pi",
       title: "The Indecisive One",
       game: "Coin Toss Betrayal"
     },
@@ -125,7 +125,7 @@
     showMessage("ANTARES", "The Tiny Argument");
   }
 
-  function buildHitAreas() {
+    function buildHitAreas() {
     map.innerHTML = "";
 
     Object.entries(positions).forEach(
@@ -139,19 +139,33 @@
         if (!personality && !isAntares) return;
 
         const group = svgElement("g", {
-          class: "scorpius-map-star interactive",
+          class: isAntares
+            ? "scorpius-map-star interactive antares-final"
+            : "scorpius-map-star interactive personality-star",
           role: "button",
-          tabindex: "0"
+          tabindex: "0",
+          "aria-label": isAntares
+            ? "Antares — The Tiny Argument"
+            : `${personality.title} — ${personality.game}`
+        });
+
+        const pulse = svgElement("circle", {
+          cx: position[0],
+          cy: position[1],
+          r: 12,
+          class: "scorpius-star-pulse"
         });
 
         const hitArea = svgElement("circle", {
           cx: position[0],
           cy: position[1],
-          r: 24,
+          r: 32,
           fill: "transparent",
+          class: "scorpius-star-hit",
           "pointer-events": "all"
         });
 
+        group.appendChild(pulse);
         group.appendChild(hitArea);
 
         const activate = event => {
@@ -160,8 +174,39 @@
 
           if (isAntares) {
             selectAntares();
-          } else {
-            selectStar(personality);
+            return;
+          }
+
+          selectStar(personality);
+
+          if (!completed.has(id)) {
+            completed.add(id);
+
+            group.classList.add("explored");
+
+            const progress =
+              document.getElementById("scorpiusProgress");
+
+            if (progress) {
+              progress.textContent =
+                `${completed.size} / 5 sides discovered`;
+            }
+
+            if (completed.size === 5) {
+              const antaresGroup =
+                map.querySelector(".antares-final");
+
+              if (antaresGroup) {
+                antaresGroup.classList.add("unlocked");
+              }
+
+              const guidance =
+                chapter.querySelector(".scorpius-guidance");
+
+              if (guidance) {
+                guidance.classList.add("all-explored");
+              }
+            }
           }
         };
 
@@ -374,10 +419,21 @@ context.restore();
     buildHitAreas();
     setupCanvas();
 
-    message = document.createElement("div");
+       message = document.createElement("div");
     message.className = "scorpius-selection";
 
     chapter.appendChild(message);
+
+    const guidance = document.createElement("div");
+    guidance.className = "scorpius-guidance";
+
+    guidance.innerHTML = `
+      <p>Some stars have a little more to tell you...</p>
+      <span>Tap the glowing stars to explore.</span>
+      <small id="scorpiusProgress">0 / 5 sides discovered</small>
+    `;
+
+    chapter.appendChild(guidance);
 
     const exit = document.getElementById(
       "scorpiusExit"

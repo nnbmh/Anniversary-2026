@@ -494,32 +494,28 @@ function initialiseScorpius() {
 
   if (!scorpiusContext) return;
 
-  const cssWidth =
-    scorpiusElement.offsetWidth;
+    /*
+    Keep the canvas drawing coordinates fixed
+    at 560 × 620, regardless of when Safari
+    finishes calculating the layout.
+  */
 
-  const cssHeight =
-    scorpiusElement.offsetHeight;
-
-  if (
-    cssWidth <= 0 ||
-    cssHeight <= 0
-  ) {
-    return;
-  }
+  const SCORPIUS_WIDTH = 560;
+  const SCORPIUS_HEIGHT = 620;
 
   const dpr = Math.min(
-  window.devicePixelRatio || 1,
-  2
-);
+    window.devicePixelRatio || 1,
+    2
+  );
 
-scorpiusCanvas.width =
-  Math.round(cssWidth * dpr);
+  scorpiusCanvas.width =
+    Math.round(SCORPIUS_WIDTH * dpr);
 
-scorpiusCanvas.height =
-  Math.round(cssHeight * dpr);
+  scorpiusCanvas.height =
+    Math.round(SCORPIUS_HEIGHT * dpr);
 
-scorpiusCanvas.style.width = "100%";
-scorpiusCanvas.style.height = "100%";
+  scorpiusCanvas.style.width = "100%";
+  scorpiusCanvas.style.height = "100%";
 
   scorpiusContext.setTransform(
     dpr,
@@ -529,7 +525,6 @@ scorpiusCanvas.style.height = "100%";
     0,
     0
   );
-
   scorpiusReady = true;
 
   requestAnimationFrame(
@@ -572,11 +567,11 @@ function animateScorpius(timestamp) {
       return;
     }
 
-    scorpiusContext.clearRect(
+        scorpiusContext.clearRect(
       0,
       0,
-      width,
-      scorpiusCanvas.offsetHeight
+      560,
+      620
     );
 
     scorpiusStars.forEach(star => {

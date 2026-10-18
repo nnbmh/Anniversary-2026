@@ -2158,7 +2158,9 @@ function drawTelescopeScorpius(width, height) {
     );
   });
 
-  if (!scorpiusRevealStarted) return;
+  // Before discovery, draw lines only during the reveal.
+// After discovery, keep the completed constellation visible.
+if (!scorpiusRevealStarted) return;
 
   /* Same pause/resume behaviour as Orion */
 
@@ -2180,12 +2182,13 @@ function drawTelescopeScorpius(width, height) {
   }
 
   const effectiveNow =
-    scorpiusRevealPausedAt === null
-      ? now
-      : scorpiusRevealPausedAt;
+  scorpiusRevealPausedAt === null
+    ? now
+    : scorpiusRevealPausedAt;
 
-  const elapsed =
-    effectiveNow -
+const elapsed = scorpiusDiscovered
+  ? Infinity
+  : effectiveNow -
     scorpiusRevealStartTime -
     scorpiusRevealPausedDuration;
 

@@ -222,6 +222,7 @@
               if (guidance) {
                 guidance.classList.add("all-explored");
               }
+            }
           }
         };
 

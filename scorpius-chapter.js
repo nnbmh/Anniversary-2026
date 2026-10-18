@@ -571,10 +571,10 @@ context.restore();
     message.classList.remove("visible");
   });
 }
-
-    if (location.hash === "#scorpius-preview") {
-      chapter.classList.add("active");
-    }
+     if (location.hash === "#scorpius-preview") {
+  chapter.classList.add("active", "intro-complete");
+  chapter.setAttribute("aria-hidden", "false");
+}
 
     requestAnimationFrame(drawChapter);
   }

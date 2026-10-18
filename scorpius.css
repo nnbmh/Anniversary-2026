@@ -281,3 +281,98 @@
     top: 250px;
   }
 }
+
+/* ==========================================
+   SCORPIUS — INTERACTIVE STAR MAP
+========================================== */
+
+.scorpius-map-line {
+  stroke: rgba(200, 210, 255, 0.25);
+  stroke-width: 1;
+  fill: none;
+}
+
+.scorpius-map-star {
+  pointer-events: none;
+}
+
+.scorpius-map-star.interactive {
+  pointer-events: auto;
+  cursor: pointer;
+  outline: none;
+}
+
+.scorpius-star-glow {
+  fill: rgba(200, 215, 255, 0.12);
+}
+
+.scorpius-star-core {
+  fill: #f5f2ff;
+  filter: drop-shadow(0 0 5px #b8caff);
+}
+
+.scorpius-star-glow.antares {
+  fill: rgba(255, 170, 125, 0.18);
+}
+
+.scorpius-star-core.antares {
+  fill: #ffd1a0;
+  filter: drop-shadow(0 0 9px #ff9966);
+}
+
+.scorpius-map-star.interactive:hover
+.scorpius-star-glow,
+.scorpius-map-star.interactive:focus
+.scorpius-star-glow {
+  fill: rgba(220, 230, 255, 0.35);
+}
+
+.scorpius-selection {
+  position: absolute;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+
+  width: min(85vw, 420px);
+  padding: 18px 22px;
+
+  background: rgba(12, 17, 35, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+
+  text-align: center;
+  color: #f6f3ea;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition: opacity 0.3s ease;
+  z-index: 20;
+}
+
+.scorpius-selection.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scorpius-selection h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.scorpius-selection p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(235, 232, 247, 0.75);
+}
+
+@media (max-width: 600px) {
+  .scorpius-selection {
+    bottom: 20px;
+    padding: 14px 18px;
+  }
+}

@@ -2084,16 +2084,11 @@ function drawTelescopeScorpius(width, height) {
 
     const distance = getScorpiusDistance();
 
-  if (distance > 210) {
-    if (
-      scorpiusRevealStarted &&
-      !scorpiusDiscovered &&
-      scorpiusRevealPausedAt === null
-    ) {
-      scorpiusRevealPausedAt =
-        performance.now();
-    }
+    // Only stop rendering when Scorpius is
+  // completely outside the telescope's range.
+  // The line animation pauses separately.
 
+  if (distance > 320) {
     return;
   }
 

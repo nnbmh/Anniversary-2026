@@ -3901,3 +3901,18 @@ button {
   font-size: 15px;
   line-height: 1.7;
 }
+
+/* ==========================================
+   VIRGO — UNDISCOVERED STAR BRIGHTNESS
+========================================== */
+
+#app #virgo:not(.discovered) .orion-star-canvas {
+  opacity: .24;
+}
+
+/* Restore brightness during the reveal */
+
+#app #virgo.revealing .orion-star-canvas,
+#app #virgo.discovered .orion-star-canvas {
+  opacity: 1;
+}

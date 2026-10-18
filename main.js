@@ -4498,7 +4498,7 @@ renderRevealedVirgoStars(timestamp);
 ========================================================= */
 
 function initialise() {
-  buildUniverseStars();
+  scheduleUniverseStarsBuild();
    
   scheduleShootingStar();
 

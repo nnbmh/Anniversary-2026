@@ -38,6 +38,30 @@
   ];
 
   const completed = new Set();
+   window.addEventListener(
+  "impostorStarComplete",
+  () => {
+    completed.add("epsilon");
+
+    const epsilonGroup = map?.querySelector(
+      '[aria-label="The Little Menace — Impostor Star"]'
+    );
+
+    if (epsilonGroup) {
+      epsilonGroup.classList.add("explored");
+    }
+
+    updateScorpiusProgress();
+
+    if (completed.size === 5) {
+      map?.querySelector(".antares-final")
+        ?.classList.add("unlocked");
+
+      chapter?.querySelector(".scorpius-guidance")
+        ?.classList.add("all-explored");
+    }
+  }
+);
 
   let chapter;
   let map;

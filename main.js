@@ -2481,7 +2481,7 @@ function enterScorpiusChapter() {
         chapter.classList.add("intro-complete");
       }
     },
-    2600
+    800
   );
 }
 

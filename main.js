@@ -2156,10 +2156,8 @@ function drawTelescopeScorpius(width, height) {
 const centreY =
   height / 2 + (position.y - lensY) * .55;
 
-const scale = Math.min(
-  .75,
-  (Math.min(width, height) * .95) / 410
-);
+const scale =
+  (Math.min(width, height) * 1.45) / 410;
    
   const time = performance.now() / 1000;
 

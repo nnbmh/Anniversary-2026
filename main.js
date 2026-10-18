@@ -2375,14 +2375,18 @@ function discoverScorpius() {
 
     scorpiusDiscovered = true;
 
-    const scorpius =
-      document.getElementById("scorpius");
+// Count all discovered constellations.
+discoveryNumber.textContent =
+  Number(orionDiscovered) +
+  Number(virgoDiscovered) +
+  Number(scorpiusDiscovered);
 
-    if (scorpius) {
-      scorpius.classList.add(
-        "discovered"
-      );
-    }
+const scorpius =
+  document.getElementById("scorpius");
+
+if (scorpius) {
+  scorpius.classList.add("discovered");
+}
 
     navigationHint.classList.add(
       "hidden"
@@ -2418,10 +2422,51 @@ function discoverScorpius() {
   );
 }
 
+/* ==========================================
+   ENTER SCORPIUS
+========================================== */
 
-/* =========================================================
+function enterScorpiusChapter() {
+  if (
+    !scorpiusDiscovered ||
+    telescopeActive
+  ) {
+    return;
+  }
+
+  const chapter =
+    document.getElementById("scorpiusChapter");
+
+  if (!chapter) return;
+
+  if (chapter.classList.contains("active")) {
+    return;
+  }
+
+  // Same navigation reset used by Virgo.
+  universeDragging = false;
+
+  activePointers.clear();
+
+  pinchStartDistance = 0;
+
+  app.classList.remove("dragging");
+
+  navigationHint.classList.add("hidden");
+  navigationHintHidden = true;
+
+  chapter.classList.add("active");
+
+  chapter.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+}
+
+
+/* ==========================================
    TAP DISCOVERED SCORPIUS
-========================================================= */
+========================================== */
 
 document.addEventListener(
   "click",
@@ -2433,23 +2478,10 @@ document.addEventListener(
       return;
     }
 
-    const chapter =
-      document.getElementById(
-        "scorpiusChapter"
-      );
-
     const scorpius =
-      document.getElementById(
-        "scorpius"
-      );
+      document.getElementById("scorpius");
 
-    if (!chapter || !scorpius) return;
-
-    if (
-      chapter.classList.contains("active")
-    ) {
-      return;
-    }
+    if (!scorpius) return;
 
     const rect =
       scorpius.getBoundingClientRect();
@@ -2468,18 +2500,7 @@ document.addEventListener(
     event.preventDefault();
     event.stopPropagation();
 
-    navigationHint.classList.add(
-      "hidden"
-    );
-
-    navigationHintHidden = true;
-
-    chapter.classList.add("active");
-
-    chapter.setAttribute(
-      "aria-hidden",
-      "false"
-    );
+    enterScorpiusChapter();
   },
   true
 );

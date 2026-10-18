@@ -237,19 +237,14 @@ button {
 /* =========================================================
    MILKY WAY BACKGROUND
 ========================================================= */
-
 #dustLayer {
   position: absolute;
   inset: 0;
-
   z-index: 0;
 
-  background-image: url("milky-way-background.PNG");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background: none;
+  opacity: 1;
 
-  opacity: .35;
   pointer-events: none;
 }
 

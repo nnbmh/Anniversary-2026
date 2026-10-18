@@ -97,90 +97,142 @@ button {
   will-change: transform;
 }
 
+/* =========================================================
+   REALISTIC COSMIC DUST
+========================================================= */
+
 .dust {
   position: absolute;
-
-  border-radius: 50%;
-
   pointer-events: none;
 
-  filter: blur(110px);
+  border-radius: 47% 53% 61% 39% / 42% 57% 43% 58%;
+
+  filter: blur(38px);
+
+  background-blend-mode: screen;
 }
+
+/* Large smoky blue dust formation */
 
 .dust-a {
-  width: 1300px;
-  height: 430px;
+  width: 1450px;
+  height: 650px;
 
-  left: 500px;
-  top: 900px;
+  left: 330px;
+  top: 750px;
 
-  transform: rotate(-19deg);
+  transform: rotate(-22deg);
 
-  opacity: .09;
+  opacity: .52;
 
   background:
     radial-gradient(
-      ellipse,
-      rgba(95,113,142,.11) 0%,
-      rgba(57,76,108,.04) 38%,
-      transparent 73%
+      ellipse at 28% 45%,
+      rgba(62, 86, 123, .16) 0%,
+      rgba(42, 61, 95, .10) 25%,
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse at 65% 55%,
+      rgba(77, 91, 117, .12) 0%,
+      rgba(35, 49, 77, .08) 32%,
+      transparent 68%
+    ),
+    radial-gradient(
+      ellipse at 48% 35%,
+      rgba(13, 20, 36, .18) 0%,
+      transparent 47%
     );
 }
+
+/* Muted violet and charcoal dust */
 
 .dust-b {
-  width: 1000px;
-  height: 540px;
+  width: 1200px;
+  height: 720px;
 
-  left: 1950px;
-  top: 600px;
+  left: 1850px;
+  top: 440px;
 
-  transform: rotate(16deg);
+  transform: rotate(17deg);
 
-  opacity: .07;
+  opacity: .46;
 
   background:
     radial-gradient(
-      ellipse,
-      rgba(89,105,133,.10) 0%,
-      rgba(47,65,94,.03) 44%,
-      transparent 74%
+      ellipse at 35% 42%,
+      rgba(88, 79, 113, .13) 0%,
+      rgba(58, 55, 88, .08) 29%,
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse at 70% 60%,
+      rgba(67, 84, 110, .12) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse at 50% 48%,
+      rgba(12, 17, 29, .20) 0%,
+      transparent 45%
     );
 }
+
+/* Thin, scattered blue-grey dust */
 
 .dust-c {
-  width: 900px;
-  height: 430px;
+  width: 1100px;
+  height: 560px;
 
-  left: 1300px;
-  top: 1750px;
+  left: 1200px;
+  top: 1780px;
 
-  opacity: .06;
+  transform: rotate(-13deg);
+
+  opacity: .42;
 
   background:
     radial-gradient(
-      ellipse,
-      rgba(111,119,138,.08) 0%,
-      transparent 70%
+      ellipse at 25% 48%,
+      rgba(85, 105, 128, .13) 0%,
+      transparent 54%
+    ),
+    radial-gradient(
+      ellipse at 58% 35%,
+      rgba(58, 73, 103, .12) 0%,
+      transparent 61%
+    ),
+    radial-gradient(
+      ellipse at 78% 65%,
+      rgba(87, 82, 111, .09) 0%,
+      transparent 49%
     );
 }
+
+/* Small, faint dust formation */
 
 .dust-d {
-  width: 750px;
-  height: 380px;
+  width: 900px;
+  height: 500px;
 
-  left: 160px;
-  top: 350px;
+  left: 80px;
+  top: 250px;
 
-  opacity: .05;
+  transform: rotate(26deg);
+
+  opacity: .38;
 
   background:
     radial-gradient(
-      ellipse,
-      rgba(72,91,122,.09) 0%,
-      transparent 72%
+      ellipse at 35% 55%,
+      rgba(72, 91, 119, .14) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse at 68% 35%,
+      rgba(91, 86, 117, .10) 0%,
+      transparent 52%
     );
 }
-
 
 /* =========================================================
    STAR LAYERS

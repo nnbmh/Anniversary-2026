@@ -384,32 +384,30 @@ context.restore();
           ? variation.size * 1.25
           : 2.75;
 
-      let size = baseSize;
+            let size = baseSize;
       let brightness = 1;
 
       const index = interactiveOrder.indexOf(id);
 
-      const shouldPulse =
+      const shouldBlink =
         (index !== -1 && !completed.has(id)) ||
         (antares && completed.size === 5);
 
-      if (shouldPulse) {
-        const cycle = 10000;
-        const spacing = 1800;
+      let blink = 0;
 
-        const offset = antares
-          ? 0
-          : index * spacing;
+      if (shouldBlink) {
+        // Fast, clearly visible blinking.
+        const speed = 2.2;
+        const wave =
+          Math.sin(timestamp / 1000 * Math.PI * 2 * speed);
 
-        const phase =
-          ((timestamp - offset) % cycle + cycle) % cycle;
-
-        const pulse = Math.exp(
-          -Math.pow((phase - 900) / 420, 2)
+        blink = Math.pow(
+          (wave + 1) / 2,
+          2
         );
 
-        size *= 1 + pulse * 0.18;
-        brightness = 1 + pulse * 0.25;
+        size *= 1 + blink * 0.28;
+        brightness = 1 + blink * 0.65;
       }
 
       window.drawConstellationStar(
@@ -426,6 +424,61 @@ context.restore();
         timestamp / 1000,
         brightness
       );
+
+      // Soft, diffused rays on tappable stars only.
+      if (shouldBlink && blink > 0.02) {
+        context.save();
+
+        context.globalCompositeOperation = "screen";
+
+        const rayLength = 11 + blink * 11;
+        const rayOpacity = blink * 0.75;
+
+        const rayColour = antares
+          ? "255, 203, 151"
+          : "211, 231, 255";
+
+        const drawRay = (dx, dy) => {
+          const gradient = context.createLinearGradient(
+            point.x,
+            point.y,
+            point.x + dx * rayLength,
+            point.y + dy * rayLength
+          );
+
+          gradient.addColorStop(
+            0,
+            `rgba(${rayColour}, ${rayOpacity})`
+          );
+
+          gradient.addColorStop(
+            1,
+            `rgba(${rayColour}, 0)`
+          );
+
+          context.beginPath();
+          context.moveTo(point.x, point.y);
+          context.lineTo(
+            point.x + dx * rayLength,
+            point.y + dy * rayLength
+          );
+
+          context.strokeStyle = gradient;
+          context.lineWidth = 1.2 + blink * 0.8;
+          context.shadowColor =
+            `rgba(${rayColour}, ${blink * 0.7})`;
+          context.shadowBlur = 5 + blink * 7;
+
+          context.stroke();
+        };
+
+        drawRay(1, 0);
+        drawRay(-1, 0);
+        drawRay(0, 1);
+        drawRay(0, -1);
+
+        context.restore();
+      }
     });
   }
 

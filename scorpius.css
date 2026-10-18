@@ -435,3 +435,238 @@
 #scorpiusMap {
   pointer-events: auto !important;
 }
+
+/* ==========================================
+   SCORPIUS — INTERACTIVE STAR GUIDANCE
+========================================== */
+
+.scorpius-guidance {
+  position: absolute;
+
+  bottom: max(
+    25px,
+    env(safe-area-inset-bottom)
+  );
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: min(90%, 420px);
+
+  text-align: center;
+
+  color: rgba(230, 238, 249, .75);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  pointer-events: none;
+
+  z-index: 15;
+
+  opacity: 0;
+
+  transition: opacity 1.2s ease;
+}
+
+#scorpiusChapter.intro-complete
+.scorpius-guidance {
+  opacity: 1;
+}
+
+.scorpius-guidance p {
+  margin: 0 0 8px;
+
+  font-size: 13px;
+  font-style: italic;
+
+  line-height: 1.6;
+}
+
+.scorpius-guidance span {
+  display: block;
+
+  font-size: 10px;
+  letter-spacing: .08em;
+
+  opacity: .65;
+}
+
+.scorpius-guidance small {
+  display: block;
+
+  margin-top: 14px;
+
+  font-size: 10px;
+  letter-spacing: .12em;
+
+  opacity: .55;
+}
+
+
+/* ==========================================
+   SCORPIUS — INTERACTIVE STAR PULSE
+========================================== */
+
+.scorpius-map-star {
+  cursor: pointer;
+}
+
+.scorpius-star-pulse {
+  fill: rgba(210, 230, 255, .035);
+
+  stroke: rgba(210, 230, 255, .4);
+  stroke-width: .8;
+
+  opacity: .5;
+
+  transform-box: fill-box;
+  transform-origin: center;
+
+  pointer-events: none;
+}
+
+.personality-star .scorpius-star-pulse {
+  animation:
+    scorpiusGentlePulse 3.8s ease-in-out infinite;
+}
+
+/* Slightly different timing for each star */
+
+.personality-star:nth-child(2)
+.scorpius-star-pulse {
+  animation-delay: -.8s;
+}
+
+.personality-star:nth-child(3)
+.scorpius-star-pulse {
+  animation-delay: -1.6s;
+}
+
+.personality-star:nth-child(4)
+.scorpius-star-pulse {
+  animation-delay: -2.4s;
+}
+
+.personality-star:nth-child(5)
+.scorpius-star-pulse {
+  animation-delay: -3.2s;
+}
+
+@keyframes scorpiusGentlePulse {
+  0%, 100% {
+    opacity: .2;
+    transform: scale(.8);
+  }
+
+  50% {
+    opacity: .8;
+    transform: scale(1.65);
+  }
+}
+
+
+/* ==========================================
+   EXPLORED STARS
+========================================== */
+
+.personality-star.explored
+.scorpius-star-pulse {
+  animation: none;
+
+  opacity: .4;
+
+  transform: scale(1);
+
+  fill: rgba(210, 230, 255, .045);
+  stroke: rgba(210, 230, 255, .3);
+}
+
+
+/* ==========================================
+   ANTARES — FINALE
+========================================== */
+
+.antares-final .scorpius-star-pulse {
+  opacity: 0;
+
+  fill: rgba(255, 195, 135, .04);
+  stroke: rgba(255, 195, 135, .45);
+}
+
+.antares-final.unlocked
+.scorpius-star-pulse {
+  animation:
+    scorpiusAntaresPulse 3.2s ease-in-out infinite;
+}
+
+@keyframes scorpiusAntaresPulse {
+  0%, 100% {
+    opacity: .2;
+    transform: scale(.85);
+  }
+
+  50% {
+    opacity: .85;
+    transform: scale(1.8);
+  }
+}
+
+
+/* ==========================================
+   HOVER AND FOCUS
+========================================== */
+
+@media (hover: hover) {
+  .personality-star:hover
+  .scorpius-star-pulse {
+    animation-play-state: paused;
+
+    opacity: 1;
+
+    transform: scale(1.5);
+
+    stroke: rgba(230, 240, 255, .7);
+  }
+}
+
+.scorpius-map-star:focus-visible
+.scorpius-star-pulse {
+  opacity: 1;
+
+  stroke: rgba(230, 240, 255, .85);
+
+  stroke-width: 1.2;
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+  .scorpius-guidance {
+    bottom: max(
+      15px,
+      env(safe-area-inset-bottom)
+    );
+  }
+
+  .scorpius-guidance p {
+    font-size: 11px;
+  }
+
+  .scorpius-guidance span,
+  .scorpius-guidance small {
+    font-size: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scorpius-star-pulse {
+    animation: none !important;
+    opacity: .5;
+  }
+}

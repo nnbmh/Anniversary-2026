@@ -2467,6 +2467,54 @@ function enterScorpiusChapter() {
   );
 }
 
+/* ==========================================
+   TAP DISCOVERED SCORPIUS
+========================================== */
+
+document.addEventListener(
+  "click",
+  event => {
+
+    if (
+      !scorpiusDiscovered ||
+      telescopeActive
+    ) {
+      return;
+    }
+
+    const chapter =
+      document.getElementById("scorpiusChapter");
+
+    const scorpius =
+      document.getElementById("scorpius");
+
+    if (!chapter || !scorpius) return;
+
+    if (chapter.classList.contains("active")) {
+      return;
+    }
+
+    const rect =
+      scorpius.getBoundingClientRect();
+
+    const paddingX = rect.width * .12;
+    const paddingY = rect.height * .12;
+
+    const insideScorpius =
+      event.clientX >= rect.left + paddingX &&
+      event.clientX <= rect.right - paddingX &&
+      event.clientY >= rect.top + paddingY &&
+      event.clientY <= rect.bottom - paddingY;
+
+    if (!insideScorpius) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    enterScorpiusChapter();
+  },
+  true
+);
 /* =========================================================
    DRAW TELESCOPE ORION
 ========================================================= */

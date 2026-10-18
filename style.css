@@ -611,20 +611,19 @@ button {
   height: 100%;
 
   z-index: 2;
-
   pointer-events: none;
 
-  opacity: 1;
+  /* Blend undiscovered Orion into the background */
+  opacity: .24;
 
-  transition:
-    opacity .8s ease;
+  transition: opacity 1.2s ease;
 }
 
-#orion.discovered
-.orion-star-canvas {
+/* Restore full brightness during and after discovery */
+#orion.discovered .orion-star-canvas,
+#orion.revealing .orion-star-canvas {
   opacity: 1;
 }
-
 
 /* =========================================================
    CONSTELLATION SVG

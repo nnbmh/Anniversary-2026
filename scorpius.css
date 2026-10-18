@@ -88,7 +88,9 @@
 
 #scorpius.discovered
 .constellation-lines line {
+  stroke-dashoffset: 0;
   opacity: .82;
+  animation: none;
 }
 
 /* ==========================================

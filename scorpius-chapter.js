@@ -13,7 +13,7 @@
     {
       id: "epsilon",
       title: "The Little Menace",
-      game: "Impostor Star"
+      game: "The Fine Print"
     },
     {
       id: "pi",
@@ -39,12 +39,12 @@
 
   const completed = new Set();
    window.addEventListener(
-  "impostorStarComplete",
+  "finePrintComplete",
   () => {
     completed.add("epsilon");
 
     const epsilonGroup = map?.querySelector(
-      '[aria-label="The Little Menace — Impostor Star"]'
+      '[aria-label="The Little Menace — The Fine Print"]'
     );
 
     if (epsilonGroup) {
@@ -131,8 +131,8 @@
 
   function selectStar(personality) {
   if (personality.id === "epsilon") {
-    if (typeof window.openImpostorStar === "function") {
-      window.openImpostorStar();
+    if (typeof window.openFinePrint === "function") {
+      window.openFinePrint();
     }
     return;
   }

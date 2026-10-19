@@ -1,889 +1,982 @@
-/* ==========================================
-   EPSILON — THE FINE PRINT
-   OUR LITTLE UNIVERSE
-========================================== */
-
+/* EPSILON — THE FINE PRINT | Our Little Universe */
 (() => {
   "use strict";
 
-  let root;
-  let canvas;
-  let ctx;
-  let frame;
-
-  let stage = "agreement";
-  let arrangement = ["silver", "blue", "gold"];
-  let moves = 0;
-  let selected = null;
-  let dragging = null;
-  let completed = false;
-
-  const rules = [
+  const RULES = [
     {
-      first: "silver",
-      second: "blue",
-      text: "Silver must be above Blue."
+      id: "a",
+      from: "silver",
+      to: "blue",
+      text: "The silver star must sit above the blue star."
     },
     {
-      first: "blue",
-      second: "gold",
-      text: "Blue must be above Gold."
+      id: "b",
+      from: "blue",
+      to: "gold",
+      text: "The blue star must sit above the gold star."
     },
     {
-      first: "gold",
-      second: "silver",
-      text: "Gold must be above Silver."
+      id: "c",
+      from: "gold",
+      to: "rose",
+      text: "The gold star must sit above the rose star."
+    },
+    {
+      id: "d",
+      from: "rose",
+      to: "silver",
+      text: "The rose star must sit above the silver star."
+    },
+    {
+      id: "e",
+      text: "Any two stars may trade places, but only one pair at a time."
+    },
+    {
+      id: "f",
+      text: "A challenge is valid only when every conflicting clause is identified."
     }
   ];
 
-  const colours = {
-    silver: "#edf4ff",
-    blue: "#a9cbff",
-    gold: "#f4d4a0"
+  const COLORS = {
+    silver: "#e6f0ff",
+    blue: "#8ebcff",
+    gold: "#f4d5a4",
+    rose: "#f3b9d0"
   };
 
-  function createElement(tag, className, text) {
+  let root;
+  let sky;
+  let context;
+  let raf = 0;
+
+  let order = ["silver", "blue", "gold", "rose"];
+  let active = null;
+  let pointer = null;
+  let moves = 0;
+  let finished = false;
+
+  const found = new Set();
+  const marked = new Set();
+
+  const $ = (selector, base = root) =>
+    base.querySelector(selector);
+
+  const $$ = (selector, base = root) =>
+    [...base.querySelectorAll(selector)];
+
+  function el(tag, className, content) {
     const element = document.createElement(tag);
 
-    if (className) element.className = className;
-    if (text) element.textContent = text;
+    if (className) {
+      element.className = className;
+    }
+
+    if (content !== undefined) {
+      element.textContent = content;
+    }
 
     return element;
   }
 
-  function createButton(text, className, action) {
-    const button = createElement(
-      "button",
-      className,
-      text
-    );
+  function button(className, content, action) {
+    const element = el("button", className, content);
 
-    button.type = "button";
-    button.addEventListener("click", action);
+    element.type = "button";
+    element.addEventListener("click", action);
 
-    return button;
+    return element;
   }
 
-  function clear() {
-    root.innerHTML = "";
-    root.appendChild(canvas);
+  function setup() {
+    root = el("div", "fp-world");
+    root.id = "finePrintWorld";
+    root.hidden = true;
+
+    root.innerHTML = `
+      <canvas class="fp-sky" aria-hidden="true"></canvas>
+      <div class="fp-nebula" aria-hidden="true"></div>
+
+      <div class="fp-shell">
+        <header class="fp-header">
+          <button class="fp-exit" type="button">
+            ← SCORPIUS
+          </button>
+
+          <span>EPSILON · THE LITTLE MENACE</span>
+          <span class="fp-count">00 / 06</span>
+        </header>
+
+        <div class="fp-scroll">
+          <div class="fp-hero">
+            <span class="fp-kicker">
+              A VERY OFFICIAL ARRANGEMENT
+            </span>
+
+            <h1>The Fine Print</h1>
+
+            <p>
+              An agreement between two people.
+              Written entirely by one.
+            </p>
+          </div>
+
+          <div class="fp-opening">
+            <p>“Bb, I am always right.”</p>
+            <p>“You are, of course, allowed to disagree.”</p>
+
+            <p class="fp-whisper">
+              The terms of disagreement are written in the stars.
+            </p>
+          </div>
+
+          <div class="fp-discovery">
+            <p class="fp-section-title">
+              I · THE AGREEMENT
+            </p>
+
+            <p class="fp-instruction">
+              Touch each of the six stars to uncover its clause.
+            </p>
+
+            <div class="fp-map" id="fpMap">
+              <svg
+                class="fp-links"
+                viewBox="0 0 1000 430"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path d="
+                  M110 240
+                  L285 82
+                  L470 285
+                  L650 80
+                  L860 218
+                  L735 370
+                  L470 285
+                  L110 240
+                  M285 82
+                  L650 80
+                  M650 80
+                  L735 370
+                "/>
+              </svg>
+            </div>
+
+            <div
+              class="fp-reading"
+              id="fpReading"
+              aria-live="polite"
+            >
+              <span>✧</span>
+              <p>Six clauses. Six stars. Read them all.</p>
+            </div>
+          </div>
+
+          <div class="fp-trial" id="fpTrial" hidden>
+            <p class="fp-section-title">
+              II · THE TRIAL
+            </p>
+
+            <h2>Make every rule true.</h2>
+
+            <p class="fp-instruction">
+              Drag a star to another position.
+              The light follows your finger.
+              You can also tap two stars to swap them.
+            </p>
+
+            <div class="fp-trial-grid">
+              <div class="fp-rail" id="fpRail"></div>
+              <div class="fp-checks" id="fpChecks"></div>
+            </div>
+
+            <p
+              class="fp-trial-note"
+              id="fpTrialNote"
+              aria-live="polite"
+            >
+              Four stars. Four instructions.
+              Surely this is easy, bb.
+            </p>
+          </div>
+
+          <div class="fp-objection" id="fpObjection" hidden>
+            <p class="fp-section-title">
+              III · THE OBJECTION
+            </p>
+
+            <h2>Something doesn't add up.</h2>
+
+            <p class="fp-instruction">
+              The agreement allows a challenge only when
+              you identify <em>every</em> clause responsible
+              for the contradiction.
+
+              Tap the clause-stars you believe form
+              an impossible loop.
+            </p>
+
+            <div
+              class="fp-verdict"
+              id="fpVerdict"
+              aria-live="polite"
+            ></div>
+
+            <button
+              class="fp-submit"
+              id="fpSubmit"
+              type="button"
+            >
+              SUBMIT YOUR OBJECTION
+              <span>↗</span>
+            </button>
+          </div>
+
+          <div class="fp-ending" id="fpEnding" hidden>
+            <span class="fp-end-star">✧</span>
+
+            <p class="fp-section-title">
+              THE OFFICIAL RULING
+            </p>
+
+            <h2>FARIS WAS RIGHT.</h2>
+
+            <p>...this time.</p>
+
+            <p>Don't let it get to your head, bb.</p>
+
+            <p class="fp-love">Love you.</p>
+
+            <button class="fp-return" type="button">
+              RETURN TO SCORPIUS ↗
+            </button>
+          </div>
+
+          <div class="fp-bottom-space"></div>
+        </div>
+      </div>
+    `;
+
+    document.body.append(root);
+
+    sky = $(".fp-sky");
+    context = sky.getContext("2d");
+
+    $(".fp-exit").addEventListener("click", close);
+    $(".fp-return").addEventListener("click", close);
+    $("#fpSubmit").addEventListener("click", submit);
+
+    window.openFinePrint = open;
+
+    // Compatibility with the previous Scorpius connection.
+    window.openImpostorStar = open;
   }
 
-  function close() {
-    root.classList.remove("visible");
-    root.setAttribute("aria-hidden", "true");
-
-    document.body.classList.remove(
-      "fine-print-open"
-    );
-
-    selected = null;
-    dragging = null;
-
-    if (frame) {
-      cancelAnimationFrame(frame);
-      frame = null;
-    }
-  }
-
-  function makeHeader() {
-    const header = createElement(
-      "div",
-      "fine-print-header"
-    );
-
-    const back = createButton(
-      "← scorpius",
-      "fine-print-back",
-      close
-    );
-
-    const label = createElement(
-      "span",
-      "fine-print-eyebrow",
-      "EPSILON · THE LITTLE MENACE"
-    );
-
-    header.append(back, label);
-
-    return header;
-  }
-
-  function makeIntro(title, subtitle) {
-    const intro = createElement(
-      "div",
-      "fine-print-intro"
-    );
-
-    const heading = createElement(
-      "h2",
-      "",
-      title
-    );
-
-    const description = createElement(
-      "p",
-      "",
-      subtitle
-    );
-
-    intro.append(heading, description);
-
-    return intro;
-  }
-
-  function makeClause(number, text, extraClass = "") {
-    const clause = createElement(
-      "div",
-      `fine-print-clause ${extraClass}`
-    );
-
-    const index = createElement(
-      "span",
-      "fine-print-clause-number",
-      number
-    );
-
-    const wording = createElement(
-      "span",
-      "fine-print-clause-text",
-      text
-    );
-
-    clause.append(index, wording);
-
-    return clause;
-  }
-
-  function showAgreement() {
-    stage = "agreement";
-    clear();
-
-    const content = createElement(
-      "section",
-      "fine-print-content agreement-stage"
-    );
-
-    content.appendChild(
-      makeIntro(
-        "THE OFFICIAL AGREEMENT",
-        "An agreement between two parties. Written entirely by one."
-      )
-    );
-
-    const clauses = createElement(
-      "div",
-      "fine-print-clauses"
-    );
-
-    clauses.append(
-      makeClause(
-        "01",
-        "Nadhira is always right."
-      ),
-      makeClause(
-        "02",
-        "Faris may challenge Nadhira's decisions."
-      ),
-      makeClause(
-        "03",
-        "All challenges must follow the instructions provided."
-      )
-    );
-
-    const note = createElement(
-      "p",
-      "fine-print-note",
-      "Please read carefully, bb. I made this very simple for you."
-    );
-
-    const begin = createButton(
-      "accept the challenge  →",
-      "fine-print-action",
-      showPuzzle
-    );
-
-    const footnote = createElement(
-      "button",
-      "fine-print-footnote",
-      "✧  supplementary terms"
-    );
-
-    footnote.type = "button";
-
-    footnote.addEventListener(
-      "click",
-      showSupplementaryTerms
-    );
-
-    clauses.appendChild(footnote);
-
-    content.append(
-      clauses,
-      note,
-      begin
-    );
-
-    root.append(
-      makeHeader(),
-      content
-    );
-  }
-
-  function showSupplementaryTerms() {
-    const existing = root.querySelector(
-      ".fine-print-terms"
-    );
-
-    if (existing) {
-      existing.remove();
-      return;
-    }
-
-    const terms = createElement(
-      "div",
-      "fine-print-terms"
-    );
-
-    const title = createElement(
-      "span",
-      "fine-print-terms-title",
-      "SUPPLEMENTARY TERMS · §04"
-    );
-
-    const description = createElement(
-      "p",
-      "",
-      "Any set of instructions that cannot all be satisfied is void. The challenger may identify the contradiction to invalidate it."
-    );
-
-    const closeTerms = createButton(
-      "close",
-      "fine-print-terms-close",
-      () => terms.remove()
-    );
-
-    terms.append(
-      title,
-      description,
-      closeTerms
-    );
-
-    root.appendChild(terms);
-  }
-
-  function ruleSatisfied(rule) {
-    return arrangement.indexOf(rule.first) <
-      arrangement.indexOf(rule.second);
-  }
-
-  function createStar(name) {
-    const button = createElement(
-      "button",
-      "fine-print-star",
-      ""
-    );
-
-    button.type = "button";
-    button.dataset.star = name;
-
-    button.setAttribute(
-      "aria-label",
-      `${name} star`
-    );
-
-    button.style.setProperty(
-      "--star-colour",
-      colours[name]
-    );
-
-    const core = createElement(
-      "span",
-      "fine-print-star-core"
-    );
-
-    const label = createElement(
-      "span",
-      "fine-print-star-label",
-      name.toUpperCase()
-    );
-
-    button.append(core, label);
-
-    button.addEventListener(
-      "pointerdown",
-      event => startDrag(event, name)
-    );
-
-    button.addEventListener(
-      "click",
-      () => selectStar(name)
-    );
-
-    return button;
-  }
-
-  function selectStar(name) {
-    if (dragging) return;
-
-    if (selected === null) {
-      selected = name;
-      updateStars();
-      return;
-    }
-
-    if (selected === name) {
-      selected = null;
-      updateStars();
-      return;
-    }
-
-    swapStars(selected, name);
-    selected = null;
-  }
-
-  function swapStars(first, second) {
-    const a = arrangement.indexOf(first);
-    const b = arrangement.indexOf(second);
-
-    if (a < 0 || b < 0 || a === b) return;
-
-    [arrangement[a], arrangement[b]] =
-      [arrangement[b], arrangement[a]];
-
-    moves++;
-
-    updatePuzzle();
-  }
-
-  function startDrag(event, name) {
-    if (event.button !== undefined &&
-        event.button !== 0) return;
-
-    dragging = {
-      name,
-      startY: event.clientY,
-      moved: false
-    };
-
-    const button = event.currentTarget;
-
-    button.setPointerCapture(event.pointerId);
-
-    button.addEventListener(
-      "pointermove",
-      dragMove
-    );
-
-    button.addEventListener(
-      "pointerup",
-      endDrag,
-      { once: true }
-    );
-
-    button.addEventListener(
-      "pointercancel",
-      cancelDrag,
-      { once: true }
-    );
-  }
-
-  function dragMove(event) {
-    if (!dragging) return;
-
-    if (
-      Math.abs(event.clientY - dragging.startY) > 8
-    ) {
-      dragging.moved = true;
-    }
-
-    event.currentTarget.classList.toggle(
-      "dragging",
-      dragging.moved
-    );
-  }
-
-  function endDrag(event) {
-    const button = event.currentTarget;
-
-    button.removeEventListener(
-      "pointermove",
-      dragMove
-    );
-
-    button.classList.remove("dragging");
-
-    if (!dragging) return;
-
-    const drag = dragging;
-    dragging = null;
-
-    if (!drag.moved) return;
-
-    const target = document.elementFromPoint(
-      event.clientX,
-      event.clientY
-    )?.closest(".fine-print-slot");
-
-    if (!target) return;
-
-    const other = arrangement[
-      Number(target.dataset.index)
+  function makeMap() {
+    const map = $("#fpMap");
+
+    $$(".fp-node", map).forEach(node => node.remove());
+
+    const positions = [
+      [11, 56],
+      [29, 18],
+      [47, 67],
+      [65, 18],
+      [86, 50],
+      [74, 85]
     ];
 
-    if (other && other !== drag.name) {
-      swapStars(drag.name, other);
-    }
-  }
-
-  function cancelDrag(event) {
-    event.currentTarget.removeEventListener(
-      "pointermove",
-      dragMove
-    );
-
-    event.currentTarget.classList.remove(
-      "dragging"
-    );
-
-    dragging = null;
-  }
-
-  function updateStars() {
-    root.querySelectorAll(
-      ".fine-print-star"
-    ).forEach(button => {
-      button.classList.toggle(
-        "selected",
-        button.dataset.star === selected
-      );
-    });
-  }
-
-  function createSlots() {
-    const container = createElement(
-      "div",
-      "fine-print-slots"
-    );
-
-    arrangement.forEach((name, index) => {
-      const slot = createElement(
-        "div",
-        "fine-print-slot"
-      );
-
-      slot.dataset.index = index;
-
-      const position = createElement(
-        "span",
-        "fine-print-position",
-        String(index + 1).padStart(2, "0")
-      );
-
-      slot.append(
-        position,
-        createStar(name)
-      );
-
-      container.appendChild(slot);
-    });
-
-    return container;
-  }
-
-  function createRules() {
-    const container = createElement(
-      "div",
-      "fine-print-rules"
-    );
-
-    rules.forEach((rule, index) => {
-      const satisfied = ruleSatisfied(rule);
-
-      const row = createElement(
-        "div",
-        `fine-print-rule ${
-          satisfied ? "satisfied" : "unsatisfied"
-        }`
-      );
-
-      const indicator = createElement(
-        "span",
-        "fine-print-rule-indicator",
-        satisfied ? "✧" : "◇"
-      );
-
-      const text = createElement(
-        "span",
+    RULES.forEach((rule, index) => {
+      const node = button(
+        "fp-node",
         "",
-        rule.text
+        () => reveal(rule.id)
       );
 
-      row.append(
-        indicator,
-        text
+      node.dataset.id = rule.id;
+
+      node.style.left = positions[index][0] + "%";
+      node.style.top = positions[index][1] + "%";
+
+      node.setAttribute(
+        "aria-label",
+        "Reveal clause " +
+          String(index + 1).padStart(2, "0")
       );
 
-      container.appendChild(row);
+      node.innerHTML = `
+        <span class="fp-point"></span>
+        <span class="fp-node-label">
+          ${String(index + 1).padStart(2, "0")}
+        </span>
+      `;
+
+      map.append(node);
+    });
+  }
+
+  function reveal(id) {
+    found.add(id);
+
+    const rule = RULES.find(item => item.id === id);
+    const box = $("#fpReading");
+
+    box.classList.add("fp-reading-on");
+
+    box.innerHTML = `
+      <span>
+        CLAUSE ${
+          String(RULES.indexOf(rule) + 1).padStart(2, "0")
+        }
+      </span>
+      <p>${rule.text}</p>
+    `;
+
+    if (found.size === 6) {
+      box.append(
+        button(
+          "fp-mark-action",
+          marked.has(id)
+            ? "REMOVE FROM OBJECTION −"
+            : "MARK THIS CLAUSE FOR OBJECTION +",
+          () => {
+            toggleMark(id);
+            reveal(id);
+          }
+        )
+      );
+    }
+
+    $$(".fp-node").forEach(node => {
+      node.classList.toggle(
+        "fp-found",
+        found.has(node.dataset.id)
+      );
+
+      node.classList.toggle(
+        "fp-active",
+        node.dataset.id === id
+      );
     });
 
-    return container;
-  }
+    $(".fp-count").textContent =
+      String(found.size).padStart(2, "0") + " / 06";
 
-  function showPuzzle() {
-    stage = "puzzle";
-    clear();
+    if (found.size === 6) {
+      $("#fpTrial").hidden = false;
+      $("#fpObjection").hidden = false;
 
-    const content = createElement(
-      "section",
-      "fine-print-content puzzle-stage"
-    );
-
-    content.appendChild(
-      makeIntro(
-        "THREE LITTLE STARS",
-        "Arrange them so every instruction is true."
-      )
-    );
-
-    const layout = createElement(
-      "div",
-      "fine-print-puzzle-layout"
-    );
-
-    const slots = createSlots();
-    const ruleList = createRules();
-
-    layout.append(
-      slots,
-      ruleList
-    );
-
-    const instruction = createElement(
-      "p",
-      "fine-print-hint",
-      "Drag the stars to swap them, or tap two stars."
-    );
-
-    const dialogue = createElement(
-      "p",
-      "fine-print-dialogue",
-      moves === 0
-        ? "Bb, it's literally three stars."
-        : "You can do it. I believe in you. Mostly."
-    );
-
-    const actions = createElement(
-      "div",
-      "fine-print-puzzle-actions"
-    );
-
-    const terms = createButton(
-      "✧  supplementary terms",
-      "fine-print-secondary",
-      showSupplementaryTerms
-    );
-
-    actions.appendChild(terms);
-
-    if (moves >= 2) {
-      const challenge = createButton(
-        "challenge the instructions  →",
-        "fine-print-action",
-        showChallenge
-      );
-
-      actions.appendChild(challenge);
-    }
-
-    content.append(
-      layout,
-      instruction,
-      dialogue,
-      actions
-    );
-
-    root.append(
-      makeHeader(),
-      content
-    );
-  }
-
-  function updatePuzzle() {
-    showPuzzle();
-  }
-
-  function showChallenge() {
-    stage = "challenge";
-    clear();
-
-    const content = createElement(
-      "section",
-      "fine-print-content challenge-stage"
-    );
-
-    content.appendChild(
-      makeIntro(
-        "A SMALL PROBLEM",
-        "Something about these instructions doesn't add up."
-      )
-    );
-
-    const explanation = createElement(
-      "p",
-      "fine-print-challenge-copy",
-      "Silver must be above Blue. Blue must be above Gold. Gold must be above Silver."
-    );
-
-    const question = createElement(
-      "p",
-      "fine-print-challenge-question",
-      "Which part of the agreement lets you challenge this?"
-    );
-
-    const options = createElement(
-      "div",
-      "fine-print-options"
-    );
-
-    const first = createButton(
-      "§01 · Nadhira is always right",
-      "fine-print-option",
-      () => wrongAnswer(
-        "Nice try, bb. That's not the loophole."
-      )
-    );
-
-    const second = createButton(
-      "§02 · Faris may challenge",
-      "fine-print-option",
-      () => wrongAnswer(
-        "You can challenge me... but what makes these instructions invalid?"
-      )
-    );
-
-    const third = createButton(
-      "§04 · Impossible instructions are void",
-      "fine-print-option",
-      showVictory
-    );
-
-    options.append(
-      first,
-      second,
-      third
-    );
-
-    const response = createElement(
-      "p",
-      "fine-print-answer-response"
-    );
-
-    response.id = "finePrintAnswerResponse";
-
-    content.append(
-      explanation,
-      question,
-      options,
-      response
-    );
-
-    root.append(
-      makeHeader(),
-      content
-    );
-  }
-
-  function wrongAnswer(text) {
-    const response = document.getElementById(
-      "finePrintAnswerResponse"
-    );
-
-    if (response) response.textContent = text;
-  }
-
-  function showVictory() {
-    stage = "victory";
-    clear();
-
-    if (!completed) {
-      completed = true;
-
-      window.dispatchEvent(
-        new CustomEvent("finePrintComplete")
-      );
-    }
-
-    const content = createElement(
-      "section",
-      "fine-print-content victory-stage"
-    );
-
-    const symbol = createElement(
-      "div",
-      "fine-print-victory-symbol",
-      "✧"
-    );
-
-    const eyebrow = createElement(
-      "span",
-      "fine-print-victory-eyebrow",
-      "AGREEMENT INVALIDATED"
-    );
-
-    const title = createElement(
-      "h2",
-      "fine-print-victory-title",
-      "FARIS WAS RIGHT."
-    );
-
-    const first = createElement(
-      "p",
-      "fine-print-victory-line",
-      "...this time."
-    );
-
-    const second = createElement(
-      "p",
-      "fine-print-victory-line",
-      "Don't let it get to your head, bb."
-    );
-
-    const third = createElement(
-      "p",
-      "fine-print-victory-love",
-      "Love you."
-    );
-
-    const returnButton = createButton(
-      "return to scorpius  →",
-      "fine-print-action",
-      close
-    );
-
-    content.append(
-      symbol,
-      eyebrow,
-      title,
-      first,
-      second,
-      third,
-      returnButton
-    );
-
-    root.append(
-      makeHeader(),
-      content
-    );
-  }
-
-  function draw(timestamp) {
-    if (!root.classList.contains("visible")) {
-      frame = null;
-      return;
-    }
-
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    const dpr = Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
-
-    if (
-      canvas.width !== Math.round(width * dpr) ||
-      canvas.height !== Math.round(height * dpr)
-    ) {
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-    }
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, width, height);
-
-    if (
-      typeof window.drawConstellationStar ===
-      "function"
-    ) {
-      for (let i = 0; i < 38; i++) {
-        const x =
-          ((i * 173.7 + 47) % 1000) / 1000 * width;
-
-        const y =
-          ((i * 317.3 + 83) % 1000) / 1000 * height;
-
-        const shimmer =
-          0.72 +
-          Math.sin(timestamp / 2300 + i * 1.7) *
-          0.12;
-
-        window.drawConstellationStar(
-          ctx,
-          x,
-          y,
-          i % 7 === 0 ? 1.8 : 1.05,
-          "cool",
-          "Bellatrix",
-          timestamp / 1000,
-          shimmer
-        );
+      if (!$("#fpRail").children.length) {
+        renderRail();
+        renderChecks();
       }
     }
 
-    frame = requestAnimationFrame(draw);
+    updateMarks();
   }
 
-  function open() {
-    arrangement = ["silver", "blue", "gold"];
-    moves = 0;
-    selected = null;
-    dragging = null;
+  function makeStar(name) {
+    const star = el("button", "fp-movable");
 
-    root.classList.add("visible");
-    root.setAttribute("aria-hidden", "false");
+    star.type = "button";
+    star.dataset.name = name;
 
-    document.body.classList.add(
-      "fine-print-open"
+    star.style.setProperty("--glow", COLORS[name]);
+
+    star.setAttribute(
+      "aria-label",
+      name + " star; tap then tap another star to swap"
     );
 
-    showAgreement();
+    star.innerHTML = `
+      <span class="fp-movable-light"></span>
+      <span class="fp-movable-name">${name}</span>
+    `;
 
-    if (!frame) {
-      frame = requestAnimationFrame(draw);
+    star.addEventListener("pointerdown", down);
+    star.addEventListener("pointermove", move);
+    star.addEventListener("pointerup", up);
+    star.addEventListener("pointercancel", cancel);
+
+    star.addEventListener("click", () => {
+      if (star.dataset.suppress === "1") {
+        star.dataset.suppress = "0";
+        return;
+      }
+
+      if (active === null) {
+        active = name;
+        updateSelected();
+        return;
+      }
+
+      if (active === name) {
+        active = null;
+        updateSelected();
+        return;
+      }
+
+      swap(active, name);
+      active = null;
+    });
+
+    return star;
+  }
+
+  function renderRail() {
+    const rail = $("#fpRail");
+    rail.innerHTML = "";
+
+    order.forEach((name, index) => {
+      const slot = el("div", "fp-slot");
+
+      slot.dataset.index = index;
+
+      slot.innerHTML = `
+        <span class="fp-slot-number">
+          0${index + 1}
+        </span>
+      `;
+
+      slot.append(makeStar(name));
+      rail.append(slot);
+    });
+
+    updateSelected();
+  }
+
+  function updateSelected() {
+    $$(".fp-movable").forEach(node => {
+      node.classList.toggle(
+        "fp-selected",
+        node.dataset.name === active
+      );
+    });
+  }
+
+  function down(event) {
+    if (
+      event.pointerType === "mouse" &&
+      event.button !== 0
+    ) {
+      return;
+    }
+
+    pointer = {
+      id: event.pointerId,
+      name: event.currentTarget.dataset.name,
+      startX: event.clientX,
+      startY: event.clientY,
+      drag: false,
+      node: event.currentTarget
+    };
+
+    event.currentTarget.setPointerCapture(
+      event.pointerId
+    );
+  }
+
+  function move(event) {
+    if (
+      !pointer ||
+      pointer.id !== event.pointerId
+    ) {
+      return;
+    }
+
+    const dx = event.clientX - pointer.startX;
+    const dy = event.clientY - pointer.startY;
+
+    if (Math.hypot(dx, dy) > 6) {
+      pointer.drag = true;
+    }
+
+    if (!pointer.drag) return;
+
+    const node = pointer.node;
+
+    node.classList.add("fp-dragging");
+
+    node.style.transform = `
+      translate3d(${dx}px, ${dy}px, 0)
+      scale(1.16)
+    `;
+
+    $$(".fp-slot").forEach(slot => {
+      const rect = slot.getBoundingClientRect();
+
+      slot.classList.toggle(
+        "fp-drop",
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom
+      );
+    });
+  }
+
+  function up(event) {
+    if (
+      !pointer ||
+      pointer.id !== event.pointerId
+    ) {
+      return;
+    }
+
+    const previous = pointer;
+    pointer = null;
+
+    const node = previous.node;
+
+    node.classList.remove("fp-dragging");
+    node.style.transform = "";
+
+    $$(".fp-slot").forEach(slot => {
+      slot.classList.remove("fp-drop");
+    });
+
+    if (!previous.drag) return;
+
+    node.dataset.suppress = "1";
+
+    const slots = $$(".fp-slot");
+
+    let target = slots.find(slot => {
+      const rect = slot.getBoundingClientRect();
+
+      return (
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom
+      );
+    });
+
+    if (!target) {
+      target = slots.reduce((best, slot) => {
+        const currentDistance = Math.abs(
+          slot.getBoundingClientRect().top -
+          event.clientY
+        );
+
+        const bestDistance = Math.abs(
+          best.getBoundingClientRect().top -
+          event.clientY
+        );
+
+        return currentDistance < bestDistance
+          ? slot
+          : best;
+      }, slots[0]);
+    }
+
+    const other = order[Number(target.dataset.index)];
+
+    if (other && other !== previous.name) {
+      swap(previous.name, other);
     }
   }
 
-  function initialise() {
-    root = createElement(
-      "div",
-      "fine-print-experience"
+  function cancel(event) {
+    if (
+      !pointer ||
+      pointer.id !== event.pointerId
+    ) {
+      return;
+    }
+
+    pointer.node.style.transform = "";
+    pointer.node.classList.remove("fp-dragging");
+
+    pointer = null;
+
+    $$(".fp-slot").forEach(slot => {
+      slot.classList.remove("fp-drop");
+    });
+  }
+
+  function swap(first, second) {
+    const a = order.indexOf(first);
+    const b = order.indexOf(second);
+
+    [order[a], order[b]] = [
+      order[b],
+      order[a]
+    ];
+
+    moves++;
+
+    renderRail();
+    renderChecks();
+  }
+
+  function renderChecks() {
+    const checks = $("#fpChecks");
+
+    checks.innerHTML = "";
+
+    let passed = 0;
+
+    RULES.slice(0, 4).forEach(rule => {
+      const correct =
+        order.indexOf(rule.from) <
+        order.indexOf(rule.to);
+
+      if (correct) passed++;
+
+      const row = el(
+        "div",
+        "fp-check " +
+          (correct ? "fp-yes" : "fp-no")
+      );
+
+      row.innerHTML = `
+        <span class="fp-check-icon">
+          ${correct ? "✧" : "◇"}
+        </span>
+
+        <span>
+          ${rule.from}
+          <small>above</small>
+          ${rule.to}
+        </span>
+      `;
+
+      checks.append(row);
+    });
+
+    const note = $("#fpTrialNote");
+
+    if (moves === 0) {
+      note.textContent =
+        "Four stars. Four instructions. Surely this is easy, bb.";
+    } else if (moves < 3) {
+      note.textContent =
+        `${passed} of 4 instructions satisfied. Keep trying.`;
+    } else {
+      note.textContent =
+        `${passed} of 4. You can keep moving them... ` +
+        "or question the rules themselves.";
+    }
+  }
+
+  function updateMarks() {
+    $$(".fp-node").forEach(node => {
+      node.classList.toggle(
+        "fp-marked",
+        marked.has(node.dataset.id)
+      );
+    });
+
+    const verdict = $("#fpVerdict");
+
+    if (!verdict) return;
+
+    verdict.textContent = marked.size
+      ? `${marked.size} clause${
+          marked.size === 1 ? "" : "s"
+        } marked for objection.`
+      : "No clauses marked yet.";
+  }
+
+  function toggleMark(id) {
+    if (marked.has(id)) {
+      marked.delete(id);
+    } else {
+      marked.add(id);
+    }
+
+    updateMarks();
+  }
+
+  function submit() {
+    const verdict = $("#fpVerdict");
+
+    if (moves < 2) {
+      verdict.textContent =
+        "Try the arrangement first. " +
+        "A proper objection needs evidence.";
+      return;
+    }
+
+    const correctClauses = [
+      "a",
+      "b",
+      "c",
+      "d"
+    ];
+
+    if (
+      marked.size === 4 &&
+      correctClauses.every(id => marked.has(id))
+    ) {
+      win();
+      return;
+    }
+
+    verdict.textContent =
+      marked.size === 0
+        ? "Tap the clause-stars to mark your objection."
+        : "Objection denied. Find the complete loop " +
+          "of instructions; leave unrelated terms untouched.";
+  }
+
+  function win() {
+    finished = true;
+
+    $("#fpEnding").hidden = false;
+    $("#fpObjection").hidden = true;
+    $("#fpTrial").hidden = true;
+
+    $(".fp-discovery").hidden = true;
+    $(".fp-opening").hidden = true;
+    $(".fp-hero").hidden = true;
+
+    $("#fpEnding").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    window.dispatchEvent(
+      new Event("finePrintComplete")
     );
 
-    root.id = "finePrintExperience";
+    window.dispatchEvent(
+      new Event("impostorStarComplete")
+    );
+  }
 
-    root.setAttribute("aria-hidden", "true");
+  function open() {
+    if (!root) return;
 
-    canvas = createElement(
-      "canvas",
-      "fine-print-canvas"
+    root.hidden = false;
+    document.body.classList.add("fp-lock");
+
+    if (finished) {
+      $("#fpEnding").hidden = false;
+      $("#fpObjection").hidden = true;
+      $("#fpTrial").hidden = true;
+
+      $(".fp-discovery").hidden = true;
+      $(".fp-opening").hidden = true;
+      $(".fp-hero").hidden = true;
+    } else {
+      order = [
+        "silver",
+        "blue",
+        "gold",
+        "rose"
+      ];
+
+      moves = 0;
+      active = null;
+
+      found.clear();
+      marked.clear();
+
+      $("#fpTrial").hidden = true;
+      $("#fpObjection").hidden = true;
+      $("#fpEnding").hidden = true;
+
+      $(".fp-discovery").hidden = false;
+      $(".fp-opening").hidden = false;
+      $(".fp-hero").hidden = false;
+
+      $("#fpReading").innerHTML = `
+        <span>✧</span>
+        <p>Six clauses. Six stars. Read them all.</p>
+      `;
+
+      $("#fpReading").classList.remove(
+        "fp-reading-on"
+      );
+
+      $(".fp-count").textContent = "00 / 06";
+
+      makeMap();
+
+      $$(".fp-node").forEach(node => {
+        node.addEventListener(
+          "contextmenu",
+          event => event.preventDefault()
+        );
+      });
+
+      $$(".fp-node").forEach(node => {
+        let timer = 0;
+
+        node.addEventListener("pointerdown", () => {
+          timer = setTimeout(() => {
+            if (found.size === 6) {
+              toggleMark(node.dataset.id);
+            }
+          }, 550);
+        });
+
+        node.addEventListener("pointerup", () => {
+          clearTimeout(timer);
+        });
+
+        node.addEventListener("pointercancel", () => {
+          clearTimeout(timer);
+        });
+
+        node.addEventListener("pointerleave", () => {
+          clearTimeout(timer);
+        });
+
+        node.addEventListener("dblclick", event => {
+          if (found.size === 6) {
+            event.preventDefault();
+            toggleMark(node.dataset.id);
+          }
+        });
+      });
+
+      const existing = $("#fpMarkGuide");
+
+      if (existing) {
+        existing.remove();
+      }
+
+      const guide = el(
+        "p",
+        "fp-mark-guide",
+        "Tap a clause-star, then use MARK THIS CLAUSE " +
+        "to add it to your objection. " +
+        "Long-press a star to mark it directly."
+      );
+
+      guide.id = "fpMarkGuide";
+
+      $("#fpObjection").insertBefore(
+        guide,
+        $("#fpVerdict")
+      );
+    }
+
+    $(".fp-scroll").scrollTop = 0;
+
+    if (!raf) {
+      raf = requestAnimationFrame(draw);
+    }
+  }
+
+  function close() {
+    if (!root) return;
+
+    root.hidden = true;
+    document.body.classList.remove("fp-lock");
+
+    cancelAnimationFrame(raf);
+    raf = 0;
+  }
+
+  function fract(number) {
+    return number - Math.floor(number);
+  }
+
+  const points = Array.from(
+    { length: 135 },
+    (_, index) => ({
+      x: fract(
+        Math.sin(index * 123.27) * 23454
+      ),
+      y: fract(
+        Math.sin(index * 95.87) * 43521
+      ),
+      r: index % 17 === 0
+        ? 1.5
+        : 0.5 + (index % 4) * 0.18,
+      phase: index * 2.1
+    })
+  );
+
+  function draw(timestamp) {
+    if (root.hidden) {
+      raf = 0;
+      return;
+    }
+
+    const dpr = Math.min(
+      devicePixelRatio || 1,
+      2
     );
 
-    ctx = canvas.getContext("2d");
+    const width = innerWidth;
+    const height = innerHeight;
 
-    root.appendChild(canvas);
+    if (
+      sky.width !== Math.floor(width * dpr) ||
+      sky.height !== Math.floor(height * dpr)
+    ) {
+      sky.width = Math.floor(width * dpr);
+      sky.height = Math.floor(height * dpr);
+    }
 
-    document.body.appendChild(root);
+    context.setTransform(
+      dpr, 0, 0, dpr, 0, 0
+    );
 
-    window.openFinePrint = open;
+    context.clearRect(
+      0, 0, width, height
+    );
+
+    points.forEach((point, index) => {
+      const x = point.x * width;
+      const y = point.y * height;
+
+      const alpha =
+        0.15 +
+        0.25 *
+        (
+          0.5 +
+          0.5 *
+          Math.sin(
+            timestamp * 0.0005 +
+            point.phase
+          )
+        );
+
+      context.fillStyle =
+        `rgba(225,237,255,${alpha})`;
+
+      context.beginPath();
+
+      context.arc(
+        x,
+        y,
+        point.r,
+        0,
+        Math.PI * 2
+      );
+
+      context.fill();
+
+      if (index % 19 === 0) {
+        context.strokeStyle =
+          `rgba(225,237,255,${alpha * 0.55})`;
+
+        context.lineWidth = 0.55;
+
+        context.beginPath();
+
+        context.moveTo(x - 7, y);
+        context.lineTo(x + 7, y);
+
+        context.moveTo(x, y - 10);
+        context.lineTo(x, y + 10);
+
+        context.stroke();
+      }
+    });
+
+    raf = requestAnimationFrame(draw);
   }
 
   if (document.readyState === "loading") {
     document.addEventListener(
       "DOMContentLoaded",
-      initialise
+      setup,
+      { once: true }
     );
   } else {
-    initialise();
+    setup();
   }
 })();

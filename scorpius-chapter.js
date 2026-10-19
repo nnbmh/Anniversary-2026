@@ -63,6 +63,26 @@
   }
 );
 
+   window.addEventListener("shaulaComplete", () => {
+  completed.add("shaula");
+
+  const shaulaGroup = map?.querySelector(
+    '[aria-label^="The Soft Side"]'
+  );
+
+  shaulaGroup?.classList.add("explored");
+
+  updateScorpiusProgress();
+
+  if (completed.size === 5) {
+    map?.querySelector(".antares-final")
+      ?.classList.add("unlocked");
+
+    chapter?.querySelector(".scorpius-guidance")
+      ?.classList.add("all-explored");
+  }
+});
+   
   let chapter;
   let map;
   let canvas;
@@ -130,6 +150,12 @@
   }
 
   function selectStar(personality) {
+     if (personality.id === "shaula") {
+  if (typeof window.openShaula === "function") {
+    window.openShaula();
+  }
+  return;
+}
   if (personality.id === "epsilon") {
     if (typeof window.openFinePrint === "function") {
       window.openFinePrint();
@@ -233,7 +259,7 @@
 
           selectStar(personality);
            
-           if (id === "epsilon") return;
+           if (id === "epsilon" || id === "shaula") return;
            if (!completed.has(id)) {
             completed.add(id);
             group.classList.add("explored");

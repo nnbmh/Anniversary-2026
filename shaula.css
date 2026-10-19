@@ -1,0 +1,489 @@
+/* ==========================================
+   SHAULA — THE SOFT SIDE
+========================================== */
+
+#shaulaExperience {
+  --shaula-warmth: 0;
+
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  color: #edf3ff;
+  font-family: Georgia, "Times New Roman", serif;
+
+  isolation: isolate;
+}
+
+#shaulaExperience[hidden],
+#shaulaExperience [hidden] {
+  display: none !important;
+}
+
+body.shaula-active {
+  overflow: hidden;
+}
+
+.shaula-veil {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 43%,
+      rgba(14, 23, 48, .89),
+      rgba(3, 7, 19, .98) 78%
+    );
+
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.shaula-close {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 20;
+
+  border: none;
+  background: transparent;
+
+  color: rgba(230, 239, 255, .7);
+  font: 30px Georgia, serif;
+
+  cursor: pointer;
+}
+
+.shaula-content {
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 50px 20px 35px;
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+.shaula-heading {
+  position: relative;
+  z-index: 2;
+}
+
+.shaula-heading > span,
+.shaula-heading > p {
+  font: 9px -apple-system, sans-serif;
+  letter-spacing: .26em;
+
+  color: rgba(192, 211, 242, .58);
+}
+
+.shaula-heading h1 {
+  margin: 16px 0 12px;
+
+  font-size: clamp(30px, 6vw, 44px);
+  font-weight: normal;
+
+  text-shadow:
+    0 0 25px rgba(177, 210, 255, .18);
+}
+
+/* THE STAR AND ITS BARRIERS */
+
+.shaula-universe {
+  position: relative;
+
+  width: min(370px, 85vw);
+  height: min(370px, 85vw);
+
+  flex-shrink: 0;
+
+  margin: 12px auto 0;
+
+  display: grid;
+  place-items: center;
+
+  transition:
+    transform 2s ease,
+    opacity 2s ease;
+}
+
+.shaula-orbit {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  border: 1px solid rgba(184, 210, 247, .22);
+  border-radius: 50%;
+
+  transform: translate(-50%, -50%);
+
+  box-shadow:
+    0 0 18px rgba(154, 190, 245, .035),
+    inset 0 0 16px rgba(154, 190, 245, .025);
+
+  transition:
+    opacity 2.1s ease,
+    transform 2.1s ease,
+    filter 2.1s ease;
+}
+
+.shaula-orbit-one {
+  width: 29%;
+  height: 29%;
+}
+
+.shaula-orbit-two {
+  width: 48%;
+  height: 48%;
+}
+
+.shaula-orbit-three {
+  width: 68%;
+  height: 68%;
+}
+
+.shaula-orbit-four {
+  width: 89%;
+  height: 89%;
+}
+
+.shaula-orbit.shaula-dissolve {
+  opacity: 0;
+
+  transform:
+    translate(-50%, -50%)
+    scale(1.25);
+
+  filter: blur(12px);
+}
+
+/* CENTRAL STAR */
+
+.shaula-star {
+  position: relative;
+  z-index: 5;
+
+  width: 90px;
+  height: 90px;
+
+  display: grid;
+  place-items: center;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shaula-star-light {
+  position: relative;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+  background: #fff5ee;
+
+  box-shadow:
+    0 0 9px 3px rgba(255, 241, 227, .75),
+    0 0 32px 12px rgba(239, 201, 179, .24),
+    0 0 65px 25px rgba(224, 175, 161, .08);
+
+  animation: shaulaBreathe 4.5s ease-in-out infinite;
+}
+
+.shaula-star-light::before,
+.shaula-star-light::after {
+  content: "";
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+.shaula-star-light::before {
+  width: 1px;
+  height: 53px;
+
+  background: linear-gradient(
+    transparent,
+    rgba(255, 243, 229, .85),
+    transparent
+  );
+}
+
+.shaula-star-light::after {
+  width: 53px;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 243, 229, .85),
+    transparent
+  );
+}
+
+@keyframes shaulaBreathe {
+  0%, 100% {
+    opacity: .75;
+    transform: scale(.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.13);
+  }
+}
+
+/* HIDDEN CONSTELLATION */
+
+.shaula-hidden-stars {
+  position: absolute;
+  inset: 0;
+
+  opacity: 0;
+  transform: scale(.85);
+
+  transition:
+    opacity 3s ease,
+    transform 3s ease;
+}
+
+.shaula-distant-star {
+  position: absolute;
+
+  width: 3px;
+  height: 3px;
+
+  border-radius: 50%;
+  background: #f5e9e2;
+
+  box-shadow:
+    0 0 8px 2px rgba(250, 221, 208, .6),
+    0 0 20px 6px rgba(234, 189, 171, .18);
+
+  animation: shaulaTwinkle 5s ease-in-out infinite;
+}
+
+@keyframes shaulaTwinkle {
+  0%, 100% { opacity: .45; }
+  50% { opacity: 1; }
+}
+
+.shaula-opened .shaula-hidden-stars {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.shaula-opened .shaula-star-light {
+  box-shadow:
+    0 0 12px 5px rgba(255, 242, 231, .9),
+    0 0 48px 20px rgba(245, 208, 186, .35),
+    0 0 100px 50px rgba(232, 179, 156, .12);
+}
+
+/* WORDS */
+
+.shaula-writing {
+  position: relative;
+
+  max-width: 450px;
+  min-height: 125px;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.shaula-caption {
+  min-height: 13px;
+
+  font: 9px -apple-system, sans-serif;
+  letter-spacing: .24em;
+
+  color: rgba(214, 192, 184, .6);
+}
+
+.shaula-words {
+  margin: 18px 0 0;
+
+  font-size: clamp(18px, 3.6vw, 23px);
+  font-style: italic;
+  line-height: 1.7;
+
+  color: rgba(245, 239, 236, .95);
+}
+
+.shaula-caption,
+.shaula-words {
+  opacity: 0;
+  transform: translateY(8px);
+
+  transition:
+    opacity .8s ease,
+    transform .8s ease;
+}
+
+.shaula-caption.shaula-visible,
+.shaula-words.shaula-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.shaula-instruction {
+  margin: 16px 0 0;
+
+  font: 9px -apple-system, sans-serif;
+  letter-spacing: .25em;
+
+  color: rgba(197, 214, 239, .48);
+
+  animation: shaulaHint 3s ease-in-out infinite;
+}
+
+@keyframes shaulaHint {
+  0%, 100% { opacity: .5; }
+  50% { opacity: 1; }
+}
+
+/* CONFESSION */
+
+.shaula-confession .shaula-universe {
+  width: 160px;
+  height: 160px;
+
+  margin-top: 10px;
+}
+
+.shaula-confession .shaula-writing,
+.shaula-confession .shaula-instruction {
+  display: none;
+}
+
+.shaula-ending {
+  width: min(470px, 100%);
+
+  margin: 10px auto 45px;
+
+  animation: shaulaEndingEnter 1.8s ease both;
+}
+
+@keyframes shaulaEndingEnter {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shaula-final-label {
+  display: block;
+
+  margin-bottom: 35px;
+
+  font: 10px -apple-system, sans-serif;
+  letter-spacing: .3em;
+
+  color: rgba(221, 196, 182, .7);
+}
+
+.shaula-ending-copy p {
+  margin: 0 0 25px;
+
+  font-size: clamp(16px, 3.3vw, 19px);
+  line-height: 1.9;
+
+  color: rgba(239, 237, 240, .88);
+}
+
+.shaula-ending-copy .shaula-emphasis {
+  margin: 35px 0;
+
+  font-size: 23px;
+  font-style: italic;
+
+  color: #fff0e6;
+}
+
+.shaula-ending-copy .shaula-last-line {
+  font-size: 26px;
+  font-style: italic;
+
+  color: #ffe8dc;
+}
+
+.shaula-signature {
+  display: block;
+
+  margin: 40px 0;
+
+  font-size: 18px;
+  font-style: italic;
+
+  color: rgba(250, 224, 213, .9);
+}
+
+.shaula-return {
+  margin-top: 10px;
+  padding: 13px 27px;
+
+  border: 1px solid rgba(231, 207, 195, .35);
+  border-radius: 40px;
+
+  background: rgba(242, 206, 184, .05);
+
+  color: #f4e7e2;
+  font: 14px Georgia, serif;
+
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .shaula-content {
+    padding-top: 48px;
+  }
+
+  .shaula-universe {
+    width: 78vw;
+    height: 78vw;
+    max-width: 310px;
+    max-height: 310px;
+  }
+
+  .shaula-writing {
+    min-height: 150px;
+  }
+
+  .shaula-ending-copy p {
+    margin-bottom: 23px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #shaulaExperience *,
+  #shaulaExperience *::before,
+  #shaulaExperience *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
